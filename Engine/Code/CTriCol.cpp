@@ -67,7 +67,7 @@ void CTriCol::Render_Buffer()
     CVIBuffer::Render_Buffer();
 }
 
-CComponent* CTriCol::Clone()
+CComponent* CTriCol::Clone(void* pArg)
 {
     return new CTriCol(*this);
 }

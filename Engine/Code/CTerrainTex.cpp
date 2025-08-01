@@ -128,7 +128,7 @@ void CTerrainTex::Render_Buffer()
     CVIBuffer::Render_Buffer();
 }
 
-CComponent* CTerrainTex::Clone()
+CComponent* CTerrainTex::Clone(void* pArg)
 {
     return new CTerrainTex(*this);
 }

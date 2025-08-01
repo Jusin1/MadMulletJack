@@ -77,7 +77,7 @@ void CRcTex::Render_Buffer()
     CVIBuffer::Render_Buffer();
 }
 
-CComponent* CRcTex::Clone()
+CComponent* CRcTex::Clone(void* pArg)
 {
     return new CRcTex(*this);
 }

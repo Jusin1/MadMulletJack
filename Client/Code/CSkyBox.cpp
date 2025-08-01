@@ -22,7 +22,7 @@ HRESULT CSkyBox::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->m_vScale = { 40.f, 40.f, 40.f };
+	m_pTransformCom->Set_Scale(40.f, 40.f, 40.f);
 
 	return S_OK;
 }
@@ -45,7 +45,7 @@ void CSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
 	D3DXMatrixInverse(&matView, 0, &matView);
 
-	m_pTransformCom->Set_Pos(matView._41, matView._42 + 3.f, matView._43);
+	m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 3.f, matView._43));
 }
 
 void CSkyBox::Render_GameObject()

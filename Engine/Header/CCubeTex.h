@@ -13,10 +13,11 @@ private:
 
 public:
 	virtual HRESULT	Ready_Buffer();
+	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Render_Buffer();
 
 public:
-	virtual CComponent* Clone() override;
+	virtual CComponent* Clone(void* pArg) override;
 	static CCubeTex* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:

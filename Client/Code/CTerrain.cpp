@@ -86,29 +86,7 @@ HRESULT CTerrain::Add_Component()
 
 void CTerrain::Key_Input(const _float& fTimeDelta)
 {
-	_vec3 vUp;
-	m_pTransformCom->Get_Info(INFO_LOOK, &vUp);
 
-	if (GetAsyncKeyState(VK_UP))
-	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vUp, &vUp), 5.f, fTimeDelta);
-	}
-
-	if (GetAsyncKeyState(VK_DOWN))
-	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vUp, &vUp), -5.f, fTimeDelta);
-	}
-
-
-	if (GetAsyncKeyState('Q'))
-	{
-		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(90.f * fTimeDelta));
-	}
-
-	if (GetAsyncKeyState('A'))
-	{
-		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(90.f * -fTimeDelta));
-	}
 }
 
 

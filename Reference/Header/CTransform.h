@@ -5,6 +5,13 @@ BEGIN(Engine)
 
 class ENGINE_DLL CTransform : public CComponent
 {
+public:
+	typedef struct tagTransformInfo
+	{
+		_vec3 vStartPos = { 0, 0, 0 };
+		_float fSpeed;
+		_float fRotationSpeed;
+	}TRANSFORMINFO;
 private:
 	explicit CTransform();
 	explicit CTransform(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -12,55 +19,54 @@ private:
 	virtual ~CTransform();
 
 public:
-	void		Get_Info(INFO eType, _vec3* pInfo)
-	{
-		memcpy(pInfo, &m_matWorld.m[eType][0], sizeof(_vec3));
-	}
-
-	void		Move_Pos(const _vec3* pDir, const _float& fSpeed, const _float& fTimeDelta)
-	{
-		m_vInfo[INFO_POS] += *pDir * fSpeed * fTimeDelta;
-	}
-
-	void		Rotation(ROTATION eType, const _float& fAngle)
-	{
-		*(((_float*)&m_vAngle) + eType) += fAngle;
-	}
-
-	const	_matrix* Get_World() const { return &m_matWorld; }
-	void	Get_World(_matrix* pWorld) const
-	{
-		*pWorld = m_matWorld;
-	}	
-		
-	void		Set_Pos(_float _fX, _float _fY, _float _fZ)
-	{
-		m_vInfo[INFO_POS] = { _fX, _fY, _fZ };
-	}
-
-public:
 	HRESULT		 Ready_Transform();
-	virtual _int Update_Component(const _float& fTimeDelta);
-	virtual void LateUpdate_Component();
-
-	void		Chase_Target(const _vec3* pTargetPos, const _float& fSpeed, const _float& fTimeDelta);
-
-	_matrix* Compute_Lookattarget(const _vec3* pTargetPos);
+	virtual HRESULT Initialize(void* pArg);
 
 public:
-	_vec3			m_vInfo[INFO_END];
-	_vec3			m_vScale;
-	_vec3			m_vAngle;
+	_vec3		Get_Info(INFO eType) { return *(_vec3*)&m_matWorld.m[eType][0]; }
+	void		Set_Info(INFO eType, _vec3 vState) { memcpy(&m_matWorld.m[eType][0], &vState, sizeof(_vec3)); }
+	_vec3		Get_Scale();
+	void		Set_Scale(_float x, _float y, _float z);
+	
+	const	_matrix* Get_World() const { return &m_matWorld; }
+	void	Get_World(_matrix* pWorld) const{*pWorld = m_matWorld;}
+	void	SetTransformInfo(TRANSFORMINFO TransformInfo) { m_TransformInfo = TransformInfo; }
+	TRANSFORMINFO GetTransformInfo() { return m_TransformInfo; }
 
+public:
+	void Move_Forward(_float fTimeDelta, _float fHeight);
+	void Move_Backward(_float fTimeDelta, _float fHeight);
+	void Move_Left(_float fTimeDelta, _float fHeight);
+	void Move_Right(_float fTimeDelta, _float fHeight);
+	void Rotation(_vec3 vAxis, _float fTimeDelta);
+
+public:
+	void Move_PosUp(_float fTimeDelta);
+	void Move_PosDown(_float fTimeDelta);
+	void Move_PosLeft(_float fTimeDelta);
+	void Move_PosLeft(_float fTimeDelta, _float fHeight);
+	void Move_PosRight(_float fTimeDelta);
+	void Move_PosRight(_float fTimeDelta, _float fHeight);
+	void Move_PosTarget(_float fTimeDelta, _float TargetPos, _vec3 distance);
+	void Move_PosDir(_float fTimeDelta, _vec3 vDir);
+
+public:
+	void LookAt(_vec3 _targetPos);
+	void ChaseTarget(_vec3 TargetPos, _vec3 distance);
+
+public:
+	HRESULT Apply_WorldMatrix();
+	void SetTarget(_vec3 target) { m_vTarget = target; }
+private:
 	_matrix			m_matWorld;
+	TRANSFORMINFO	m_TransformInfo;
+	_vec3			m_vTarget;
 
 public:
-	virtual CComponent* Clone();
+	virtual CComponent* Clone(void* pArg = nullptr) override;
 	static CTransform* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void	Free();
-
 };
-
 END

@@ -111,7 +111,7 @@ void CRcCol::Render_Buffer()
     CVIBuffer::Render_Buffer();
 }
 
-CComponent* CRcCol::Clone()
+CComponent* CRcCol::Clone(void* pArg)
 {
     return new CRcCol(*this);
 }

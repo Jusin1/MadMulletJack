@@ -28,7 +28,6 @@ _int CCamera::Update_GameObject(const _float& fTimeDelta)
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	//CPipeline::MakeViewMatrix(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-
 	return 0;
 }
 

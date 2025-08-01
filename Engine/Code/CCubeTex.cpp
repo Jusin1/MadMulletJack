@@ -129,14 +129,27 @@ HRESULT CCubeTex::Ready_Buffer()
     return S_OK;
 }
 
+HRESULT CCubeTex::Initialize(void* pArg)
+{
+    return S_OK;
+}
+
 void CCubeTex::Render_Buffer()
 {
     CVIBuffer::Render_Buffer();
 }
 
-CComponent* CCubeTex::Clone()
+CComponent* CCubeTex::Clone(void* pArg)
 {
-    return new CCubeTex(*this);
+    CCubeTex* pInstance = new CCubeTex(*this);
+
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("pCubeTex Clone Failed");
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
 }
 
 CCubeTex* CCubeTex::Create(LPDIRECT3DDEVICE9 pGraphicDev)

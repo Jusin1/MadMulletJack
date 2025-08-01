@@ -1,26 +1,21 @@
 #include "CTransform.h"
 
 CTransform::CTransform()
-	: m_vScale(1.f, 1.f, 1.f), m_vAngle(0.f, 0.f, 0.f)
 {
-	ZeroMemory(m_vInfo, sizeof(m_vInfo));
+	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
 }
 
 CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CComponent(pGraphicDev), m_vScale(1.f, 1.f, 1.f), m_vAngle(0.f, 0.f, 0.f)
+	: CComponent(pGraphicDev)
 {
-	ZeroMemory(m_vInfo, sizeof(m_vInfo));
+	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
 }
 
 CTransform::CTransform(const CTransform& rhs)
-	: CComponent(rhs), m_vScale(rhs.m_vScale), m_vAngle(rhs.m_vAngle)
+	: CComponent(rhs), m_matWorld(rhs.m_matWorld), m_TransformInfo(rhs.m_TransformInfo)
 {
-	for (_uint i = 0; i < INFO_END; ++i)
-		m_vInfo[i] = rhs.m_vInfo[i];
-
-	m_matWorld = rhs.m_matWorld;
 }
 
 CTransform::~CTransform()
@@ -31,104 +26,197 @@ HRESULT CTransform::Ready_Transform()
 {
 	D3DXMatrixIdentity(&m_matWorld);
 
-	for (_uint i = 0; i < INFO_END; ++i)
-		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
-
 	return S_OK;
 }
 
-_int CTransform::Update_Component(const _float& fTimeDelta)
+HRESULT CTransform::Initialize(void* pArg)
 {
-	D3DXMatrixIdentity(&m_matWorld);
-
-	for (_uint i = 0; i < INFO_POS; ++i)
-		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
-
-	// 크기 변환
-
-	for (_uint i = 0; i < INFO_POS; ++i)
+	if (pArg != nullptr)
 	{
-		D3DXVec3Normalize(&m_vInfo[i], &m_vInfo[i]);
-		m_vInfo[i] *= *(((_float*)&m_vScale) + i);
+		memcpy(&m_TransformInfo, pArg, sizeof(TRANSFORMINFO));
+		Set_Info(INFO_POS, m_TransformInfo.vStartPos);
 	}
-
-	// 회전 변환
-
-	_matrix		matRot[ROT_END];
-
-	D3DXMatrixRotationX(&matRot[ROT_X], m_vAngle.x);
-	D3DXMatrixRotationY(&matRot[ROT_Y], m_vAngle.y);
-	D3DXMatrixRotationZ(&matRot[ROT_Z], m_vAngle.z);
-
-	for (_uint i = 0; i < INFO_POS; ++i)
-	{
-		for (_uint j = 0; j < ROT_END; ++j)
-		{
-			D3DXVec3TransformNormal(&m_vInfo[i], &m_vInfo[i], &matRot[j]);
-		}
-	}
-
-	for (_uint i = 0; i < INFO_END; ++i)
-	{
-		memcpy(&m_matWorld.m[i][0], &m_vInfo[i], sizeof(_vec3));
-	}
-
-	return 0;
+	return S_OK;
 }
 
-void CTransform::LateUpdate_Component()
+_vec3 CTransform::Get_Scale()
 {
+	_vec3		vRight = Get_Info(INFO_RIGHT);
+	_vec3		vUp = Get_Info(INFO_UP);
+	_vec3		vLook = Get_Info(INFO_LOOK);
+
+	return _vec3(D3DXVec3Length(&vRight), D3DXVec3Length(&vUp), D3DXVec3Length(&vLook));
 }
 
-void CTransform::Chase_Target(const _vec3* pTargetPos, const _float& fSpeed, const _float& fTimeDelta)
+void CTransform::Set_Scale(_float x, _float y, _float z)
 {
-	_vec3		vDir = *pTargetPos - m_vInfo[INFO_POS];
+	_vec3		vRight = Get_Info(INFO_RIGHT);
+	_vec3		vUp = Get_Info(INFO_UP);
+	_vec3		vLook = Get_Info(INFO_LOOK);
 
-	m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * fTimeDelta;
-		
-	_matrix	matScale, matRot, matTrans;
-
-	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
-	D3DXMatrixTranslation(&matTrans, m_vInfo[INFO_POS].x, m_vInfo[INFO_POS].y, m_vInfo[INFO_POS].z);
-
-	matRot = *Compute_Lookattarget(pTargetPos);
-
-	m_matWorld = matScale * matRot * matTrans;
+	Set_Info(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * x);
+	Set_Info(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * y);
+	Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * z);
 }
 
-_matrix* CTransform::Compute_Lookattarget(const _vec3* pTargetPos)
+void CTransform::Move_Forward(_float fTimeDelta, _float fHeight)
 {
-	_vec3	vDir = *pTargetPos - m_vInfo[INFO_POS];
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vLook = Get_Info(INFO_LOOK);
 
-	// _vec3	vAxis = *D3DXVec3Cross(&vAxis, &m_vInfo[INFO_UP], &vDir);
-	// 
-	// _matrix	matRot;
-	// _vec3	vUp;
-	// 
-	// D3DXVec3Normalize(&vUp, &m_vInfo[INFO_UP]);
-	// D3DXVec3Normalize(&vDir, &vDir);
-	// 
-	// float fDot = D3DXVec3Dot(&vUp, &vDir);
-	// 
-	// float	fAngle = acosf(fDot);
-	// 
-	// D3DXMatrixRotationAxis(&matRot, &vAxis, fAngle);
-	// 
-	// return &matRot;
+	vPos += *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_TransformInfo.fSpeed;
+	vPos.y = fHeight;
 
-	_matrix	matRot;
-	_vec3 vAxis, vUp;
-
-	return D3DXMatrixRotationAxis(&matRot,
-								D3DXVec3Cross(&vAxis, &m_vInfo[INFO_UP], &vDir),
-								acosf(D3DXVec3Dot(D3DXVec3Normalize(&vUp, &m_vInfo[INFO_UP]),
-												  D3DXVec3Normalize(&vDir, &vDir))));
-
+	Set_Info(INFO_POS, vPos);
 }
-CComponent* CTransform::Clone()
+
+void CTransform::Move_Backward(_float fTimeDelta, _float fHeight)
 {
-	return new CTransform(*this);
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vLook = Get_Info(INFO_LOOK);
+
+	vPos -= *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_TransformInfo.fSpeed;
+	vPos.y = fHeight;
+
+	Set_Info(INFO_POS, vPos);
 }
+
+void CTransform::Move_Right(_float fTimeDelta, _float fHeight)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vRight = Get_Info(INFO_RIGHT);
+
+	vPos += *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_TransformInfo.fSpeed;
+	vPos.y = fHeight;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_Left(_float fTimeDelta, _float fHeight)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vLeft = Get_Info(INFO_RIGHT);
+
+	vPos -= *D3DXVec3Normalize(&vLeft, &vLeft) * fTimeDelta * m_TransformInfo.fSpeed;
+	vPos.y = fHeight;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosUp(_float fTimeDelta)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.z += fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosDown(_float fTimeDelta)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.z -= fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosLeft(_float fTimeDelta)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.x -= fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosRight(_float fTimeDelta)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.x += fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosTarget(_float fTimeDelta, _vec3 TargetPos, _vec3 distance)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vNewPos = { TargetPos.x + distance.x, TargetPos.y + distance.y, TargetPos.z + distance.z };
+	_vec3 vDir = vNewPos - vPos;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir * fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS,vPos);
+}
+
+void CTransform::Move_PosDir(_float fTimeDelta, _vec3 _vDir)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	_vec3 vDir = _vDir;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir * fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+
+
+void CTransform::LookAt(_vec3 TargetPos)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vLook = TargetPos - vPos;
+	_vec3 vRight;
+
+	_vec3 vWorldUp = _vec3(0.f, 1.f, 0.f);  
+	D3DXVec3Cross(&vRight, &vWorldUp, &vLook);
+
+	_vec3 vUp;
+	D3DXVec3Cross(&vUp, &vLook, &vRight);
+
+	_vec3		vScale = Get_Scale();
+
+	Set_Info(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * vScale.x);
+	Set_Info(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * vScale.y);
+	Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * vScale.z);
+}
+
+void CTransform::Rotation(_vec3 vAxis, _float fTimeDelta)
+{
+	_vec3 vRight = Get_Info(INFO_RIGHT);
+	_vec3 vUp = Get_Info(INFO_UP);
+	_vec3 vLook = Get_Info(INFO_LOOK);
+
+	_matrix RotateMatrix;
+	D3DXMatrixRotationAxis(&RotateMatrix, &vAxis, m_TransformInfo.fRotationSpeed * fTimeDelta);
+
+	D3DXVec3TransformNormal(&vRight, &vRight, &RotateMatrix);
+	D3DXVec3TransformNormal(&vUp, &vUp, &RotateMatrix);
+	D3DXVec3TransformNormal(&vLook, &vLook, &RotateMatrix);
+
+	Set_Info(INFO_RIGHT, vRight);
+	Set_Info(INFO_UP, vUp);
+	Set_Info(INFO_LOOK, vLook);
+}
+
+void CTransform::ChaseTarget(_vec3 TargetPos, _vec3 distance)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	_vec3 vNewPos = { TargetPos.x + distance.x, TargetPos.y + distance.y, TargetPos.z + distance.z };
+
+	Set_Info(INFO_POS, vNewPos);
+}
+
+HRESULT CTransform::Apply_WorldMatrix()
+{
+	if (m_pGraphicDev == nullptr)
+		return E_FAIL;
+
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
+	return S_OK;
+}
+
 
 CTransform* CTransform::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
@@ -144,8 +232,21 @@ CTransform* CTransform::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pTransform;
 }
 
+CComponent* CTransform::Clone(void* pArg)
+{
+	CTransform* pInstance = new CTransform(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Transform Create Failed");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+
 void CTransform::Free()
 {
 	CComponent::Free();
-
 }

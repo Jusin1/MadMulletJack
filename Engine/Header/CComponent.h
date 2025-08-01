@@ -14,6 +14,7 @@ protected:
 	virtual ~CComponent();
 
 public:
+	virtual HRESULT Initialize(void* pArg);
 	virtual _int Update_Component(const _float& fTimeDelta) { return 0; }
 	virtual void LateUpdate_Component() { }
 
@@ -22,10 +23,9 @@ protected:
 	_bool						m_bClone;
 
 public:
-	virtual CComponent* Clone()	PURE;		// 프로토타입 사용 예
-
+	virtual CComponent* Clone(void* pArg = nullptr)	PURE;		
 protected:
-	virtual void				Free();
+	virtual void	Free() override;
 };
 
 END

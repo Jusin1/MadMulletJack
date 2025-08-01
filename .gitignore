@@ -1,1 +1,4 @@
 .vs/
+# Visual Studio Release/Debug outputs
+**/x64/Debug/
+!**/*.vcxproj.filters

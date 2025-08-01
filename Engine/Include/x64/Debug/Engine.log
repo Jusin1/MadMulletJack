@@ -1,34 +1,13 @@
-﻿  CCalculator.cpp
-  CCamera.cpp
-  CComponent.cpp
-  CCubeTex.cpp
-  CDInputMgr.cpp
-  CFont.cpp
-  CFontMgr.cpp
-  CFrame.cpp
-  CFrameMgr.cpp
+﻿  CCamera.cpp
+  CColiderManager.cpp
   CGameObject.cpp
-  CGraphicDev.cpp
   CLayer.cpp
   CManagement.cpp
-  CPipeline.cpp
-  CProtoMgr.cpp
-  CRcCol.cpp
-  CRcTex.cpp
   CRenderer.cpp
   CScene.cpp
-  CTerrainTex.cpp
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  CTexture.cpp
-  CTimer.cpp
-  CTimerMgr.cpp
-  CTransform.cpp
-  CTriCol.cpp
-  CVIBuffer.cpp
   코드를 생성하고 있습니다...
      ../Bin\Engine.lib 라이브러리 및 ../Bin\Engine.exp 개체를 생성하고 있습니다.
-  Engine.vcxproj -> D:\유준환\156기\Frame156\Engine\Bin\Engine.dll
+  Engine.vcxproj -> C:\Users\조한웅\Downloads\1조 Framework\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
   .\Engine\Bin\Engine.dll
@@ -37,6 +16,8 @@
   1개 파일이 복사되었습니다.
   .\Engine\Header\CCalculator.h
   .\Engine\Header\CCamera.h
+  .\Engine\Header\CColiderManager.h
+  .\Engine\Header\CColider_Rect.h
   .\Engine\Header\CComponent.h
   .\Engine\Header\CCubeTex.h
   .\Engine\Header\CDInputMgr.h
@@ -67,4 +48,4 @@
   .\Engine\Header\Engine_Macro.h
   .\Engine\Header\Engine_Struct.h
   .\Engine\Header\Engine_Typedef.h
-  32개 파일이 복사되었습니다.
+  34개 파일이 복사되었습니다.

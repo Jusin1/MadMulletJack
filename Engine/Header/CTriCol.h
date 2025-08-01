@@ -16,7 +16,7 @@ public:
 	virtual void	Render_Buffer();
 
 public:
-	virtual CComponent* Clone() override;
+	virtual CComponent* Clone(void* pArg) override;
 	static CTriCol* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:

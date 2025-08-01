@@ -3,7 +3,7 @@
 
 IMPLEMENT_SINGLETON(CManagement)
 
-CManagement::CManagement() : m_pScene(nullptr)
+CManagement::CManagement() : m_pCurrentScene(nullptr)
 {
 }
 
@@ -14,10 +14,10 @@ CManagement::~CManagement()
 
 CComponent* CManagement::Get_Component(COMPONENTID eID, const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag)
 {
-    if (nullptr == m_pScene)
+    if (nullptr == m_pCurrentScene)
         return nullptr;
 
-    return m_pScene->Get_Component(eID, pLayerTag, pObjTag, pComponentTag);
+    return m_pCurrentScene->Get_Component(eID, pLayerTag, pObjTag, pComponentTag);
 }
 
 HRESULT CManagement::Set_Scene(CScene* pScene)
@@ -25,36 +25,36 @@ HRESULT CManagement::Set_Scene(CScene* pScene)
     if (nullptr == pScene)
         return  E_FAIL;
 
-    Safe_Release(m_pScene);
+    Safe_Release(m_pCurrentScene);
 
     CRenderer::GetInstance()->Clear_RenderGroup();
 
-    m_pScene = pScene;
+    m_pCurrentScene = pScene;
 
     return S_OK;
 }
 
 _int CManagement::Update_Scene(const _float& fTimeDelta)
 {
-    if (nullptr == m_pScene)
+    if (nullptr == m_pCurrentScene)
         return -1;
 
-    return m_pScene->Update_Scene(fTimeDelta);
+    return m_pCurrentScene->Update_Scene(fTimeDelta);
 }
 
 void CManagement::LateUpdate_Scene(const _float& fTimeDelta)
 {
-    m_pScene->LateUpdate_Scene(fTimeDelta);
+    m_pCurrentScene->LateUpdate_Scene(fTimeDelta);
 }
 
 void CManagement::Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CRenderer::GetInstance()->Render_GameObject(pGraphicDev);
 
-    m_pScene->Render_Scene();
+    m_pCurrentScene->Render_Scene();
 }
 
 void CManagement::Free()
 {
-    Safe_Release(m_pScene);
+    Safe_Release(m_pCurrentScene);
 }

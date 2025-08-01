@@ -44,12 +44,6 @@ _float CCalculator::Compute_HeightOnTerrain(const _vec3* pPos,
 			&pTerrainVtxPos[dwIndex]);
 	}
 
-	// ax + by + cz + d = 0
-
-	// by = -ax - cz - d
-	// 
-	// y = (-ax - cz - d) / b
-	
 	return (-Plane.a * pPos->x - Plane.c * pPos->z - Plane.d) / Plane.b;
 }
 
@@ -101,10 +95,6 @@ _vec3 CCalculator::Picking_OnTerrain(HWND hWnd,
 	D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matWorld);
 
 
-
-
-
-
 	return _vec3();
 }
 
@@ -122,7 +112,7 @@ CCalculator* CCalculator::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pCalculator;
 }
 
-CComponent* CCalculator::Clone()
+CComponent* CCalculator::Clone(void* pArg)
 {
 	return new CCalculator(*this);
 }

@@ -29,7 +29,7 @@ private:
 
 public:
 	static CCalculator* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual CComponent* Clone();
+	virtual CComponent* Clone(void* pArg);
 private:
 	virtual void	Free();
 

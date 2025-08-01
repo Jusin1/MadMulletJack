@@ -3,6 +3,9 @@
 
 BEGIN(Engine)
 
+class CTerrainTex;
+class CTransform;
+
 class ENGINE_DLL CCalculator :   public CComponent
 {
 private:
@@ -16,12 +19,17 @@ public:
 											const _ulong& dwCntX,
 											const _ulong& dwCntZ,
 											const _ulong& dwVtxItv = VTXITV);
+
+	_vec3			Picking_OnTerrain(HWND hWnd,
+									  const CTerrainTex* pTerrainBufferCom,
+									  const CTransform* pTerrainTransformCom);
+
 private:
 	LPDIRECT3DDEVICE9		m_pGraphicDev;
 
 public:
 	static CCalculator* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual CComponent* Clone();
+	virtual CComponent* Clone(void* pArg);
 private:
 	virtual void	Free();
 

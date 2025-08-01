@@ -66,7 +66,7 @@ void CTexture::Set_Texture(const _uint& iIndex)
     m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
 }
 
-CComponent* CTexture::Clone()
+CComponent* CTexture::Clone(void* pArg)
 {
     return new CTexture(*this);
 }

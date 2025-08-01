@@ -39,10 +39,10 @@ CFrame* CFrame::Create(const _float& fCallLimit)
 		MSG_BOX("frame create Failed");
 		return nullptr;
 	}
-
 	return pFrame;
 }
 
 void CFrame::Free()
 {
+
 }

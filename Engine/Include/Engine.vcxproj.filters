@@ -82,6 +82,15 @@
     <Filter Include="00. Manager\03. Management\03. Component\03. Calculator">
       <UniqueIdentifier>{e39dcafa-a481-4854-9d08-c75c98a5d3de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\08. ColiderManager">
+      <UniqueIdentifier>{f0152376-9234-4619-9522-59e165cb0020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\04. Colider">
+      <UniqueIdentifier>{9e1819df-6bf8-4387-b357-0591c84963a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\04. Colider\00.Colider_Rect">
+      <UniqueIdentifier>{084884aa-575a-4d23-afd0-7ce577e81dcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -110,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CScene.cpp">
       <Filter>00. Manager\03. Management\00. Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CManagement.cpp">
-      <Filter>00. Manager\03. Management</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVIBuffer.cpp">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer</Filter>
@@ -158,6 +164,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCalculator.cpp">
       <Filter>00. Manager\03. Management\03. Component\03. Calculator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CManagement.cpp">
+      <Filter>00. Manager\03. Management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CColiderManager.cpp">
+      <Filter>00. Manager\08. ColiderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CColider_Rect.cpp">
+      <Filter>00. Manager\03. Management\03. Component\04. Colider\00.Colider_Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +221,6 @@
     <ClInclude Include="..\Header\CScene.h">
       <Filter>00. Manager\03. Management\00. Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CManagement.h">
-      <Filter>00. Manager\03. Management</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CVIBuffer.h">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer</Filter>
     </ClInclude>
@@ -253,6 +265,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCalculator.h">
       <Filter>00. Manager\03. Management\03. Component\03. Calculator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CManagement.h">
+      <Filter>00. Manager\03. Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CColiderManager.h">
+      <Filter>00. Manager\08. ColiderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CColider_Rect.h">
+      <Filter>00. Manager\03. Management\03. Component\04. Colider\00.Colider_Rect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

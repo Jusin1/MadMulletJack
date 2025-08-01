@@ -1,5 +1,7 @@
 #pragma once
 
+
+// 레퍼런스 카운트를 관리 (증가 or 감소)
 class _declspec(dllexport) CBase
 {
 protected:
@@ -7,8 +9,8 @@ protected:
 	inline virtual ~CBase();
 
 public:
-	inline unsigned long Add_Ref();
-	inline unsigned long Release();
+	inline unsigned long Add_Ref(); // 증가
+	inline unsigned long Release(); // 감소
 
 protected:
 	unsigned long m_dwRefCnt;

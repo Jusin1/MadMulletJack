@@ -28,7 +28,7 @@ private:
 
 
 public:
-	virtual CComponent* Clone() override;
+	virtual CComponent* Clone(void* pArg) override;
 	static CTerrainTex* Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 		const _ulong& dwCntX = VTXCNTX, 
 		const _ulong& dwCntZ = VTXCNTZ, 

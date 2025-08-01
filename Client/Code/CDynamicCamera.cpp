@@ -30,18 +30,13 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 	if (FAILED(Engine::CCamera::Ready_GameObject()))
 		return E_FAIL;
-
 	m_fSpeed = 5.f;
-
-
 	return S_OK;
 }
 
 _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = Engine::CCamera::Update_GameObject(fTimeDelta);
-
-
 	return iExit;
 }
 

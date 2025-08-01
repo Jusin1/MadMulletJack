@@ -46,9 +46,8 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 		return;
 
 	_vec3		vPlayerPos{};
-	pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+	vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
 
-	m_pTransformCom->Chase_Target(&vPlayerPos, 2.f, fTimeDelta);
 }
 
 void CMonster::Render_GameObject()

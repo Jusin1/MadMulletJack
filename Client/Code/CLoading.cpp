@@ -31,7 +31,7 @@ HRESULT CLoading::Ready_Loading(LOADINGID eID)
 	return S_OK;
 }
 
-_uint CLoading::Loading_ForStage()
+_uint CLoading::Loading_ForStage() // 스테이지 컴포넌트 등록
 {
 	lstrcpy(m_szLoading, L"Buffer Component Loading.....................");
 

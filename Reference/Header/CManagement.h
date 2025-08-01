@@ -26,7 +26,10 @@ public:
 	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	CScene*					m_pScene;
+	CScene*					m_pCurrentScene;
+	_uint					m_iPrevSceneIndex;
+	_uint					m_iSceneIndex;
+	_uint					m_iLastSceneIndex;
 
 public:
 	virtual void			Free();

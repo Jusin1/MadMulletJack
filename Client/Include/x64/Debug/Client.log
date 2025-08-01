@@ -1,20 +1,2 @@
-﻿  pch.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\crtdbg.h(307,17): warning C4005: '_malloca': 매크로 재정의
-  (소스 파일 'pch.cpp'을(를) 컴파일하는 중)
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\malloc.h(120,17):
-      '_malloca'의 이전 정의를 참조하십시오.
-  
-  CBackGround.cpp
-  CDynamicCamera.cpp
-  CLoading.cpp
-  CLogo.cpp
-  CMainApp.cpp
-  CMonster.cpp
-  CPlayer.cpp
-  CSkyBox.cpp
-  CStage.cpp
-  CTerrain.cpp
-  Client.cpp
-  코드를 생성하고 있습니다...
-     ../Bin\Client.lib 라이브러리 및 ../Bin\Client.exp 개체를 생성하고 있습니다.
+﻿  CPlayer.cpp
   Client.vcxproj -> C:\Users\조한웅\Downloads\1조 Framework\Client\Bin\Client.exe

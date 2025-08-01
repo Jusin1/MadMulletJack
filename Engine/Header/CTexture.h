@@ -19,7 +19,7 @@ private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;
 
 public:
-	virtual CComponent* Clone();
+	virtual CComponent* Clone(void* pArg);
 	static CTexture* Create(LPDIRECT3DDEVICE9 pGraphicDev,
 		const _tchar* pPath, 
 		TEXTUREID eType,

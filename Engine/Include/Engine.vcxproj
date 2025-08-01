@@ -155,6 +155,8 @@ call Copy.bat</Command>
   <ItemGroup>
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
+    <ClInclude Include="..\Header\CColiderManager.h" />
+    <ClInclude Include="..\Header\CColider_Rect.h" />
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CCubeTex.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
@@ -188,6 +190,8 @@ call Copy.bat</Command>
   <ItemGroup>
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
+    <ClCompile Include="..\Code\CColiderManager.cpp" />
+    <ClCompile Include="..\Code\CColider_Rect.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CCubeTex.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />

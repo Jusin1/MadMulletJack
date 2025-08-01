@@ -21,6 +21,11 @@ CComponent::~CComponent()
 {
 }
 
+HRESULT CComponent::Initialize(void* pArg)
+{
+    return S_OK;
+}
+
 void CComponent::Free()
 {
     Safe_Release(m_pGraphicDev);

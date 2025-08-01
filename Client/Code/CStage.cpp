@@ -34,7 +34,6 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
     _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
-
     return iExit;
 }
 
@@ -120,7 +119,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     // if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
     //     return E_FAIL;
 
-  
 
     m_mapLayer.insert({ pLayerTag , pLayer });
 
