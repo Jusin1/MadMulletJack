@@ -20,33 +20,41 @@ CMonster::~CMonster()
 
 HRESULT CMonster::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
+	if(FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CMonster::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if(FAILED(SetComponent()))
+		return E_FAIL;
+
+	m_pTransformCom->Set_Scale(5.f, 1.f, 5.f);
 
 	return S_OK;
 }
 
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+		return DEAD;
+
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-
-	return 0;
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+	return NO_EVENT;
 }
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-	Engine::CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"Environment_Layer", L"Player", L"Com_Transform"));
-
-	if (nullptr == pPlayerTransformCom)
-		return;
-
-	_vec3		vPlayerPos{};
-	vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
 
 }
 
@@ -56,45 +64,39 @@ void CMonster::Render_GameObject()
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pBufferCom->Render_Buffer();
-
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CMonster::Add_Component()
+HRESULT CMonster::SetComponent(void* pArg)
 {
-	CComponent* pComponent = NULL;
-
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CTriCol*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TriCol"));
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer",pComponent });
-
-	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Transform",pComponent });
-
 	return S_OK;
 }
 
+
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CMonster* pBackGround = new CMonster(pGraphicDev);
+	CMonster* pInstance = new CMonster(pGraphicDev);
 
-	if (FAILED(pBackGround->Ready_GameObject()))
+	if (FAILED(pInstance->Ready_GameObject()))
 	{
-		Safe_Release(pBackGround);
-		MSG_BOX("BackGround Create Failed");
-		return nullptr;
+		MSG_BOX("pMonster Create Failed");
+		Safe_Release(pInstance);
 	}
 
-	return pBackGround;
+	return pInstance;
+}
+
+CGameObject* CMonster::Clone(void* pArg)
+{
+	CMonster* pInstance = new CMonster(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("pMonster Clone Failed");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CMonster::Free()

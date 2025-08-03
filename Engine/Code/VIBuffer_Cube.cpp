@@ -1,24 +1,21 @@
-#include "CCubeTex.h"
+#include "VIBuffer_Cube.h"
 
-CCubeTex::CCubeTex()
-{
-}
 
-CCubeTex::CCubeTex(LPDIRECT3DDEVICE9 pGraphicDev)
+VIBuffer_Cube::VIBuffer_Cube(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev)
 {
 }
 
-CCubeTex::CCubeTex(const CCubeTex& rhs)
+VIBuffer_Cube::VIBuffer_Cube(const VIBuffer_Cube& rhs)
     : CVIBuffer(rhs)
 {
 }
 
-CCubeTex::~CCubeTex()
+VIBuffer_Cube::~VIBuffer_Cube()
 {
 }
 
-HRESULT CCubeTex::Ready_Buffer()
+HRESULT VIBuffer_Cube::Ready_Buffer()
 {
 
     m_dwVtxSize = sizeof(VTXCUBE);
@@ -29,7 +26,7 @@ HRESULT CCubeTex::Ready_Buffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Buffer()))
+    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
         return E_FAIL;
 
     VTXCUBE* pVertex = NULL;
@@ -64,6 +61,9 @@ HRESULT CCubeTex::Ready_Buffer()
     pVertex[7].vTexUV = pVertex[7].vPosition;
 
     m_pVB->Unlock();
+
+    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
+        return E_FAIL;
 
     INDEX32* pIndex = NULL;
 
@@ -129,44 +129,40 @@ HRESULT CCubeTex::Ready_Buffer()
     return S_OK;
 }
 
-HRESULT CCubeTex::Initialize(void* pArg)
+HRESULT VIBuffer_Cube::Initialize(void* pArg)
 {
     return S_OK;
 }
 
-void CCubeTex::Render_Buffer()
+VIBuffer_Cube* VIBuffer_Cube::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CVIBuffer::Render_Buffer();
-}
-
-CComponent* CCubeTex::Clone(void* pArg)
-{
-    CCubeTex* pInstance = new CCubeTex(*this);
-
-    if (FAILED(pInstance->Initialize(pArg)))
-    {
-        MSG_BOX("pCubeTex Clone Failed");
-        Safe_Release(pInstance);
-    }
-
-    return pInstance;
-}
-
-CCubeTex* CCubeTex::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-    CCubeTex* pCubeTex = new CCubeTex(pGraphicDev);
+    VIBuffer_Cube* pCubeTex = new VIBuffer_Cube(pGraphicDev);
 
     if (FAILED(pCubeTex->Ready_Buffer()))
     {
         Safe_Release(pCubeTex);
-        MSG_BOX("pCubeTex Create Failed");
+        MSG_BOX("pCube Create Failed");
         return nullptr;
     }
 
     return pCubeTex;
 }
 
-void CCubeTex::Free()
+
+CComponent* VIBuffer_Cube::Clone(void* pArg)
+{
+    VIBuffer_Cube* pInstance = new VIBuffer_Cube(*this);
+
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("pCube Create Failed");
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+void VIBuffer_Cube::Free()
 {
     CVIBuffer::Free();
 }

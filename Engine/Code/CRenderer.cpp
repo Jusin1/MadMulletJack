@@ -1,88 +1,133 @@
 #include "CRenderer.h"
 
-IMPLEMENT_SINGLETON(CRenderer)
-
-CRenderer::CRenderer()
+CRenderer::CRenderer(LPDIRECT3DDEVICE9 pGraphic_Device)
+	: CComponent(pGraphic_Device)
 {
-}
 
+}
 CRenderer::~CRenderer()
 {
 	Free();
 }
 
-void CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
+HRESULT CRenderer::Ready_Render()
 {
-	if (RENDER_END <= eType || nullptr == pGameObject)
-		return;
+	return S_OK;
+}
+
+HRESULT CRenderer::Initialize(void* pArg)
+{
+	return S_OK;
+}
+
+HRESULT CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
 	m_RenderGroup[eType].push_back(pGameObject);
+
 	pGameObject->Add_Ref();
+
+	return S_OK;
 }
 
-void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev)
+HRESULT CRenderer::Render_GameObject()
 {
-	Render_Priority(pGraphicDev);
-	Render_NonAlpha(pGraphicDev);
-	Render_Alpha(pGraphicDev);
-	Render_UI(pGraphicDev);
+	if (FAILED(Render_Priority()))
+		return E_FAIL;
+	if (FAILED(Render_NonAlpha()))
+		return E_FAIL;
+	if (FAILED(Render_Alpha()))
+		return E_FAIL;
+	if (FAILED(Render_UI()))
+		return E_FAIL;
+	return S_OK;
 
-	Clear_RenderGroup();
 }
 
-void CRenderer::Clear_RenderGroup()
+HRESULT CRenderer::Render_Priority()
 {
-	for (size_t i = 0; i < RENDER_END; ++i)
+	for (auto& pGameObject : m_RenderGroup[RENDER_PRIORITY])
 	{
-		for_each(m_RenderGroup[i].begin(), m_RenderGroup[i].end(), CDeleteObj());
-		m_RenderGroup[i].clear();
-	}
-}
-
-void CRenderer::Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev)
-{
-	for (auto& pObj : m_RenderGroup[RENDER_PRIORITY])
-	{
-		if (nullptr != pObj)
+		if (nullptr != pGameObject)
 		{
-			pObj->Render_GameObject();
+			pGameObject->Render_GameObject();
+			Safe_Release(pGameObject);
 		}
 	}
+	m_RenderGroup[RENDER_PRIORITY].clear();
+
+	return S_OK;
 }
 
-void CRenderer::Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev)
+HRESULT CRenderer::Render_NonAlpha()
 {
-	for (auto& pObj : m_RenderGroup[RENDER_NONALPHA])
-		pObj->Render_GameObject();
+	for (auto& pGameObject : m_RenderGroup[RENDER_NONALPHA])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render_GameObject();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_RenderGroup[RENDER_NONALPHA].clear();
+	return S_OK;
 }
 
-void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
+HRESULT CRenderer::Render_Alpha()
 {
-	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	for (auto& pGameObject : m_RenderGroup[RENDER_ALPHA])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render_GameObject();
+			Safe_Release(pGameObject);
+		}
+	}
 
-	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_RenderGroup[RENDER_ALPHA].clear();
 
-	//pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	//
-	//pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	//pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0xc0);
-
-	for (auto& pObj : m_RenderGroup[RENDER_ALPHA])
-		pObj->Render_GameObject();
-
-
-	//pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	return S_OK;
 }
 
-void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
+HRESULT CRenderer::Render_UI()
 {
-	for (auto& pObj : m_RenderGroup[RENDER_UI])
-		pObj->Render_GameObject();
+	for (auto& pGameObject : m_RenderGroup[RENDER_UI])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render_GameObject();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_RenderGroup[RENDER_UI].clear();
+	return S_OK;
+}
+
+CRenderer* CRenderer::Create(LPDIRECT3DDEVICE9 pGrahpicDev)
+{
+	CRenderer* pRender = new CRenderer(pGrahpicDev);
+
+	if (FAILED(pRender->Ready_Render()))
+	{
+		MSG_BOX("Renderer Create Failed");
+		Safe_Release(pRender);
+	}
+
+	return pRender;
+}
+
+CComponent* CRenderer::Clone(void* pArg)
+{
+	this->Add_Ref();
+
+	return this;
 }
 
 void CRenderer::Free()
 {
-	Clear_RenderGroup();
+	CComponent::Free();
 }

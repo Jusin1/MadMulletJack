@@ -1,5 +1,5 @@
 #include "CTexture.h"
-
+#include "CTimerMgr.h"
 CTexture::CTexture(LPDIRECT3DDEVICE9 pGraphicDev)
     : CComponent(pGraphicDev)
 {
@@ -22,37 +22,40 @@ CTexture::CTexture(const CTexture& rhs)
 
 CTexture::~CTexture()
 {
+
 }
 
-HRESULT CTexture::Ready_Texture(const _tchar* pPath, 
-                                TEXTUREID eType, 
+HRESULT CTexture::Ready_Texture(TEXTUREID eType,
+                                const _tchar* pPath,
                                 const _uint& iCnt)
 {
-    m_vecTexture.reserve(iCnt);
+    m_iNumTextures = iCnt;
 
-    IDirect3DBaseTexture9* pTexture = NULL;
+    _tchar	szFullPath[MAX_PATH] = TEXT("");
 
-    for (_uint i = 0; i < iCnt; ++i)
+    for (_uint i = 0; i < m_iNumTextures; ++i)
     {
-        TCHAR           szFileName[128] = L"";
+        IDirect3DBaseTexture9* pTexture = nullptr;
 
-        wsprintf(szFileName, pPath, i);
+        wsprintf(szFullPath, pPath, i);
 
-        switch (eType)
-        {
-        case TEX_NORMAL:
-            if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
-                return E_FAIL;
+        HRESULT hr = eType == TEX_NORMAL ? D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DTEXTURE9*)&pTexture) : D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DCUBETEXTURE9*)&pTexture);
 
-            break;
-
-        case TEX_CUBE:
-            if (FAILED(D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
-                return E_FAIL;
-            break;
-        }
+        if (FAILED(hr))
+            return E_FAIL;
 
         m_vecTexture.push_back(pTexture);
+    }
+
+    return S_OK;
+}
+
+HRESULT CTexture::Initialize(void* pArg)
+{
+    if (pArg != nullptr)
+    {
+        memcpy(&m_TextureInfo, pArg, sizeof(TEXINFO));
+        m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
     }
 
     return S_OK;
@@ -66,16 +69,36 @@ void CTexture::Set_Texture(const _uint& iIndex)
     m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
 }
 
-CComponent* CTexture::Clone(void* pArg)
+void CTexture::MoveFrame(const _tchar* timeTag)
 {
-    return new CTexture(*this);
+
+    m_fTimeAcc += CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_60");
+
+    if (m_fTimeAcc > 1.f / m_TextureInfo.m_fSpeed)
+    {
+        m_TextureInfo.m_iCurrentTex++;
+
+        if (m_TextureInfo.m_iCurrentTex >= m_TextureInfo.m_iEndTex)
+            m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
+
+        m_fTimeAcc = 0.f;
+    }
 }
 
-CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pPath, TEXTUREID eType, const _uint& iCnt)
+void CTexture::Set_Frame(int iStart, int iEnd, int iSpeed)
+{
+    m_TextureInfo.m_iStart = iStart;
+    m_TextureInfo.m_iEndTex = iEnd;
+    m_TextureInfo.m_fSpeed = iSpeed;
+    m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
+}
+
+
+CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eType, const _tchar* pPath, const _uint& iCnt)
 {
     CTexture* pTexture = new CTexture(pGraphicDev);
 
-    if (FAILED(pTexture->Ready_Texture(pPath, eType, iCnt)))
+    if (FAILED(pTexture->Ready_Texture(eType, pPath, iCnt)))
     {
         Safe_Release(pTexture);
         MSG_BOX("pTexture Create Failed");
@@ -84,6 +107,20 @@ CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pPath, T
 
     return pTexture;
 }
+
+CComponent* CTexture::Clone(void* pArg)
+{
+    CTexture* pInstance = new CTexture(*this);
+
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("pTexture Clone Failed");
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
 
 void CTexture::Free()
 {

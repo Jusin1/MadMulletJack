@@ -1,10 +1,13 @@
 #pragma once
 
 #include "CGameObject.h"
-#include "CProtoMgr.h"
+#include "Clinet_Define.h"
+#include "CComponentMgr.h"
 
 class CPlayer : public CGameObject
 {
+public:
+	enum STATE {IDLE, WALK, PLAYER_END};
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CPlayer(const CGameObject& rhs);
@@ -17,21 +20,40 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-private:
-	HRESULT			Add_Component();
-	void			Key_Input(const _float& fTimeDelta);
-	void			Set_OnTerrain();
+public:
+	_vec3 Get_Pos();
+	_vec3 Get_Look();
+	_vec3 Get_Right();
+	void Set_GroundY(float _fY) { m_fGround_Height = _fY; }
 
 private:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTexture* m_pTextureCom;
+	HRESULT			Set_Component();
+	void			Key_Input(const _float& fTimeDelta);
+
+private:
+	HRESULT Texture_Clone();
+	HRESULT Change_Texture(const _tchar* LayerTag);
+
+
+private:
+	Engine::CVIBuffer_Rect* m_pBufferCom;
+	Engine::CRenderer* m_pRenderCom;
+	Engine::CColider_Rect* m_pColliderCom;
+	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
 	Engine::CTransform* m_pTransformCom;
 	Engine::CCalculator* m_pCalculatorCom;
+	vector<CTexture*> m_vecTexture; //애니메이션 전용 텍스쳐
+
+private:
+	STATE m_eState = IDLE;
+	STATE m_ePrevState = PLAYER_END;
+	const _tchar* m_TimerTag = TEXT("");
+	_float m_fGround_Height = 0.f;
+
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-private:
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void		Free();
 };
 

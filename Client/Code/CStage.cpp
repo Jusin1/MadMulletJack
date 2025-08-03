@@ -1,16 +1,18 @@
 #include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
-#include "CProtoMgr.h"
+#include "CObjectManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 
+
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
 {
+
 }
 
 CStage::~CStage()
@@ -19,6 +21,12 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
+    if(FAILED(CScene::Ready_Scene()))
+        return E_FAIL;
+
+    if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
+        return E_FAIL;
+
     if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
         return E_FAIL;
 
@@ -44,89 +52,65 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CStage::Render_Scene()
 {
-   
+   // 디버깅용 코드
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    Engine::CLayer* pLayer = CLayer::Create();
-    if (nullptr == pLayer)
-        return E_FAIL;
-
-    Engine::CGameObject* pGameObject = nullptr;
-
-    _vec3	vEye{ 0.f, 10.f, -10.f };
-    _vec3	vAt{ 0.f, 0.f, 1.f };
-    _vec3	vUp{ 0.f , 1.f, 0.f };
-
-    // DynamicCamera
-    pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
-
-    if (nullptr == pGameObject)
-        return E_FAIL;
-
-    if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
+    // Terrian
+    _vec3 terriainPos = { 0.f, 0.f, 0.f };
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Terrian", SCENE_STAGE, pLayerTag, &terriainPos)))
         return E_FAIL;
 
     // SkyBox
-    pGameObject = CSkyBox::Create(m_pGraphicDev);
-
-    if (nullptr == pGameObject)
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_SkyBox", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
+    
 
-    if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
+    return S_OK;
+}
+
+HRESULT CStage::Ready_Camera_Layer(const _tchar* pLayerTag)
+{
+    // Camera
+    CDynamicCamera::CAMINFO				CamInfo;
+    ZeroMemory(&CamInfo, sizeof(CDynamicCamera::CAMINFO));
+
+    CamInfo.vEye = _vec3(0.f, 2.f, -5.f);
+    CamInfo.vAt = _vec3(0.f, 0.f, 0.f);
+
+    CamInfo.fFov = D3DXToRadian(60.0f);
+    CamInfo.fAspect = (_float)WINCX / WINCY;
+    CamInfo.fNear = 0.1f;
+    CamInfo.fFar = 1000.f;
+
+    CamInfo.TransformInfo.fSpeed = 10.f;
+    CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE, pLayerTag, &CamInfo)))
         return E_FAIL;
-
- 
-
-    m_mapLayer.insert({ pLayerTag , pLayer });
 
     return S_OK;
 }
 
 HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
-    Engine::CLayer* pLayer = CLayer::Create();
-    if (nullptr == pLayer)
-        return E_FAIL;
-
-    Engine::CGameObject* pGameObject = nullptr;
-
-    // Terrain
-    pGameObject = CTerrain::Create(m_pGraphicDev);
-
-    if (nullptr == pGameObject)
-        return E_FAIL;
-
-    if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-        return E_FAIL;
-
     // Player
-     pGameObject = CPlayer::Create(m_pGraphicDev);
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
     
-     if (nullptr == pGameObject)
-         return E_FAIL;
-    
-     if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-         return E_FAIL;
-    //
-    // // Monster
-    // pGameObject = CMonster::Create(m_pGraphicDev);
-    //
-    // if (nullptr == pGameObject)
-    //     return E_FAIL;
-    //
-    // if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-    //     return E_FAIL;
-
-
-    m_mapLayer.insert({ pLayerTag , pLayer });
+    // Monster
+    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
+    //    return E_FAIL;
 
     return S_OK;
 }
 
 HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UI", SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
+
     return S_OK;
 }
 

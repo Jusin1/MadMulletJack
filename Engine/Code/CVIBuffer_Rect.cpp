@@ -1,26 +1,23 @@
-#include "CRcTex.h"
+#include "CVIBuffer_Rect.h"
 
-CRcTex::CRcTex()
-{
-}
 
-CRcTex::CRcTex(LPDIRECT3DDEVICE9 pGraphicDev)
+CVIBuffer_Rect::CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev)
 {
 }
 
-CRcTex::CRcTex(const CRcTex& rhs)
+CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& rhs)
     : CVIBuffer(rhs)
 {
 }
 
-CRcTex::~CRcTex()
+CVIBuffer_Rect::~CVIBuffer_Rect()
 {
+
 }
 
-HRESULT CRcTex::Ready_Buffer()
+HRESULT CVIBuffer_Rect::Ready_Buffer()
 {
-   
     m_dwVtxSize = sizeof(VTXTEX);
     m_dwVtxCnt = 4;
     m_dwTriCnt = 2;
@@ -29,7 +26,7 @@ HRESULT CRcTex::Ready_Buffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Buffer()))
+    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
         return E_FAIL;
 
     VTXTEX* pVertex = NULL;
@@ -52,7 +49,10 @@ HRESULT CRcTex::Ready_Buffer()
 
     m_pVB->Unlock();
 
-    INDEX32* pIndex = NULL;
+    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
+        return E_FAIL;
+
+    INDEX32* pIndex = nullptr;
 
     m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
@@ -72,19 +72,14 @@ HRESULT CRcTex::Ready_Buffer()
     return S_OK;
 }
 
-void CRcTex::Render_Buffer()
+HRESULT CVIBuffer_Rect::Initialize(void* pArg)
 {
-    CVIBuffer::Render_Buffer();
+    return S_OK;
 }
 
-CComponent* CRcTex::Clone(void* pArg)
+CVIBuffer_Rect* CVIBuffer_Rect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    return new CRcTex(*this);
-}
-
-CRcTex* CRcTex::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-    CRcTex* pRcTex = new CRcTex(pGraphicDev);
+    CVIBuffer_Rect* pRcTex = new CVIBuffer_Rect(pGraphicDev);
 
     if (FAILED(pRcTex->Ready_Buffer()))
     {
@@ -96,7 +91,20 @@ CRcTex* CRcTex::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pRcTex;
 }
 
-void CRcTex::Free()
+CComponent* CVIBuffer_Rect::Clone(void* pArg)
+{
+    CVIBuffer_Rect* pInstance = new CVIBuffer_Rect(*this);
+
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("pRcTex Clone Failed");
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+void CVIBuffer_Rect::Free()
 {
     CVIBuffer::Free();
 }

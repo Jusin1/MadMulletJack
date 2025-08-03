@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "CSkyBox.h"
-#include "CProtoMgr.h"
-#include "CRenderer.h"
 
 CSkyBox::CSkyBox(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -19,7 +17,18 @@ CSkyBox::~CSkyBox()
 
 HRESULT CSkyBox::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
+	if (FAILED(__super::Ready_GameObject()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CSkyBox::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(SetComponent()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(40.f, 40.f, 40.f);
@@ -31,7 +40,11 @@ _int CSkyBox::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
+	_matrix	matView;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixInverse(&matView, 0, &matView);
+
+	m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 3.f, matView._43));
 
 	return 0;
 }
@@ -41,11 +54,8 @@ void CSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-	_matrix	matView;
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	D3DXMatrixInverse(&matView, 0, &matView);
-
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 3.f, matView._43));
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(RENDER_PRIORITY, this);
 }
 
 void CSkyBox::Render_GameObject()
@@ -62,32 +72,30 @@ void CSkyBox::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CSkyBox::Add_Component()
+HRESULT CSkyBox::SetComponent()
 {
-	CComponent* pComponent = NULL;
-
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CCubeTex*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CubeTex"));
-	if (nullptr == pComponent)
+	/* For.Com_Renderer */
+	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC , L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer",pComponent });
+	/* For.Com_Texture */
+	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_SkyBox", (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	/* For.Com_VIBuffer */
+	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_CubeBuffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
+
 
 	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-	if (nullptr == pComponent)
+	CTransform::TRANSFORMINFO		TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
+
+	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
-
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform",pComponent });
-
-	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SkyBoxTexture"));
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture",pComponent });
 
 	return S_OK;
 }
@@ -100,11 +108,24 @@ CSkyBox* CSkyBox::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pPlayer->Ready_GameObject()))
 	{
 		Safe_Release(pPlayer);
-		MSG_BOX("pPlayer Create Failed");
+		MSG_BOX("pSky Create Failed");
 		return nullptr;
 	}
 
 	return pPlayer;
+}
+
+CGameObject* CSkyBox::Clone(void* pArg)
+{
+	CSkyBox* pInstance = new CSkyBox(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("pSky Clone Failed");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CSkyBox::Free()

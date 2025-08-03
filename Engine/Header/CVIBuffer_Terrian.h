@@ -3,21 +3,20 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CTerrainTex : public CVIBuffer
+class ENGINE_DLL CVIBuffer_Terrian : public CVIBuffer
 {
 private:
-	explicit CTerrainTex();
-	explicit CTerrainTex(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CTerrainTex(const CTerrainTex& rhs);
-	virtual ~CTerrainTex();
+	explicit CVIBuffer_Terrian();
+	explicit CVIBuffer_Terrian(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CVIBuffer_Terrian(const CVIBuffer_Terrian& rhs);
+	virtual ~CVIBuffer_Terrian();
 
 public:
 	const _vec3* Get_VtxPos() { return m_pPos; }
 
 public:
 	HRESULT	Ready_Buffer(const _ulong& dwCntX, const _ulong& dwCntZ, const _ulong& dwVtxItv);
-	virtual void	Render_Buffer();
-
+	virtual HRESULT Initialize(void* pArg) override;
 
 private:
 	HANDLE			m_hFile;
@@ -29,12 +28,10 @@ private:
 
 public:
 	virtual CComponent* Clone(void* pArg) override;
-	static CTerrainTex* Create(LPDIRECT3DDEVICE9 pGraphicDev, 
-		const _ulong& dwCntX = VTXCNTX, 
-		const _ulong& dwCntZ = VTXCNTZ, 
+	static CVIBuffer_Terrian* Create(LPDIRECT3DDEVICE9 pGraphicDev,
+		const _ulong& dwCntX = VTXCNTX,
+		const _ulong& dwCntZ = VTXCNTZ,
 		const _ulong& dwVtxItv = VTXITV);
-
-private:
 	virtual void		Free();
 };
 

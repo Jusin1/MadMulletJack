@@ -1,7 +1,8 @@
 #pragma once
 
 #include "CGameObject.h"
-#include "CProtoMgr.h"
+#include "CComponentMgr.h"
+#include "Clinet_Define.h"
 
 class CSkyBox : public CGameObject
 {
@@ -12,22 +13,23 @@ private:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
+	virtual			HRESULT		Initialize(void* pArg) override;
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
 private:
-	HRESULT			Add_Component();
+	HRESULT			SetComponent();
 
 private:
-	Engine::CCubeTex* m_pBufferCom;
+	Engine::VIBuffer_Cube* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 	Engine::CTransform* m_pTransformCom;
+	Engine::CRenderer* m_pRendererCom;
 
 public:
 	static CSkyBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-private:
-	virtual void		Free();
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
+	virtual void Free() override;
 };
 

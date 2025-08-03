@@ -15,11 +15,24 @@ CBackGround::CBackGround(const CGameObject& rhs)
 
 CBackGround::~CBackGround()
 {
+
 }
 
 HRESULT CBackGround::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
+	if (FAILED(__super::Ready_GameObject()))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CBackGround::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	return S_OK;
@@ -28,16 +41,16 @@ HRESULT CBackGround::Ready_GameObject()
 _int CBackGround::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
-
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
+	m_pRenderCom->Add_RenderGroup(RENDER_PRIORITY, this);
 
 	return 0;
 }
 
 void CBackGround::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 }
 
 void CBackGround::Render_GameObject()
@@ -50,24 +63,19 @@ void CBackGround::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CBackGround::Add_Component()
+HRESULT CBackGround::Set_Component()
 {
-	CComponent* pComponent = NULL;
+	// Render
+	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
+		return E_FAIL;
 
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-	 if (nullptr == pComponent)
-		 return E_FAIL;
+	// VIBuffer
+	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
 
-	 m_mapComponent[ID_STATIC].insert({ L"Com_Buffer",pComponent });
-
-	 // Texture
-	 pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		 (CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_LogoTexture"));
-	 if (nullptr == pComponent)
-		 return E_FAIL;
-
-	 m_mapComponent[ID_STATIC].insert({ L"Com_Texture",pComponent });
+	// Texture
+	if (FAILED(Add_Components(L"Com_Texture", SCENE_LOGO, L"Prototype_Component_Texture_BackGround", (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -85,6 +93,18 @@ CBackGround* CBackGround::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	}
 
 	return pBackGround;
+}
+
+CGameObject* CBackGround::Clone(void* pArg)
+{
+	CBackGround* pInstance = new CBackGround(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("pBackGround Clone Failed");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CBackGround::Free()

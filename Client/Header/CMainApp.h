@@ -1,7 +1,10 @@
 #pragma once
 
 #include "CBase.h"
+#include "Clinet_Define.h"
 #include "CGraphicDev.h"
+#include "CManagement.h"
+#include "CRenderer.h"
 
 namespace Engine
 {
@@ -22,11 +25,12 @@ public:
 
 private:
 	HRESULT			Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev);
-	HRESULT			Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
+	HRESULT			Ready_Scene(SCENE eScene);
+	HRESULT			Ready_Prototype_Component();
 
 private:
 	Engine::CGraphicDev* m_pDeviceClass;
-	Engine::CManagement* m_pManagementClass;
+	Engine::CRenderer* m_pRenderer;
 
 	LPDIRECT3DDEVICE9		m_pGraphicDev;
 
@@ -38,13 +42,3 @@ private:
 
 };
 
-// 1. 스카이 박스를 띄워와라
-// 
-// 
-// 2. 평면의 방정식을 이용하여 플레이어가 지형을 타도록 구현하라(키보드 이동)
-// 평면의 방정식 : ax + by + cz + d = 0
-// D3DXPLANE 
-// D3DXPlaneFromPoints
-// 
-// 3. 마우스 피킹을 이용하여 플레이어가 지형을 타도록 구현하라()
-// D3DXIntersecTri

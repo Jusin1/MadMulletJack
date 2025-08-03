@@ -8,50 +8,70 @@ CLayer::~CLayer()
 {
 }
 
-CComponent* CLayer::Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag)
-{
-	auto	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
-
-	if (iter == m_mapObject.end())
-		return nullptr;
-
-	return iter->second->Get_Component(eID, pComponentTag);
-}
-
-HRESULT CLayer::Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject)
-{
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	m_mapObject.insert({ pObjTag, pGameObject });
-
-	return S_OK;
-}
-
 HRESULT CLayer::Ready_Layer()
 {
 	return S_OK;
 }
 
-_int CLayer::Update_Layer(const _float& fTimeDelta)
+
+
+HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 {
-	_int	iResult(0);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
-	for (auto& pObj : m_mapObject)
+	m_objList.push_back(pGameObject);
+
+	return S_OK;
+}
+
+
+
+void CLayer::Update_Layer(const _float& fTimeDelta)
+{
+	for (auto& pGameObject : m_objList)
 	{
-		iResult = pObj.second->Update_GameObject(fTimeDelta);
-
-		if (iResult & 0x80000000)
-			return iResult;
+		if (nullptr != pGameObject)
+		{
+			int iEvent = pGameObject->Update_GameObject(fTimeDelta);
+			if (iEvent == DEAD)
+			{
+				Safe_Release(pGameObject);
+			}
+		}
 	}
-
-	return iResult;
 }
 
 void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 {
-	for (auto& pObj : m_mapObject)
-		pObj.second->LateUpdate_GameObject(fTimeDelta);
+	for (auto& pGameObject : m_objList)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
+CGameObject* CLayer::Get_Object(_uint iIndex)
+{
+	if (m_objList.size() <= iIndex)
+		return nullptr;
+
+	auto	iter = m_objList.begin();
+
+	for (size_t i = 0; i < iIndex; ++i)
+		++iter;
+
+	return *iter;
+}
+
+CComponent* CLayer::Get_Component(const _tchar* pComponentTag, _uint iIndex)
+{
+	auto	iter = m_objList.begin();
+
+	for (_uint i = 0; i < iIndex; ++i)
+		++iter;
+
+	return (*iter)->Find_Component(pComponentTag);
 }
 
 
@@ -73,6 +93,8 @@ CLayer* CLayer::Create()
 
 void CLayer::Free()
 {
-	for_each(m_mapObject.begin(), m_mapObject.end(), CDeleteMap());
-	m_mapObject.clear();
+	for (auto& pGameObject : m_objList)
+		Safe_Release(pGameObject);
+
+	m_objList.clear();
 }

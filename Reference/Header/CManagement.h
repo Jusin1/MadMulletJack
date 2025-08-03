@@ -14,21 +14,20 @@ private:
 	virtual		~CManagement();
 
 public:
-	CComponent* Get_Component(COMPONENTID eID,
-		const _tchar* pLayerTag,
-		const _tchar* pObjTag,
-		const _tchar* pComponentTag);
-
-public:
-	HRESULT			Set_Scene(CScene* pScene);
-	_int			Update_Scene(const _float& fTimeDelta);
+	HRESULT Open_Scene(unsigned int iSceneIdx, class CScene* pNewScene);
+	void			Update_Scene(const _float& fTimeDelta);
 	void			LateUpdate_Scene(const _float& fTimeDelta);
-	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
+
+	CScene* GetCurrentScene() { return m_pCurrentScene; }
+	_uint Get_CurrentSceneIdx() { return  m_iSceneIndex; }
+	_uint Get_PrevSceneIdx() { return m_iPrevSceneIndex; }
+	_uint Get_LastSceneIdx() { return m_iLastSceneIndex; }
+	void Set_LastScene(_uint iIdx) { m_iLastSceneIndex = iIdx; }
 
 private:
-	CScene*					m_pCurrentScene;
+	CScene*					m_pCurrentScene = nullptr;
 	_uint					m_iPrevSceneIndex;
-	_uint					m_iSceneIndex;
+	_uint					m_iSceneIndex; 
 	_uint					m_iLastSceneIndex;
 
 public:

@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 
+// Transform : 위치, 회전, 스케일 정보 관리(이동/ 회전 기능)
 class ENGINE_DLL CTransform : public CComponent
 {
 public:
@@ -19,10 +20,11 @@ private:
 	virtual ~CTransform();
 
 public:
-	HRESULT		 Ready_Transform();
-	virtual HRESULT Initialize(void* pArg);
+	HRESULT		 Ready_Transform(); // 프로토 타입 초기화
+	virtual HRESULT Initialize(void* pArg); // 클론 객체 초기화
 
 public:
+
 	_vec3		Get_Info(INFO eType) { return *(_vec3*)&m_matWorld.m[eType][0]; }
 	void		Set_Info(INFO eType, _vec3 vState) { memcpy(&m_matWorld.m[eType][0], &vState, sizeof(_vec3)); }
 	_vec3		Get_Scale();
@@ -34,21 +36,21 @@ public:
 	TRANSFORMINFO GetTransformInfo() { return m_TransformInfo; }
 
 public:
-	void Move_Forward(_float fTimeDelta, _float fHeight);
-	void Move_Backward(_float fTimeDelta, _float fHeight);
-	void Move_Left(_float fTimeDelta, _float fHeight);
-	void Move_Right(_float fTimeDelta, _float fHeight);
+	// 로컬 방향 기준 이동 함수
+	void Move_Forward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Backward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Left(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
 
 public:
+	// 월드 좌표 기준 이동
 	void Move_PosUp(_float fTimeDelta);
 	void Move_PosDown(_float fTimeDelta);
 	void Move_PosLeft(_float fTimeDelta);
-	void Move_PosLeft(_float fTimeDelta, _float fHeight);
 	void Move_PosRight(_float fTimeDelta);
-	void Move_PosRight(_float fTimeDelta, _float fHeight);
-	void Move_PosTarget(_float fTimeDelta, _float TargetPos, _vec3 distance);
-	void Move_PosDir(_float fTimeDelta, _vec3 vDir);
+	void Move_PosTarget(_float fTimeDelta, _vec3 TargetPos, _vec3 distance);
+	void Move_PosDir(_float fTimeDelta, _vec3 _vDir);
 
 public:
 	void LookAt(_vec3 _targetPos);

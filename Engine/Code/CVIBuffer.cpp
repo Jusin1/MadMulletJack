@@ -30,28 +30,11 @@ CVIBuffer::~CVIBuffer()
 
 HRESULT CVIBuffer::Ready_Buffer()
 {
-		// D3DPOOL_DEFAULT = 0,			// 그래픽 메모리 저장
-		// D3DPOOL_MANAGED = 1,			// 그래픽 메모리에 저장, 메인 메모리에 백업
-		// D3DPOOL_SYSTEMMEM = 2,		// 메인 메모리에 저장
-		// D3DPOOL_SCRATCH = 3,			// 메인 메모리에 저장(DX 장치로는 접근 불가)
+	return S_OK;
+}
 
-	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_dwVtxCnt * m_dwVtxSize,	// 버텍스 버퍼의 크기
-												0,	// 버퍼의 종류(속성) -> D3DUSAGE_DYNAMIC
-												m_dwFVF,	// 버텍스 속성
-												D3DPOOL_MANAGED,
-												&m_pVB, 
-												NULL)))
-		return E_FAIL;
-
-
-	if (FAILED(m_pGraphicDev->CreateIndexBuffer(m_dwIdxSize * m_dwTriCnt,	// 인덱스 버퍼의 크기
-												0,	// 버퍼의 종류(속성) -> D3DUSAGE_DYNAMIC
-												m_IdxFmt,	// 인덱스 속성
-												D3DPOOL_MANAGED,
-												&m_pIB,
-												NULL)))
-												return E_FAIL;
-
+HRESULT CVIBuffer::Initialize(void* pArg)
+{
 	return S_OK;
 }
 
@@ -63,16 +46,28 @@ void CVIBuffer::Render_Buffer()
 
 	m_pGraphicDev->SetIndices(m_pIB);
 
-	// m_pGraphicDev->DrawPrimitive(D3DPT_TRIANGLELIST, 0, m_dwTriCnt);
-
 	m_pGraphicDev->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_dwVtxCnt, 0, m_dwTriCnt);
+}
+
+HRESULT CVIBuffer::Ready_Vertex_Buffer()
+{
+	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_dwVtxCnt * m_dwVtxSize, 0, m_dwFVF, D3DPOOL_MANAGED, &m_pVB, NULL)))
+		return E_FAIL;
+
+	return S_OK;;
+}
+
+HRESULT CVIBuffer::Ready_Index_Buffer()
+{
+	if (FAILED(m_pGraphicDev->CreateIndexBuffer(m_dwIdxSize * m_dwTriCnt, 0, m_IdxFmt, D3DPOOL_MANAGED, &m_pIB, NULL)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CVIBuffer::Free()
 {
+	CComponent::Free();
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
-
-
-	CComponent::Free();
 }

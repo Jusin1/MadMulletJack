@@ -1,25 +1,25 @@
-#include "CTerrainTex.h"
+#include "CVIBuffer_Terrian.h"
 
-CTerrainTex::CTerrainTex()
+CVIBuffer_Terrian::CVIBuffer_Terrian()
 {
 }
 
-CTerrainTex::CTerrainTex(LPDIRECT3DDEVICE9 pGraphicDev)
+CVIBuffer_Terrian::CVIBuffer_Terrian(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev), m_hFile(nullptr), m_pPos(nullptr)
 {
 }
 
-CTerrainTex::CTerrainTex(const CTerrainTex& rhs)
+CVIBuffer_Terrian::CVIBuffer_Terrian(const CVIBuffer_Terrian& rhs)
     : CVIBuffer(rhs), m_hFile(rhs.m_hFile), m_fh(rhs.m_fh), m_ih(rhs.m_ih)
     , m_pPos(rhs.m_pPos)
 {
 }
 
-CTerrainTex::~CTerrainTex()
+CVIBuffer_Terrian::~CVIBuffer_Terrian()
 {
 }
 
-HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
+HRESULT CVIBuffer_Terrian::Ready_Buffer(const _ulong& dwCntX,
     const _ulong& dwCntZ,
     const _ulong& dwVtxItv)
 {
@@ -34,7 +34,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Buffer()))
+    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
         return E_FAIL;
 
 
@@ -88,6 +88,9 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 
     m_pVB->Unlock();
 
+    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
+        return E_FAIL;
+
     INDEX32* pIndex = NULL;
 
     _ulong      dwTriCnt(0);
@@ -123,22 +126,17 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
     return S_OK;
 }
 
-void CTerrainTex::Render_Buffer()
+HRESULT CVIBuffer_Terrian::Initialize(void* pArg)
 {
-    CVIBuffer::Render_Buffer();
+    return S_OK;
 }
 
-CComponent* CTerrainTex::Clone(void* pArg)
+CVIBuffer_Terrian* CVIBuffer_Terrian::Create(LPDIRECT3DDEVICE9 pGraphicDev,
+    const _ulong& dwCntX,
+    const _ulong& dwCntZ,
+    const _ulong& dwVtxItv)
 {
-    return new CTerrainTex(*this);
-}
-
-CTerrainTex* CTerrainTex::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
-                                    const _ulong& dwCntX,
-                                    const _ulong& dwCntZ,
-                                    const _ulong& dwVtxItv)
-{
-    CTerrainTex* pTerrainTex = new CTerrainTex(pGraphicDev);
+    CVIBuffer_Terrian* pTerrainTex = new CVIBuffer_Terrian(pGraphicDev);
 
     if (FAILED(pTerrainTex->Ready_Buffer(dwCntX, dwCntZ, dwVtxItv)))
     {
@@ -150,13 +148,27 @@ CTerrainTex* CTerrainTex::Create(LPDIRECT3DDEVICE9 pGraphicDev,
     return pTerrainTex;
 }
 
-void CTerrainTex::Free()
+
+CComponent* CVIBuffer_Terrian::Clone(void* pArg)
+{
+    CVIBuffer_Terrian* pInstance = new CVIBuffer_Terrian(*this);
+
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("pTerrainTex Clone Failed");
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+
+void CVIBuffer_Terrian::Free()
 {
     if (false == m_bClone)
     {
         Safe_Delete_Array(m_pPos);
     }
-
 
     CVIBuffer::Free();
 }

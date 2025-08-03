@@ -1,4 +1,5 @@
 #include "CGameObject.h"
+#include "CComponentMgr.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev)
@@ -16,15 +17,6 @@ CGameObject::~CGameObject()
 {
 }
 
-CComponent* CGameObject::Get_Component(COMPONENTID eID, const _tchar* pComponentTag)
-{
-    CComponent* pComponent = Find_Component(eID, pComponentTag);
-
-    if (nullptr == pComponent)
-        return nullptr;
-
-    return pComponent;
-}
 
 HRESULT CGameObject::Ready_GameObject()
 {
@@ -33,24 +25,48 @@ HRESULT CGameObject::Ready_GameObject()
 
 _int CGameObject::Update_GameObject(const _float& fTimeDelta)
 {
-    for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
-        pComponent.second->Update_Component(fTimeDelta);
-    return 0;
+    return NO_EVENT;
 }
 
 void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
-        pComponent.second->LateUpdate_Component();
+
 }
 
-CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponentTag)
-{
-    auto        iter = find_if(m_mapComponent[eID].begin(),
-                                m_mapComponent[eID].end(), 
-                                 CTag_Finder(pComponentTag));
 
-    if (iter == m_mapComponent[eID].end())
+HRESULT CGameObject::Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg)
+{
+    if (nullptr != Find_Component(pComponentTag))
+        return E_FAIL;
+
+
+    CComponent* pComponent = CComponentMgr::GetInstance()->Clone_Component(iSceneIdx, pPrototypeTag, pArg);
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent.emplace(pComponentTag, pComponent);
+
+    *ppOut = pComponent;
+
+
+    return S_OK;
+}
+
+HRESULT CGameObject::Change_Component(const _tchar* pComponentTag, CComponent** ppOut)
+{
+    CComponent* pComponent = Find_Component(pComponentTag);
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    *ppOut = pComponent;
+
+    return S_OK;
+}
+
+CComponent* CGameObject::Find_Component(const _tchar* pComponentTag)
+{
+    auto	iter = find_if(m_mapComponent.begin(), m_mapComponent.end(), CTag_Finder(pComponentTag));
+    if (iter == m_mapComponent.end())
         return nullptr;
 
     return iter->second;
@@ -58,11 +74,9 @@ CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponen
 
 void CGameObject::Free()
 {
-    for (_uint i = 0; i < ID_END; ++i)
-    {
-        for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());
-        m_mapComponent[i].clear();
-    }
+    for (auto& Pair : m_mapComponent)
+        Safe_Release(Pair.second);
+    m_mapComponent.clear();
 
     Safe_Release(m_pGraphicDev);
 }

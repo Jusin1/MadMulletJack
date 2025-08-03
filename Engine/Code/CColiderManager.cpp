@@ -1,5 +1,5 @@
 #include "CColiderManager.h"
-#include "CProtoMgr.h"
+#include "CComponentMgr.h"
 
 IMPLEMENT_SINGLETON(CColiderManager)
 
@@ -64,8 +64,8 @@ _bool  CColiderManager::CollisionGroup(COLLSION_GROUP _collisionGroup, class CGa
 			switch (_collisionType)
 			{
 			case Engine::CColiderManager::COLLISION_RECT:
-				DamageOwner = (CColider_Rect*)pGameObject->Get_Component(ID_DYNAMIC, L"Com_Collider_Rect");
-				Target = (CColider_Rect*)iter->Get_Component(ID_DYNAMIC, L"Com_Collider_Rect");
+				DamageOwner = (CColider_Rect*)pGameObject->Find_Component(L"Com_Colider_Rect");
+				Target = (CColider_Rect*)iter->Find_Component(L"Com_Collider_Rect");
 				if (Target == nullptr)
 					continue;
 				if (true == (dynamic_cast<CColider_Rect*>(DamageOwner)->Collision_Check((CColider_Rect*)Target, pOutDistance)))

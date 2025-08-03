@@ -3,189 +3,126 @@
 #include "CDInputMgr.h"
 
 CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CCamera(pGraphicDev), m_bFix(false), m_bCheck(false)
+	: Engine::CCamera(pGraphicDev)
 {
 }
+
+CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs) : CCamera(rhs)
+{
+
+}
+
 
 CDynamicCamera::~CDynamicCamera()
 {
 }
 
-HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye, 
-											const _vec3* pAt, 
-											const _vec3* pUp, 
-											const _float& fFov, 
-											const _float& fAspect, 
-											const _float& fNear, 
-											const _float& fFar)
+
+
+HRESULT CDynamicCamera::Ready_GameObject()
 {
-	m_vEye = *pEye;
-	m_vAt = *pAt;
-	m_vUp = *pUp;
-
-	m_fFov = fFov;
-	m_fAspect = fAspect;
-	m_fNear = fNear;
-	m_fFar = fFar;
-
-	if (FAILED(Engine::CCamera::Ready_GameObject()))
+	if (FAILED(CCamera::Ready_GameObject()))
 		return E_FAIL;
-	m_fSpeed = 5.f;
+
+	return S_OK;
+}
+
+HRESULT CDynamicCamera::Initialize(void* pArg)
+{
+	if (FAILED(CCamera::Initialize(pArg)))
+		return E_FAIL;
 	return S_OK;
 }
 
 _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	_int iExit = Engine::CCamera::Update_GameObject(fTimeDelta);
-	return iExit;
+	CCamera::Update_GameObject(fTimeDelta);
+
+	DefaultCamera(fTimeDelta);
+
+	if (FAILED(Apply_ViewPorjection()))
+		return NO_EVENT;
+	return NO_EVENT;
 }
 
 void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::CCamera::LateUpdate_GameObject(fTimeDelta);
-
-	Key_Input(fTimeDelta);
-
-	if (false == m_bFix)
-	{
-		Mouse_Move();
-		Mouse_Fix();
-	}
 }
 
-void CDynamicCamera::Key_Input(const _float& fTimeDelta)
+void CDynamicCamera::DefaultCamera(_float fTimeDelta)
 {
-	_matrix	matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+	// 위치 갱신
+	m_vPosition = m_pTransform->Get_Info(INFO_POS);
 
+	// 마우스 휠 줌
+	_long iWheel = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z);
+	if (iWheel != 0)
+	{
+		m_lMouseWheel += iWheel * 0.05f;
+		m_pTransform->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
+	}
 
+	// Yaw 회전 (Q/E)
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)
+		m_pTransform->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)
+		m_pTransform->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
+
+	// 이동
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
-	{
-		_vec3	vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-	}
-
+		m_pTransform->Move_Forward(fTimeDelta, m_vPosition.y);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
-	{
-		_vec3	vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
-
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-	}
-
+		m_pTransform->Move_Backward(fTimeDelta, m_vPosition.y);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+		m_pTransform->Move_Left(fTimeDelta, m_vPosition.y);
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+		m_pTransform->Move_Right(fTimeDelta, m_vPosition.y);
 
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
 
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
-
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB) & 0x80)
+	//  상하 이동 (월드 Y축 기준) 직접 처리
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
 	{
-		if (m_bCheck)
-			return;
-	
-		m_bCheck = true;
-	
-		if (m_bFix)
-			m_bFix = false;
-	
-		else
-			m_bFix = true;
+		_vec3 vPos = m_pTransform->Get_Info(INFO_POS);
+		vPos.y += fTimeDelta * m_pTransform->GetTransformInfo().fSpeed;
+		m_pTransform->Set_Info(INFO_POS, vPos);
 	}
-	else
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F) & 0x80)
 	{
-		m_bCheck = false;
+		_vec3 vPos = m_pTransform->Get_Info(INFO_POS);
+		vPos.y -= fTimeDelta * m_pTransform->GetTransformInfo().fSpeed;
+		m_pTransform->Set_Info(INFO_POS, vPos);
 	}
-	
-	if (false == m_bFix)
-		return;
-	
 }
 
-void CDynamicCamera::Mouse_Move()
-{
-	_matrix	matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
 
-	_long	dwMouseMove(0);
-
-	if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y))
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
-
-		_vec3	vLook = m_vAt - m_vEye;
-		_matrix matRot;
-
-		D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouseMove / 10.f));
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-		m_vAt = m_vEye + vLook;
-	}
-
-	if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
-	{
-		_vec3	vUp{ 0.f, 1.f, 0.f };
-
-		_vec3	vLook = m_vAt - m_vEye;
-		_matrix matRot;
-
-		D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(dwMouseMove / 10.f));
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-		m_vAt = m_vEye + vLook;
-	}
-
-}
-
-void CDynamicCamera::Mouse_Fix()
-{
-	POINT	ptMouse{ WINCX >> 1, WINCY >> 1 };
-
-	ClientToScreen(g_hWnd, &ptMouse);
-	SetCursorPos(ptMouse.x, ptMouse.y);
-}
-
-CDynamicCamera* CDynamicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3* pEye, const _vec3* pAt, const _vec3* pUp, const _float& fFov, const _float& fAspect, const _float& fNear, const _float& fFar)
+CDynamicCamera* CDynamicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CDynamicCamera* pCamera = new CDynamicCamera(pGraphicDev);
 
-	if (FAILED(pCamera->Ready_GameObject(pEye, pAt, pUp, fFov, fAspect, fNear, fFar)))
+	if (FAILED(pCamera->Ready_GameObject()))
 	{
 		Safe_Release(pCamera);
 		MSG_BOX("DynamicCamera Create Failed");
 		return nullptr;
 	}
-
 	return pCamera;
+}
+
+CCamera* CDynamicCamera::Clone(void* pArg)
+{
+	CDynamicCamera* pInstance = new CDynamicCamera(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("DynamicCamera Clone Failed");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CDynamicCamera::Free()
 {
 	Engine::CCamera::Free();
-
 }

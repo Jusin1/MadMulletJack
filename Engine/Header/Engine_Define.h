@@ -36,6 +36,10 @@
 #define new DBG_NEW 
 
 #endif
+
+#define DEAD 1
+#define NO_EVENT 0
+#define NONE_HEIGHT		9999999.f
 #endif
 
 using namespace std;

@@ -24,6 +24,7 @@ public:
 	virtual HRESULT Initialize(void* pArg); // 클론 객체 초기화
 
 public:
+
 	_vec3		Get_Info(INFO eType) { return *(_vec3*)&m_matWorld.m[eType][0]; }
 	void		Set_Info(INFO eType, _vec3 vState) { memcpy(&m_matWorld.m[eType][0], &vState, sizeof(_vec3)); }
 	_vec3		Get_Scale();
@@ -36,10 +37,10 @@ public:
 
 public:
 	// 로컬 방향 기준 이동 함수
-	void Move_Forward(_float fTimeDelta, _float fHeight);
-	void Move_Backward(_float fTimeDelta, _float fHeight);
-	void Move_Left(_float fTimeDelta, _float fHeight);
-	void Move_Right(_float fTimeDelta, _float fHeight);
+	void Move_Forward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Backward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Left(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
+	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
 
 public:

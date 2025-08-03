@@ -19,26 +19,39 @@ CTerrain::~CTerrain()
 
 HRESULT CTerrain::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
+	if (FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
-
 
 	return S_OK;
 }
+
+
+HRESULT CTerrain::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(SetComponent(pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 _int CTerrain::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-
-	return 0;
+	SetUp_TerrainY();
+	return NO_EVENT;
 }
 
 void CTerrain::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 }
 
 void CTerrain::Render_GameObject()
@@ -54,41 +67,38 @@ void CTerrain::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CTerrain::Add_Component()
+HRESULT CTerrain::SetComponent(void* pArg)
 {
-	CComponent* pComponent = NULL;
-
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CTerrainTex*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TerrainTex"));
-	if (nullptr == pComponent)
+	// Renderer
+	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer",pComponent });
-
-	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform",pComponent });
 
 	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TerrainTexture"));
-	if (nullptr == pComponent)
+	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_Terrian", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture",pComponent });
+	// VIBUFFER
+	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_TerrianBuffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
+
+	// Transform
+	CTransform::TRANSFORMINFO		TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
+	TransformInfo.vStartPos = *(_vec3*)pArg;
+
+	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
+		return E_FAIL;
 
 	return S_OK;
 }
 
-void CTerrain::Key_Input(const _float& fTimeDelta)
+void CTerrain::SetUp_TerrainY()
 {
 
 }
-
 
 
 CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -99,10 +109,21 @@ CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	{
 		Safe_Release(pTerrain);
 		MSG_BOX("Terrain Create Failed");
-		return nullptr;
 	}
 
 	return pTerrain;
+}
+
+CTerrain* CTerrain::Clone(void* pArg)
+{
+	CTerrain* pInstance = new CTerrain(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("pTerrian Clone Failed");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CTerrain::Free()

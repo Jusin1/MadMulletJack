@@ -1,16 +1,19 @@
 #include "pch.h"
 #include "CMainApp.h"
 #include "CManagement.h"
+#include "CLoading_Scene.h"
 #include "CLogo.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
-#include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
+#include "CColiderManager.h"
+#include "CObjectManager.h"
+#include "CComponentMgr.h"
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
-, m_pManagementClass(CManagement::GetInstance())
+, m_pRenderer(nullptr)
 {
 }
 
@@ -24,7 +27,17 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Scene(m_pGraphicDev)))
+	if (FAILED(CObjectManager::GetInstance()->Readay_ObjectManager(SCENE_END)))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Ready_Prototype(SCENE_END)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Prototype_Component()))
+		return E_FAIL;
+
+
+	if (FAILED(Ready_Scene(SCENE_LOGO)))
 		return E_FAIL;
 
 	return S_OK;
@@ -34,7 +47,8 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 
-	m_pManagementClass->Update_Scene(fTimeDelta);
+	CManagement::GetInstance()->Update_Scene(fTimeDelta);
+	CObjectManager::GetInstance()->Update(fTimeDelta);
 
 	return 0;
 }
@@ -47,20 +61,18 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 	// {
 	// 	int a = 0;
 	// }
+	CManagement::GetInstance()->LateUpdate_Scene(fTimeDelta);
+	CObjectManager::GetInstance()->Late_Update(fTimeDelta);
 
-
-
-	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+	CColiderManager::GetInstance()->Clear_Colider_Group();
 }
 
 void CMainApp::Render_MainApp()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
-
+	
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
-
-	m_pManagementClass->Render_Scene(m_pGraphicDev);
-
+	m_pRenderer->Render_GameObject();
 	m_pDeviceClass->Render_End();
 }
 
@@ -102,20 +114,35 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	return S_OK;
 }
 
-HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CMainApp::Ready_Scene(SCENE eScene)
 {
-	Engine::CScene* pScene = CLogo::Create(pGraphicDev);
-	if (nullptr == pScene)
+	CLoading_Scene* pLoadingScene = CLoading_Scene::Create(m_pGraphicDev, eScene);
+	if (nullptr == pLoadingScene)
 		return E_FAIL;
 
-	if (FAILED(m_pManagementClass->Set_Scene(pScene)))
-	{
-		MSG_BOX("Scene Setting Failed");
-		return E_FAIL;
-	}
-
-
+	CManagement::GetInstance()->Open_Scene(SCENE_LOADING, pLoadingScene);
 	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
+{
+
+	// Transform
+	if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// RectCol
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer", Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Colider
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Rect", Engine::CColider_Rect::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Renderer
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 }
 
 CMainApp* CMainApp::Create()
@@ -133,16 +160,16 @@ CMainApp* CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CComponentMgr::GetInstance()->DestroyInstance();
+	Engine::Safe_Release(m_pRenderer);
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pGraphicDev);
-
+	CColiderManager::GetInstance()->DestroyInstance();
+	CManagement::GetInstance()->DestroyInstance();
+	CObjectManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
-	CRenderer::GetInstance()->DestroyInstance();
-	CProtoMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CDInputMgr::GetInstance()->DestroyInstance();
-
-	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
 }

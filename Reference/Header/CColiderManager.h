@@ -12,7 +12,6 @@ public:
     enum COLLSION_GROUP {COLLISION_PLAYER, COLLISION_MONSTER, COLLISION_END};
     enum COLLISION_TYPE {COLLISION_RECT};
 
-
 private:
     explicit CColiderManager();
     virtual ~CColiderManager();

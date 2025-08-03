@@ -5,29 +5,33 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CRenderer :    public CBase
+class ENGINE_DLL CRenderer :    public CComponent
 {
-	DECLARE_SINGLETON(CRenderer)
 
 private:
-	explicit CRenderer();
+	explicit CRenderer(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CRenderer();
 
 public:
-	void		Add_RenderGroup(RENDERID eType, CGameObject* pGameObject);
-	void		Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev);
-	void		Clear_RenderGroup();
+	virtual HRESULT Ready_Render();
+	virtual HRESULT Initialize(void* pArg);
+public:
+	HRESULT		Add_RenderGroup(RENDERID eType, CGameObject* pGameObject);
+	HRESULT		Render_GameObject();
 
 private:
-	void		Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);
-	void		Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev);
-	void		Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev);
-	void		Render_UI(LPDIRECT3DDEVICE9& pGraphicDev);
+	HRESULT		Render_Priority();
+	HRESULT		Render_NonAlpha();
+	HRESULT		Render_Alpha();
+	HRESULT		Render_UI();
 
 private:
 	list<CGameObject*>			m_RenderGroup[RENDER_END];
+	typedef list<class CGameObject*>		GAMEOBJECTS;
 
-private:
-	virtual void			Free();
+public:
+	static CRenderer* Create(LPDIRECT3DDEVICE9 pGrahpicDev);
+	virtual CComponent* Clone(void* pArg = nullptr)override;
+	virtual void Free();
 };
 END

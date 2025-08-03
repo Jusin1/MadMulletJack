@@ -1,11 +1,4 @@
-﻿  CCamera.cpp
-  CColiderManager.cpp
-  CGameObject.cpp
-  CLayer.cpp
-  CManagement.cpp
-  CRenderer.cpp
-  CScene.cpp
-  코드를 생성하고 있습니다...
+﻿  CGameObject.cpp
      ../Bin\Engine.lib 라이브러리 및 ../Bin\Engine.exp 개체를 생성하고 있습니다.
   Engine.vcxproj -> C:\Users\조한웅\Downloads\1조 Framework\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
@@ -19,7 +12,7 @@
   .\Engine\Header\CColiderManager.h
   .\Engine\Header\CColider_Rect.h
   .\Engine\Header\CComponent.h
-  .\Engine\Header\CCubeTex.h
+  .\Engine\Header\CComponentMgr.h
   .\Engine\Header\CDInputMgr.h
   .\Engine\Header\CFont.h
   .\Engine\Header\CFontMgr.h
@@ -29,23 +22,24 @@
   .\Engine\Header\CGraphicDev.h
   .\Engine\Header\CLayer.h
   .\Engine\Header\CManagement.h
+  .\Engine\Header\CObjectManager.h
   .\Engine\Header\CPipeline.h
-  .\Engine\Header\CProtoMgr.h
   .\Engine\Header\CRcCol.h
-  .\Engine\Header\CRcTex.h
   .\Engine\Header\CRenderer.h
   .\Engine\Header\CScene.h
-  .\Engine\Header\CTerrainTex.h
   .\Engine\Header\CTexture.h
   .\Engine\Header\CTimer.h
   .\Engine\Header\CTimerMgr.h
   .\Engine\Header\CTransform.h
   .\Engine\Header\CTriCol.h
   .\Engine\Header\CVIBuffer.h
+  .\Engine\Header\CVIBuffer_Rect.h
+  .\Engine\Header\CVIBuffer_Terrian.h
   .\Engine\Header\Engine_Define.h
   .\Engine\Header\Engine_Enum.h
   .\Engine\Header\Engine_Function.h
   .\Engine\Header\Engine_Macro.h
   .\Engine\Header\Engine_Struct.h
   .\Engine\Header\Engine_Typedef.h
-  34개 파일이 복사되었습니다.
+  .\Engine\Header\VIBuffer_Cube.h
+  35개 파일이 복사되었습니다.

@@ -11,21 +11,21 @@ private:
 	virtual ~CLayer();
 
 public:
-	CComponent*		Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag);
-	HRESULT			Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
+	class CComponent* Get_Component(const _tchar* pComponentTag, _uint iIndex = 0);
+	class CGameObject* Get_Object(_uint iIndex = 0);
+	list<CGameObject*>* Get_ObjectList() { return &m_objList; };
 
 public:
 	HRESULT			Ready_Layer();
-	_int			Update_Layer(const _float& fTimeDelta);
+	HRESULT			Add_GameObject(CGameObject* pGameObject);
+	void			Update_Layer(const _float& fTimeDelta);
 	void			LateUpdate_Layer(const _float& fTimeDelta);
 
 private:
-	map<const _tchar*, CGameObject*>			m_mapObject;
+	list<class CGameObject*> m_objList;
 
 public:
 	static CLayer* Create();
-
-private:
 	virtual void	Free();
 };
 

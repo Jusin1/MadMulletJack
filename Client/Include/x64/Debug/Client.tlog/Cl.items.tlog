@@ -1,6 +1,7 @@
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CBackGround.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CBackGround.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CDynamicCamera.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CDynamicCamera.obj
-C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CLoading.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CLoading.obj
+C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CLoader.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CLoader.obj
+C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CLoading_Scene.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CLoading_Scene.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CLogo.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CLogo.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CMainApp.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CMainApp.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CMonster.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CMonster.obj
@@ -8,5 +9,6 @@ C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CPlayer.cpp;C:\Users\조
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CSkyBox.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CSkyBox.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CStage.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CStage.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CTerrain.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CTerrain.obj
+C:\Users\조한웅\Downloads\1조 Framework\Client\Code\CUI.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\CUI.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Include\Client.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\Client.obj
 C:\Users\조한웅\Downloads\1조 Framework\Client\Include\pch.cpp;C:\Users\조한웅\Downloads\1조 Framework\Client\Include\x64\Debug\pch.obj

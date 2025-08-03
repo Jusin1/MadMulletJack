@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "CPlayer.h"
-#include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
+#include "CColiderManager.h"
+#include "CTimerMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -20,7 +21,7 @@ CPlayer::~CPlayer()
 
 HRESULT CPlayer::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
+	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
 	m_vPosition = { 10.f, 1.f, 10.f };
@@ -30,6 +31,13 @@ HRESULT CPlayer::Ready_GameObject()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Set_Component()))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -37,9 +45,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	Set_OnTerrain();
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	m_pRenderCom->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return 0;
 }
@@ -48,6 +55,9 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+	if (nullptr != m_pRenderCom)
+		m_pRenderCom->Add_RenderGroup(RENDER_NONALPHA, this);
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -57,54 +67,54 @@ void CPlayer::Render_GameObject()
 
 	m_pTransformCom->Apply_WorldMatrix();
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
+	m_pTextureCom->MoveFrame(m_TimerTag);
+
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
-HRESULT CPlayer::Add_Component()
+HRESULT CPlayer::Set_Component()
 {
-	CComponent* pComponent = NULL;
-
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-	if (nullptr == pComponent)
+	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer",pComponent });
+	m_TimerTag = TEXT("Timer_Player");
 
-	// Transform
-	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-	TransformInfo.fSpeed = 3.f;
-	TransformInfo.fRotationSpeed = 5.f;
-	TransformInfo.vStartPos = _vec3(40.f, 0.5f, 25.f);
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-	dynamic_cast<CTransform*>(pComponent)->SetTransformInfo(TransformInfo);
-	if (nullptr == pComponent)
+	// Render
+	if(FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
 		return E_FAIL;
 
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform",pComponent });
+	// Colider
+	if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Rect", (CComponent**)&m_pColliderCom)))
+		return E_FAIL;
+
+	// VIBuffer
+	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
 
 	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
-	if (nullptr == pComponent)
+	if (Texture_Clone())
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture",pComponent });
+	CTransform::TRANSFORMINFO TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<Engine::CCalculator*>
-		(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Calculator"));
-	if (nullptr == pComponent)
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
+
+	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Calculator",pComponent });
-
+	
 	return S_OK;
 }
 
@@ -138,19 +148,47 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 }
 
-void CPlayer::Set_OnTerrain()
+HRESULT CPlayer::Texture_Clone()
 {
-	_vec3	vPos;
-	vPos = m_pTransformCom->Get_Info(INFO_POS);
+	CTexture::TEXINFO		TextureInfo;
+	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
 
-	Engine::CTerrainTex* pTerrainBufferCom =
-		dynamic_cast<Engine::CTerrainTex*>
-		(CManagement::GetInstance()->Get_Component(ID_STATIC, L"GameLogic_Layer", L"Terrain", L"Com_Buffer"));
+	TextureInfo.m_iStart = 0;
+	TextureInfo.m_iEndTex = 5;
+	TextureInfo.m_fSpeed = 6;
 
-	_float fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ, VTXITV);
+	if (FAILED(Add_Components(L"Com_Texture_Test", SCENE_STAGE, L"Prototype_Component_Texture_PlayerTest", (CComponent**)&m_pTextureCom, &TextureInfo)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(vPos.x, fHeight + 1.f, vPos.z));
+	return S_OK;
 }
+
+HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
+{
+	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_Zero_Frame();
+
+	return S_OK;
+}
+
+_vec3 CPlayer::Get_Pos()
+{
+	return (m_pTransformCom->Get_Info(INFO_POS));
+}
+
+_vec3 CPlayer::Get_Look()
+{
+	return (m_pTransformCom->Get_Info(INFO_LOOK));
+}
+
+_vec3 CPlayer::Get_Right()
+{
+	return (m_pTransformCom->Get_Info(INFO_RIGHT));
+}
+
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
@@ -164,6 +202,19 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	}
 
 	return pPlayer;
+}
+
+CGameObject* CPlayer::Clone(void* pArg)
+{
+	CPlayer* pInstance = new CPlayer(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("pPlayer Clone Failed");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CPlayer::Free()

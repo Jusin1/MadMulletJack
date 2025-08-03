@@ -49,6 +49,15 @@
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{a9a06ec8-c157-42ed-b807-cd9033af1dd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99. Header">
+      <UniqueIdentifier>{93cdc3c1-8a0b-44e7-85f7-a89c16c1a037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\02. Loading\Loader">
+      <UniqueIdentifier>{b8f8a04b-55df-4865-8db2-b1793a196da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI">
+      <UniqueIdentifier>{6c2dbcfb-e0a4-4bfc-9de5-7c1adc6984cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -87,7 +96,7 @@
     <ClInclude Include="..\Header\CStage.h">
       <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLoading.h">
+    <ClInclude Include="..\Header\CLoading_Scene.h">
       <Filter>01. Scene\02. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
@@ -95,6 +104,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Clinet_Define.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoader.h">
+      <Filter>01. Scene\02. Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI.h">
+      <Filter>02. GameObject\06. UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,7 +143,7 @@
     <ClCompile Include="..\Code\CStage.cpp">
       <Filter>01. Scene\01. Stage</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLoading.cpp">
+    <ClCompile Include="..\Code\CLoading_Scene.cpp">
       <Filter>01. Scene\02. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
@@ -133,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoader.cpp">
+      <Filter>01. Scene\02. Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI.cpp">
+      <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
