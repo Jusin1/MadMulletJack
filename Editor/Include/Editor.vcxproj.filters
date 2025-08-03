@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Headers">
+      <UniqueIdentifier>{48a2e9b2-029e-4030-ad89-f95f166b17e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC">
+      <UniqueIdentifier>{2984d317-34e3-4692-a052-83de5911ce11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC\imgui">
+      <UniqueIdentifier>{ba2cd1eb-246e-491e-b0c6-deaff5106276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC\imGuizmo">
+      <UniqueIdentifier>{48151439-c676-4822-8007-bd64b3b40509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Headers\Andromeda">
+      <UniqueIdentifier>{bfb542bb-9c49-4052-a507-4410bb30b0ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. EditorApplication">
+      <UniqueIdentifier>{010def09-6940-435e-9c0d-d1982557cdc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. EditorApplication\00. main">
+      <UniqueIdentifier>{abfc6b6b-0ff3-4696-9b07-03409c255337}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>00. EditorApplication\00. main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\pch.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>00. EditorApplication\00. main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\pch.cpp">
+      <Filter>99. Headers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Editor.ico">
+      <Filter>99. Headers\Andromeda</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>99. Headers\Andromeda</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

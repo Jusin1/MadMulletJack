@@ -9,13 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Engine", "01. Engine", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Include\Client.vcxproj", "{6FD90A45-2E09-4E7F-B41E-865F1C69CADD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Base", "02. Base", "{3A9EF0C2-FBE2-41D3-B546-070B8351F8ED}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Base", "03. Base", "{3A9EF0C2-FBE2-41D3-B546-070B8351F8ED}"
 	ProjectSection(SolutionItems) = preProject
 		Base\CBase.h = Base\CBase.h
 		Base\CBase.inl = Base\CBase.inl
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Include\Engine.vcxproj", "{66BAFC2E-875C-4712-9CC7-B569BB637F85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Editor", "02. Editor", "{B8A9776C-340C-47F8-86D4-B24D93E96453}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Include\Editor.vcxproj", "{F808C637-B8BC-4543-8647-3975EBCD4CAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{66BAFC2E-875C-4712-9CC7-B569BB637F85}.Release|x64.Build.0 = Release|x64
 		{66BAFC2E-875C-4712-9CC7-B569BB637F85}.Release|x86.ActiveCfg = Release|Win32
 		{66BAFC2E-875C-4712-9CC7-B569BB637F85}.Release|x86.Build.0 = Release|Win32
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Debug|x64.ActiveCfg = Debug|x64
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Debug|x64.Build.0 = Debug|x64
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Debug|x86.ActiveCfg = Debug|Win32
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Debug|x86.Build.0 = Debug|Win32
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Release|x64.ActiveCfg = Release|x64
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Release|x64.Build.0 = Release|x64
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Release|x86.ActiveCfg = Release|Win32
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6FD90A45-2E09-4E7F-B41E-865F1C69CADD} = {88448B2F-9EFD-4E79-80AD-5F8A2439AD63}
 		{66BAFC2E-875C-4712-9CC7-B569BB637F85} = {92F2DD2B-DA8D-41FD-AA0F-6A93DBC7B37C}
+		{F808C637-B8BC-4543-8647-3975EBCD4CAA} = {B8A9776C-340C-47F8-86D4-B24D93E96453}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1782C6A5-41B5-4748-B92D-EE2AD7CFDAED}

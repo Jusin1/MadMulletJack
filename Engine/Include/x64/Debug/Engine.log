@@ -1,35 +1,4 @@
-﻿  CCalculator.cpp
-  CCamera.cpp
-  CColiderManager.cpp
-  CColider_Rect.cpp
-  CComponent.cpp
-  VIBuffer_Cube.cpp
-  CDInputMgr.cpp
-  CFont.cpp
-  CFontMgr.cpp
-  CFrame.cpp
-  CFrameMgr.cpp
-  CGameObject.cpp
-  CGraphicDev.cpp
-  CLayer.cpp
-  CManagement.cpp
-  CObjectManager.cpp
-  CComponentMgr.cpp
-  CVIBuffer_Rect.cpp
-  CRenderer.cpp
-  CScene.cpp
-  Generating Code...
-  Compiling...
-  CVIBuffer_Terrian.cpp
-  CTexture.cpp
-C:\Users\PC\Documents\MadMulletJack\Engine\Code\CTexture.cpp(92,30): warning C4244: '=': conversion from 'int' to 'Engine::_float', possible loss of data
-  CTimer.cpp
-  CTimerMgr.cpp
-  CTransform.cpp
-  CVIBuffer.cpp
-  Generating Code...
-     Creating library ../Bin\Engine.lib and object ../Bin\Engine.exp
-  Engine.vcxproj -> C:\Users\PC\Documents\MadMulletJack\Engine\Bin\Engine.dll
+﻿  Engine.vcxproj -> C:\Users\PC\Documents\MadMulletJack\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
   .\Engine\Bin\Engine.dll
