@@ -22,6 +22,9 @@
     <Filter Include="00. EditorApplication\00. main">
       <UniqueIdentifier>{abfc6b6b-0ff3-4696-9b07-03409c255337}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. ETC\imgui\impl">
+      <UniqueIdentifier>{af875e43-0514-4fc3-8171-b30f85576c5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -36,7 +39,49 @@
     <ClInclude Include="main.h">
       <Filter>00. EditorApplication\00. main</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\pch.h">
+    <ClInclude Include="imgui_impl_dx9.h">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphEditor.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImCurveEdit.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGradient.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImSequencer.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImZoomSlider.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +89,43 @@
     <ClCompile Include="main.cpp">
       <Filter>00. EditorApplication\00. main</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\pch.cpp">
+    <ClCompile Include="imgui_impl_dx9.cpp">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphEditor.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImCurveEdit.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGradient.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImSequencer.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
       <Filter>99. Headers</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,3 +1,22 @@
-﻿  LINK : ..\Bin\Client.exe not found or not built by the last incremental link; performing full link
+﻿  CBackGround.cpp
+  CDynamicCamera.cpp
+C:\Users\PC\Documents\MadMulletJack\Client\Code\CDynamicCamera.cpp(62,27): warning C4244: '+=': conversion from 'float' to 'Engine::_long', possible loss of data
+  CLoader.cpp
+  CLoading_Scene.cpp
+  CLogo.cpp
+  CMainApp.cpp
+  CMonster.cpp
+  CPlayer.cpp
+  CSkyBox.cpp
+  CStage.cpp
+  CTerrain.cpp
+  CUI.cpp
+  Client.cpp
+  Generating Code...
+C:\Users\PC\Documents\MadMulletJack\Client\Code\CUI.cpp(105): warning C4715: 'CUI::SetComponent': not all control paths return a value
+C:\Users\PC\Documents\MadMulletJack\Client\Code\CMainApp.cpp(146): warning C4715: 'CMainApp::Ready_Prototype_Component': not all control paths return a value
+C:\Users\PC\Documents\MadMulletJack\Client\Code\CLogo.cpp(45): warning C4715: 'CLogo::Update_Scene': not all control paths return a value
+C:\Users\PC\Documents\MadMulletJack\Client\Code\CLoader.cpp(159): warning C4715: 'CLoader::Loading_ForStage': not all control paths return a value
+  LINK : ..\Bin\Client.exe not found or not built by the last incremental link; performing full link
      Creating library ../Bin\Client.lib and object ../Bin\Client.exp
   Client.vcxproj -> C:\Users\PC\Documents\MadMulletJack\Client\Bin\Client.exe

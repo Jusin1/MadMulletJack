@@ -20,28 +20,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     ::MyRegisterClass(hInstance);
 
-    // Perform application initialization:
     if (!::InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EDITOR));
+    HACCEL hAccelTable = ::LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EDITOR));
 
     MSG msg;
     msg.message = WM_NULL;
 
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (msg.message != WM_QUIT)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (!::TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                ::TranslateMessage(&msg);
+                ::DispatchMessage(&msg);
+            }
+        }
+        else
+        {
+
         }
     }
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
 
@@ -63,7 +68,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName  = WindowClassName.c_str();
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+    return ::RegisterClassExW(&wcex);
 }
 
 
@@ -98,25 +103,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             switch (wmId)
             {
             case IDM_EXIT:
-                DestroyWindow(hWnd);
+                ::DestroyWindow(hWnd);
                 break;
             default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
+                return ::DefWindowProc(hWnd, message, wParam, lParam);
             }
         }
         break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            EndPaint(hWnd, &ps);
+            HDC hdc = ::BeginPaint(hWnd, &ps);
+            ::EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
-        PostQuitMessage(0);
+        ::PostQuitMessage(0);
         break;
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return ::DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
