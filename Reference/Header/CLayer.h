@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 
+// GameObject 관리
 class ENGINE_DLL CLayer : public CBase
 {
 private:
@@ -11,6 +12,7 @@ private:
 	virtual ~CLayer();
 
 public:
+	// 인덱스 기반으로 Get
 	class CComponent* Get_Component(const _tchar* pComponentTag, _uint iIndex = 0);
 	class CGameObject* Get_Object(_uint iIndex = 0);
 	list<CGameObject*>* Get_ObjectList() { return &m_objList; };

@@ -19,7 +19,7 @@ public:
 	virtual			void		Render_GameObject();
 
 private:
-	HRESULT SetComponent(void* pArg);
+	HRESULT Set_Component(void* pArg);
 
 private:
 	void SetUp_TerrainY();

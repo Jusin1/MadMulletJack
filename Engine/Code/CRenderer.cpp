@@ -20,6 +20,7 @@ HRESULT CRenderer::Initialize(void* pArg)
 	return S_OK;
 }
 
+// 렌더링 그룹에 오브젝트 추가
 HRESULT CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
@@ -32,6 +33,8 @@ HRESULT CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
 	return S_OK;
 }
 
+
+// 모든 그룹 렌더링
 HRESULT CRenderer::Render_GameObject()
 {
 	if (FAILED(Render_Priority()))
@@ -76,6 +79,7 @@ HRESULT CRenderer::Render_NonAlpha()
 	return S_OK;
 }
 
+// 아직 추가안함(알파sorting해서 정렬예정)
 HRESULT CRenderer::Render_Alpha()
 {
 	for (auto& pGameObject : m_RenderGroup[RENDER_ALPHA])
@@ -120,6 +124,7 @@ CRenderer* CRenderer::Create(LPDIRECT3DDEVICE9 pGrahpicDev)
 	return pRender;
 }
 
+// 공유용이므로 자기 자신 반환(참조만 증가시킴)
 CComponent* CRenderer::Clone(void* pArg)
 {
 	this->Add_Ref();

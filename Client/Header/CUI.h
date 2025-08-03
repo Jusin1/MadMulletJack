@@ -28,7 +28,7 @@ private:
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
 private:
-	virtual HRESULT			SetComponent();
+	virtual HRESULT			Set_Component();
 
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

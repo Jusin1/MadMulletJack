@@ -13,6 +13,8 @@ CManagement::~CManagement()
     Free();
 }
 
+// 씬을 새로 교체
+// 기존 씬이 존재하면 객체들 제거
 HRESULT CManagement::Open_Scene(unsigned int iSceneIdx, CScene* pNewScene)
 {
 	if (nullptr != m_pCurrentScene)

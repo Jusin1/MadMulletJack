@@ -4,15 +4,16 @@
 
 BEGIN(Engine)
 
+// 텍스쳐 로딩 및 관리
 class ENGINE_DLL CTexture : public CComponent
 {
 public:
-	typedef struct tagTextureInfo
+	typedef struct tagTextureInfo // 텍스처 애니메이션 프레임 정보
 	{
-		int m_iStart = 0;
-		int m_iCurrentTex = 0;
-		int m_iEndTex = 0;
-		_float m_fSpeed = 1;
+		int m_iStart = 0; // 시작 프레임
+		int m_iCurrentTex = 0; // 현재 프레임
+		int m_iEndTex = 0; // 마지막 프레임
+		_float m_fSpeed = 1; // 프레임 속도
 	}TEXINFO;
 protected:
 	explicit CTexture(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -20,21 +21,24 @@ protected:
 	virtual ~CTexture();
 
 public:
-	HRESULT	Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt);
-	HRESULT Initialize(void* pArg)override;
-	void	Set_Texture(const _uint& iIndex = 0);
+	HRESULT	Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt); // 텍스쳐 로딩
+	HRESULT Initialize(void* pArg)override; // 초기화 함수(복사 시 호출)
+	void	Set_Texture(const _uint& iIndex = 0); // 텍스처 바인딩(렌더링 시)
 
 public:
-	void MoveFrame(const _tchar* timeTag);
-	void Set_Frame(int iStart, int iEnd, int iSpeed);
-	void Set_Zero_Frame() { m_TextureInfo.m_iCurrentTex = 0; }
-	TEXINFO& Get_Frame() { return m_TextureInfo; }
+	void MoveFrame(const _tchar* timeTag); // 애니메이션 프레임 이동
+	void Set_Frame(int iStart, int iEnd, int iSpeed); // 애니메이션 프레임 설정
+	void Set_Zero_Frame() { m_TextureInfo.m_iCurrentTex = 0; } // 현재 프레임을 0 으로 초기화
+	TEXINFO& Get_Frame() { return m_TextureInfo; } // 프레임 정보 가져오기
+	void Stop_Anim() { m_bStopAnim = true; } // 애니메이션 정지
+	void Resume_Anim() { m_bStopAnim = false; } // 다시재생
 
 private:
-	_uint								m_iNumTextures = 0;
-	vector<IDirect3DBaseTexture9*>		m_vecTexture;
-	TEXINFO								m_TextureInfo;
-	_float m_fTimeAcc = 0.0f;
+	_uint								m_iNumTextures = 0; // 텍스쳐 수
+	vector<IDirect3DBaseTexture9*>		m_vecTexture; // 텍스쳐 컨테이너
+	TEXINFO								m_TextureInfo; // 프레임 정보
+	_float m_fTimeAcc = 0.0f; // 시간 누적용
+	bool								m_bStopAnim = false;
 	
 
 public:

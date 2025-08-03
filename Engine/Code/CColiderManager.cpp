@@ -13,17 +13,19 @@ CColiderManager::~CColiderManager()
 	Free();
 }
 
+// 충돌 그룹에 오브젝트 등록
 HRESULT CColiderManager::Add_CollisionGroup(COLLSION_GROUP _collisionGroup, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_GameObjects[_collisionGroup].push_back(pGameObject);
-	Add_Ref();
+	Add_Ref(); // 참조 카운트 증가(안전하게 보관하기 위해)
 
 	return S_OK;
 }
 
+// 충돌 그룹에서 특정 오브젝트 삭제
 void CColiderManager::Remove_CollisionGroup(COLLSION_GROUP _collisionGroup, CGameObject* pGameObject)
 {
 	auto iter = m_GameObjects[_collisionGroup].begin();
@@ -36,6 +38,7 @@ void CColiderManager::Remove_CollisionGroup(COLLSION_GROUP _collisionGroup, CGam
 	}
 }
 
+// 충돌 그룹 초기화 및 참조 해제
 HRESULT CColiderManager::Clear_Colider_Group()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
@@ -52,6 +55,7 @@ HRESULT CColiderManager::Clear_Colider_Group()
 	return S_OK;
 }
 
+// 특정 그룹과 오브젝트 간의 충돌 검사
 _bool  CColiderManager::CollisionGroup(COLLSION_GROUP _collisionGroup, class CGameObject* pGameObject, COLLISION_TYPE _collisionType, _vec3* pOutDistance)
 {
 	CComponent* Target = nullptr;

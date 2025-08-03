@@ -25,7 +25,6 @@ HRESULT CPlayer::Ready_GameObject()
 		return E_FAIL;
 
 	m_vPosition = { 10.f, 1.f, 10.f };
-
 	return S_OK;
 }
 
@@ -37,7 +36,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
-
+	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
 	return S_OK;
 }
 
@@ -138,14 +137,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 	}
-	if (GetAsyncKeyState('Q'))
-	{
-		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
-	}
-	if (GetAsyncKeyState('E'))
-	{
-		m_pTransformCom->Rotation(_vec3(0.f, -1.f, 0.f), fTimeDelta);
-	}
+	//if (GetAsyncKeyState('Q'))
+	//{
+	//	m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
+	//}
+	//if (GetAsyncKeyState('E'))
+	//{
+	//	m_pTransformCom->Rotation(_vec3(0.f, -1.f, 0.f), fTimeDelta);
+	//}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -155,7 +154,7 @@ HRESULT CPlayer::Texture_Clone()
 
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 5;
-	TextureInfo.m_fSpeed = 6;
+	TextureInfo.m_fSpeed = 2;
 
 	if (FAILED(Add_Components(L"Com_Texture_Test", SCENE_STAGE, L"Prototype_Component_Texture_PlayerTest", (CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;

@@ -19,7 +19,7 @@ public:
 	virtual			void		Render_GameObject();
 
 private:
-	HRESULT			SetComponent();
+	HRESULT			Set_Component();
 
 private:
 	Engine::VIBuffer_Cube* m_pBufferCom;

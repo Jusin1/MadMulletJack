@@ -24,19 +24,23 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
+	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
+	// 객체 그룹 설정
 	if (FAILED(CObjectManager::GetInstance()->Readay_ObjectManager(SCENE_END)))
 		return E_FAIL;
 
+	// 컴포넌트 프로토타입 컨테이너 준비
 	if (FAILED(CComponentMgr::GetInstance()->Ready_Prototype(SCENE_END)))
 		return E_FAIL;
 
+	// 기본 컴포넌트 등록
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
-
+	// 로고 씬으로 시작
 	if (FAILED(Ready_Scene(SCENE_LOGO)))
 		return E_FAIL;
 
@@ -45,13 +49,14 @@ HRESULT CMainApp::Ready_MainApp()
 
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
-	CDInputMgr::GetInstance()->Update_InputDev();
+	CDInputMgr::GetInstance()->Update_InputDev(); // 디바이스 갱신
 
-	CManagement::GetInstance()->Update_Scene(fTimeDelta);
-	CObjectManager::GetInstance()->Update(fTimeDelta);
+	CManagement::GetInstance()->Update_Scene(fTimeDelta); // 씬 업데이트
+	CObjectManager::GetInstance()->Update(fTimeDelta); // 오브젝트 업데이트
 
 	return 0;
 }
+
 
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
@@ -62,17 +67,17 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 	// 	int a = 0;
 	// }
 	CManagement::GetInstance()->LateUpdate_Scene(fTimeDelta);
-	CObjectManager::GetInstance()->Late_Update(fTimeDelta);
+	CObjectManager::GetInstance()->Late_Update(fTimeDelta); 
 
-	CColiderManager::GetInstance()->Clear_Colider_Group();
+	CColiderManager::GetInstance()->Clear_Colider_Group(); // 충돌 그룹을 매프레임마다 비워야 함
 }
 
 void CMainApp::Render_MainApp()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE); 
 	
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
-	m_pRenderer->Render_GameObject();
+	m_pRenderer->Render_GameObject(); // 모든 렌더 대상 렌더링
 	m_pDeviceClass->Render_End();
 }
 
@@ -114,12 +119,15 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	return S_OK;
 }
 
+// 초기 씬 로딩
 HRESULT CMainApp::Ready_Scene(SCENE eScene)
 {
+	// 로딩 씬 생성
 	CLoading_Scene* pLoadingScene = CLoading_Scene::Create(m_pGraphicDev, eScene);
 	if (nullptr == pLoadingScene)
 		return E_FAIL;
 
+	// 씬 교체
 	CManagement::GetInstance()->Open_Scene(SCENE_LOADING, pLoadingScene);
 	return S_OK;
 }
@@ -131,7 +139,7 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 	if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	// RectCol
+	// RectBuffer
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer", Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
 		return E_FAIL;
 

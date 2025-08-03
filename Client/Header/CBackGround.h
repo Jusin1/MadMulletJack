@@ -31,6 +31,5 @@ public:
 	static CBackGround* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void		Free();
-
 };
 

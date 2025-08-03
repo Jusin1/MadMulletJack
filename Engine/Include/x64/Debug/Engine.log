@@ -1,6 +1,11 @@
-﻿  CGameObject.cpp
-     ../Bin\Engine.lib 라이브러리 및 ../Bin\Engine.exp 개체를 생성하고 있습니다.
-  Engine.vcxproj -> C:\Users\조한웅\Downloads\1조 Framework\Engine\Bin\Engine.dll
+﻿  CColiderManager.cpp
+  CComponentMgr.cpp
+  CGameObject.cpp
+  CManagement.cpp
+  CTexture.cpp
+C:\Users\조한웅\Desktop\빽업용\MadMulletJack\Engine\Code\CTexture.cpp(101,30): warning C4244: '=': 'int'에서 'Engine::_float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  Engine.vcxproj -> C:\Users\조한웅\Desktop\빽업용\MadMulletJack\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
   .\Engine\Bin\Engine.dll

@@ -18,7 +18,7 @@ public:
 	virtual			void		Render_GameObject();
 
 private:
-	HRESULT SetComponent(void* pArg = nullptr);
+	HRESULT Set_Component(void* pArg = nullptr);
 
 private:
 	Engine::CTransform* m_pTransformCom;

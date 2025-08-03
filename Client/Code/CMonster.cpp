@@ -31,7 +31,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if(FAILED(SetComponent()))
+	if(FAILED(Set_Component()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(5.f, 1.f, 5.f);
@@ -67,7 +67,7 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CMonster::SetComponent(void* pArg)
+HRESULT CMonster::Set_Component(void* pArg)
 {
 	return S_OK;
 }

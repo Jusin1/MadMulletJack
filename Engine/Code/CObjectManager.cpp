@@ -14,6 +14,7 @@ CObjectManager::~CObjectManager()
 	Free();
 }
 
+// Layer 전부 초기화
 HRESULT CObjectManager::Readay_ObjectManager(_uint iSceneNum)
 {
 	if (nullptr != m_pLayers)
@@ -26,6 +27,7 @@ HRESULT CObjectManager::Readay_ObjectManager(_uint iSceneNum)
 	return S_OK;
 }
 
+// 오브젝트 원형 등록
 HRESULT CObjectManager::Add_Prototype(const _tchar* pPrototypeTag, CGameObject* pPrototype) // 원본 생성
 {
 	if (nullptr != Find_Prototype(pPrototypeTag))
@@ -36,6 +38,7 @@ HRESULT CObjectManager::Add_Prototype(const _tchar* pPrototypeTag, CGameObject* 
 	return S_OK;
 }
 
+// 원본 복사하여 실제 게임오브젝트 추가
 HRESULT CObjectManager::Add_GameObject(const _tchar* pPrototypeTag, _uint iSceneIdx, const _tchar* pLayerTag, void* pArg)
 {
 	CGameObject* pPrototype = Find_Prototype(pPrototypeTag);
@@ -84,6 +87,7 @@ void CObjectManager::Late_Update(_float fTimeDelta)
 	}
 }
 
+// 특정 씬 제거
 void CObjectManager::Clear(_uint iLevelIndex)
 {
 	if (iLevelIndex >= m_iSceneNum ||
@@ -96,6 +100,7 @@ void CObjectManager::Clear(_uint iLevelIndex)
 	m_pLayers[iLevelIndex].clear();
 }
 
+// 특정 레이어 제거
 void CObjectManager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 {
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
@@ -105,6 +110,7 @@ void CObjectManager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	pLayer->Free();
 }
 
+// 오브젝트 반환
 CGameObject* CObjectManager::Find_Object(_uint iSceneIdx, const _tchar* pLayerTag, _uint iIdx)
 {
 	CLayer* pLayer = Find_Layer(iSceneIdx, pLayerTag);
@@ -114,6 +120,7 @@ CGameObject* CObjectManager::Find_Object(_uint iSceneIdx, const _tchar* pLayerTa
 	return pLayer->Get_Object(iIdx);
 }
 
+// 오브젝트 리스트 반환
 list<CGameObject*>* CObjectManager::Get_ObjectList(_uint iSceneID, const _tchar* pLayerTag)
 {
 	CLayer* pLayer = Find_Layer(iSceneID, pLayerTag);
@@ -123,6 +130,7 @@ list<CGameObject*>* CObjectManager::Get_ObjectList(_uint iSceneID, const _tchar*
 	return pLayer->Get_ObjectList();
 }
 
+// 컴포넌트 가져오기
 CComponent* CObjectManager::Get_Component(_uint iSceneIdx, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIdx)
 {
 	CLayer* pLayer = Find_Layer(iSceneIdx, pLayerTag);
@@ -133,7 +141,7 @@ CComponent* CObjectManager::Get_Component(_uint iSceneIdx, const _tchar* pLayerT
 	return pLayer->Get_Component(pComponentTag, iIdx);
 }
 
-
+// 원본 검색
 CGameObject* CObjectManager::Find_Prototype(const _tchar* pProtoTypeTag)
 {
 	auto	iter = find_if(m_objMap.begin(), m_objMap.end(), CTag_Finder(pProtoTypeTag));
@@ -144,6 +152,7 @@ CGameObject* CObjectManager::Find_Prototype(const _tchar* pProtoTypeTag)
 	return iter->second;
 }
 
+// 레이어 검색
 CLayer* CObjectManager::Find_Layer(_uint iSceneIdx, const _tchar* pLayerTag)
 {
 	if (iSceneIdx >= m_iSceneNum)

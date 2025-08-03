@@ -12,8 +12,8 @@ protected:
 	virtual ~CGameObject();
 
 public:
-	virtual			HRESULT		Ready_GameObject();
-	virtual			HRESULT		Initialize(void* pArg) { return S_OK; }
+	virtual			HRESULT		Ready_GameObject(); // 초기생성 호출
+	virtual			HRESULT		Initialize(void* pArg) { return S_OK; } // 복사생성 호출
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject() {}
@@ -35,9 +35,12 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 
 protected:
+	// 컴포넌트 추가
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
+	// 컴포넌트 참조만 얻기
 	HRESULT Change_Component(const _tchar* pComponentTag, CComponent** ppOut);
 public:
+	// 컴포넌트 찾기
 	CComponent* Find_Component(const _tchar* pComponentTag);
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) PURE;

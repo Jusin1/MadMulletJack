@@ -14,6 +14,7 @@ CTexture::CTexture(const CTexture& rhs)
 
     m_vecTexture = rhs.m_vecTexture;
 
+    // 모든 텍스쳐 참조 증가
     for (size_t i = 0; i < iContainerSize; ++i)
     {
         m_vecTexture[i]->AddRef();
@@ -25,6 +26,7 @@ CTexture::~CTexture()
 
 }
 
+// 텍스쳐 로딩 함수
 HRESULT CTexture::Ready_Texture(TEXTUREID eType,
                                 const _tchar* pPath,
                                 const _uint& iCnt)
@@ -37,8 +39,9 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType,
     {
         IDirect3DBaseTexture9* pTexture = nullptr;
 
-        wsprintf(szFullPath, pPath, i);
+        wsprintf(szFullPath, pPath, i); // 경로 내 인덱스 적용
 
+        // 2D or Cube 텍스쳐 생성
         HRESULT hr = eType == TEX_NORMAL ? D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DTEXTURE9*)&pTexture) : D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DCUBETEXTURE9*)&pTexture);
 
         if (FAILED(hr))
@@ -50,6 +53,7 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType,
     return S_OK;
 }
 
+// 텍스쳐 초기화(프레임 정보 적용)
 HRESULT CTexture::Initialize(void* pArg)
 {
     if (pArg != nullptr)
@@ -61,6 +65,7 @@ HRESULT CTexture::Initialize(void* pArg)
     return S_OK;
 }
 
+// 텍스쳐 바인딩
 void CTexture::Set_Texture(const _uint& iIndex)
 {
     if (m_vecTexture.size() < iIndex)
@@ -69,8 +74,11 @@ void CTexture::Set_Texture(const _uint& iIndex)
     m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
 }
 
+// 애니메이션 프레임 이동
 void CTexture::MoveFrame(const _tchar* timeTag)
 {
+    if (m_bStopAnim)
+        return;
 
     m_fTimeAcc += CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_60");
 
@@ -85,6 +93,7 @@ void CTexture::MoveFrame(const _tchar* timeTag)
     }
 }
 
+// 애니메이션 프레임 설정
 void CTexture::Set_Frame(int iStart, int iEnd, int iSpeed)
 {
     m_TextureInfo.m_iStart = iStart;

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 
+// 모든 컴포넌트의 추상클래스 
 class ENGINE_DLL CComponent : public CBase
 {
 protected:
@@ -14,7 +15,7 @@ protected:
 	virtual ~CComponent();
 
 public:
-	virtual HRESULT Initialize(void* pArg);
+	virtual HRESULT Initialize(void* pArg); // 초기화
 	virtual _int Update_Component(const _float& fTimeDelta) { return 0; }
 	virtual void LateUpdate_Component() { }
 

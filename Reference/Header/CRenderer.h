@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 
+// 렌더링 처리하는 컴포넌트
 class ENGINE_DLL CRenderer :    public CComponent
 {
 
@@ -13,20 +14,23 @@ private:
 	virtual ~CRenderer();
 
 public:
-	virtual HRESULT Ready_Render();
+	virtual HRESULT Ready_Render(); 
 	virtual HRESULT Initialize(void* pArg);
 public:
-	HRESULT		Add_RenderGroup(RENDERID eType, CGameObject* pGameObject);
+	// 특정 렌더 그룹에 오브젝트 추가
+	HRESULT		Add_RenderGroup(RENDERID eType, CGameObject* pGameObject); 
+	// 등록된 오브젝트들을 순서대로 렌더링
 	HRESULT		Render_GameObject();
 
 private:
-	HRESULT		Render_Priority();
-	HRESULT		Render_NonAlpha();
-	HRESULT		Render_Alpha();
-	HRESULT		Render_UI();
+	HRESULT		Render_Priority(); // 우선순위
+	HRESULT		Render_NonAlpha(); // 불투명
+	HRESULT		Render_Alpha(); // 반투명
+	HRESULT		Render_UI(); // UI 전용
 
 private:
-	list<CGameObject*>			m_RenderGroup[RENDER_END];
+	// 렌더 그룹 오브젝트 리스트 배열
+	list<CGameObject*>			m_RenderGroup[RENDER_END]; 
 	typedef list<class CGameObject*>		GAMEOBJECTS;
 
 public:

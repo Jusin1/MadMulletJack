@@ -21,6 +21,7 @@ CColider_Rect::CColider_Rect(const CColider_Rect& rhs)
 	m_pIB->AddRef();
 }
 
+// 기본 설정 크기(1x1)
 HRESULT CColider_Rect::Ready_Colider()
 {
 	D3DXMatrixIdentity(&m_StateDesc.StateMatrix);
@@ -77,6 +78,7 @@ HRESULT CColider_Rect::Ready_Colider()
 	return S_OK;
 }
 
+// 외부 설정 받아서 충돌체 생성
 HRESULT CColider_Rect::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
@@ -137,18 +139,17 @@ HRESULT CColider_Rect::Initialize(void* pArg)
 	return S_OK;
 }
 
+// 월드행렬 반영해서 정점 위치를 갱신
 HRESULT CColider_Rect::Update_ColliderBox(_matrix WorldMatrix)
 {
 
-	m_vPoint[0] = _vec3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
+	m_vPoint[0] = _vec3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);
 
-	m_vPoint[1] = _vec3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// +InitPos;
+	m_vPoint[1] = _vec3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);
 
-	m_vPoint[2] = _vec3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
+	m_vPoint[2] = _vec3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);
 
-	m_vPoint[3] = _vec3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
-
-
+	m_vPoint[3] = _vec3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);
 
 	m_StateDesc.StateMatrix = WorldMatrix;
 	_vec3 vecOffsetPos = *(_vec3*)&(m_StateDesc.StateMatrix.m[3][0]);
@@ -168,6 +169,7 @@ HRESULT CColider_Rect::Update_ColliderBox(_matrix WorldMatrix)
 	return S_OK;
 }
 
+// 충돌체 그리기(디버깅용 와이어프레임)
 HRESULT CColider_Rect::Render_ColliderBox()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
@@ -186,6 +188,7 @@ HRESULT CColider_Rect::Render_ColliderBox()
 	return S_OK;
 }
 
+// AABB충돌 검사
 _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance)
 {
 	CColider_Rect* pOther = pTarget;
@@ -196,6 +199,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 	_vec3		vDestMin, vDestMax, vDestCenter;
 	_vec3		vDistance = _vec3(0, 0, 0);
 
+	// 자신의 충돌 영역 계산
 	if (m_bIsInverse)
 	{
 		vSourMin = m_vPoint[2];
@@ -209,7 +213,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 
 	vSourCenter = (vSourMax + vSourMin) * 0.5f;
 
-	// Flip Min and Max if pOther is Scaled by -1 (X-Axis)
+	// 대상 충돌 영역 계산
 	if (pTarget->m_bIsInverse)
 	{
 		vDestMin = pOther->m_vPoint[2];
@@ -224,7 +228,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 	vDestCenter = (vDestMax + vDestMin) * 0.5f;
 
 
-
+	// X축 충돌 판정
 	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
 		return false;
 	else
@@ -237,7 +241,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 			vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
 	}
 
-
+	// Z축 충돌 판정
 	if (min(vSourMax.z, vDestMax.z) < max(vSourMin.z, vDestMin.z))
 		return false;
 	else
@@ -250,7 +254,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 			vDistance.z = min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z);
 	}
 
-
+	// 거리 저장
 	if (pOutDistance != nullptr)
 		*pOutDistance = vDistance;
 

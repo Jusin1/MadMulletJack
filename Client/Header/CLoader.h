@@ -3,7 +3,8 @@
 #include "CBase.h"
 #include "Engine_Define.h"
 
-// 다음 씬 데이터 설정
+
+// 로딩을 위한 클래스
 class CLoader : public CBase
 {
 private:
@@ -16,9 +17,9 @@ public:
 	_bool			Get_Finish() const { return m_isFinished; }
 	const _tchar* Get_String() const { return m_szLoading; }
 public:
-	HRESULT			Ready_Loading(SCENE eNextScene);
-	HRESULT			Loading_Logo();
-	HRESULT			Loading_ForStage();
+	HRESULT			Ready_Loading(SCENE eNextScene); // 로딩 준비
+	HRESULT			Loading_Logo(); // 로고 씬 로딩
+	HRESULT			Loading_ForStage(); // 스테이지 씬 로딩
 
 private:
 	SCENE					m_eNextScene = SCENE_END;

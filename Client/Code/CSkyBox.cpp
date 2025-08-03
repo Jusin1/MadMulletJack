@@ -28,7 +28,7 @@ HRESULT CSkyBox::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetComponent()))
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(40.f, 40.f, 40.f);
@@ -72,7 +72,7 @@ void CSkyBox::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CSkyBox::SetComponent()
+HRESULT CSkyBox::Set_Component()
 {
 	/* For.Com_Renderer */
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC , L"Proto_Renderer", (CComponent**)&m_pRendererCom)))

@@ -38,7 +38,7 @@ HRESULT CUI::Initialize(void* pArg)
 	m_fX = WINCX * 0.5f;
 	m_fY = WINCY * 0.5f;
 
-	if (FAILED(SetComponent()))
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
@@ -78,7 +78,7 @@ void CUI::Render_GameObject()
 
 }
 
-HRESULT CUI::SetComponent()
+HRESULT CUI::Set_Component()
 {
 	// Renderer
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))

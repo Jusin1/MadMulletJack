@@ -31,7 +31,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetComponent(pArg)))
+	if (FAILED(Set_Component(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -67,7 +67,7 @@ void CTerrain::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CTerrain::SetComponent(void* pArg)
+HRESULT CTerrain::Set_Component(void* pArg)
 {
 	// Renderer
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
