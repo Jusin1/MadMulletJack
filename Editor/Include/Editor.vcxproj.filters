@@ -25,6 +25,18 @@
     <Filter Include="98. ETC\imgui\impl">
       <UniqueIdentifier>{af875e43-0514-4fc3-8171-b30f85576c5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{fdf20e53-9e1e-468b-95f9-dbd994a2f652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Camera">
+      <UniqueIdentifier>{d899c018-5e6a-436e-a8da-64d6b89b1a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Loader">
+      <UniqueIdentifier>{6651524d-eb82-4ddf-9d2c-3407063ff306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Tile">
+      <UniqueIdentifier>{71f096fc-57bf-4a1f-af40-4ce723b5a552}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -84,6 +96,24 @@
     <ClInclude Include="pch.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEditorApplication.h">
+      <Filter>00. EditorApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorScene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor_Define.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorCamera.h">
+      <Filter>02. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditLoader.h">
+      <Filter>04. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorLoadingScene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +157,21 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>99. Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorApplication.cpp">
+      <Filter>00. EditorApplication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorScene.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorCamera.cpp">
+      <Filter>02. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditLoader.cpp">
+      <Filter>04. Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorLoadingScene.cpp">
+      <Filter>01. Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

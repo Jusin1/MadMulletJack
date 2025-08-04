@@ -1,5 +1,19 @@
 #include "pch.h"
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx9.h"
+
+#include "ImGuizmo.h"
+#include "ImSequencer.h"
+#include "ImZoomSlider.h"
+#include "ImCurveEdit.h"
+#include "GraphEditor.h"
+
+#include "Engine_Define.h"
 #include "framework.h"
+#include "CEditorApplication.h"
 #include "main.h"
 
 
@@ -12,6 +26,9 @@ wstring WindowClassName = L"EditorWindow";
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -30,6 +47,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     msg.message = WM_NULL;
 
+    CEditorApplication *pEditorApplication = CEditorApplication::Create();
+    if (!pEditorApplication)
+        return FALSE;
+
     while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -42,8 +63,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-
+            pEditorApplication->Run_EditorApplication();
         }
+    }
+
+    _ulong dwRefCnt{ 0 };
+
+    if (dwRefCnt = Engine::Safe_Release(pEditorApplication))
+    {
+        MSG_BOX("EidtorApplication Release FAILED");
+        return FALSE;
     }
 
     return (int)msg.wParam;
@@ -76,8 +105,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    g_hInst = hInstance;
 
+   RECT rc{ 0, 0, WINCX, WINCY };
+   ::AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
    HWND hWnd = ::CreateWindowW(WindowClassName.c_str(), TitleName.c_str(), WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+       CW_USEDEFAULT, 0,
+       rc.right - rc.left,
+       rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -95,6 +129,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     switch (message)
     {
     case WM_COMMAND:
@@ -117,6 +154,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ::EndPaint(hWnd, &ps);
         }
         break;
+    case WM_DPICHANGED:
+    {
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
+        {
+            const RECT *suggested_rect = (RECT *)lParam;
+            ::SetWindowPos(hWnd, NULL, suggested_rect->left, suggested_rect->top
+                , suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top
+                , SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+    } break;
     case WM_DESTROY:
         ::PostQuitMessage(0);
         break;
