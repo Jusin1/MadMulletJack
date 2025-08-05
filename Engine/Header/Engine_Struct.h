@@ -8,7 +8,7 @@ namespace Engine
 	typedef struct tagVertexColor
 	{
 		_vec3		vPosition;		
-		_ulong		dwColor;
+		D3DCOLOR		dwColor;
 
 	}VTXCOL;
 
@@ -47,6 +47,7 @@ namespace Engine
 		_ulong	_2;
 
 	}INDEX32;
+
 	
 }
 

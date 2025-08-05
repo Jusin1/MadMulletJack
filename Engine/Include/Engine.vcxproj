@@ -156,7 +156,9 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CColiderManager.h" />
+    <ClInclude Include="..\Header\CColider_Cube.h" />
     <ClInclude Include="..\Header\CColider_Rect.h" />
+    <ClInclude Include="..\Header\CColider_Sphere.h" />
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\VIBuffer_Cube.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
@@ -190,7 +192,9 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CColiderManager.cpp" />
+    <ClCompile Include="..\Code\CColider_Cube.cpp" />
     <ClCompile Include="..\Code\CColider_Rect.cpp" />
+    <ClCompile Include="..\Code\CColider_Sphere.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />

@@ -143,8 +143,16 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer", Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	// Colider
+	// Colider_Rect
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Rect", Engine::CColider_Rect::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Colider_Cube
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Cube", Engine::CColider_Cube::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Colider_Sphere
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Sphere", Engine::CColider_Sphere::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// Renderer

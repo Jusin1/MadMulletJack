@@ -42,6 +42,22 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
     _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+    // µð¹ö±ë¿ë 
+    static _bool bPrevF1 = false;
+
+    if (GetAsyncKeyState(VK_F1) & 0x8000)
+    {
+        if (!bPrevF1)
+        {
+            g_ColiderRender = !g_ColiderRender;
+            bPrevF1 = true;
+        }
+    }
+    else
+    {
+        bPrevF1 = false;
+    }
     return iExit;
 }
 
@@ -100,8 +116,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
         return E_FAIL;
     
     // Monster
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
-    //    return E_FAIL;
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
 
     return S_OK;
 }

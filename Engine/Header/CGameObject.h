@@ -1,7 +1,7 @@
 #pragma once
 #include "CBase.h"
 #include "CComponent.h"
-
+#include "CTransform.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CGameObject : public CBase
@@ -25,7 +25,8 @@ public:
 	_bool Get_Dead() { return m_bDead; }
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
-
+public:
+	CTransform* GetTransform() const { return m_pTransformCom; }
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent;
 	_vec3									m_vPosition;
@@ -33,6 +34,11 @@ protected:
 	_bool									m_bDead = false;
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
+
+
+	// Trnasform Component
+protected:
+	CTransform* m_pTransformCom;
 
 protected:
 	// 컴포넌트 추가

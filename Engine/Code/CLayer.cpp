@@ -75,8 +75,6 @@ CComponent* CLayer::Get_Component(const _tchar* pComponentTag, _uint iIndex)
 }
 
 
-
-
 CLayer* CLayer::Create()
 {
 	CLayer* pLayer = new CLayer;

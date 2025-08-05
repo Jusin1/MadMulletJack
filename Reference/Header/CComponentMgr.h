@@ -8,6 +8,8 @@
 #include "CVIBuffer_Terrian.h"
 #include "VIBuffer_Cube.h"
 #include "CColider_Rect.h"
+#include "CColider_Cube.h"
+#include "CColider_Sphere.h"
 
 #include "CTransform.h"
 #include "CTexture.h"

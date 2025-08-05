@@ -1,7 +1,9 @@
 #pragma once
 
 #include "CGameObject.h"
-#include "CProtoMgr.h"
+#include "CComponentMgr.h"
+#include "Clinet_Define.h"
+#include "Client_Global.h"
 
 class CMonster : public CGameObject
 {
@@ -19,9 +21,13 @@ public:
 
 private:
 	HRESULT Set_Component(void* pArg = nullptr);
+	void			Set_Collider(void);
+	void			Set_CollisionMatrix();
+
 
 private:
-	Engine::CTransform* m_pTransformCom;
+	Engine::CRenderer* m_pRendererCom;
+	Engine::CColider_Cube* m_pColiderCom;
 
 
 public:

@@ -96,9 +96,6 @@
     <ClInclude Include="..\Header\CStage.h">
       <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLoading_Scene.h">
-      <Filter>01. Scene\02. Loading</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
       <Filter>02. GameObject\04. DynamicCamera</Filter>
     </ClInclude>
@@ -113,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\06. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Global.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoading_Scene.h">
+      <Filter>01. Scene\02. Loading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPlayer.cpp">
-      <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMonster.cpp">
       <Filter>02. GameObject\02. Monster</Filter>
@@ -157,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\06. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Clinet_Global.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer.cpp">
+      <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

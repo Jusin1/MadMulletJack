@@ -29,12 +29,15 @@ public:
 	COLIDERINFO Get_CollRectDesc() { return m_StateDesc; } // 충돌체 반환
 	_vec3						m_vPoint[4]; // 4개의 정정 정보
 	_bool						m_bIsInverse = false; // 좌우 반전된 상태 여부
+	void Set_Active(_bool bEnable) { m_bActive = bEnable; } // 충돌 활성화
+	_bool Get_Active() const { return m_bActive; } // 충돌 비활성화
 
 public:
 	void Set_IsInverse(_bool bIsInverse) { m_bIsInverse = bIsInverse; } // 좌우 반전 설정
 
 protected:
 	COLIDERINFO		m_StateDesc; //현재 충돌체 상태
+	_bool m_bActive = true; // 충돌체 활성화 여부
 
 protected:
 	LPDIRECT3DVERTEXBUFFER9  m_pVB = nullptr;
@@ -48,7 +51,6 @@ protected:
 	LPDIRECT3DINDEXBUFFER9		m_pIB = nullptr;
 	_uint						m_iIndicesByte = 0; 
 	D3DFORMAT					m_eIndexFormat;
-
 
 public:
 	static CColider_Rect* Create(LPDIRECT3DDEVICE9 pGraphicDev);

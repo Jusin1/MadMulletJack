@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "Clinet_Define.h"
+#include "Client_Global.h"
 #include "CComponentMgr.h"
 
 class CPlayer : public CGameObject
@@ -28,6 +29,8 @@ public:
 
 private:
 	HRESULT			Set_Component();
+	void			Set_Collider(void);
+	void			Set_CollisionMatrix();
 	void			Key_Input(const _float& fTimeDelta);
 
 private:
@@ -38,9 +41,9 @@ private:
 private:
 	Engine::CVIBuffer_Rect* m_pBufferCom;
 	Engine::CRenderer* m_pRenderCom;
-	Engine::CColider_Rect* m_pColliderCom;
+	Engine::CColider_Cube* m_pColliderCom;
+	//Engine::CColider_Sphere* m_pColiderSphere;
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
-	Engine::CTransform* m_pTransformCom;
 	Engine::CCalculator* m_pCalculatorCom;
 	vector<CTexture*> m_vecTexture; //애니메이션 전용 텍스쳐
 
@@ -49,7 +52,6 @@ private:
 	STATE m_ePrevState = PLAYER_END;
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fGround_Height = 0.f;
-
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

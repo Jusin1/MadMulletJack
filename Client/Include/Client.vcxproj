@@ -164,6 +164,7 @@
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Client_Global.h" />
     <ClInclude Include="Clinet_Define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clinet_Global.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
