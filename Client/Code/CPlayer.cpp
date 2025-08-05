@@ -34,9 +34,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Set_Component()))
-		return E_FAIL;
-
-	Set_CollisionMatrix();       
+		return E_FAIL;  
 
 	m_vPosition = { 2.f, 1.f, 1.f };
 	m_pTransformCom->Set_Info(INFO_POS, m_vPosition); 
@@ -94,10 +92,10 @@ void CPlayer::Render_GameObject()
 	{
 		m_pColliderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
 	}
-	//if (g_ColiderRender && m_pColiderSphere != nullptr)
-	//{
-	//	m_pColiderSphere->Render_ColliderSphere(); // 충돌체 디버그 렌더
-	//}
+	if (g_ColiderRender && m_pColiderSphere != nullptr)
+	{
+		m_pColiderSphere->Render_ColliderSphere(); // 충돌체 디버그 렌더
+	}
 #endif
 }
 
@@ -112,27 +110,6 @@ HRESULT CPlayer::Set_Component()
 	if(FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
 		return E_FAIL;
 
-	CColider_Cube::COLLRECTDESC CollCubeDesc;
-	ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
-	CollCubeDesc.fRadiusY = 1.f;
-	CollCubeDesc.fRadiusX = 1.f;
-	CollCubeDesc.fRadiusZ = 1.f;
-	CollCubeDesc.fOffSetX = 0.f;
-	CollCubeDesc.fOffSetY = 0.f;
-	CollCubeDesc.fOffsetZ = 0.f;
-
-	// Colider
-	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
-		return E_FAIL;
-
-
-	//CColider_Sphere::COLLINFO CollSphereInfo;
-	//ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	//CollSphereInfo.fRadius = 1.f;                    // 반지름 1
-	//CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
-	//// Colider_Sphere
-	//if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColliderCom, &CollSphereInfo)))
-	//	return E_FAIL;
 
 	// VIBuffer
 	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
@@ -151,23 +128,50 @@ HRESULT CPlayer::Set_Component()
 
 	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
+
+	CColider_Cube::COLLRECTDESC CollCubeDesc;
+	ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
+	CollCubeDesc.fRadiusY = 1.f;
+	CollCubeDesc.fRadiusX = 1.f;
+	CollCubeDesc.fRadiusZ = 1.f;
+	CollCubeDesc.fOffSetX = 0.f;
+	CollCubeDesc.fOffSetY = 0.f;
+	CollCubeDesc.fOffsetZ = 0.f;
+
+	// Colider_Cube
+	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
+		return E_FAIL;
+	m_pColliderCom->Set_Transform(m_pTransformCom);
+
+
+	// Collider_Sphere
+	CColider_Sphere::COLLINFO CollSphereInfo;
+	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
+	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
+	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
+
+	// Colider_Sphere
+	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSphere, &CollSphereInfo)))
+		return E_FAIL;
+	m_pColiderSphere->Set_Transform(m_pTransformCom);
 	
 	return S_OK;
 }
 
 void CPlayer::Set_Collider(void)
 {
-	Set_CollisionMatrix();
-   
-	_vec3 test =m_pTransformCom->Get_Info(INFO_POS);
+	m_pColliderCom->Update_ColliderBox();
+	m_pColiderSphere->Update_ColliderSphere();
+
+	//  충돌 검사만 유지
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
-	//if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
-	//{
-	//	_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	//}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	{
+		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+	}
 
 }
 
@@ -193,14 +197,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 	}
-	//if (GetAsyncKeyState('Q'))
-	//{
-	//	m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
-	//}
-	//if (GetAsyncKeyState('E'))
-	//{
-	//	m_pTransformCom->Rotation(_vec3(0.f, -1.f, 0.f), fTimeDelta);
-	//}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -229,13 +225,6 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 	return S_OK;
 }
 
-void CPlayer:: Set_CollisionMatrix()
-{
-	D3DXMatrixIdentity(&m_CollisionMatrix);
-	memcpy(*(_vec3*)&m_CollisionMatrix.m[3][0], m_pTransformCom->Get_Info(INFO_POS), sizeof(_vec3));
-	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-	//m_pColiderSphere->Update_ColliderSphere(m_CollisionMatrix);
-}
 
 _vec3 CPlayer::Get_Pos()
 {

@@ -3,6 +3,9 @@
 #include "CTransform.h"
 
 
+#include "CColider_Sphere.h"
+#include "CTransform.h"
+
 CColider_Sphere::CColider_Sphere(LPDIRECT3DDEVICE9 pGraphicDev)
     : CComponent(pGraphicDev), m_pGraphicDev(pGraphicDev)
 {
@@ -34,12 +37,11 @@ HRESULT CColider_Sphere::Initialize_Prototype()
 
 HRESULT CColider_Sphere::Initialize(void* pArg)
 {
-    if (nullptr == pArg)
+    if (pArg == nullptr)
         return E_FAIL;
 
     memcpy(&m_SphereDesc, pArg, sizeof(COLLINFO));
     m_fBaseRadius = m_SphereDesc.fRadius;
-    m_vOffset = m_SphereDesc.vOffset;
 
 #ifdef _DEBUG
     if (FAILED(D3DXCreateSphere(m_pGraphicDev, m_fBaseRadius, 20, 20, &m_pSphereMesh, nullptr)))
@@ -49,20 +51,26 @@ HRESULT CColider_Sphere::Initialize(void* pArg)
     return S_OK;
 }
 
-HRESULT CColider_Sphere::Update_ColliderSphere(const _matrix& WorldMatrix)
+void CColider_Sphere::Set_Transform(CTransform* pTransform)
 {
-    m_SphereDesc.StateMatrix = WorldMatrix;
+    m_pTransform = pTransform;
+}
 
-    _vec3 vOffsetPos;
-    D3DXVec3TransformCoord(&vOffsetPos, &m_SphereDesc.vOffset, &WorldMatrix);
-    m_vCenter = vOffsetPos;
+HRESULT CColider_Sphere::Update_ColliderSphere()
+{
+    if (m_pTransform == nullptr)
+        return E_FAIL;
+
+    const _matrix world = *m_pTransform->Get_World();
+
+    D3DXVec3TransformCoord(&m_vCenter, &m_SphereDesc.vOffset, &world);
 
     _vec3 vScale;
-    vScale.x = D3DXVec3Length((_vec3*)&WorldMatrix.m[0][0]);
-    vScale.y = D3DXVec3Length((_vec3*)&WorldMatrix.m[1][0]);
-    vScale.z = D3DXVec3Length((_vec3*)&WorldMatrix.m[2][0]);
+    vScale.x = D3DXVec3Length((_vec3*)&world.m[0][0]);
+    vScale.y = D3DXVec3Length((_vec3*)&world.m[1][0]);
+    vScale.z = D3DXVec3Length((_vec3*)&world.m[2][0]);
 
-    float fMaxScale = max(vScale.x, max(vScale.y, vScale.z));
+    _float fMaxScale = max(vScale.x, max(vScale.y, vScale.z));
     m_fRadius = m_fBaseRadius * fMaxScale;
 
     return S_OK;
@@ -73,6 +81,9 @@ HRESULT CColider_Sphere::Render_ColliderSphere()
 #ifdef _DEBUG
     if (!m_pSphereMesh || !m_pGraphicDev)
         return E_FAIL;
+
+    if (!m_bActive)
+        return S_OK;
 
     _matrix matScale, matTrans, matWorld;
     D3DXMatrixScaling(&matScale, m_fRadius, m_fRadius, m_fRadius);

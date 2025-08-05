@@ -30,6 +30,7 @@ public:
 
     // 특정 오브젝트가 그룹 내 오브젝트와 충돌하는지 검사
     _bool CollisionGroup(COLLISION_GROUP _collisionGroup, class CGameObject* pGameObject, COLLISION_TYPE _collisionType, _vec3* pOutDistance);
+
     _bool Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, COLLISION_TYPE eCollisionType);
 private:
     // 각 그룹 별 오브젝트 리스트

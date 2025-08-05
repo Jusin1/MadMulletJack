@@ -36,9 +36,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	if(FAILED(Set_Component()))
 		return E_FAIL;
 
-	Set_CollisionMatrix();
-
-	
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
@@ -83,6 +80,10 @@ void CMonster::Render_GameObject()
 	{
 		m_pColiderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
 	}
+	if (g_ColiderRender && m_pColiderSpherCom != nullptr)
+	{
+		m_pColiderSpherCom->Render_ColliderSphere(); // 충돌체 디버그 렌더
+	}
 #endif
 }
 
@@ -114,26 +115,33 @@ HRESULT CMonster::Set_Component(void* pArg)
 	// Colider
 	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColiderCom, &CollCubeDesc)))
 		return E_FAIL;
+	m_pColiderCom->Set_Transform(m_pTransformCom);
 
+
+	CColider_Sphere::COLLINFO CollSphereInfo;
+	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
+	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
+	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
+	// Colider_Sphere
+	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSpherCom, &CollSphereInfo)))
+		return E_FAIL;
+	m_pColiderSpherCom->Set_Transform(m_pTransformCom);
 	return S_OK;
 }
 
 void CMonster::Set_Collider(void)
 {
-	Set_CollisionMatrix();
-
+	m_pColiderCom->Update_ColliderBox();
+	m_pColiderSpherCom->Update_ColliderSphere();
 
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_CUBE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
-}
-
-void CMonster::Set_CollisionMatrix()
-{
-	D3DXMatrixIdentity(&m_CollisionMatrix);
-	memcpy(*(_vec3*)&m_CollisionMatrix.m[3][0], m_pTransformCom->Get_Info(INFO_POS), sizeof(_vec3));
-	m_pColiderCom->Update_ColliderBox(m_CollisionMatrix);
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	{
+		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+	}
 }
 
 

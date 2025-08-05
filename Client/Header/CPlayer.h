@@ -30,7 +30,6 @@ public:
 private:
 	HRESULT			Set_Component();
 	void			Set_Collider(void);
-	void			Set_CollisionMatrix();
 	void			Key_Input(const _float& fTimeDelta);
 
 private:
@@ -41,9 +40,9 @@ private:
 private:
 	Engine::CVIBuffer_Rect* m_pBufferCom;
 	Engine::CRenderer* m_pRenderCom;
-	Engine::CColider_Cube* m_pColliderCom;
-	//Engine::CColider_Sphere* m_pColiderSphere;
-	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
+	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
+	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
+	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐 
 	Engine::CCalculator* m_pCalculatorCom;
 	vector<CTexture*> m_vecTexture; //애니메이션 전용 텍스쳐
 

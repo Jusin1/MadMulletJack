@@ -4,12 +4,11 @@ BEGIN(Engine)
 class ENGINE_DLL CColider_Sphere : public CComponent
 {
 public:
-	typedef struct tagSphereDesc
+	struct COLLINFO
 	{
 		_float fRadius = 1.f;
 		_vec3 vOffset = { 0.f, 0.f, 0.f };
-		_matrix StateMatrix;
-	}COLLINFO;
+	};
 
 public:
 	explicit CColider_Sphere(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -19,22 +18,27 @@ public:
 public:
 	HRESULT Initialize_Prototype();
 	HRESULT Initialize(void* pArg) override;
-	HRESULT Update_ColliderSphere(const _matrix& WorldMatrix);
+	HRESULT Update_ColliderSphere(); 
 	HRESULT Render_ColliderSphere();
 	_bool	Collision_Check(CColider_Sphere* pTarget, _vec3* pOutDistance = nullptr);
 
 public:
-	COLLINFO Get_SphereDesc() { return m_SphereDesc; }
-	void Set_Position(class CTransform* pTransform) {}
+	void Set_Transform(class CTransform* pTransform);
 	void Set_IsInverse(_bool bIsInverse) { m_bIsInverse = bIsInverse; }
+	void Set_Active(_bool bActive) { m_bActive = bActive; }
+	_bool Is_Active() const { return m_bActive; }
+
+	COLLINFO Get_SphereDesc() const { return m_SphereDesc; }
 
 protected:
 	COLLINFO m_SphereDesc;
+	class CTransform* m_pTransform = nullptr;
+
 	_vec3 m_vCenter = { 0.f, 0.f, 0.f };
 	_float m_fRadius = 1.f;
-	_vec3 m_vOffset = { 0.f, 0.f, 0.f };
 	_float m_fBaseRadius = 1.f;
 	_bool m_bIsInverse = false;
+	_bool m_bActive = true;
 
 protected:
 #ifdef _DEBUG

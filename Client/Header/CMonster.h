@@ -22,12 +22,12 @@ public:
 private:
 	HRESULT Set_Component(void* pArg = nullptr);
 	void			Set_Collider(void);
-	void			Set_CollisionMatrix();
 
 
 private:
 	Engine::CRenderer* m_pRendererCom;
 	Engine::CColider_Cube* m_pColiderCom;
+	Engine::CColider_Sphere* m_pColiderSpherCom;
 
 
 public:

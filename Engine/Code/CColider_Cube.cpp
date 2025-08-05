@@ -1,8 +1,6 @@
 #include "CColider_Cube.h"
 #include "CTransform.h"
 
-const _tchar* CColider_Cube::m_pTransformTag = L"Com_Transform";
-
 CColider_Cube::CColider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -17,6 +15,7 @@ CColider_Cube::CColider_Cube(const CColider_Cube& rhs)
 	, m_iStride(rhs.m_iStride)
 	, m_ePrimitiveType(rhs.m_ePrimitiveType)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
+	, m_StateDesc(rhs.m_StateDesc)
 {
 	memcpy(m_vPoint, rhs.m_vPoint, sizeof(_vec3) * 8);
 	m_pVB->AddRef();
@@ -69,36 +68,52 @@ HRESULT CColider_Cube::Initialize_Prototype()
 
 	m_pIB->Unlock();
 
-	D3DXMatrixIdentity(&m_StateDesc.StateMatrix);
+	D3DXMatrixIdentity(&m_matWorld);
+
 	return S_OK;
 }
 
 HRESULT CColider_Cube::Initialize(void* pArg)
 {
-	if (FAILED(Initialize_Prototype())) return E_FAIL;
-	if (pArg != nullptr) memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));
+	if (FAILED(Initialize_Prototype()))
+		return E_FAIL;
+
+	if (pArg != nullptr)
+		memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));
+
 	return S_OK;
 }
 
-HRESULT CColider_Cube::Update_ColliderBox(_matrix WorldMatrix)
+void CColider_Cube::Set_Transform(CTransform* pTransform)
 {
-	m_StateDesc.StateMatrix = WorldMatrix;
-	_vec3 vOffset = *(_vec3*)&WorldMatrix.m[3][0];
+	m_pTransform = pTransform;
+}
+
+HRESULT CColider_Cube::Update_ColliderBox()
+{
+	if (m_pTransform == nullptr)
+		return E_FAIL;
+
+	m_matWorld = *m_pTransform->Get_World();
+
+	// 오프셋 적용
+	_vec3 vOffset = *(_vec3*)&m_matWorld.m[3][0];
 	vOffset += _vec3(m_StateDesc.fOffSetX, m_StateDesc.fOffSetY, m_StateDesc.fOffsetZ);
-	m_StateDesc.StateMatrix._41 = vOffset.x;
-	m_StateDesc.StateMatrix._42 = vOffset.y;
-	m_StateDesc.StateMatrix._43 = vOffset.z;
+	m_matWorld._41 = vOffset.x;
+	m_matWorld._42 = vOffset.y;
+	m_matWorld._43 = vOffset.z;
 
 	return S_OK;
 }
 
 HRESULT CColider_Cube::Render_ColliderBox()
 {
-
+	if (!m_bActive)
+		return S_OK; 
 	DWORD oldFillMode = 0;
 	m_pGraphicDev->GetRenderState(D3DRS_FILLMODE, &oldFillMode);
 
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
 	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -110,19 +125,15 @@ HRESULT CColider_Cube::Render_ColliderBox()
 
 	m_pGraphicDev->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
 
-	// 렌더 상태 복구!
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, oldFillMode);
 
 	return S_OK;
 }
 
-
-
 _bool CColider_Cube::Collision_Check(CColider_Cube* pTarget, _vec3* pOutDistance)
 {
 	if (nullptr == pTarget)
 		return false;
-
 
 	auto GetTransformedMinMax = [&](const _vec3* pPoints, const _matrix& matWorld, _vec3& outMin, _vec3& outMax) {
 		_vec3 vTransformed[8];
@@ -143,15 +154,13 @@ _bool CColider_Cube::Collision_Check(CColider_Cube* pTarget, _vec3* pOutDistance
 	_vec3 vSourMin, vSourMax;
 	_vec3 vDestMin, vDestMax;
 
-	GetTransformedMinMax(m_vPoint, m_StateDesc.StateMatrix, vSourMin, vSourMax);
-	GetTransformedMinMax(pTarget->m_vPoint, pTarget->m_StateDesc.StateMatrix, vDestMin, vDestMax);
+	GetTransformedMinMax(m_vPoint, m_matWorld, vSourMin, vSourMax);
+	GetTransformedMinMax(pTarget->m_vPoint, pTarget->m_matWorld, vDestMin, vDestMax);
 
-	// AABB 충돌 판정
 	if (vSourMax.x < vDestMin.x || vSourMin.x > vDestMax.x) return false;
 	if (vSourMax.y < vDestMin.y || vSourMin.y > vDestMax.y) return false;
 	if (vSourMax.z < vDestMin.z || vSourMin.z > vDestMax.z) return false;
 
-	// 거리 계산
 	if (pOutDistance)
 	{
 		_vec3 vCenter1 = (vSourMax + vSourMin) * 0.5f;
