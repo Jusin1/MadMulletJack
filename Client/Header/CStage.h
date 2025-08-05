@@ -17,6 +17,8 @@ public:
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_Camera_Layer(const _tchar* pLayerTag);
+	HRESULT			Ready_Player_Layer(const _tchar* pLayerTag);
+	HRESULT			Ready_Monster_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 

@@ -30,6 +30,12 @@ HRESULT CStage::Ready_Scene()
     if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
         return E_FAIL;
 
+    if (FAILED(Ready_Player_Layer(L"Player_Layer")))
+        return E_FAIL;
+
+    if(FAILED(Ready_Monster_Layer(L"Monster_Layer")))
+        return E_FAIL;
+
     if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
         return E_FAIL;
 
@@ -113,16 +119,24 @@ HRESULT CStage::Ready_Camera_Layer(const _tchar* pLayerTag)
     return S_OK;
 }
 
-HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
+HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 {
     // Player
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE, pLayerTag)))
         return E_FAIL;
-    
+    return S_OK;
+}
+
+HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
+{
     // Monster
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
         return E_FAIL;
+    return S_OK;
+}
 
+HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
+{
     return S_OK;
 }
 

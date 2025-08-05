@@ -7,12 +7,12 @@
 #include "CObjectManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+	: CCharacter(pGraphicDev)
 {
 }
 
 CMonster::CMonster(const CGameObject& rhs)
-	: CGameObject(rhs)
+	: CCharacter(rhs)
 {
 }
 
@@ -22,7 +22,7 @@ CMonster::~CMonster()
 
 HRESULT CMonster::Ready_GameObject()
 {
-	if(FAILED(CGameObject::Ready_GameObject()))
+	if (FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -33,7 +33,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if(FAILED(Set_Component()))
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
@@ -50,8 +50,6 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 	list<CGameObject*>* objList = CObjectManager::GetInstance()->Get_ObjectList(SCENE_STAGE, L"GameLogic_Layer");
 	CTransform* pPlayer = dynamic_cast<CTransform*>(CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, L"GameLogic_Layer", L"Com_Transform", 0));
 
-
-	
 	CGameObject::Update_GameObject(fTimeDelta);
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this);
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
@@ -74,7 +72,7 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	
+
 #ifdef _DEBUG
 	if (g_ColiderRender && m_pColiderCom != nullptr)
 	{
@@ -117,7 +115,6 @@ HRESULT CMonster::Set_Component(void* pArg)
 		return E_FAIL;
 	m_pColiderCom->Set_Transform(m_pTransformCom);
 
-
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
 	CollSphereInfo.fRadius = 1.f;                    // ¹ÝÁö¸§ 1
@@ -143,7 +140,6 @@ void CMonster::Set_Collider(void)
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
 }
-
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

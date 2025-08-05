@@ -1,14 +1,14 @@
 #pragma once
 
-#include "CGameObject.h"
+#include "CCharacter.h"
 #include "Clinet_Define.h"
 #include "Client_Global.h"
 #include "CComponentMgr.h"
 
-class CPlayer : public CGameObject
+class CPlayer : public CCharacter
 {
 public:
-	enum STATE {IDLE, WALK, PLAYER_END};
+	enum STATE { IDLE, WALK, PLAYER_END };
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CPlayer(const CGameObject& rhs);
@@ -36,13 +36,12 @@ private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
-
 private:
 	Engine::CVIBuffer_Rect* m_pBufferCom;
 	Engine::CRenderer* m_pRenderCom;
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
 	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
-	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐 
+	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
 	Engine::CCalculator* m_pCalculatorCom;
 	vector<CTexture*> m_vecTexture; //애니메이션 전용 텍스쳐
 
@@ -57,4 +56,3 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void		Free();
 };
-

@@ -4,14 +4,13 @@
 #include "CColiderManager.h"
 #include "CTimerMgr.h"
 
-
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+	: CCharacter(pGraphicDev)
 {
 }
 
 CPlayer::CPlayer(const CGameObject& rhs)
-	: CGameObject(rhs)
+	: CCharacter(rhs)
 {
 }
 
@@ -24,7 +23,6 @@ HRESULT CPlayer::Ready_GameObject()
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -34,10 +32,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Set_Component()))
-		return E_FAIL;  
+		return E_FAIL;
 
 	m_vPosition = { 2.f, 1.f, 1.f };
-	m_pTransformCom->Set_Info(INFO_POS, m_vPosition); 
+	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
@@ -54,15 +52,13 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	Key_Input(fTimeDelta);
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	Set_Collider();
-	
+
 	if (nullptr != m_pRenderCom)
 		m_pRenderCom->Add_RenderGroup(RENDER_NONALPHA, this);
-
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -107,9 +103,8 @@ HRESULT CPlayer::Set_Component()
 	m_TimerTag = TEXT("Timer_Player");
 
 	// Render
-	if(FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
+	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
 		return E_FAIL;
-
 
 	// VIBuffer
 	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
@@ -143,7 +138,6 @@ HRESULT CPlayer::Set_Component()
 		return E_FAIL;
 	m_pColliderCom->Set_Transform(m_pTransformCom);
 
-
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
@@ -154,7 +148,7 @@ HRESULT CPlayer::Set_Component()
 	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSphere, &CollSphereInfo)))
 		return E_FAIL;
 	m_pColiderSphere->Set_Transform(m_pTransformCom);
-	
+
 	return S_OK;
 }
 
@@ -172,10 +166,7 @@ void CPlayer::Set_Collider(void)
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
-
 }
-
-
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
@@ -225,7 +216,6 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 	return S_OK;
 }
 
-
 _vec3 CPlayer::Get_Pos()
 {
 	return (m_pTransformCom->Get_Info(INFO_POS));
@@ -240,7 +230,6 @@ _vec3 CPlayer::Get_Right()
 {
 	return (m_pTransformCom->Get_Info(INFO_RIGHT));
 }
-
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

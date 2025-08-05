@@ -1,11 +1,11 @@
 #pragma once
 
-#include "CGameObject.h"
+#include "CCharacter.h"
 #include "CComponentMgr.h"
 #include "Clinet_Define.h"
 #include "Client_Global.h"
 
-class CMonster : public CGameObject
+class CMonster : public CCharacter
 {
 private:
 	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -23,16 +23,13 @@ private:
 	HRESULT Set_Component(void* pArg = nullptr);
 	void			Set_Collider(void);
 
-
 private:
 	Engine::CRenderer* m_pRendererCom;
 	Engine::CColider_Cube* m_pColiderCom;
 	Engine::CColider_Sphere* m_pColiderSpherCom;
-
 
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGrahpicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
-
