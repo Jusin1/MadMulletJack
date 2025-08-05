@@ -2,15 +2,28 @@
 #include "CComponentMgr.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_pGraphicDev(pGraphicDev), m_pTransformCom(nullptr)
+    : m_pGraphicDev(pGraphicDev)
+    , m_pTransformCom(nullptr)
+    , m_vPosition(0.f, 0.f, 0.f)
+    , m_fRadius(0.5f)
+    , m_bDead(false)
+    , m_CollisionMatrix{}
 {
-    m_pGraphicDev->AddRef();
+    if (m_pGraphicDev)
+        m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_pTransformCom(rhs.m_pTransformCom)
+    : m_pGraphicDev(rhs.m_pGraphicDev)
+    , m_pTransformCom(rhs.m_pTransformCom)
+    , m_vPosition(rhs.m_vPosition)
+    , m_fRadius(rhs.m_fRadius)
+    , m_bDead(rhs.m_bDead)
+    , m_CollisionMatrix(rhs.m_CollisionMatrix)
+    , m_mapComponent(rhs.m_mapComponent) // 얕복임 (주의: 컴포넌트 깊복 필요시 따로 처리해야 함)
 {
-    m_pGraphicDev->AddRef();
+    if (m_pGraphicDev)
+        m_pGraphicDev->AddRef();
 }
 
 

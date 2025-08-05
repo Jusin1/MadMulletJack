@@ -30,8 +30,8 @@ public:
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent;
 	_vec3									m_vPosition;
-	_float									m_fRadius = 0.5f; // 충돌 반지름(원충돌)
-	_bool									m_bDead = false;
+	_float									m_fRadius;
+	_bool									m_bDead;
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 

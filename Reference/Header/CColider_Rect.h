@@ -40,16 +40,16 @@ protected:
 	_bool m_bActive = true; // 충돌체 활성화 여부
 
 protected:
-	LPDIRECT3DVERTEXBUFFER9  m_pVB = nullptr;
-	_uint						m_iNumVertices = 0;
-	_uint						m_iStride = 0; 
-	_ulong						m_dwFVF = 0;
+	LPDIRECT3DVERTEXBUFFER9  m_pVB;
+	_uint						m_iNumVertices;
+	_uint						m_iStride;
+	_ulong						m_dwFVF;
 	D3DPRIMITIVETYPE			m_ePrimitiveType;
-	_uint						m_iNumPrimitive = 0;
+	_uint						m_iNumPrimitive;
 
 protected:
-	LPDIRECT3DINDEXBUFFER9		m_pIB = nullptr;
-	_uint						m_iIndicesByte = 0; 
+	LPDIRECT3DINDEXBUFFER9		m_pIB;
+	_uint						m_iIndicesByte;
 	D3DFORMAT					m_eIndexFormat;
 
 public:

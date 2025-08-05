@@ -2,24 +2,41 @@
 
 CColider_Rect::CColider_Rect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
+	, m_StateDesc{}
+	, m_bActive(true)
+	, m_pVB(nullptr)
+	, m_iNumVertices(0)
+	, m_iStride(0)
+	, m_dwFVF(0)
+	, m_ePrimitiveType(D3DPT_TRIANGLELIST)
+	, m_iNumPrimitive(0)
+	, m_pIB(nullptr)
+	, m_iIndicesByte(0)
+	, m_eIndexFormat(D3DFMT_INDEX16)
 {
 }
 
 CColider_Rect::CColider_Rect(const CColider_Rect& rhs)
 	: CComponent(rhs)
+	, m_StateDesc(rhs.m_StateDesc)
+	, m_bActive(rhs.m_bActive)
 	, m_pVB(rhs.m_pVB)
-	, m_pIB(rhs.m_pIB)
 	, m_iNumVertices(rhs.m_iNumVertices)
-	, m_dwFVF(rhs.m_dwFVF)
 	, m_iStride(rhs.m_iStride)
+	, m_dwFVF(rhs.m_dwFVF)
 	, m_ePrimitiveType(rhs.m_ePrimitiveType)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
-
+	, m_pIB(rhs.m_pIB)
+	, m_iIndicesByte(rhs.m_iIndicesByte)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
 {
 	memcpy(m_vPoint, rhs.m_vPoint, sizeof(_vec3) * 4);
-	m_pVB->AddRef();
-	m_pIB->AddRef();
+
+	if (m_pVB) m_pVB->AddRef();
+	if (m_pIB) m_pIB->AddRef();
 }
+
+
 
 // 기본 설정 크기(1x1)
 HRESULT CColider_Rect::Ready_Colider()

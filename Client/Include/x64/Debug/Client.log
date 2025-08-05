@@ -1,5 +1,11 @@
 ﻿  CBackGround.cpp
+  CCameraFPS.cpp
+  CDynamicCamera.cpp
+C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CDynamicCamera.cpp(62,27): warning C4244: '+=': 'float'에서 'Engine::_long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Code/CDynamicCamera.cpp'을(를) 컴파일하는 중)
+  
   CLoader.cpp
+  CLoading_Scene.cpp
   CLogo.cpp
   CMainApp.cpp
   CMonster.cpp
@@ -8,10 +14,10 @@
   CStage.cpp
   CTerrain.cpp
   CUI.cpp
+  Client.cpp
   코드를 생성하고 있습니다...
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CUI.cpp(105,1): warning C4715: 'CUI::Set_Component': 모든 제어 경로에서 값을 반환하지는 않습니다.
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CMainApp.cpp(162,1): warning C4715: 'CMainApp::Ready_Prototype_Component': 모든 제어 경로에서 값을 반환하지는 않습니다.
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CLogo.cpp(45,1): warning C4715: 'CLogo::Update_Scene': 모든 제어 경로에서 값을 반환하지는 않습니다.
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CLoader.cpp(165,1): warning C4715: 'CLoader::Loading_ForStage': 모든 제어 경로에서 값을 반환하지는 않습니다.
-     ../Bin\Client.lib 라이브러리 및 ../Bin\Client.exp 개체를 생성하고 있습니다.
   Client.vcxproj -> C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Bin\Client.exe

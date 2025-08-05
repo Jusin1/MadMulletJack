@@ -34,8 +34,8 @@ public:
 	void Clear(_uint iSceneIdx);// ÄÄÆ÷³ÍÆ® ¿øº» Á¦°Å
 
 private:
-	_uint								m_iSceneNum = 0; // ¾À °¹¼ö
-	map<const _tchar*, CComponent*>* m_mapPrototype = nullptr;	// ¿øº» ÄÄÆ÷³ÍÆ®
+	_uint								m_iSceneNum;
+	map<const _tchar*, CComponent*>* m_mapPrototype;
 	typedef map<const _tchar*, class CComponent*>		PROTOTYPES; 
 
 	

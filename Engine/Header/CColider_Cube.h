@@ -33,16 +33,16 @@ public:
 protected:
 	COLLRECTDESC m_StateDesc;
 	_matrix m_matWorld; 
-	class CTransform* m_pTransform = nullptr;
-	_bool m_bActive = true;
+	class CTransform* m_pTransform;
+	_bool m_bActive;
 
 protected:
 	_vec3 m_vPoint[8];
-	_bool m_bIsInverse = false;
+	_bool m_bIsInverse;
 
 protected:
-	LPDIRECT3DVERTEXBUFFER9 m_pVB = nullptr;
-	LPDIRECT3DINDEXBUFFER9  m_pIB = nullptr;
+	LPDIRECT3DVERTEXBUFFER9 m_pVB;
+	LPDIRECT3DINDEXBUFFER9  m_pIB;
 
 	_uint m_iNumVertices = 0;
 	_uint m_iStride = 0;

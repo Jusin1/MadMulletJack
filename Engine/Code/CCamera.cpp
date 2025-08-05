@@ -5,11 +5,11 @@ const _tchar* CCamera::m_pTransformTag = L"Com_Transform";
 
 
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+	: CGameObject(pGraphicDev), m_camInfo{} 
 {
 }
 
-CCamera::CCamera(const CCamera& rhs) : CGameObject(rhs)
+CCamera::CCamera(const CCamera& rhs) : CGameObject(rhs), m_camInfo(rhs.m_camInfo)
 {
 }
 

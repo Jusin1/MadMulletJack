@@ -32,19 +32,19 @@ public:
 
 protected:
 	COLLINFO m_SphereDesc;
-	class CTransform* m_pTransform = nullptr;
+	class CTransform* m_pTransform;
 
-	_vec3 m_vCenter = { 0.f, 0.f, 0.f };
-	_float m_fRadius = 1.f;
-	_float m_fBaseRadius = 1.f;
-	_bool m_bIsInverse = false;
-	_bool m_bActive = true;
+	_vec3 m_vCenter;
+	_float m_fRadius;
+	_float m_fBaseRadius;
+	_bool m_bIsInverse;
+	_bool m_bActive;
 
 protected:
 #ifdef _DEBUG
-	LPD3DXMESH m_pSphereMesh = nullptr;
+	LPD3DXMESH m_pSphereMesh;
 #endif
-	LPDIRECT3DDEVICE9 m_pGraphicDev = nullptr;
+	LPDIRECT3DDEVICE9 m_pGraphicDev;
 
 public:
 	static CColider_Sphere* Create(LPDIRECT3DDEVICE9 pGraphicDev);

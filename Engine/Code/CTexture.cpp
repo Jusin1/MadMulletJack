@@ -2,22 +2,28 @@
 #include "CTimerMgr.h"
 CTexture::CTexture(LPDIRECT3DDEVICE9 pGraphicDev)
     : CComponent(pGraphicDev)
+    , m_iNumTextures(0)
+    , m_vecTexture{}
+    , m_TextureInfo{}
+    , m_fTimeAcc(0.f)
+    , m_bStopAnim(false)
 {
 }
 
+
 CTexture::CTexture(const CTexture& rhs)
     : CComponent(rhs)
+    , m_iNumTextures(rhs.m_iNumTextures)
+    , m_vecTexture(rhs.m_vecTexture)
+    , m_TextureInfo(rhs.m_TextureInfo)
+    , m_fTimeAcc(rhs.m_fTimeAcc)
+    , m_bStopAnim(rhs.m_bStopAnim)
 {
-    size_t   iContainerSize = rhs.m_vecTexture.size();
-
-    m_vecTexture.reserve(iContainerSize);
-
-    m_vecTexture = rhs.m_vecTexture;
-
-    // 모든 텍스쳐 참조 증가
-    for (size_t i = 0; i < iContainerSize; ++i)
+    // 텍스쳐 참조 카운트 증가
+    for (auto& pTex : m_vecTexture)
     {
-        m_vecTexture[i]->AddRef();
+        if (pTex)
+            pTex->AddRef();
     }
 }
 

@@ -2,12 +2,16 @@
 #include "CColider_Sphere.h"
 #include "CTransform.h"
 
-
-#include "CColider_Sphere.h"
-#include "CTransform.h"
-
 CColider_Sphere::CColider_Sphere(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CComponent(pGraphicDev), m_pGraphicDev(pGraphicDev)
+    : CComponent(pGraphicDev)
+    , m_SphereDesc{}
+    , m_pTransform(nullptr)
+    , m_vCenter(0.f, 0.f, 0.f)
+    , m_fRadius(1.f)
+    , m_fBaseRadius(1.f)
+    , m_bIsInverse(false)
+    , m_bActive(true)
+    , m_pGraphicDev(pGraphicDev)
 {
     m_pGraphicDev->AddRef();
 #ifdef _DEBUG
@@ -18,10 +22,12 @@ CColider_Sphere::CColider_Sphere(LPDIRECT3DDEVICE9 pGraphicDev)
 CColider_Sphere::CColider_Sphere(const CColider_Sphere& rhs)
     : CComponent(rhs)
     , m_SphereDesc(rhs.m_SphereDesc)
+    , m_pTransform(rhs.m_pTransform)
     , m_vCenter(rhs.m_vCenter)
     , m_fRadius(rhs.m_fRadius)
     , m_fBaseRadius(rhs.m_fBaseRadius)
     , m_bIsInverse(rhs.m_bIsInverse)
+    , m_bActive(rhs.m_bActive)
     , m_pGraphicDev(rhs.m_pGraphicDev)
 {
     m_pGraphicDev->AddRef();

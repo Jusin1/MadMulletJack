@@ -3,24 +3,47 @@
 
 CColider_Cube::CColider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
+	, m_StateDesc{}
+	, m_matWorld{}
+	, m_pTransform(nullptr)
+	, m_bActive(true)
+	, m_vPoint{}
+	, m_bIsInverse(false)
+	, m_pVB(nullptr)
+	, m_pIB(nullptr)
+	, m_iNumVertices(0)
+	, m_iStride(0)
+	, m_dwFVF(0)
+	, m_ePrimitiveType(D3DPT_TRIANGLELIST)
+	, m_iNumPrimitive(0)
+	, m_iIndicesByte(0)
+	, m_eIndexFormat(D3DFMT_INDEX16)
 {
 }
 
 CColider_Cube::CColider_Cube(const CColider_Cube& rhs)
 	: CComponent(rhs)
+	, m_StateDesc(rhs.m_StateDesc)
+	, m_matWorld(rhs.m_matWorld)
+	, m_pTransform(rhs.m_pTransform)
+	, m_bActive(rhs.m_bActive)
+	, m_bIsInverse(rhs.m_bIsInverse)
 	, m_pVB(rhs.m_pVB)
 	, m_pIB(rhs.m_pIB)
 	, m_iNumVertices(rhs.m_iNumVertices)
-	, m_dwFVF(rhs.m_dwFVF)
 	, m_iStride(rhs.m_iStride)
+	, m_dwFVF(rhs.m_dwFVF)
 	, m_ePrimitiveType(rhs.m_ePrimitiveType)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
-	, m_StateDesc(rhs.m_StateDesc)
+	, m_iIndicesByte(rhs.m_iIndicesByte)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
 {
 	memcpy(m_vPoint, rhs.m_vPoint, sizeof(_vec3) * 8);
-	m_pVB->AddRef();
-	m_pIB->AddRef();
+
+	if (m_pVB) m_pVB->AddRef();
+	if (m_pIB) m_pIB->AddRef();
 }
+
 
 HRESULT CColider_Cube::Initialize_Prototype()
 {

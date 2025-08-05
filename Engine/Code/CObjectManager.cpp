@@ -5,8 +5,9 @@
 IMPLEMENT_SINGLETON(CObjectManager)
 
 CObjectManager::CObjectManager()
+	: m_iSceneNum(0)
+	, m_pLayers(nullptr)
 {
-
 }
 
 CObjectManager::~CObjectManager()
