@@ -12,6 +12,7 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CUI.h"
+#include "CCameraFPS.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -125,10 +126,15 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	//// Camera_Dynamic
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_Dynamic",
-		CDynamicCamera::Create(m_pGraphicDev))))
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_Dynamic",
+	//	CDynamicCamera::Create(m_pGraphicDev))))
+	//	return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
+		CCameraFPS::Create(m_pGraphicDev))))
 		return E_FAIL;
-	
+
+
 	// Player
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Player",
 		CPlayer::Create(m_pGraphicDev))))

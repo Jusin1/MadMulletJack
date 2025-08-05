@@ -43,9 +43,6 @@
     <Filter Include="01. Scene\02. Loading">
       <UniqueIdentifier>{d8c4b272-1c4a-46ca-b9c9-68997636653a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\04. DynamicCamera">
-      <UniqueIdentifier>{2e80ddbf-44c7-4b9f-8e48-31f9c9c4cf57}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{a9a06ec8-c157-42ed-b807-cd9033af1dd8}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,15 @@
     </Filter>
     <Filter Include="02. GameObject\06. UI">
       <UniqueIdentifier>{6c2dbcfb-e0a4-4bfc-9de5-7c1adc6984cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera">
+      <UniqueIdentifier>{4c937395-abb0-45dd-bfb4-62be4974441d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\01. DynamicCamera">
+      <UniqueIdentifier>{2e80ddbf-44c7-4b9f-8e48-31f9c9c4cf57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\02. CameraFPS">
+      <UniqueIdentifier>{cf77e855-0e9e-4432-86be-9b0eda930f33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +103,7 @@
       <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -116,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLoading_Scene.h">
       <Filter>01. Scene\02. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraFPS.h">
+      <Filter>02. GameObject\04. Camera\02. CameraFPS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +156,7 @@
       <Filter>01. Scene\02. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -163,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayer.cpp">
       <Filter>02. GameObject\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraFPS.cpp">
+      <Filter>02. GameObject\04. Camera\02. CameraFPS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -103,9 +103,13 @@ HRESULT CStage::Ready_Camera_Layer(const _tchar* pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE, pLayerTag, &CamInfo)))
+    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE, pLayerTag, &CamInfo)))
+    //    return E_FAIL;
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE, pLayerTag, &CamInfo)))
         return E_FAIL;
 
+    
     return S_OK;
 }
 
