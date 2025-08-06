@@ -26,7 +26,7 @@ HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
         return S_OK;
     }
     else
-        ::memcpy(&m_tData, pArg, sizeof(PANELDATA));
+        Set_Data(pArg);
 
     switch (m_tData.eType)
     {
@@ -260,7 +260,7 @@ CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("pTerrainTex Clone Failed");
+        MSG_BOX("GridPanel Clone Failed");
         Safe_Release(pInstance);
     }
 
@@ -269,15 +269,15 @@ CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
 
 CVIBuffer_GridPanel *CVIBuffer_GridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg)
 {
-    CVIBuffer_GridPanel *pTerrainTex = new CVIBuffer_GridPanel(pGraphicDev);
-    if (FAILED(pTerrainTex->Ready_Buffer(pArg)))
+    CVIBuffer_GridPanel *pGridPanel = new CVIBuffer_GridPanel(pGraphicDev);
+    if (FAILED(pGridPanel->Ready_Buffer(pArg)))
     {
-        Safe_Release(pTerrainTex);
-        MSG_BOX("pTerrainTex Create Failed");
+        Safe_Release(pGridPanel);
+        MSG_BOX("GridPanel Create Failed");
         return nullptr;
     }
 
-    return pTerrainTex;
+    return pGridPanel;
 }
 
 HRESULT CVIBuffer_GridPanel::Initialize(void *pArg)
