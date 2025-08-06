@@ -98,4 +98,6 @@ HRESULT CEditLoader::Loading_Editor()
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
+	return S_OK;
 }

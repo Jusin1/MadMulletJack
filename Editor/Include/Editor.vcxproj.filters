@@ -31,11 +31,23 @@
     <Filter Include="02. Camera">
       <UniqueIdentifier>{d899c018-5e6a-436e-a8da-64d6b89b1a53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Loader">
+    <Filter Include="03. Component">
+      <UniqueIdentifier>{71f096fc-57bf-4a1f-af40-4ce723b5a552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\GridPanel">
+      <UniqueIdentifier>{c147b684-a03b-4121-b792-44f7dad1c441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Loader">
       <UniqueIdentifier>{6651524d-eb82-4ddf-9d2c-3407063ff306}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Tile">
-      <UniqueIdentifier>{71f096fc-57bf-4a1f-af40-4ce723b5a552}</UniqueIdentifier>
+    <Filter Include="06. GUI">
+      <UniqueIdentifier>{a8bb9748-d214-4f0c-8d03-59534f358564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GridPanel">
+      <UniqueIdentifier>{fc014be5-b044-437a-ad7c-17609aefac59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GridPanel\Wall">
+      <UniqueIdentifier>{0e0420a1-c6ec-467a-9cfc-e3937b692287}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,10 +121,19 @@
       <Filter>02. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditLoader.h">
-      <Filter>04. Loader</Filter>
+      <Filter>05. Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditorLoadingScene.h">
       <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiBase.h">
+      <Filter>06. GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel.h">
+      <Filter>03. Component\GridPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWall.h">
+      <Filter>04. GridPanel\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,10 +189,19 @@
       <Filter>02. Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditLoader.cpp">
-      <Filter>04. Loader</Filter>
+      <Filter>05. Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditorLoadingScene.cpp">
       <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiBase.cpp">
+      <Filter>06. GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp">
+      <Filter>03. Component\GridPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWall.cpp">
+      <Filter>04. GridPanel\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Base", "03. Base", "{3A
 	ProjectSection(SolutionItems) = preProject
 		Base\CBase.h = Base\CBase.h
 		Base\CBase.inl = Base\CBase.inl
+		Editor\Code\CVIBuffer_WallPanel.cpp = Editor\Code\CVIBuffer_WallPanel.cpp
+		Editor\Header\CVIBuffer_WallPanel.h = Editor\Header\CVIBuffer_WallPanel.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Include\Engine.vcxproj", "{66BAFC2E-875C-4712-9CC7-B569BB637F85}"
