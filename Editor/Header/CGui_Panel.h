@@ -12,8 +12,14 @@ private:
 
 	virtual void Free() override;
 public:
-	void AddElement(GuiType _eType);
+	static CGui_Panel *Create(const string &_title);
+	void AddElement(CGuiBase *pElement);
 
 	void Render();
+	const string &GetTitle() const { return m_title; }
+	CGuiBase *GetElement(const string &_keyName);
+private:
+	std::string m_title;
+	std::map<string, CGuiBase *> m_pElements;
 };
 

@@ -14,6 +14,11 @@ void CGui_Button::Free()
 {
 }
 
+CGui_Button *CGui_Button::Create(const string &_label, std::function<void()> _func)
+{
+	return nullptr;
+}
+
 void CGui_Button::Render()
 {
 	if (ImGui::Button(m_label.c_str()))

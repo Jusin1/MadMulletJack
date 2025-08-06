@@ -13,6 +13,9 @@
 #include "CRenderer.h"
 #include "CManagement.h"
 #include "CEditorLoadingScene.h"
+#include "CGuiManager.h"
+#include "CGui_Panel.h"
+#include "CGui_Thumbnail.h"
 #include "CGraphicDev.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
@@ -171,6 +174,7 @@ HRESULT CEditorApplication::ImGuiInitialize()
 
 	m_bShowDemoWindow = true;
 	m_bShowAnotherWindow = false;
+
 	return S_OK;
 }
 
@@ -179,9 +183,53 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
-	auto *ptest = Engine::CComponentMgr::GetInstance();
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDevice))))
 		return E_FAIL;
+
+	
+	// Texture_PanelDefault
+	// Panel
+	{
+		CGui_Panel *pNewPanel = CGui_Panel::Create("Test");
+		CGuiManager::GetInstance()->AddPanel(pNewPanel);
+		// Test
+		{
+			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Test Thumbnail");
+			pNewPanel->AddElement(pThumbnail);
+		}
+	}
+
+	CGui_Thumbnail *pThumbnail = static_cast<CGui_Thumbnail*>(CGuiManager::GetInstance()->GetPanel("Test")->GetElement("Test Thumbnail"));
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault",
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Default.png", 1))))
+		return E_FAIL;
+	auto pTexture = static_cast<CTexture*>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault"))
+		->Get_Texture();
+	pThumbnail->Add_Thumbnail("test1", L"Proto_Component_Texture_PanelDefault", pTexture);
+
+#pragma region Å×½ºÆ®
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest",
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Trigger.png", 1))))
+		return E_FAIL;
+	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest"))
+		->Get_Texture();
+	pThumbnail->Add_Thumbnail("test2", L"Proto_Component_Texture_PanelTest", pTexture);
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2",
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_NoDraw.png", 1))))
+		return E_FAIL;
+	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2"))
+		->Get_Texture();
+	pThumbnail->Add_Thumbnail("test3", L"Proto_Component_Texture_PanelTest2", pTexture);
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3",
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Collider.png", 1))))
+		return E_FAIL;
+	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3"))
+		->Get_Texture();
+	pThumbnail->Add_Thumbnail("test4", L"Proto_Component_Texture_PanelTest3", pTexture);
+
+#pragma endregion
 
 	return S_OK;
 }
@@ -209,6 +257,10 @@ void CEditorApplication::RenderImGuiRender()
 
 	if (m_bShowDemoWindow)
 		ImGui::ShowDemoWindow(&m_bShowDemoWindow);
+
+	{
+		CGuiManager::GetInstance()->Render();
+	}
 
 	{
 		static float f = 0.0f;

@@ -153,7 +153,7 @@ HRESULT CGridPanel::Set_Component()
 		return E_FAIL;
 
 	// Texture
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_EDITOR, L"Proto_Component_Texture_PanelDefault", (CComponent **)&m_pTexture)))
+	if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Component_Texture_PanelDefault", (CComponent **)&m_pTexture)))
 		return E_FAIL;
 
 	CTransform::TRANSFORMINFO TransformInfo;

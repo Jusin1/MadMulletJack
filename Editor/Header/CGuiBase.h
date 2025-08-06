@@ -1,5 +1,8 @@
 #pragma once
 #include "CBase.h"
+
+#pragma push_macro("new")
+#undef new
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -11,6 +14,8 @@
 #include "ImZoomSlider.h"
 #include "ImCurveEdit.h"
 #include "GraphEditor.h"
+#pragma pop_macro("new")
+
 #include "CGuiManager.h"
 
 class CGuiBase : public CBase
@@ -22,6 +27,8 @@ protected:
 	virtual void Free();
 public:
 	virtual void Render() = 0;
+
+	const string &GetLabel() const { return m_label; }
 protected:
 	string m_label;
 };

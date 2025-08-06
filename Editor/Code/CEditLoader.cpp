@@ -86,17 +86,6 @@ HRESULT CEditLoader::Loading_Editor()
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 
 
-	// Texture_PanelDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_EDITOR, L"Proto_Component_Texture_PanelDefault",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Default.png", 1))))
-		return E_FAIL;
-
-#pragma region 테스트
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_EDITOR, L"Proto_Component_Texture_PanelTest",
-			CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Trigger.png", 1))))
-		return E_FAIL;
-#pragma endregion
-
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
 	//// Camera_Dynamic

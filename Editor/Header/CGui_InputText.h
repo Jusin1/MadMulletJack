@@ -9,6 +9,7 @@ protected:
 
 	virtual void Free() override;
 public:
+	static CGui_InputText *Create(const string &_label);
 	virtual void Render() override;
 
 	std::string GetValue() const { return std::string(cBuffer); }
