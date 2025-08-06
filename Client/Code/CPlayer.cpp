@@ -195,13 +195,13 @@ HRESULT CPlayer::Texture_Clone()
 	CTexture::TEXINFO		TextureInfo;
 	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
 
+	// TEST
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 5;
 	TextureInfo.m_fSpeed = 2;
-
 	if (FAILED(Add_Components(L"Com_Texture_Test", SCENE_STAGE, L"Prototype_Component_Texture_PlayerTest", (CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Test"), m_pTextureCom));
 
 	return S_OK;
 }

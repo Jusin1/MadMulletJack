@@ -107,6 +107,19 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 #pragma endregion 플레이어 테스트
 
+#pragma region 몬스터 테스트
+	// Monster
+	// IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/idle%03d.png", 12))))
+		return E_FAIL;
+
+	// AIM
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
+		return E_FAIL;
+#pragma endregion 몬스터 테스트
+
 #pragma region UI 테스트
 	// Player
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UITest",

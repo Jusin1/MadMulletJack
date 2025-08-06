@@ -5,6 +5,8 @@
 #include "CRenderer.h"
 #include "CColiderManager.h"
 #include "CObjectManager.h"
+#include "CTimerMgr.h"
+#include "CPickingManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -36,6 +38,9 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
+	//Test
+	Change_Texture(TEXT("Com_Texture_Idle"));
+
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
@@ -46,10 +51,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
-
-	list<CGameObject*>* objList = CObjectManager::GetInstance()->Get_ObjectList(SCENE_STAGE, L"GameLogic_Layer");
-	CTransform* pPlayer = dynamic_cast<CTransform*>(CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, L"GameLogic_Layer", L"Com_Transform", 0));
-
+	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 	CGameObject::Update_GameObject(fTimeDelta);
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this);
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
@@ -58,10 +60,12 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Key_Input(); // 테스트용 지워야 함
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	Set_Collider();
-
+	CPickingManager::GetInstance()->Add_PickingGroup(this);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CMonster::Render_GameObject()
@@ -69,24 +73,35 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
+	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
+	m_pTextureCom->MoveFrame(m_TimerTag);
+
+	// 알파 테스트 설정 추가
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	m_pBufferCom->Render_Buffer();
+
+	// 원상복귀
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 #ifdef _DEBUG
 	if (g_ColiderRender && m_pColiderCom != nullptr)
-	{
-		m_pColiderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
-	}
+		m_pColiderCom->Render_ColliderBox();
+
 	if (g_ColiderRender && m_pColiderSpherCom != nullptr)
-	{
-		m_pColiderSpherCom->Render_ColliderSphere(); // 충돌체 디버그 렌더
-	}
+		m_pColiderSpherCom->Render_ColliderSphere();
 #endif
 }
 
 HRESULT CMonster::Set_Component(void* pArg)
 {
+	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Monster"))))
+		return E_FAIL;
+
 	CTransform::TRANSFORMINFO TransformInfo;
 	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 
@@ -94,7 +109,17 @@ HRESULT CMonster::Set_Component(void* pArg)
 	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
 	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
 
+	m_TimerTag = TEXT("Timer_Monster");
+
 	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
+		return E_FAIL;
+
+	// VIBuffer
+	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
+
+	// Texture
+	if (Texture_Clone())
 		return E_FAIL;
 
 	// Render
@@ -139,6 +164,65 @@ void CMonster::Set_Collider(void)
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
+}
+
+void CMonster::Key_Input()
+{
+	if (GetAsyncKeyState('R'))
+	{
+		Change_Texture(TEXT("Com_Texture_AIM"));
+	}
+}
+
+_bool CMonster::Picking(_vec3* PickingPoint)
+{
+	if (true == m_pBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+		return true;
+	}
+	else
+		return false;
+	return true;
+}
+
+void CMonster::PickingTrue()
+{
+	m_bPickingTrue = true;
+}
+
+HRESULT CMonster::Texture_Clone()
+{
+	CTexture::TEXINFO		TextureInfo;
+	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
+
+
+	// IDLE
+	TextureInfo.m_iStart = 0;
+	TextureInfo.m_iEndTex = 12;
+	TextureInfo.m_fSpeed = 6;
+	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle", (CComponent**)&m_pTextureCom, &TextureInfo)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle"), m_pTextureCom));
+
+	// AIM
+	TextureInfo.m_iStart = 0;
+	TextureInfo.m_iEndTex = 9;
+	TextureInfo.m_fSpeed = 6;
+	if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim", (CComponent**)&m_pTextureCom, &TextureInfo)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_AIM"), m_pTextureCom));
+	return S_OK;
+}
+
+HRESULT CMonster::Change_Texture(const _tchar* LayerTag)
+{
+	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_Zero_Frame();
+
+	return S_OK;
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)

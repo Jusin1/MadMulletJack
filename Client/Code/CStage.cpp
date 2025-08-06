@@ -7,7 +7,7 @@
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
-
+#include "CPickingManager.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -42,6 +42,8 @@ HRESULT CStage::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
+    CPickingManager::GetInstance()->Ready_Picking();
+
     return S_OK;
 }
 
@@ -64,6 +66,8 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
     {
         bPrevF1 = false;
     }
+
+    CPickingManager::GetInstance()->Picking();
     return iExit;
 }
 

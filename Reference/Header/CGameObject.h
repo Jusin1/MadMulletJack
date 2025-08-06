@@ -25,6 +25,10 @@ public:
 	_bool Get_Dead() { return m_bDead; }
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
+
+public:
+	virtual _bool Picking(_vec3* PickingPoint) { return true; }
+	virtual void PickingTrue() {};
 public:
 	CTransform* GetTransform() const { return m_pTransformCom; }
 protected:

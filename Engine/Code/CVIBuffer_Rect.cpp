@@ -1,5 +1,6 @@
 #include "CVIBuffer_Rect.h"
-
+#include "CPicking.h"
+#include "CTransform.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev)
@@ -9,6 +10,8 @@ CVIBuffer_Rect::CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphicDev)
 CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& rhs)
     : CVIBuffer(rhs)
 {
+    for (int i = 0; i < 4; ++i)
+        m_vVerticesLocal[i] = rhs.m_vVerticesLocal[i];
 }
 
 CVIBuffer_Rect::~CVIBuffer_Rect()
@@ -25,6 +28,8 @@ HRESULT CVIBuffer_Rect::Ready_Buffer()
 
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
+
+
 
     if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
         return E_FAIL;
@@ -47,7 +52,14 @@ HRESULT CVIBuffer_Rect::Ready_Buffer()
     pVertex[3].vPosition = { -1.f, -1.f, 0.f };
     pVertex[3].vTexUV = { 0.f, 1.f };
 
+    // 로컬 정점 위치 저장
+    m_vVerticesLocal[0] = pVertex[0].vPosition;
+    m_vVerticesLocal[1] = pVertex[1].vPosition;
+    m_vVerticesLocal[2] = pVertex[2].vPosition;
+    m_vVerticesLocal[3] = pVertex[3].vPosition;
+
     m_pVB->Unlock();
+
 
     if (FAILED(CVIBuffer::Ready_Index_Buffer()))
         return E_FAIL;
@@ -75,6 +87,36 @@ HRESULT CVIBuffer_Rect::Ready_Buffer()
 HRESULT CVIBuffer_Rect::Initialize(void* pArg)
 {
     return S_OK;
+}
+
+_bool CVIBuffer_Rect::Picking(CTransform* pTransform, _vec3* pOut)
+{
+    CPicking* pPicking = CPicking::GetInstance();
+
+    pPicking->Add_Ref();
+
+
+    _matrix   WorldMatrix = *pTransform->Get_World();
+    _matrix	WorldMatrixInverse;
+    D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
+
+    pPicking->TransformRayToLocalSpace(WorldMatrixInverse);
+
+    if (true == pPicking->IntersectRayWithTriangleInLocal(m_vVerticesLocal[0], m_vVerticesLocal[1], m_vVerticesLocal[2], pOut))
+        goto Coll;
+
+    else if (true == pPicking->IntersectRayWithTriangleInLocal(m_vVerticesLocal[0], m_vVerticesLocal[2], m_vVerticesLocal[3], pOut))
+        goto Coll;
+
+    Safe_Release(pPicking);
+    return false;
+
+Coll:
+    D3DXVec3TransformCoord(pOut, pOut, &WorldMatrix);
+
+    Safe_Release(pPicking);
+
+    return true;
 }
 
 CVIBuffer_Rect* CVIBuffer_Rect::Create(LPDIRECT3DDEVICE9 pGraphicDev)

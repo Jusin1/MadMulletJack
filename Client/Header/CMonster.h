@@ -22,11 +22,25 @@ public:
 private:
 	HRESULT Set_Component(void* pArg = nullptr);
 	void			Set_Collider(void);
+	void			Key_Input(); // 테스트용 지워야함
+
+private: 
+	virtual _bool Picking(_vec3* PickingPoint) override;
+	virtual void PickingTrue() override;
 
 private:
+	HRESULT Texture_Clone();
+	HRESULT Change_Texture(const _tchar* LayerTag);
+
+private:
+	Engine::CVIBuffer_Rect* m_pBufferCom;
 	Engine::CRenderer* m_pRendererCom;
 	Engine::CColider_Cube* m_pColiderCom;
 	Engine::CColider_Sphere* m_pColiderSpherCom;
+	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
+	map<const _tchar*, CTexture*> m_mapTexture;
+	const _tchar* m_TimerTag = TEXT("");
+	_vec3 m_vecOutPos; // For Picking
 
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGrahpicDev);

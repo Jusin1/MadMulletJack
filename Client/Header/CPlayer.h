@@ -42,8 +42,7 @@ private:
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
 	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
-	Engine::CCalculator* m_pCalculatorCom;
-	vector<CTexture*> m_vecTexture; //애니메이션 전용 텍스쳐
+	map<const _tchar*, CTexture*> m_mapTexture;
 
 private:
 	STATE m_eState = IDLE;

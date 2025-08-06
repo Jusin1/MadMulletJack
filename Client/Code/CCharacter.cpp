@@ -2,7 +2,7 @@
 #include "CCharacter.h"
 
 CCharacter::CCharacter(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CGameObject(pGraphicDev)
+	:CGameObject(pGraphicDev), m_bPickingTrue(false)
 {
 }
 

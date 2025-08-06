@@ -21,7 +21,7 @@ public:
 	OBJID	Get_ObjID(void) { return m_eObjID; }
 protected:
 	OBJID m_eObjID;
-	_bool m_bPickingTrue = false;
+	_bool m_bPickingTrue;
 
 	virtual void Free() override;
 };

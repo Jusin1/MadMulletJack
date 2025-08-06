@@ -67,6 +67,12 @@
     <Filter Include="02. GameObject\01. Character\02. Monster">
       <UniqueIdentifier>{2d2d0674-1e7e-4d1e-9841-94446ae2ffbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{5362bf18-7c21-4327-a4b4-94d9be3df2b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\PickingManager">
+      <UniqueIdentifier>{f9b54d02-4e72-4866-9974-02b9f5233c87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -132,6 +138,9 @@
     <ClInclude Include="..\Header\CCharacter.h">
       <Filter>02. GameObject\01. Character</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPickingManager.h">
+      <Filter>03. Manager\PickingManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -184,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCharacter.cpp">
       <Filter>02. GameObject\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPickingManager.cpp">
+      <Filter>03. Manager\PickingManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

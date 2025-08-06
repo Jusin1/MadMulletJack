@@ -11,6 +11,8 @@
 #include "CColiderManager.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
+#include "CPicking.h"
+#include "CPickingManager.h"
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
 , m_pRenderer(nullptr)
@@ -26,6 +28,10 @@ HRESULT CMainApp::Ready_MainApp()
 {
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
+		return E_FAIL;
+
+	// 픽킹 초기화
+	if(FAILED(CPicking::GetInstance()->Initialize(g_hWnd, m_pGraphicDev)))
 		return E_FAIL;
 
 	// 객체 그룹 설정
@@ -53,6 +59,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 	CManagement::GetInstance()->Update_Scene(fTimeDelta); // 씬 업데이트
 	CObjectManager::GetInstance()->Update(fTimeDelta); // 오브젝트 업데이트
+	CPicking::GetInstance()->Update();
 
 	return 0;
 }
@@ -181,11 +188,13 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pGraphicDev);
 	CColiderManager::GetInstance()->DestroyInstance();
+	CPicking::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CDInputMgr::GetInstance()->DestroyInstance();
+	CPickingManager::GetInstance()->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
 }
