@@ -62,6 +62,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(); // 테스트용 지워야 함
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+	SetUp_BillBoard();
 	Set_Collider();
 	CPickingManager::GetInstance()->Add_PickingGroup(this);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -191,6 +192,22 @@ void CMonster::PickingTrue()
 {
 	m_bPickingTrue = true;
 }
+
+void CMonster::SetUp_BillBoard()
+{
+	_matrix _matView;
+
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &_matView);
+	D3DXMatrixInverse(&_matView, nullptr, &_matView);
+
+	_vec3 vRight = *(_vec3*)&_matView.m[0][0];
+	_vec3 vUp = *(_vec3*)&_matView.m[1][0];
+	_vec3 vLook = *(_vec3*)&_matView.m[2][0];
+	m_pTransformCom->Set_Info(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_Info(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
+}
+
 
 HRESULT CMonster::Texture_Clone()
 {

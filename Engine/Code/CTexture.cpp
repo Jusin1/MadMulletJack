@@ -74,7 +74,8 @@ HRESULT CTexture::Initialize(void* pArg)
 // 텍스쳐 바인딩
 void CTexture::Set_Texture(const _uint& iIndex)
 {
-    if (m_vecTexture.size() < iIndex)
+    // 올바른 조건
+    if (iIndex >= m_vecTexture.size())
         return;
 
     m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
