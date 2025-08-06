@@ -73,6 +73,15 @@
     <Filter Include="03. Manager\PickingManager">
       <UniqueIdentifier>{f9b54d02-4e72-4866-9974-02b9f5233c87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI">
+      <UniqueIdentifier>{f5c42883-adff-44ca-81b8-c6f4edd619e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerHandUI">
+      <UniqueIdentifier>{396b671f-4a22-47ee-b4df-70168e3aee84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerGunHI">
+      <UniqueIdentifier>{f01e7319-8097-41f7-b834-985e7e25c19a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -141,6 +150,15 @@
     <ClInclude Include="..\Header\CPickingManager.h">
       <Filter>03. Manager\PickingManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CUIBase.h">
+      <Filter>02. GameObject\06. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Hand.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Gun.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -196,6 +214,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPickingManager.cpp">
       <Filter>03. Manager\PickingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUIBase.cpp">
+      <Filter>02. GameObject\06. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Hand.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Gun.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

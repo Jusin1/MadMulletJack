@@ -11,6 +11,7 @@ CCharacter::CCharacter(LPDIRECT3DDEVICE9 pGraphicDev)
 CCharacter::CCharacter(const CGameObject& rhs)
 	: CGameObject(rhs)
 {
+
 }
 
 CCharacter::~CCharacter()

@@ -2,12 +2,12 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+	: CUIBase(pGraphicDev)
 {
 }
 
 CUI::CUI(const CUI& rhs)
-	: CGameObject(rhs)
+	: CUIBase(rhs)
 {
 }
 
@@ -31,18 +31,8 @@ HRESULT CUI::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
 
-	m_fSizeX = 50.0f;
-	m_fSizeY = 50.0f;
-
-	// Á¤Áß¾Ó
-	m_fX = WINCX * 0.5f;
-	m_fY = WINCY * 0.5f;
-
 	if (FAILED(Set_Component()))
 		return E_FAIL;
-
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(600.f, 0.f, 0.f)); // Á¤Áß¾Ó ÁÂÇ¥
 
 	return S_OK;
 }
@@ -72,7 +62,6 @@ void CUI::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	m_pTextureCom->Set_Texture(0);
 
 	m_pVIBufferCom->Render_Buffer();
 
@@ -82,10 +71,6 @@ HRESULT CUI::Set_Component()
 {
 	// Renderer
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	// Texture
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_UITest", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	// VIBUFFER
@@ -101,7 +86,6 @@ HRESULT CUI::Set_Component()
 
 	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
-
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -3,6 +3,9 @@
 #include "CRenderer.h"
 #include "CColiderManager.h"
 #include "CTimerMgr.h"
+#include "CPlayer_Hand.h"
+#include "CObjectManager.h"
+#include "CUIBase.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -30,6 +33,21 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	m_pUIPlayer = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
+
+	if (m_pUIPlayer == nullptr)
+		return E_FAIL;
+
+	// 손 UI 생성
+	CPlayer_Hand* pHandUI = dynamic_cast<CPlayer_Hand*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandUI", SCENE_STAGE, L"UI_Layer"));
+
+	if (pHandUI)
+	{
+		pHandUI->Initialize(nullptr); // 필요 시 인자 전달
+		m_pUIPlayer->Add_Child(pHandUI); // 루트 UI에 등록
+	}
 
 	if (FAILED(Set_Component()))
 		return E_FAIL;
@@ -70,7 +88,7 @@ void CPlayer::Render_GameObject()
 	m_pTransformCom->Apply_WorldMatrix();
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	m_pTextureCom->MoveFrame();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -99,8 +117,6 @@ HRESULT CPlayer::Set_Component()
 {
 	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
-
-	m_TimerTag = TEXT("Timer_Player");
 
 	// Render
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
@@ -155,7 +171,7 @@ HRESULT CPlayer::Set_Component()
 void CPlayer::Set_Collider(void)
 {
 	m_pColliderCom->Update_ColliderBox();
-	//m_pColiderSphere->Update_ColliderSphere();
+	m_pColiderSphere->Update_ColliderSphere();
 
 	//  큐브 충돌
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE, nullptr))
@@ -213,7 +229,6 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 		return E_FAIL;
 
 	m_pTextureCom->Set_Zero_Frame();
-
 	return S_OK;
 }
 
@@ -242,7 +257,6 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("pPlayer Create Failed");
 		return nullptr;
 	}
-
 	return pPlayer;
 }
 

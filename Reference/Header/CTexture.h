@@ -26,7 +26,7 @@ public:
 	void	Set_Texture(const _uint& iIndex = 0); // 텍스처 바인딩(렌더링 시)
 
 public:
-	void MoveFrame(const _tchar* timeTag); // 애니메이션 프레임 이동
+	void MoveFrame(); // 애니메이션 프레임 이동
 	void Set_Frame(int iStart, int iEnd, int iSpeed); // 애니메이션 프레임 설정
 	void Set_Zero_Frame() { m_TextureInfo.m_iCurrentTex = 0; } // 현재 프레임을 0 으로 초기화
 	TEXINFO& Get_Frame() { return m_TextureInfo; } // 프레임 정보 가져오기
@@ -52,5 +52,4 @@ private:
 	virtual void	Free();
 
 };
-
 END

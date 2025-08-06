@@ -1,11 +1,10 @@
 #pragma once
-#include "CGameObject.h"
+#include "CUIBase.h"
 #include "CComponentMgr.h"
 #include "Clinet_Define.h"
-class CUI :
-    public CGameObject
+class CUI : public CUIBase
 {
-private:
+protected:
 	explicit CUI(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CUI(const CUI& rhs);
 	virtual ~CUI();
@@ -17,18 +16,18 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-private:
+protected:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 
-private:
+protected:
 	_matrix					m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
-private:
+protected:
 	virtual HRESULT			Set_Component();
-
+	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

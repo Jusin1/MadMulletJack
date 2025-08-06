@@ -4,6 +4,7 @@
 #include "Clinet_Define.h"
 #include "Client_Global.h"
 #include "CComponentMgr.h"
+class CUIBase;
 
 class CPlayer : public CCharacter
 {
@@ -34,7 +35,7 @@ private:
 
 private:
 	HRESULT Texture_Clone();
-	HRESULT Change_Texture(const _tchar* LayerTag);
+	HRESULT Change_Texture(const _tchar* componentTag);
 
 private:
 	Engine::CVIBuffer_Rect* m_pBufferCom;
@@ -47,8 +48,10 @@ private:
 private:
 	STATE m_eState = IDLE;
 	STATE m_ePrevState = PLAYER_END;
-	const _tchar* m_TimerTag = TEXT("");
 	_float m_fGround_Height = 0.f;
+
+private:
+	CUIBase* m_pUIPlayer = nullptr;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

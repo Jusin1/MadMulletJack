@@ -17,7 +17,6 @@ VIBuffer_Cube::~VIBuffer_Cube()
 
 HRESULT VIBuffer_Cube::Ready_Buffer()
 {
-
     m_dwVtxSize = sizeof(VTXCUBE);
     m_dwVtxCnt = 8;
     m_dwTriCnt = 12;
@@ -124,8 +123,6 @@ HRESULT VIBuffer_Cube::Ready_Buffer()
     pIndex[11]._2 = 3;
 
     m_pIB->Unlock();
-
-
     return S_OK;
 }
 

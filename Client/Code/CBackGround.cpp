@@ -56,7 +56,6 @@ void CBackGround::LateUpdate_GameObject(const _float& fTimeDelta)
 void CBackGround::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
 	m_pTextureCom->Set_Texture();
 	m_pBufferCom->Render_Buffer();
 

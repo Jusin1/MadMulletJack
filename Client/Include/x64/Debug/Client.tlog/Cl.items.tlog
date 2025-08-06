@@ -9,10 +9,13 @@ C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CMainApp.cpp;C:\Users\�
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CMonster.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CMonster.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CPickingManager.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CPickingManager.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CPlayer.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CPlayer.obj
+C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CPlayer_Gun.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CPlayer_Gun.obj
+C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CPlayer_Hand.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CPlayer_Hand.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CSkyBox.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CSkyBox.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CStage.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CStage.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CTerrain.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CTerrain.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CUI.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CUI.obj
+C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Code\CUIBase.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\CUIBase.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\Client.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\Client.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\Clinet_Global.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\Clinet_Global.obj
 C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\pch.cpp;C:\Users\조한웅\Desktop\Git\MadMulletJack\Client\Include\x64\Debug\pch.obj

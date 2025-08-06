@@ -162,10 +162,13 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CPickingManager.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
+    <ClInclude Include="..\Header\CPlayer_Gun.h" />
+    <ClInclude Include="..\Header\CPlayer_Hand.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CUI.h" />
+    <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Global.h" />
     <ClInclude Include="Clinet_Define.h" />
@@ -186,10 +189,13 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CPickingManager.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
+    <ClCompile Include="..\Code\CPlayer_Gun.cpp" />
+    <ClCompile Include="..\Code\CPlayer_Hand.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
+    <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Clinet_Global.cpp" />
     <ClCompile Include="pch.cpp">

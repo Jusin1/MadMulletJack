@@ -25,7 +25,7 @@ public:
 private:
 	HRESULT		Render_Priority(); // 우선순위
 	HRESULT		Render_NonAlpha(); // 불투명
-	HRESULT		Render_Alpha(); // 반투명
+	HRESULT		Render_Alpha(); // 반투명6
 	HRESULT		Render_UI(); // UI 전용
 
 private:

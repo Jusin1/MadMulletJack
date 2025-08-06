@@ -42,7 +42,6 @@ private:
 	Engine::CColider_Sphere* m_pColiderSpherCom;
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
 	map<const _tchar*, CTexture*> m_mapTexture;
-	const _tchar* m_TimerTag = TEXT("");
 	_vec3 m_vecOutPos; 
 
 public:

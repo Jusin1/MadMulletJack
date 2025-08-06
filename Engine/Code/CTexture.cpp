@@ -48,7 +48,14 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType,
         wsprintf(szFullPath, pPath, i); // 경로 내 인덱스 적용
 
         // 2D or Cube 텍스쳐 생성
-        HRESULT hr = eType == TEX_NORMAL ? D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DTEXTURE9*)&pTexture) : D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DCUBETEXTURE9*)&pTexture);
+        HRESULT hr = eType == TEX_NORMAL ? D3DXCreateTextureFromFileEx(
+            m_pGraphicDev,
+            szFullPath,
+            D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
+            1, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED,
+            D3DX_FILTER_NONE, D3DX_FILTER_NONE,
+            0, NULL, NULL, (LPDIRECT3DTEXTURE9*)&pTexture) : D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFullPath, (LPDIRECT3DCUBETEXTURE9*)&pTexture);
+
 
         if (FAILED(hr))
             return E_FAIL;
@@ -82,7 +89,7 @@ void CTexture::Set_Texture(const _uint& iIndex)
 }
 
 // 애니메이션 프레임 이동
-void CTexture::MoveFrame(const _tchar* timeTag)
+void CTexture::MoveFrame()
 {
     if (m_bStopAnim)
         return;
@@ -120,7 +127,6 @@ CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eType, const
         MSG_BOX("pTexture Create Failed");
         return nullptr;
     }
-
     return pTexture;
 }
 
@@ -133,7 +139,6 @@ CComponent* CTexture::Clone(void* pArg)
         MSG_BOX("pTexture Clone Failed");
         Safe_Release(pInstance);
     }
-
     return pInstance;
 }
 
@@ -143,7 +148,7 @@ void CTexture::Free()
     for (size_t i = 0; i < m_vecTexture.size(); ++i)
     {
         Safe_Release(m_vecTexture[i]);
-    }   
+    }
 
     m_vecTexture.clear();
 

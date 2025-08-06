@@ -19,7 +19,6 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return 0; }
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag) { return 0; }
 
-
 public:
 	static CLogo* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

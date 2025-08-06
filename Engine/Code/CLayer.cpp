@@ -21,7 +21,6 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 		return E_FAIL;
 
 	m_objList.push_back(pGameObject);
-
 	return S_OK;
 }
 

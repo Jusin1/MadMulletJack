@@ -42,8 +42,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	Change_Texture(TEXT("Com_Texture_Idle"));
 
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-
+	m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
 	return S_OK;
 }
 
@@ -76,7 +75,7 @@ void CMonster::Render_GameObject()
 	m_pTransformCom->Apply_WorldMatrix();
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	m_pTextureCom->MoveFrame();
 
 	// 알파 테스트 설정 추가
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -110,7 +109,6 @@ HRESULT CMonster::Set_Component(void* pArg)
 	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
 	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
 
-	m_TimerTag = TEXT("Timer_Monster");
 
 	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;

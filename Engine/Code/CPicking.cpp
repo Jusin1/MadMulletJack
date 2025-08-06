@@ -12,7 +12,6 @@ CPicking::CPicking()
 	m_vRayDir_Local{},
 	m_vRayPos_Local{}
 {
-
 }
 
 CPicking::~CPicking()
