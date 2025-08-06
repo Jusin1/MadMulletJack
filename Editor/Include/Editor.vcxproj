@@ -120,7 +120,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../Header;../Include;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -158,8 +158,13 @@
     <ClInclude Include="..\Header\CEditorLoadingScene.h" />
     <ClInclude Include="..\Header\CEditorScene.h" />
     <ClInclude Include="..\Header\CEditLoader.h" />
-    <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CGuiManager.h" />
+    <ClInclude Include="..\Header\CGui_Button.h" />
+    <ClInclude Include="..\Header\CGui_InputText.h" />
+    <ClInclude Include="..\Header\CGui_Panel.h" />
+    <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CGuiBase.h" />
+    <ClInclude Include="..\Header\CGui_Thumbnail.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel.h" />
     <ClInclude Include="Editor_Define.h" />
     <ClInclude Include="GraphEditor.h" />
@@ -188,8 +193,13 @@
     <ClCompile Include="..\Code\CEditorLoadingScene.cpp" />
     <ClCompile Include="..\Code\CEditorScene.cpp" />
     <ClCompile Include="..\Code\CEditLoader.cpp" />
-    <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\CGuiManager.cpp" />
+    <ClCompile Include="..\Code\CGui_Button.cpp" />
+    <ClCompile Include="..\Code\CGui_InputText.cpp" />
+    <ClCompile Include="..\Code\CGui_Panel.cpp" />
+    <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGuiBase.cpp" />
+    <ClCompile Include="..\Code\CGui_Thumbnail.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="ImCurveEdit.cpp" />

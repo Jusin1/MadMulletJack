@@ -1,12 +1,7 @@
 #include "pch.h"
 #include "CGuiBase.h"
-
-CGuiBase::CGuiBase()
-{
-}
-
-CGuiBase::CGuiBase(string _title)
-	: m_title(_title)
+CGuiBase::CGuiBase(const string &_label)
+	: m_label(_label)
 {
 }
 

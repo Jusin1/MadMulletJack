@@ -11,16 +11,18 @@
 #include "ImZoomSlider.h"
 #include "ImCurveEdit.h"
 #include "GraphEditor.h"
+#include "CGuiManager.h"
 
 class CGuiBase : public CBase
 {
-private:
-	explicit CGuiBase();
-	explicit CGuiBase(string _title);
+protected:
+	explicit CGuiBase(const string &_label);
 	virtual ~CGuiBase();
 
 	virtual void Free();
-private:
-	string m_title;
+public:
+	virtual void Render() = 0;
+protected:
+	string m_label;
 };
 

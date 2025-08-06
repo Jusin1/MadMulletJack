@@ -1,5 +1,8 @@
 #include "CEditorScene.h"
 #include "Editor_Define.h"
+#include "CGridPanel.h"
+#include "CGuiManager.h"
+#include "CTexture.h"
 #include "CObjectManager.h"
 #include "CEditorCamera.h"
 
@@ -75,7 +78,7 @@ HRESULT CEditorScene::Ready_Camera_Layer(const _tchar *pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_Camera_Edit", SCENE_EDITOR, pLayerTag, &CamInfo)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_Camera_Edit", SCENE_EDITOR, pLayerTag, &CamInfo)))
         return E_FAIL;
 
     return S_OK;
@@ -83,5 +86,17 @@ HRESULT CEditorScene::Ready_Camera_Layer(const _tchar *pLayerTag)
 
 HRESULT CEditorScene::Ready_EditLogic_Layer(const _tchar *pLayerTag)
 {
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, pLayerTag)))
+        return E_FAIL;
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, pLayerTag)))
+        return E_FAIL;
+
+    
+    CGameObject *pObj = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 1);
+    CGuiManager::GetInstance()->SetTarget(pObj);
+    CGameObject *pObj2 = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 0);
+    static_cast<CGridPanel *>(pObj2)->Change_Texture(SCENE_EDITOR ,L"Proto_Component_Texture_PanelTest");
+    static_cast<CGridPanel *>(pObj)->Change_Buffer(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest");
     return S_OK;
 }

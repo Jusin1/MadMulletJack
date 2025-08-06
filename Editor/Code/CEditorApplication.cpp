@@ -95,15 +95,15 @@ void CEditorApplication::Run_EditorApplication()
 _int CEditorApplication::Update_EditorApplication()
 {
 	Engine::CDInputMgr::GetInstance()->Update_InputDev();
-	Engine::CManagement::GetInstance()->Update_Scene(0.0166f);
-	Engine::CObjectManager::GetInstance()->Update(0.0166f);
+	Engine::CManagement::GetInstance()->Update_Scene(0.00166f);
+	Engine::CObjectManager::GetInstance()->Update(0.00166f);
 	return 0;
 }
 
 void CEditorApplication::LateUpdate_EditorApplication()
 {
-	Engine::CManagement::GetInstance()->LateUpdate_Scene(0.0166f);
-	Engine::CObjectManager::GetInstance()->Late_Update(0.0166f);
+	Engine::CManagement::GetInstance()->LateUpdate_Scene(0.00166f);
+	Engine::CObjectManager::GetInstance()->Late_Update(0.00166f);
 
 	m_pGraphicDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
@@ -179,6 +179,7 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
+	auto *ptest = Engine::CComponentMgr::GetInstance();
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDevice))))
 		return E_FAIL;
 

@@ -2,6 +2,8 @@
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
 #include "CEditorCamera.h"
+#include "CVIBuffer_GridPanel.h"
+#include "CGridPanel.h"
 #include <process.h>
 
 CEditLoader::CEditLoader(LPDIRECT3DDEVICE9 pGraphicDevice)
@@ -83,18 +85,54 @@ HRESULT CEditLoader::Loading_Editor()
 {
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 
+
+	// Texture_PanelDefault
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_EDITOR, L"Proto_Component_Texture_PanelDefault",
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Default.png", 1))))
+		return E_FAIL;
+
+#pragma region 테스트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_EDITOR, L"Proto_Component_Texture_PanelTest",
+			CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Trigger.png", 1))))
+		return E_FAIL;
+#pragma endregion
+
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
 	//// Camera_Dynamic
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_Camera_Edit",
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_Camera_Edit",
 		CEditorCamera::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
+	// SamplePanel
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_SamplePanel",
+		CGridPanel::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
-	// CubeTex
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDevice))))
+	PANELDATA tTestData;
+	tTestData.eType = PanelType::FLOOR;
+	tTestData.dwIncline = 0;
+	tTestData.dwCountX = 5;
+	tTestData.dwCountZ = 5;
+	tTestData.dwInterval = 1;
+
+	// Buffer_PanelDefault
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice, &tTestData))))
 		return E_FAIL;
+
+	tTestData;
+	tTestData.eType = PanelType::WALL_VER;
+	tTestData.dwIncline = 0;
+	tTestData.dwCountY = 10;
+	tTestData.dwCountZ = 10;
+	tTestData.dwInterval = 1;
+
+	// Buffer_PanelTest
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest", CVIBuffer_GridPanel::Create(m_pGraphicDevice, &tTestData))))
+		return E_FAIL;
+	
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;

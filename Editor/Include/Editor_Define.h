@@ -3,6 +3,13 @@
 enum SCENE { SCENE_STATIC, SCENE_LOADING, SCENE_EDITOR, SCENE_END };
 enum OBJID { OBJ_WALL, OBJ_FLOOR, OBJ_INCLINE, OBJ_CEILING, OBJ_END };
 
+enum class GuiType
+{
+	TEXT,
+	BUTTON,
+	NONE
+};
+
 enum class PanelType : unsigned int
 {
 	WALL_HOR = 0,

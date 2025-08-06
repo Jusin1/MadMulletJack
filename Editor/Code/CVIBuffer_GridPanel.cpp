@@ -22,7 +22,7 @@ HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
 {
     if (!pArg)
     {
-        MSG_BOX("PanelData is nullptr");
+        MSG_BOX("CVIBuffer_GridPanel::Ready_Buffer, PanelBufferData is nullptr");
         return S_OK;
     }
     else
@@ -41,8 +41,10 @@ HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
     default:
     {
         MSG_BOX("PanelData.eType is None");
-    } return S_OK;
+    } break;
     }
+
+    return S_OK;
 }
 
 HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
@@ -91,9 +93,9 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
 
     m_pIB->Lock(0, 0, (void **)&pIndex, 0);
 
-    for (_ulong i = 0; i < m_tData.dwCountY; ++i)
+    for (_ulong i = 0; i < m_tData.dwCountY-1; ++i)
     {
-        for (_ulong j = 0; j < m_tData.dwCountX; ++j)
+        for (_ulong j = 0; j < m_tData.dwCountX-1; ++j)
         {
             dwIndex = i * m_tData.dwCountX + j;
 
@@ -161,9 +163,9 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
 
     m_pIB->Lock(0, 0, (void **)&pIndex, 0);
 
-    for (_ulong i = 0; i < m_tData.dwCountY; ++i)
+    for (_ulong i = 0; i < m_tData.dwCountY-1; ++i)
     {
-        for (_ulong j = 0; j < m_tData.dwCountZ; ++j)
+        for (_ulong j = 0; j < m_tData.dwCountZ-1; ++j)
         {
             dwIndex = i * m_tData.dwCountZ + j;
 
@@ -230,9 +232,9 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
 
     m_pIB->Lock(0, 0, (void **)&pIndex, 0);
 
-    for (_ulong i = 0; i < m_tData.dwCountZ; ++i)
+    for (_ulong i = 0; i < m_tData.dwCountZ - 1; ++i)
     {
-        for (_ulong j = 0; j < m_tData.dwCountX; ++j)
+        for (_ulong j = 0; j < m_tData.dwCountX - 1; ++j)
         {
             dwIndex = i * m_tData.dwCountX + j;
 
@@ -260,7 +262,7 @@ CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("GridPanel Clone Failed");
+        MSG_BOX("GridPanelBuffer Clone Failed");
         Safe_Release(pInstance);
     }
 
@@ -273,7 +275,7 @@ CVIBuffer_GridPanel *CVIBuffer_GridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
     if (FAILED(pGridPanel->Ready_Buffer(pArg)))
     {
         Safe_Release(pGridPanel);
-        MSG_BOX("GridPanel Create Failed");
+        MSG_BOX("GridPanelBuffer Create Failed");
         return nullptr;
     }
 

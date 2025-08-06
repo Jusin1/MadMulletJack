@@ -43,11 +43,29 @@
     <Filter Include="06. GUI">
       <UniqueIdentifier>{a8bb9748-d214-4f0c-8d03-59534f358564}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. GridPanel">
+    <Filter Include="06. GUI\Element">
+      <UniqueIdentifier>{cff62c8d-fba9-42ae-be46-f8f6dff5a097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Base">
+      <UniqueIdentifier>{3c361479-bfee-48c7-af99-8ba628db30a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Button">
+      <UniqueIdentifier>{ed356b75-57fd-49e9-b9fc-d9a2d032adb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Text">
+      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Panel">
+      <UniqueIdentifier>{ea27ae45-282b-40e7-975d-c4522b416a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject">
       <UniqueIdentifier>{fc014be5-b044-437a-ad7c-17609aefac59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. GridPanel\Wall">
+    <Filter Include="04. GameObject\GridPanel">
       <UniqueIdentifier>{0e0420a1-c6ec-467a-9cfc-e3937b692287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Thumbnail">
+      <UniqueIdentifier>{9dc81b83-b9a7-41bb-976b-ddcf5b085085}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,14 +144,29 @@
     <ClInclude Include="..\Header\CEditorLoadingScene.h">
       <Filter>01. Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGuiBase.h">
-      <Filter>06. GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CVIBuffer_GridPanel.h">
       <Filter>03. Component\GridPanel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CWall.h">
-      <Filter>04. GridPanel\Wall</Filter>
+    <ClInclude Include="..\Header\CGridPanel.h">
+      <Filter>04. GameObject\GridPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiBase.h">
+      <Filter>06. GUI\Element\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_InputText.h">
+      <Filter>06. GUI\Element\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Button.h">
+      <Filter>06. GUI\Element\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Panel.h">
+      <Filter>06. GUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiManager.h">
+      <Filter>06. GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Thumbnail.h">
+      <Filter>06. GUI\Element\Thumbnail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,14 +227,29 @@
     <ClCompile Include="..\Code\CEditorLoadingScene.cpp">
       <Filter>01. Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGuiBase.cpp">
-      <Filter>06. GUI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp">
       <Filter>03. Component\GridPanel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CWall.cpp">
-      <Filter>04. GridPanel\Wall</Filter>
+    <ClCompile Include="..\Code\CGridPanel.cpp">
+      <Filter>04. GameObject\GridPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiBase.cpp">
+      <Filter>06. GUI\Element\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_InputText.cpp">
+      <Filter>06. GUI\Element\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Button.cpp">
+      <Filter>06. GUI\Element\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Panel.cpp">
+      <Filter>06. GUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiManager.cpp">
+      <Filter>06. GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Thumbnail.cpp">
+      <Filter>06. GUI\Element\Thumbnail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

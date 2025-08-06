@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Engine_Define.h"
+#include "CGameObject.h"
 #include "CGuiManager.h"
 
 IMPLEMENT_SINGLETON(CGuiManager)

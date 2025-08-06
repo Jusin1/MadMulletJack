@@ -12,7 +12,7 @@ private:
 
 	virtual void Free() override;
 public:
-	void AddElement();
+	void AddElement(GuiType _eType);
 
 	void Render();
 };

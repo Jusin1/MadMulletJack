@@ -1,7 +1,11 @@
 #pragma once
 #include "CBase.h"
+#include "Engine_Define.h"
 
-class CGameObject;
+namespace Engine
+{
+	class CGameObject;
+}
 
 class CGuiManager : public CBase
 {
@@ -12,9 +16,9 @@ private:
 
 	virtual void Free() override;
 public:
-	const CGameObject *GetTarget() const { return m_pTarget; }
-	void SetTarget(CGameObject *_p) { m_pTarget = _p; }
+	const Engine::CGameObject *GetTarget() const { return m_pTarget; }
+	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }
 private:
-	CGameObject *m_pTarget;
+	Engine::CGameObject *m_pTarget;
 };
 
