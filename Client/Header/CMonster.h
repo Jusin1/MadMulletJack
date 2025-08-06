@@ -29,6 +29,9 @@ private:
 	virtual void PickingTrue() override;
 
 private:
+	void SetUp_BillBoard();
+
+private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
@@ -40,7 +43,7 @@ private:
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
 	map<const _tchar*, CTexture*> m_mapTexture;
 	const _tchar* m_TimerTag = TEXT("");
-	_vec3 m_vecOutPos; // For Picking
+	_vec3 m_vecOutPos; 
 
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGrahpicDev);

@@ -155,17 +155,18 @@ HRESULT CPlayer::Set_Component()
 void CPlayer::Set_Collider(void)
 {
 	m_pColliderCom->Update_ColliderBox();
-	m_pColiderSphere->Update_ColliderSphere();
+	//m_pColiderSphere->Update_ColliderSphere();
 
-	//  충돌 검사만 유지
+	//  큐브 충돌
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
-	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	}
+	//// 구 충돌
+	//if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	//{
+	//	_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+	//}
 }
 
 void CPlayer::Key_Input(const _float& fTimeDelta)

@@ -42,7 +42,7 @@ HRESULT CUI::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(0.f, 0.f, 0.f)); // Á¤Áß¾Ó ÁÂÇ¥
+	m_pTransformCom->Set_Info(INFO_POS, _vec3(600.f, 0.f, 0.f)); // Á¤Áß¾Ó ÁÂÇ¥
 
 	return S_OK;
 }

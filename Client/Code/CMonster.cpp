@@ -178,7 +178,8 @@ _bool CMonster::Picking(_vec3* PickingPoint)
 {
 	if (true == m_pBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
-		m_vecOutPos = *PickingPoint;
+		//m_vecOutPos = *PickingPoint;
+		Change_Texture(TEXT("Com_Texture_AIM"));
 		return true;
 	}
 	else
@@ -196,7 +197,6 @@ HRESULT CMonster::Texture_Clone()
 	CTexture::TEXINFO		TextureInfo;
 	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
 
-
 	// IDLE
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 12;
@@ -212,6 +212,8 @@ HRESULT CMonster::Texture_Clone()
 	if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim", (CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;
 	m_mapTexture.insert(make_pair(TEXT("Com_Texture_AIM"), m_pTextureCom));
+
+
 	return S_OK;
 }
 

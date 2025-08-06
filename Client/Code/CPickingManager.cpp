@@ -19,11 +19,13 @@ HRESULT CPickingManager::Ready_Picking()
 	return S_OK;
 }
 
+// 모든 픽킹 대상 제거
 void CPickingManager::Clear_Picking()
 {
 	m_PickingList.clear();
 }
 
+// 픽킹 대상 추가
 void CPickingManager::Add_PickingGroup(CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
@@ -32,6 +34,7 @@ void CPickingManager::Add_PickingGroup(CGameObject* pGameObject)
 	m_PickingList.push_back(pGameObject);
 }
 
+// 픽킹 대상 제거
 void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 {
 	auto iter = m_PickingList.begin();
@@ -44,7 +47,7 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 	}
 }
 
-
+// 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
 	if(m_bMouseInUI)
@@ -58,6 +61,7 @@ _bool CPickingManager::Picking()
 	vector<_vec3> vecPos;
 	_vec3 vPos;
 
+	// 모든 오브젝트 중 레이와 충돌한 것 수집
 	for (auto& pGameObject : m_PickingList)
 	{
 		if (pGameObject->Picking(&vPos))
@@ -67,10 +71,12 @@ _bool CPickingManager::Picking()
 		}
 	}
 
+	// 하나라도 충돌한 게 있다면
 	if (!vecPicked.empty())
 	{
 		_vec3 vecNearPos;
 		int NearNum = 0;
+		// 가장 가까운 오브젝트 찾기 (z값 기준)
 		for (_uint i = 0; i < vecPos.size(); ++i)
 		{
 			if (vecPos[i].z <= vecNearPos.z || i == 0)
@@ -81,7 +87,7 @@ _bool CPickingManager::Picking()
 		}
 
 		m_vPickingPos = vecNearPos;
-		vecPicked[NearNum]->PickingTrue();
+		vecPicked[NearNum]->PickingTrue(); // 해당 오브젝트에 알림
 
 		return true;
 	}
@@ -89,6 +95,7 @@ _bool CPickingManager::Picking()
 	return false;
 }
 
+// 현재 픽킹된 오브젝트 해제
 void CPickingManager::Release_PickingObject()
 {
 	if (nullptr != m_pPickingObject)

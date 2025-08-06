@@ -12,7 +12,7 @@ CPicking::CPicking()
 	m_vRayDir_Local{},
 	m_vRayPos_Local{}
 {
-			
+
 }
 
 CPicking::~CPicking()
@@ -23,6 +23,7 @@ HRESULT CPicking::Initialize(HWND hWnd, LPDIRECT3DDEVICE9 pGrahpicDev)
 {
 	m_pGrahpicDev = pGrahpicDev;
 
+	m_hWnd = hWnd; 
 	m_pGrahpicDev->AddRef();
 
 	return S_OK;
