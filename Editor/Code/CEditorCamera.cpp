@@ -83,12 +83,12 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 {
 	m_vPosition = m_pTransform->Get_Info(INFO_POS);
 
-	_long iWheel = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z);
+	/*_long iWheel = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z);
 	if (iWheel != 0)
 	{
 		m_lMouseWheel += iWheel * 0.05f;
 		m_pTransform->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
-	}
+	}*/
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)
 		m_pTransform->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);

@@ -19,7 +19,7 @@ private:
 	virtual void Free() override;
 public:
 	void Render();
-	const Engine::CGameObject *GetTarget() const { return m_pTarget; }
+	Engine::CGameObject *GetTarget() const { return m_pTarget; }
 	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }
 	
 	map<string, CGui_Panel *> *GetPanelMapList() { return &m_pPanels; }

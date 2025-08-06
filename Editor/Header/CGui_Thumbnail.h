@@ -21,6 +21,7 @@ public:
 	virtual void Render() override;
 
 	void Add_Thumbnail(const string &_name, const _tchar *_comp_name, IDirect3DBaseTexture9 *_pTexture);
+	void Change_Texture();
 private:
 	int m_iSelectedIndex;
 	int m_iCol;

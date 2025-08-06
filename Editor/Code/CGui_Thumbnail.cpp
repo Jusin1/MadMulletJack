@@ -1,4 +1,7 @@
 #include "pch.h"
+#include "Editor_Define.h"
+#include "CGuiManager.h"
+#include "CGridPanel.h"
 #include "CGui_Thumbnail.h"
 
 CGui_Thumbnail::CGui_Thumbnail(const string &_label)
@@ -31,6 +34,7 @@ void CGui_Thumbnail::Render()
 		if (ImGui::ImageButton(m_vecThumbnails[i].name.c_str(), m_vecThumbnails[i].imguiID, ImVec2(m_fThumbnailSize, m_fThumbnailSize)))
 		{
 			m_iSelectedIndex = static_cast<int>(i);
+			Change_Texture();
 		}
 		ImGui::TextWrapped("%s", m_vecThumbnails[i].name.c_str());
 		ImGui::EndGroup();
@@ -50,4 +54,17 @@ void CGui_Thumbnail::Add_Thumbnail(const string &_name, const _tchar *_comp_name
 	newData.imguiID = reinterpret_cast<ImTextureID>(_pTexture);
 
 	m_vecThumbnails.push_back(newData);
+}
+
+void CGui_Thumbnail::Change_Texture()
+{
+	if (m_iSelectedIndex >= 0)
+	{
+		if (CGridPanel *pTargetPanel = static_cast<CGridPanel *>(CGuiManager::GetInstance()->GetTarget()))
+		{
+			pTargetPanel->Change_Texture(SCENE_STATIC, m_vecThumbnails[m_iSelectedIndex].comp_name);
+		}
+
+		m_iSelectedIndex = -1;
+	}
 }
