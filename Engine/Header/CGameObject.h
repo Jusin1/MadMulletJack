@@ -31,6 +31,7 @@ public:
 public:
 	virtual _bool Picking(_vec3* PickingPoint) { return true; }
 	virtual void PickingTrue() {};
+	virtual void ExportData(void *pData) {};
 public:
 	CTransform* GetTransform() const { return m_pTransformCom; }
 protected:

@@ -73,7 +73,7 @@ namespace Engine
 
 	typedef struct tagTextureData
 	{
-		wstring FilePath = L"";
+		wstring OriginComponentName = L"";
 	} TEXTUREDATA;
 
 	typedef struct tagMapObjectData

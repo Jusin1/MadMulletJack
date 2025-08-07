@@ -12,6 +12,7 @@ CGuiManager::CGuiManager()
 
 CGuiManager::~CGuiManager()
 {
+	Free();
 }
 
 void CGuiManager::Free()

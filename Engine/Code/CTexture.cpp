@@ -7,6 +7,7 @@ CTexture::CTexture(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_TextureInfo{}
     , m_fTimeAcc(0.f)
     , m_bStopAnim(false)
+    , m_OriginComponentName(L"")
 {
 }
 
@@ -18,6 +19,7 @@ CTexture::CTexture(const CTexture& rhs)
     , m_TextureInfo(rhs.m_TextureInfo)
     , m_fTimeAcc(rhs.m_fTimeAcc)
     , m_bStopAnim(rhs.m_bStopAnim)
+    , m_OriginComponentName(rhs.m_OriginComponentName)
 {
     // 텍스쳐 참조 카운트 증가
     for (auto& pTex : m_vecTexture)

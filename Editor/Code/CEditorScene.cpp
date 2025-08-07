@@ -1,6 +1,8 @@
 #include "CEditorScene.h"
 #include "Editor_Define.h"
 #include "CGridPanel.h"
+#include "CDInputMgr.h"
+#include "CFileManager.h"
 #include "CGuiManager.h"
 #include "CTexture.h"
 #include "CObjectManager.h"
@@ -56,6 +58,10 @@ _int CEditorScene::Update_Scene(const _float &fTimeDelta)
 void CEditorScene::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_1))
+    {
+        CFileManager::GetInstance()->SaveObjectList(L"test.json", SCENE_EDITOR, L"EditLogic_Layer");
+    }
 }
 
 void CEditorScene::Render_Scene()

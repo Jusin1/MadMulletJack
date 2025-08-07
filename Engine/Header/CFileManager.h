@@ -17,13 +17,12 @@ private:
 	virtual ~CFileManager();
 	
 	virtual void Free() override;
-
 public:
 	static inline std::string WStringToUTF8(const std::wstring &wstr);
 	static inline std::wstring UTF8ToWString(const std::string &str);
 
-public:
-	
+	void SaveObjectList(const wstring &filePath, _uint iSceneID, const _tchar *szLayerTag);
+	void LoadObjectList(const std::wstring &filePath, _uint iSceneID, const _tchar *szLayerTag);
 private:
 	
 };

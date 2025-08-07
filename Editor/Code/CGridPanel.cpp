@@ -65,10 +65,10 @@ HRESULT CGridPanel::Ready_GameObject()
 
 HRESULT CGridPanel::Initialize(void *pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;
 
-	if (FAILED(Set_Component()))
+	if (FAILED(Set_Component(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -99,6 +99,28 @@ void CGridPanel::Render_GameObject()
 	m_pBuffer->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CGridPanel::ExportData(void *pData)
+{
+	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pData))
+	{
+		p->ObjType = OBJ_END;
+		p->panelBuffer.dwCountX = GetBuffer()->Get_Data()->dwCountX;
+		p->panelBuffer.dwCountY = GetBuffer()->Get_Data()->dwCountY;
+		p->panelBuffer.dwCountZ = GetBuffer()->Get_Data()->dwCountZ;
+		p->panelBuffer.dwInterval = GetBuffer()->Get_Data()->dwInterval;
+		p->panelBuffer.eType = GetBuffer()->Get_Data()->eType;
+		p->texture.OriginComponentName = GetTexture()->GetOriginCompName();
+		_vec3 cpy = GetTransform()->Get_Info(INFO_RIGHT);
+		::memcpy(&p->transform.Right, &cpy, sizeof(_vec3));
+		cpy = GetTransform()->Get_Info(INFO_UP);
+		::memcpy(&p->transform.Up, &cpy, sizeof(_vec3));
+		cpy = GetTransform()->Get_Info(INFO_LOOK);
+		::memcpy(&p->transform.Look, &cpy, sizeof(_vec3));
+		cpy = GetTransform()->Get_Info(INFO_POS);
+		::memcpy(&p->transform.Pos, &cpy, sizeof(_vec3));
+	}
 }
 
 HRESULT CGridPanel::Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg)
@@ -141,10 +163,13 @@ HRESULT CGridPanel::Change_Buffer(_uint iSceneIdx, const _tchar *pPrototypeTag, 
 	return CGameObject::Add_Components(L"Com_Buffer", iSceneIdx, pPrototypeTag, (CComponent **)&m_pBuffer, pArg);
 }
 
-HRESULT CGridPanel::Set_Component()
+HRESULT CGridPanel::Set_Component(void *pArg)
 {
-	auto *test = CComponentMgr::GetInstance();
-
+	if (pArg)
+	{
+		MAPOBJECTDATA tdata;
+		::memcpy(&tdata, pArg, sizeof(MAPOBJECTDATA));
+	}
 	// Render
 	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent **)&m_pRenderer)))
 		return E_FAIL;

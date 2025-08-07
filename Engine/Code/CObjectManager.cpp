@@ -1,4 +1,5 @@
 #include "CObjectManager.h"
+#include "CFileManager.h"
 #include "CLayer.h"
 
 
@@ -166,6 +167,25 @@ CComponent* CObjectManager::Get_Component(_uint iSceneIdx, const _tchar* pLayerT
 
 
 	return pLayer->Get_Component(pComponentTag, iIdx);
+}
+
+std::vector<MAPOBJECTDATA> CObjectManager::ExportObjectData(_uint iSceneID, const _tchar *pLayerTag)
+{
+	list<CGameObject *> *pList = Get_ObjectList(iSceneID, pLayerTag);
+	if ((*pList).size() <= 0 || !pList)
+		return {};
+
+	std::vector<MAPOBJECTDATA> returnData;
+	returnData.reserve((*pList).size());
+
+	for (CGameObject *element : (*pList))
+	{
+		MAPOBJECTDATA pSrc;
+		element->ExportData(&pSrc);
+		returnData.push_back(pSrc);
+	}
+
+	return returnData;
 }
 
 // 원본 검색

@@ -10,7 +10,7 @@ CVIBuffer_GridPanel::CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev)
 }
 
 CVIBuffer_GridPanel::CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs)
-    : CVIBuffer(rhs)
+    : CVIBuffer(rhs), m_tData(rhs.m_tData)
 {
 }
 

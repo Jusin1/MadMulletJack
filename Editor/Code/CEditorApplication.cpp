@@ -14,6 +14,7 @@
 #include "CManagement.h"
 #include "CEditorLoadingScene.h"
 #include "CGuiManager.h"
+#include "CFileManager.h"
 #include "CGui_Panel.h"
 #include "CGui_Thumbnail.h"
 #include "CGraphicDev.h"
@@ -40,10 +41,15 @@ void CEditorApplication::Free()
 	Engine::CManagement::GetInstance()->DestroyInstance();
 	Engine::CObjectManager::GetInstance()->DestroyInstance();
 	Engine::CDInputMgr::GetInstance()->DestroyInstance();
+	
+	m_pDeviceClass->DestroyInstance();
 
 	Engine::Safe_Release(m_pRenderer);
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pGraphicDevice);
+
+	CGuiManager::GetInstance()->DestroyInstance();
+	CFileManager::GetInstance()->DestroyInstance();
 
 	::ImGui_ImplDX9_Shutdown();
 	::ImGui_ImplWin32_Shutdown();

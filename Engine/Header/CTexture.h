@@ -37,14 +37,15 @@ public:
 	TEXINFO& Get_Frame() { return m_TextureInfo; } // 프레임 정보 가져오기
 	void Stop_Anim() { m_bStopAnim = true; } // 애니메이션 정지
 	void Resume_Anim() { m_bStopAnim = false; } // 다시재생
-
+	void SetOriginCompName(std::wstring _wstr) { m_OriginComponentName = _wstr; }
+	std::wstring GetOriginCompName() { return m_OriginComponentName; }
 private:
 	_uint								m_iNumTextures = 0; // 텍스쳐 수
 	vector<IDirect3DBaseTexture9*>		m_vecTexture; // 텍스쳐 컨테이너
 	TEXINFO								m_TextureInfo; // 프레임 정보
 	_float m_fTimeAcc = 0.0f; // 시간 누적용
 	bool								m_bStopAnim = false;
-	
+	std::wstring						m_OriginComponentName; // 원본 컴포넌트 이름 (파싱용)
 
 public:
 	virtual CComponent* Clone(void* pArg);

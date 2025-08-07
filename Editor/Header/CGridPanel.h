@@ -27,10 +27,12 @@ public:
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
 
+	virtual void ExportData(void *pData) override;
+
 	HRESULT Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg = nullptr);
 	HRESULT Change_Buffer(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg = nullptr);
 private:
-	HRESULT			Set_Component();
+	HRESULT			Set_Component(void *pArg);
 public:
 	CVIBuffer_GridPanel *GetBuffer() { return m_pBuffer; }
 	Engine::CRenderer *GetRenderer() { return m_pRenderer; }

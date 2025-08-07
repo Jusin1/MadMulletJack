@@ -103,6 +103,7 @@ HRESULT CEditLoader::Loading_Editor()
 	PANELDATA tTestData;
 	tTestData.eType = PanelType::FLOOR;
 	tTestData.dwCountX = 5;
+	tTestData.dwCountY = 0;
 	tTestData.dwCountZ = 5;
 	tTestData.dwInterval = 1;
 
@@ -112,6 +113,7 @@ HRESULT CEditLoader::Loading_Editor()
 
 	tTestData;
 	tTestData.eType = PanelType::WALL_VER;
+	tTestData.dwCountX = 0;
 	tTestData.dwCountY = 10;
 	tTestData.dwCountZ = 10;
 	tTestData.dwInterval = 1;

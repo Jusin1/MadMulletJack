@@ -3,6 +3,7 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include "CObjectManager.h"
 #include "CFileManager.h"
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PanelType, {
@@ -50,6 +51,47 @@ std::wstring CFileManager::UTF8ToWString(const std::string &str)
 	return conv.from_bytes(str);
 }
 
+void CFileManager::SaveObjectList(const wstring &filePath, _uint iSceneID, const _tchar *szLayerTag)
+{
+    std::vector<MAPOBJECTDATA> objectDatas = CObjectManager::GetInstance()->ExportObjectData(iSceneID, szLayerTag);
+
+    json jArray = json::array();
+    for (const auto &data : objectDatas)
+    {
+        jArray.push_back(data);
+    }
+
+    std::ofstream ofs(filePath, std::ios::out | std::ios::binary);
+    if (!ofs.is_open())
+    {
+        MSG_BOX("CFileManager::SaveObjectList, Failed Save");
+        return;
+    }
+
+    ofs << std::setw(4) << jArray << std::endl;
+    ofs.close();
+}
+
+void CFileManager::LoadObjectList(const std::wstring &filePath, _uint iSceneID, const _tchar *szLayerTag)
+{
+    std::ifstream ifs(filePath, std::ios::in | std::ios::binary);
+    if (!ifs.is_open())
+    {
+        MessageBox(nullptr, L"파일 열기 실패!", L"Error", MB_OK);
+        return;
+    }
+
+    json jArray;
+    ifs >> jArray;
+
+    for (const auto &jObj : jArray)
+    {
+        MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
+        CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", iSceneID, szLayerTag,&objData);
+    }
+    ifs.close();
+}
+
 BEGIN(Engine)
 
 void to_json(json &_j, const TRANSFORMDATA &_tData)
@@ -75,7 +117,7 @@ void to_json(json &_j, const TEXTUREDATA &_tData)
 {
     _j = json
     {
-        {"FilePath", CFileManager::WStringToUTF8(_tData.FilePath)}
+        {"FilePath", CFileManager::WStringToUTF8(_tData.OriginComponentName)}
     };
 }
 
@@ -83,7 +125,7 @@ void from_json(const json &_j, TEXTUREDATA &_tData)
 {
     std::string srcString{ "" };
     _j.at("FilePath").get_to(srcString);
-    _tData.FilePath = CFileManager::UTF8ToWString(srcString);
+    _tData.OriginComponentName = CFileManager::UTF8ToWString(srcString);
 }
 
 void to_json(json &_j, const PANELDATA &_tData)

@@ -36,7 +36,11 @@ HRESULT CComponentMgr::Add_Prototype(_uint iSceneIdx, const _tchar* pPrototypeTa
     if (nullptr != Find_Component(iSceneIdx, pPrototypeTag))
         return E_FAIL;
 
-    
+    if (CTexture *pTextureComp = dynamic_cast<CTexture *>(pPrototype))
+    {
+        pTextureComp->SetOriginCompName(std::wstring(pPrototypeTag));
+    }
+
     m_mapPrototype[iSceneIdx].emplace(pPrototypeTag, pPrototype);
 
     return S_OK;
