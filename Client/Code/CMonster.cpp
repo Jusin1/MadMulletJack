@@ -13,7 +13,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
-CMonster::CMonster(const CGameObject& rhs)
+CMonster::CMonster(const CMonster& rhs)
 	: CCharacter(rhs)
 {
 }
@@ -51,19 +51,19 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
-	CPickingManager::GetInstance()->Remove_PickingGroup(this);
+	CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 그룹에서 지워줌
 	CGameObject::Update_GameObject(fTimeDelta);
-	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this);
+	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this); // collider 그룹에 넣어줌
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	return NO_EVENT;
 }
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	Key_Input(); // 테스트용 지워야 함
+	//Key_Input(); // 테스트용 지워야 함
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	Set_Collider();
-	CPickingManager::GetInstance()->Add_PickingGroup(this);
+	CPickingManager::GetInstance()->Add_PickingGroup(this); // picking 그룹에 넣어줌
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 }
@@ -147,7 +147,7 @@ HRESULT CMonster::Set_Component(void* pArg)
 	// Colider_Sphere
 	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSpherCom, &CollSphereInfo)))
 		return E_FAIL;
-	m_pColiderSpherCom->Set_Transform(m_pTransformCom);
+	m_pColiderSpherCom->Set_Transform(m_pTransformCom); // set tranform을 해줘야함 <- 그 전에 transform 생성 해줘야 하고
 	return S_OK;
 }
 
