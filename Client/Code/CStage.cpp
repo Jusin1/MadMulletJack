@@ -149,6 +149,9 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
 
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_HPUI", SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
+
     return S_OK;
 }
 

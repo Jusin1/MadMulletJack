@@ -28,6 +28,9 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
+protected:
+	virtual HRESULT			Set_Component();
+
 public:
 	void	Set_HpPersent(_float m_fHPPercent);
 

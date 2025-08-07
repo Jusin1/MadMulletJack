@@ -180,9 +180,9 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	//// HpBarUI
-	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
-	//	CHpBarUI::Create(m_pGraphicDev))))
-	//	return E_FAIL;
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
+		CHpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("¸ðµ¨ ·Îµù Áß."));
 	// TerrianTex
@@ -204,24 +204,19 @@ HRESULT CLoader::Loading_ForStage()
 CLoader* CLoader::Create(LPDIRECT3DDEVICE9 pGrahpicDev, SCENE eNextScene)
 {
 	CLoader* pInstance = new CLoader(pGrahpicDev);
-
 	if (FAILED(pInstance->Ready_Loading(eNextScene)))
 	{
 		MSG_BOX("Failed to Created : CLoader");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
 void CLoader::Free()
 {
 	WaitForSingleObject(m_hThread, INFINITE);
-
 	CloseHandle(m_hThread);
-
 	DeleteCriticalSection(&m_Crt);
-
 	Safe_Release(m_pGraphicDev);
 }
 

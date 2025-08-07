@@ -249,7 +249,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 	}
 
 	CountHp(fTimeDelta);
-	KeyInput(fTimeDelta);
+	Key_Input(fTimeDelta);
 }
 
 void CPlayer::StateNormalSet()
@@ -353,6 +353,7 @@ void CPlayer::SLIED_Begin()
 
 void CPlayer::SLIED_On(const _float& fTimeDelta)
 {
+
 }
 
 void CPlayer::SLIED_End()

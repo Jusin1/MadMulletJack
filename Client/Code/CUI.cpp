@@ -31,14 +31,13 @@ HRESULT CUI::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
 
-
 	return S_OK;
 }
 
 
 _int CUI::Update_GameObject(const _float& fTimeDelta)
 {
-
+	__super::Update_GameObject(fTimeDelta);
 	return NO_EVENT;
 }
 
@@ -63,6 +62,9 @@ void CUI::Render_GameObject()
 
 HRESULT CUI::Set_Component()
 {
+	if (FAILED(__super::Set_Component()))
+		return E_FAIL;
+
 	// VIBUFFER
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;

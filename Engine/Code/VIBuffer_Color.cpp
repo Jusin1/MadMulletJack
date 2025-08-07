@@ -16,7 +16,7 @@ VIBuffer_Color::~VIBuffer_Color()
 
 HRESULT VIBuffer_Color::Ready_Buffer()
 {
-    m_dwVtxSize = sizeof(VTXTEX);
+    m_dwVtxSize = sizeof(VTXCOL);
     m_dwVtxCnt = 4;
     m_dwTriCnt = 2;
     m_dwFVF = FVF_COL;
