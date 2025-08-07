@@ -12,9 +12,7 @@ public:
 	static CGui_InputText *Create(const string &_label);
 	virtual void Render() override;
 
-	std::string GetValue() const { return std::string(cBuffer); }
 private:
-	char cBuffer[256];
-public:
+	std::vector<char> m_value; 
 };
 

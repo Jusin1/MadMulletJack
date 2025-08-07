@@ -94,8 +94,8 @@ HRESULT CEditorScene::Ready_EditLogic_Layer(const _tchar *pLayerTag)
 
     
     CGameObject *pObj = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 1);
-    CGuiManager::GetInstance()->SetTarget(pObj);
     CGameObject *pObj2 = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 0);
+    CGuiManager::GetInstance()->SetTarget(pObj2);
     static_cast<CGridPanel *>(pObj2)->Change_Texture(SCENE_STATIC,L"Proto_Component_Texture_PanelTest");
     static_cast<CGridPanel *>(pObj)->Change_Buffer(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest");
     return S_OK;

@@ -165,6 +165,7 @@
     <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CGuiBase.h" />
     <ClInclude Include="..\Header\CGui_Thumbnail.h" />
+    <ClInclude Include="..\Header\CGui_Transform.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel.h" />
     <ClInclude Include="Editor_Define.h" />
     <ClInclude Include="GraphEditor.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGuiBase.cpp" />
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp" />
+    <ClCompile Include="..\Code\CGui_Transform.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="ImCurveEdit.cpp" />

@@ -166,3 +166,14 @@ HRESULT CGridPanel::Set_Component()
 
 	return S_OK;
 }
+
+// setcomponent 2번 호출
+// 복사본 생성때 pArg 활용하는쪽으로
+
+// 누수 체크 추가
+
+// 파싱
+// {
+//		
+// }
+//

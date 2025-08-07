@@ -67,6 +67,9 @@
     <Filter Include="06. GUI\Element\Thumbnail">
       <UniqueIdentifier>{9dc81b83-b9a7-41bb-976b-ddcf5b085085}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. GUI\Element\Transform">
+      <UniqueIdentifier>{7b7bd83c-38f7-4f6d-84d0-0324219aad53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="..\Header\CGui_Thumbnail.h">
       <Filter>06. GUI\Element\Thumbnail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGui_Transform.h">
+      <Filter>06. GUI\Element\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -250,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp">
       <Filter>06. GUI\Element\Thumbnail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Transform.cpp">
+      <Filter>06. GUI\Element\Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

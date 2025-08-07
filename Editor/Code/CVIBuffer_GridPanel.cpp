@@ -78,7 +78,9 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
                                            
             };
 
-            pVertex[dwIndex].vTexUV = { (_float)j,(_float)i };
+            pVertex[dwIndex].vTexUV = {
+                                        (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
+                                        (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
         }
     }
 
@@ -148,7 +150,9 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
 
             };
 
-            pVertex[dwIndex].vTexUV = { (_float)j,(_float)i };
+            pVertex[dwIndex].vTexUV = {
+                                        (_float)j / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1),
+                                        (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
         }
     }
 
@@ -217,7 +221,9 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
                                            (_float)i * m_tData.dwInterval
             };
 
-            pVertex[dwIndex].vTexUV = { (_float)j,(_float)i };
+            pVertex[dwIndex].vTexUV = {
+                                        (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
+                                        (_float)i / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1) };
         }
     }
 

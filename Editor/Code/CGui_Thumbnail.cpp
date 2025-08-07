@@ -5,7 +5,7 @@
 #include "CGui_Thumbnail.h"
 
 CGui_Thumbnail::CGui_Thumbnail(const string &_label)
-	: CGuiBase(_label), m_iSelectedIndex(-1), m_iCol(4), m_fThumbnailSize(64.f)
+	: CGuiBase(_label), m_iSelectedIndex(-1), m_iCol(3), m_fThumbnailSize(64.f)
 	, m_fPadding(5.f)
 {
 	m_vecThumbnails.reserve(10);

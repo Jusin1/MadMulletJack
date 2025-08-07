@@ -23,7 +23,7 @@ public:
 	HRESULT	Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt);
 	HRESULT Initialize(void* pArg)override;
 	void	Set_Texture(const _uint& iIndex = 0);
-	IDirect3DBaseTexture9 *Get_Texture(const _uint &iIndex = 0) { return m_vecTexture[0]; }
+	IDirect3DBaseTexture9 *Get_Texture(const _uint &iIndex = 0) { return m_vecTexture[iIndex]; }
 public:
 	void MoveFrame(const _tchar* timeTag);
 	void Set_Frame(int iStart, int iEnd, int iSpeed);

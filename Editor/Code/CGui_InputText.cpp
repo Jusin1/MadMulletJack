@@ -4,7 +4,7 @@
 CGui_InputText::CGui_InputText(const string &_label)
 	:CGuiBase(_label)
 {
-	cBuffer[0] = '\0';
+	m_value.reserve(256);
 }
 
 CGui_InputText::~CGui_InputText()
@@ -22,5 +22,6 @@ CGui_InputText *CGui_InputText::Create(const string &_label)
 
 void CGui_InputText::Render()
 {
-	ImGui::InputText(m_label.c_str(), cBuffer, sizeof(cBuffer));
+	std::vector<char> buffer{ 256 };
+	ImGui::InputText(m_label.c_str(), m_value.data(), m_value.size());
 }
