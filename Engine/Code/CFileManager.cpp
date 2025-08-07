@@ -13,4 +13,5 @@ CFileManager::~CFileManager()
 
 void CFileManager::Free()
 {
+	
 }

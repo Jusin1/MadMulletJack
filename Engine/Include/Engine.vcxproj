@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Header; ../../Base;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header; ../Include; ../../Base;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,7 +137,7 @@ call Copy.bat</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Header; ../../Base;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header; ../Include; ../../Base;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,7 +163,6 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CFileManager.h" />
     <ClInclude Include="..\Header\CPicking.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel.h" />
-    <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\VIBuffer_Color.h" />
     <ClInclude Include="..\Header\VIBuffer_Cube.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
@@ -192,6 +191,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Macro.h" />
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
+    <ClInclude Include="json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CCalculator.cpp" />

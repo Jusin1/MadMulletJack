@@ -14,7 +14,7 @@ class ENGINE_DLL CFileManager : public CBase
 private:
 	explicit CFileManager();
 	virtual ~CFileManager();
-
+	
 	virtual void Free() override;
 public:
 };

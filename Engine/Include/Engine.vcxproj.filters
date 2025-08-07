@@ -323,7 +323,7 @@
     <ClInclude Include="..\Header\CFileManager.h">
       <Filter>00. Manager\11. FileManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\json.hpp">
+    <ClInclude Include="json.hpp">
       <Filter>99. Header\JsonFile</Filter>
     </ClInclude>
   </ItemGroup>
