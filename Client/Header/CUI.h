@@ -1,7 +1,5 @@
 #pragma once
 #include "CUIBase.h"
-#include "CComponentMgr.h"
-#include "Clinet_Define.h"
 class CUI : public CUIBase
 {
 protected:
@@ -18,7 +16,6 @@ public:
 
 protected:
 	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 
 protected:

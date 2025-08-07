@@ -8,6 +8,7 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_fRadius(0.5f)
     , m_bDead(false)
     , m_CollisionMatrix{}
+    , m_bActive(false)
 {
     if (m_pGraphicDev)
         m_pGraphicDev->AddRef();

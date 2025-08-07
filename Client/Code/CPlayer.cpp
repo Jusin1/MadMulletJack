@@ -6,6 +6,7 @@
 #include "CPlayer_Hand.h"
 #include "CObjectManager.h"
 #include "CUIBase.h"
+#include "CDInputMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -46,6 +47,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (pHandUI)
 	{
 		pHandUI->Initialize(nullptr); // 필요 시 인자 전달
+		pHandUI->Set_ObjTag(L"HandUI");
 		m_pUIPlayer->Add_Child(pHandUI); // 루트 UI에 등록
 	}
 
@@ -204,6 +206,24 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
 		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+	} 
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		CUIBase* pFound = m_pUIPlayer->Find_Child_ByTag(L"HandUI");
+		if (pFound)
+		{
+			CPlayer_Hand* pHand = dynamic_cast<CPlayer_Hand*>(pFound);
+			if (pHand)
+				pHand->Change_Texture(L"Com_Texture_Hand_Shot");
+		}
+	}
+	if (GetAsyncKeyState('R'))
+	{
+		m_pUIPlayer->Set_Active(false);
+	}
+	if (GetAsyncKeyState('T'))
+	{
+		m_pUIPlayer->Set_Active(true);
 	}
 }
 

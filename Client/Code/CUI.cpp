@@ -31,8 +31,6 @@ HRESULT CUI::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
 
-	if (FAILED(Set_Component()))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -48,8 +46,6 @@ void CUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
 }
 
 void CUI::Render_GameObject()
@@ -62,17 +58,11 @@ void CUI::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-
 	m_pVIBufferCom->Render_Buffer();
-
 }
 
 HRESULT CUI::Set_Component()
 {
-	// Renderer
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
 	// VIBUFFER
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;

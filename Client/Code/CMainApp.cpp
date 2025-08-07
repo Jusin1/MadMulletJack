@@ -86,6 +86,20 @@ void CMainApp::Render_MainApp()
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 	m_pRenderer->Render_GameObject(); // 모든 렌더 대상 렌더링
 	m_pDeviceClass->Render_End();
+
+		// FPS 출력
+	m_fFPSTime += CTimerMgr::GetInstance()->Get_TimeDelta(TEXT("Timer_60"));
+	++m_iFPSCnt;
+
+	if (m_fFPSTime >= 1.f)
+	{
+		wchar_t szFPS[128];
+		swprintf_s(szFPS, 128, L"FPS : %d", m_iFPSCnt);
+		SetWindowText(g_hWnd, szFPS);
+
+		m_fFPSTime = 0.f;
+		m_iFPSCnt = 0;
+	}
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)

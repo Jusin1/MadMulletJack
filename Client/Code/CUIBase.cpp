@@ -11,11 +11,8 @@ CUIBase::CUIBase(const CUIBase& rhs)
 
 }
 
-CUIBase::~CUIBase()
+CUIBase::~CUIBase() 
 {
-    for (auto& pChild : m_vecChildren)
-        Safe_Release(pChild);
-    m_vecChildren.clear();
 }
 
 HRESULT CUIBase::Ready_GameObject()
@@ -25,11 +22,19 @@ HRESULT CUIBase::Ready_GameObject()
 
 HRESULT CUIBase::Initialize(void* pArg)
 {
+    if (FAILED(Set_Component()))
+        return E_FAIL;
     return S_OK;
 }
 
-_int CUIBase::Update_GameObject(const _float& fTimeDelta)
+_int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
 {
+    if (!m_bActive)
+        return NO_EVENT;
+
+    if (nullptr != m_pRendererCom)
+        m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
+
     for (auto& pChild : m_vecChildren)
     {
         if (pChild)
@@ -39,8 +44,11 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta)
     return NO_EVENT;
 }
 
-void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta)
+void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
 {
+    if (!m_bActive)
+        return;
+
     for (auto& pChild : m_vecChildren)
     {
         if (pChild)
@@ -48,8 +56,11 @@ void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta)
     }
 }
 
-void CUIBase::Render_GameObject()
+void CUIBase::Render_GameObject() // 자식 Render
 {
+    if (!m_bActive)
+        return;
+
     for (auto& pChild : m_vecChildren)
     {
         if (pChild)
@@ -57,13 +68,30 @@ void CUIBase::Render_GameObject()
     }
 }
 
-void CUIBase::Add_Child(CUIBase* pChild)
+HRESULT CUIBase::Set_Component()
+{
+    // Renderer
+    if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
+        return E_FAIL;
+}
+
+void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가
 {
     if (pChild)
     {
         m_vecChildren.push_back(pChild);
         pChild->Add_Ref();
     }
+}
+
+CUIBase* CUIBase::Find_Child_ByTag(const _tchar* pTag) // 자식 찾기(태그로)
+{
+    for (auto& pChild : m_vecChildren)
+    {
+        if (lstrcmp(pChild->Get_ObjTag(), pTag) == 0)
+            return pChild;
+    }
+    return nullptr;
 }
 
 CUIBase* CUIBase::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -82,17 +110,15 @@ CUIBase* CUIBase::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 CGameObject* CUIBase::Clone(void* pArg)
 {
     CUIBase* pInstance = new CUIBase(*this);
-
     if (FAILED(pInstance->Initialize(pArg)))
     {
         MSG_BOX("CUIBase Clone Failed");
         Safe_Release(pInstance);
     }
-
     return pInstance;
 }
 
-void CUIBase::Free()
+void CUIBase::Free() // 메모리 해제
 {
     for (auto& child : m_vecChildren)
         Safe_Release(child);

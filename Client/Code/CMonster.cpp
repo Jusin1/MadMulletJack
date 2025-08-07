@@ -99,9 +99,6 @@ void CMonster::Render_GameObject()
 
 HRESULT CMonster::Set_Component(void* pArg)
 {
-	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Monster"))))
-		return E_FAIL;
-
 	CTransform::TRANSFORMINFO TransformInfo;
 	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 
@@ -216,6 +213,7 @@ HRESULT CMonster::Texture_Clone()
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 12;
 	TextureInfo.m_fSpeed = 6;
+	TextureInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle", (CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;
 	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle"), m_pTextureCom));
@@ -224,10 +222,10 @@ HRESULT CMonster::Texture_Clone()
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 9;
 	TextureInfo.m_fSpeed = 6;
+	TextureInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim", (CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;
 	m_mapTexture.insert(make_pair(TEXT("Com_Texture_AIM"), m_pTextureCom));
-
 
 	return S_OK;
 }

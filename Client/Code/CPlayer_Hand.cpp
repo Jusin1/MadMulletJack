@@ -32,7 +32,6 @@ HRESULT CPlayer_Hand::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHand"))))
         return E_FAIL;
 
-
     m_fSizeX = 200.f;
     m_fSizeY = 200.f;
 
@@ -50,8 +49,16 @@ HRESULT CPlayer_Hand::Initialize(void* pArg)
 }
 
 _int CPlayer_Hand::Update_GameObject(const _float& fTimeDelta)
-{
-    return __super::Update_GameObject(fTimeDelta);
+{   
+    __super::Update_GameObject(fTimeDelta);
+    if (m_pTextureCom->Is_AnimFinished())
+    {
+        if (m_CurrentAnimTag != TEXT("Com_Texture_Hand_Idle"))
+        {
+            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+        }
+    }
+    return NO_EVENT;
 }
 
 void CPlayer_Hand::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -88,7 +95,7 @@ HRESULT CPlayer_Hand::Texture_Clone()
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 9;
     texInfo.m_fSpeed = 1.f;
-
+    texInfo.m_bLoop = true;
     // IDLE
     if (FAILED(Add_Components(L"Com_Texture_Hand_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -98,6 +105,7 @@ HRESULT CPlayer_Hand::Texture_Clone()
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 6;
     texInfo.m_fSpeed = 10.f;
+    texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Hand_Shot", SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Hand_Shot"), m_pTextureCom });
@@ -111,6 +119,7 @@ HRESULT CPlayer_Hand::Change_Texture(const _tchar* pTextureTag)
         return E_FAIL;
 
     m_pTextureCom->Set_Zero_Frame();
+    m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
     return S_OK;
 }
 

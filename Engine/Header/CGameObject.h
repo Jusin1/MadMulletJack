@@ -25,6 +25,8 @@ public:
 	_bool Get_Dead() { return m_bDead; }
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
+	void Set_Active(bool bActive) { m_bActive = bActive; }
+	bool Is_Active() const { return m_bActive; }
 
 public:
 	virtual _bool Picking(_vec3* PickingPoint) { return true; }
@@ -38,6 +40,8 @@ protected:
 	_bool									m_bDead;
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
+	bool m_bActive;
+
 
 
 	// Trnasform Component

@@ -21,7 +21,8 @@ private:
     HRESULT Texture_Clone();
 
 private:
-    map<const _tchar*, CTexture*> m_mapTextures;
+    map<const _tchar*, CTexture*> m_mapTextures; // 애니메이션 텍스쳐
+    wstring m_CurrentAnimTag; // 현재 애니메이션 태그
 public:
     static CPlayer_Hand* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;

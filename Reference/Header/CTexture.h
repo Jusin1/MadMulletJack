@@ -14,6 +14,7 @@ public:
 		int m_iCurrentTex = 0; // 현재 프레임
 		int m_iEndTex = 0; // 마지막 프레임
 		_float m_fSpeed = 1; // 프레임 속도
+		_bool m_bLoop = true; // 애니메이션 반복 여부
 	}TEXINFO;
 protected:
 	explicit CTexture(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -21,13 +22,16 @@ protected:
 	virtual ~CTexture();
 
 public:
+
 	HRESULT	Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt); // 텍스쳐 로딩
 	HRESULT Initialize(void* pArg)override; // 초기화 함수(복사 시 호출)
 	void	Set_Texture(const _uint& iIndex = 0); // 텍스처 바인딩(렌더링 시)
 
+	bool Is_AnimFinished() const { return m_TextureInfo.m_iCurrentTex >= m_TextureInfo.m_iEndTex; }
+
 public:
 	void MoveFrame(); // 애니메이션 프레임 이동
-	void Set_Frame(int iStart, int iEnd, int iSpeed); // 애니메이션 프레임 설정
+	void Set_Frame(int iStart, int iEnd, int iSpeed, _bool bLoop); // 애니메이션 프레임 설정
 	void Set_Zero_Frame() { m_TextureInfo.m_iCurrentTex = 0; } // 현재 프레임을 0 으로 초기화
 	TEXINFO& Get_Frame() { return m_TextureInfo; } // 프레임 정보 가져오기
 	void Stop_Anim() { m_bStopAnim = true; } // 애니메이션 정지

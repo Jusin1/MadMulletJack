@@ -81,11 +81,12 @@ HRESULT CTexture::Initialize(void* pArg)
 // 텍스쳐 바인딩
 void CTexture::Set_Texture(const _uint& iIndex)
 {
-    // 올바른 조건
-    if (iIndex >= m_vecTexture.size())
-        return;
+    _uint clampedIndex = iIndex;
+    if (clampedIndex >= m_vecTexture.size()) {
+        clampedIndex = static_cast<_uint>(m_vecTexture.size() - 1);
+    }
 
-    m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
+    m_pGraphicDev->SetTexture(0, m_vecTexture[clampedIndex]);
 }
 
 // 애니메이션 프레임 이동
@@ -98,22 +99,34 @@ void CTexture::MoveFrame()
 
     if (m_fTimeAcc > 1.f / m_TextureInfo.m_fSpeed)
     {
-        m_TextureInfo.m_iCurrentTex++;
-
-        if (m_TextureInfo.m_iCurrentTex >= m_TextureInfo.m_iEndTex)
-            m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
-
         m_fTimeAcc = 0.f;
+
+        if (!m_TextureInfo.m_bLoop)
+        {
+            if (m_TextureInfo.m_iCurrentTex < m_TextureInfo.m_iEndTex)
+            {
+                ++m_TextureInfo.m_iCurrentTex;
+            }
+            // EndTex 넘으면 멈추도록 아무것도 하지 않음
+        }
+        else
+        {
+            ++m_TextureInfo.m_iCurrentTex;
+
+            if (m_TextureInfo.m_iCurrentTex > m_TextureInfo.m_iEndTex)
+                m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
+        }
     }
 }
 
 // 애니메이션 프레임 설정
-void CTexture::Set_Frame(int iStart, int iEnd, int iSpeed)
+void CTexture::Set_Frame(int iStart, int iEnd, int iSpeed, _bool bLoop)
 {
     m_TextureInfo.m_iStart = iStart;
     m_TextureInfo.m_iEndTex = iEnd;
     m_TextureInfo.m_fSpeed = iSpeed;
     m_TextureInfo.m_iCurrentTex = m_TextureInfo.m_iStart;
+    m_TextureInfo.m_bLoop = bLoop;
 }
 
 

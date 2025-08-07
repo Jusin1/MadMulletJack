@@ -52,7 +52,6 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         return -1;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-    vPlayerPos.z -= 10.f; // z°ª  »ìÂ¦ µÚ·Î   debug
     m_pTransformCom->Set_Info(INFO_POS, vPlayerPos);
 
 
@@ -75,7 +74,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     if (false == m_bFix)
     {
         Mouse_Move();
-        //Mouse_Fix();
+        Mouse_Fix();
     }
 
 }
