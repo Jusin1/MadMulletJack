@@ -7,6 +7,7 @@
 #include "CVIBuffer_Rect.h"
 #include "CVIBuffer_Terrian.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Color.h"
 #include "CColider_Rect.h"
 
 #include "CTransform.h"

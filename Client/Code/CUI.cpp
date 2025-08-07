@@ -34,7 +34,6 @@ HRESULT CUI::Initialize(void* pArg)
 	m_fSizeX = 50.0f;
 	m_fSizeY = 50.0f;
 
-	// Á¤Áß¾Ó
 	m_fX = WINCX * 0.5f;
 	m_fY = WINCY * 0.5f;
 
@@ -92,6 +91,11 @@ HRESULT CUI::Set_Component()
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
+	// ColorBuffer
+	if (FAILED(Add_Components(L"Com_ColBuffer", SCENE_STATIC, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
+		return E_FAIL;
+
+
 	// Transform
 	CTransform::TRANSFORMINFO		TransformInfo;
 	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
@@ -102,6 +106,7 @@ HRESULT CUI::Set_Component()
 	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
 
+	return S_OK;
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

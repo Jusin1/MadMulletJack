@@ -12,6 +12,7 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CUI.h"
+#include "CHpBarUI.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -107,10 +108,12 @@ HRESULT CLoader::Loading_ForStage()
 #pragma endregion 플레이어 테스트
 
 #pragma region UI 테스트
-	// Player
+	// UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UITest",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/UITEST.png", 1))))
 		return E_FAIL;
+
+
 #pragma endregion UI 테스트
 
 	// 객체 생성
@@ -142,6 +145,11 @@ HRESULT CLoader::Loading_ForStage()
 	// UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UI",
 		CUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// HpBarUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
+		CHpBarUI:: Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));

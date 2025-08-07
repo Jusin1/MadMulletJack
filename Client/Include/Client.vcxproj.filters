@@ -58,6 +58,12 @@
     <Filter Include="02. GameObject\06. UI">
       <UniqueIdentifier>{6c2dbcfb-e0a4-4bfc-9de5-7c1adc6984cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\02. HpBar">
+      <UniqueIdentifier>{51995eca-9031-4d87-a505-7457fc9cffc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\01. CLifeCount">
+      <UniqueIdentifier>{94a0d041-d062-49fd-9b25-66ac99b58ed9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -114,6 +120,9 @@
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\06. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CHpBarUI.h">
+      <Filter>02. GameObject\06. UI\02. HpBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -157,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\06. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\02. HpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

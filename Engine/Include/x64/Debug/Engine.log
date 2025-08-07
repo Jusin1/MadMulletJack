@@ -1,13 +1,9 @@
-﻿  CColiderManager.cpp
-  CComponentMgr.cpp
-  CGameObject.cpp
-  CManagement.cpp
-  CTexture.cpp
-C:\Users\조한웅\Desktop\빽업용\MadMulletJack\Engine\Code\CTexture.cpp(101,30): warning C4244: '=': 'int'에서 'Engine::_float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
-  Engine.vcxproj -> C:\Users\조한웅\Desktop\빽업용\MadMulletJack\Engine\Bin\Engine.dll
+﻿  VIBuffer_Color.cpp
+  Engine.vcxproj -> C:\Users\chaerim\Documents\MadMulletJack\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
+  .\Engine\Bin\Engine.dll
+  1개 파일이 복사되었습니다.
   .\Engine\Bin\Engine.dll
   1개 파일이 복사되었습니다.
   .\Engine\Bin\Engine.lib
@@ -46,5 +42,6 @@ C:\Users\조한웅\Desktop\빽업용\MadMulletJack\Engine\Code\CTexture.cpp(101,
   .\Engine\Header\Engine_Macro.h
   .\Engine\Header\Engine_Struct.h
   .\Engine\Header\Engine_Typedef.h
+  .\Engine\Header\VIBuffer_Color.h
   .\Engine\Header\VIBuffer_Cube.h
-  35개 파일이 복사되었습니다.
+  36개 파일이 복사되었습니다.
