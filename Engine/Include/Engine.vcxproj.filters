@@ -103,6 +103,12 @@
     <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect\Color">
       <UniqueIdentifier>{bcd946f0-daa4-4cf7-a404-5cb6dfcd25d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\11. FileManager">
+      <UniqueIdentifier>{88d28ac2-d3c2-45a7-ab05-8ce2f2f53bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header\JsonFile">
+      <UniqueIdentifier>{e092322c-83d3-4536-bab8-ea317b885380}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -197,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\VIBuffer_Color.cpp">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFileManager.cpp">
+      <Filter>00. Manager\11. FileManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,6 +319,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\VIBuffer_Color.h">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFileManager.h">
+      <Filter>00. Manager\11. FileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\json.hpp">
+      <Filter>99. Header\JsonFile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
