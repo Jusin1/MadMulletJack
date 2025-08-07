@@ -7,6 +7,7 @@
 #include "CFrameMgr.h"
 #include "CRenderer.h"
 #include "CFontMgr.h"
+#include "VIBuffer_Color.h"
 #include "CDInputMgr.h"
 #include "CColiderManager.h"
 #include "CObjectManager.h"
@@ -179,6 +180,10 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 
 	// calculator 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// RectColorBuffer
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Color_Buffer", Engine::VIBuffer_Color::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 }

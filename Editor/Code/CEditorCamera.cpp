@@ -81,40 +81,40 @@ CCamera *CEditorCamera::Clone(void *pArg)
 
 void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 {
-	m_vPosition = m_pTransform->Get_Info(INFO_POS);
+	m_vPosition = m_pTransformCom->Get_Info(INFO_POS);
 
 	/*_long iWheel = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z);
 	if (iWheel != 0)
 	{
 		m_lMouseWheel += iWheel * 0.05f;
-		m_pTransform->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
+		m_pTransformCom->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
 	}*/
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)
-		m_pTransform->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
+		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)
-		m_pTransform->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
+		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
-		m_pTransform->Move_Forward(fTimeDelta, m_vPosition.y);
+		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
-		m_pTransform->Move_Backward(fTimeDelta, m_vPosition.y);
+		m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
-		m_pTransform->Move_Left(fTimeDelta, m_vPosition.y);
+		m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
-		m_pTransform->Move_Right(fTimeDelta, m_vPosition.y);
+		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
 	{
-		_vec3 vPos = m_pTransform->Get_Info(INFO_POS);
-		vPos.y += fTimeDelta * m_pTransform->GetTransformInfo().fSpeed;
-		m_pTransform->Set_Info(INFO_POS, vPos);
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		vPos.y += fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;
+		m_pTransformCom->Set_Info(INFO_POS, vPos);
 	}
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LCONTROL) & 0x80)
 	{
-		_vec3 vPos = m_pTransform->Get_Info(INFO_POS);
-		vPos.y -= fTimeDelta * m_pTransform->GetTransformInfo().fSpeed;
-		m_pTransform->Set_Info(INFO_POS, vPos);
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		vPos.y -= fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;
+		m_pTransformCom->Set_Info(INFO_POS, vPos);
 	}
 }

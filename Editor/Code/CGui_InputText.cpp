@@ -22,6 +22,6 @@ CGui_InputText *CGui_InputText::Create(const string &_label)
 
 void CGui_InputText::Render()
 {
-	std::vector<char> buffer{ 256 };
+	//std::vector<char> buffer{ 256 };
 	ImGui::InputText(m_label.c_str(), m_value.data(), m_value.size());
 }

@@ -34,9 +34,6 @@
     <Filter Include="03. Component">
       <UniqueIdentifier>{71f096fc-57bf-4a1f-af40-4ce723b5a552}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Component\GridPanel">
-      <UniqueIdentifier>{c147b684-a03b-4121-b792-44f7dad1c441}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05. Loader">
       <UniqueIdentifier>{6651524d-eb82-4ddf-9d2c-3407063ff306}</UniqueIdentifier>
     </Filter>
@@ -147,9 +144,6 @@
     <ClInclude Include="..\Header\CEditorLoadingScene.h">
       <Filter>01. Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CVIBuffer_GridPanel.h">
-      <Filter>03. Component\GridPanel</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CGridPanel.h">
       <Filter>04. GameObject\GridPanel</Filter>
     </ClInclude>
@@ -232,9 +226,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEditorLoadingScene.cpp">
       <Filter>01. Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp">
-      <Filter>03. Component\GridPanel</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGridPanel.cpp">
       <Filter>04. GameObject\GridPanel</Filter>

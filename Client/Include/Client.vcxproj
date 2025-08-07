@@ -155,6 +155,7 @@
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
+    <ClInclude Include="..\Header\CHpBarUI.h" />
     <ClInclude Include="..\Header\CLoader.h" />
     <ClInclude Include="..\Header\CLoading_Scene.h" />
     <ClInclude Include="..\Header\CLogo.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
+    <ClCompile Include="..\Code\CHpBarUI.cpp" />
     <ClCompile Include="..\Code\CLoader.cpp" />
     <ClCompile Include="..\Code\CLoading_Scene.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />

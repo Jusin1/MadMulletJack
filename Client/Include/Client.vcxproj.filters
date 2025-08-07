@@ -82,6 +82,9 @@
     <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerGunHI">
       <UniqueIdentifier>{f01e7319-8097-41f7-b834-985e7e25c19a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\HpBar_UI">
+      <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Header\CPlayer_Gun.h">
       <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CHpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayer_Gun.cpp">
       <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,5 +18,16 @@ namespace Engine
 	enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_MB, DIM_END };
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
+	enum OBJID { OBJ_PLAYER, OBJ_MONSTER, OBJ_MAP, OBJ_FLOOR, OBJ_INCLINE, OBJ_CEILING, OBJ_END };
+
+	enum class PanelType : unsigned int
+	{
+		WALL_HOR = 0,
+		WALL_VER,
+		INCLINE,
+		FLOOR,
+		CEILING,
+		NONE
+	};
 }
 #endif // Engine_Enum_h__

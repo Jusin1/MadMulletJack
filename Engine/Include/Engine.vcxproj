@@ -161,6 +161,8 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CColider_Sphere.h" />
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CPicking.h" />
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel.h" />
+    <ClInclude Include="..\Header\VIBuffer_Color.h" />
     <ClInclude Include="..\Header\VIBuffer_Cube.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
     <ClInclude Include="..\Header\CFont.h" />
@@ -198,6 +200,8 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CColider_Sphere.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CPicking.cpp" />
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp" />
+    <ClCompile Include="..\Code\VIBuffer_Color.cpp" />
     <ClCompile Include="..\Code\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />
     <ClCompile Include="..\Code\CFont.cpp" />

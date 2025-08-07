@@ -6,9 +6,8 @@ namespace Engine
 	class CRenderer;
 	class CTexture;
 	class CTransform;
+	class CVIBuffer_GridPanel;
 }
-
-class CVIBuffer_GridPanel;
 
 class CGridPanel : public CGameObject
 {

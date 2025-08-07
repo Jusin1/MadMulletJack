@@ -26,6 +26,7 @@ public:
 	HRESULT	Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt); // 텍스쳐 로딩
 	HRESULT Initialize(void* pArg)override; // 초기화 함수(복사 시 호출)
 	void	Set_Texture(const _uint& iIndex = 0); // 텍스처 바인딩(렌더링 시)
+	IDirect3DBaseTexture9 *Get_Texture(const _uint &iIndex = 0) { return m_vecTexture[iIndex]; }
 
 	bool Is_AnimFinished() const { return m_TextureInfo.m_iCurrentTex >= m_TextureInfo.m_iEndTex; }
 

@@ -15,6 +15,7 @@
 #include "CCameraFPS.h"
 
 // UI
+#include "CHpBarUI.h"
 #include "CPlayer_Hand.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -178,6 +179,11 @@ HRESULT CLoader::Loading_ForStage()
 		CPlayer_Hand::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	//// HpBarUI
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
+	//	CHpBarUI::Create(m_pGraphicDev))))
+	//	return E_FAIL;
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_TerrianBuffer", Engine::CVIBuffer_Terrian::Create(m_pGraphicDev))))
@@ -191,7 +197,8 @@ HRESULT CLoader::Loading_ForStage()
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
-
+	
+	return S_OK;
 }
 
 CLoader* CLoader::Create(LPDIRECT3DDEVICE9 pGrahpicDev, SCENE eNextScene)

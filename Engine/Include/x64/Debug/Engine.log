@@ -1,17 +1,40 @@
-﻿  CCamera.cpp
+﻿  CCalculator.cpp
+  CCamera.cpp
   CColiderManager.cpp
-  CComponentMgr.cpp
+  CColider_Cube.cpp
+  CColider_Rect.cpp
+  CColider_Sphere.cpp
+  CComponent.cpp
+  CPicking.cpp
+  CVIBuffer_GridPanel.cpp
+  VIBuffer_Color.cpp
+  VIBuffer_Cube.cpp
+  CDInputMgr.cpp
+  CFont.cpp
+  CFontMgr.cpp
+  CFrame.cpp
+  CFrameMgr.cpp
   CGameObject.cpp
+  CGraphicDev.cpp
   CLayer.cpp
   CManagement.cpp
+  Generating Code...
+  Compiling...
   CObjectManager.cpp
+  CComponentMgr.cpp
+  CVIBuffer_Rect.cpp
   CRenderer.cpp
   CScene.cpp
+  CVIBuffer_Terrian.cpp
   CTexture.cpp
-C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Code\CTexture.cpp(127,30): warning C4244: '=': 'int'에서 'Engine::_float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
-     ../Bin\Engine.lib 라이브러리 및 ../Bin\Engine.exp 개체를 생성하고 있습니다.
-  Engine.vcxproj -> C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Bin\Engine.dll
+C:\Users\PC\Documents\MadMulletJack\Engine\Code\CTexture.cpp(127,30): warning C4244: '=': conversion from 'int' to 'Engine::_float', possible loss of data
+  CTimer.cpp
+  CTimerMgr.cpp
+  CTransform.cpp
+  CVIBuffer.cpp
+  Generating Code...
+     Creating library ../Bin\Engine.lib and object ../Bin\Engine.exp
+  Engine.vcxproj -> C:\Users\PC\Documents\MadMulletJack\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
   .\Engine\Bin\Engine.dll
@@ -49,6 +72,7 @@ C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Code\CTexture.cpp(127,30): w
   .\Engine\Header\CTransform.h
   .\Engine\Header\CTriCol.h
   .\Engine\Header\CVIBuffer.h
+  .\Engine\Header\CVIBuffer_GridPanel.h
   .\Engine\Header\CVIBuffer_Rect.h
   .\Engine\Header\CVIBuffer_Terrian.h
   .\Engine\Header\Engine_Define.h
@@ -57,5 +81,6 @@ C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Code\CTexture.cpp(127,30): w
   .\Engine\Header\Engine_Macro.h
   .\Engine\Header\Engine_Struct.h
   .\Engine\Header\Engine_Typedef.h
+  .\Engine\Header\VIBuffer_Color.h
   .\Engine\Header\VIBuffer_Cube.h
-  38개 파일이 복사되었습니다.
+  40개 파일이 복사되었습니다.

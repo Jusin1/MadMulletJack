@@ -1,6 +1,7 @@
 #include "CGridPanel.h"
 #include "CTexture.h"
 #include "CComponentMgr.h"
+#include "Editor_Define.h"
 #include "CTransform.h"
 #include "CVIBuffer_GridPanel.h"
 #include "CRenderer.h"

@@ -201,7 +201,7 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 
 	CGui_Thumbnail *pThumbnail = static_cast<CGui_Thumbnail*>(CGuiManager::GetInstance()->GetPanel("Test")->GetElement("Test Thumbnail"));
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Default.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png", 1))))
 		return E_FAIL;
 	auto pTexture = static_cast<CTexture*>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault"))
 		->Get_Texture();
@@ -209,70 +209,70 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 
 #pragma region Å×½ºÆ®
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Trigger.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("GridBox_Trigger", L"Proto_Component_Texture_PanelTest", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_NoDraw.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("GridBox_NoDraw", L"Proto_Component_Texture_PanelTest2", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/GridBox_Collider.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("GridBox_Collider", L"Proto_Component_Texture_PanelTest3", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest4",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 1.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest4"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 1", L"Proto_Component_Texture_PanelTest4", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest5",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 2.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest5"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 2", L"Proto_Component_Texture_PanelTest5", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest6",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 3.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest6"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 3", L"Proto_Component_Texture_PanelTest6", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest7",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 4.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest7"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 4", L"Proto_Component_Texture_PanelTest7", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest8",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 5.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest8"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 5", L"Proto_Component_Texture_PanelTest8", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest9",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 6.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest9"))
 		->Get_Texture();
 	pThumbnail->Add_Thumbnail("FLOOR 6", L"Proto_Component_Texture_PanelTest9", pTexture);
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest10",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../Bin/Resource/Grid/FLOOR 7.png", 1))))
+		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png", 1))))
 		return E_FAIL;
 	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest10"))
 		->Get_Texture();
