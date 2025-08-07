@@ -33,7 +33,7 @@ public:
 	const	_matrix* Get_World() const { return &m_matWorld; }
 	void	Get_World(_matrix* pWorld) const{*pWorld = m_matWorld;}
 	void	SetTransformInfo(TRANSFORMINFO TransformInfo) { m_TransformInfo = TransformInfo; }
-	TRANSFORMINFO GetTransformInfo() { return m_TransformInfo; }
+	TRANSFORMINFO& GetTransformInfo() { return m_TransformInfo; }
 
 public:
 	// 로컬 방향 기준 이동 함수

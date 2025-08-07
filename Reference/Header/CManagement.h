@@ -27,7 +27,11 @@ public:
 	void Set_LastScene(_uint iIdx) { m_iLastSceneIndex = iIdx; }
 
 private:
+<<<<<<< HEAD
 	CScene*					m_pCurrentScene = nullptr; // 현재 씬
+=======
+	CScene*					m_pCurrentScene;// 현재 씬
+>>>>>>> develop
 	_uint					m_iPrevSceneIndex; // 이전 씬엔덱스
 	_uint					m_iSceneIndex;  // 현재 씬 인덱스
 	_uint					m_iLastSceneIndex; // 마지막 씬 인덱스(전환 예약 용)

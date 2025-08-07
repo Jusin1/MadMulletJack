@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "CHpBarUI.h"
+<<<<<<< HEAD
+=======
+#include "VIBuffer_Color.h"
+>>>>>>> develop
 #include "CDInputMgr.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -74,7 +78,10 @@ void		CHpBarUI::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
 	m_pColBufferCom->Render_Buffer();
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 }
 
 void CHpBarUI::Key_UI(const _float& fTimeDelta)

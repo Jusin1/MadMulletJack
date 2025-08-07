@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\chaerim\Documents\MadMulletJack\Client\Bin\Client.exe</FullPath>
+=======
+      <FullPath>C:\Users\PC\Documents\MadMulletJack\Client\Bin\Client.exe</FullPath>
+>>>>>>> develop
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

@@ -3,6 +3,8 @@
 IMPLEMENT_SINGLETON(CComponentMgr)
 
 CComponentMgr::CComponentMgr()
+    : m_iSceneNum(0)
+    , m_mapPrototype(nullptr)
 {
 }
 

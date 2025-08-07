@@ -19,6 +19,7 @@ CComponent::CComponent(const CComponent& rhs)
 
 CComponent::~CComponent()
 {
+
 }
 
 HRESULT CComponent::Initialize(void* pArg)

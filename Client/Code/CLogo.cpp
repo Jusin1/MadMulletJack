@@ -71,19 +71,16 @@ HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 CLogo* CLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CLogo* pLogo = new CLogo(pGraphicDev);
-
     if (FAILED(pLogo->Ready_Scene()))
     {
         MSG_BOX("Logo Create Failed");
         Safe_Release(pLogo);
         return nullptr;
     }
-
     return pLogo;
 }
 
 void CLogo::Free()
 {
-
     Engine::CScene::Free();
 }

@@ -7,7 +7,7 @@
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
-
+#include "CPickingManager.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -30,11 +30,19 @@ HRESULT CStage::Ready_Scene()
     if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
         return E_FAIL;
 
+    if (FAILED(Ready_Player_Layer(L"Player_Layer")))
+        return E_FAIL;
+
+    if(FAILED(Ready_Monster_Layer(L"Monster_Layer")))
+        return E_FAIL;
+
     if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
         return E_FAIL;
 
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
+
+    CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;
 }
@@ -42,6 +50,24 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
     _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+    // µð¹ö±ë¿ë 
+    static _bool bPrevF1 = false;
+
+    if (GetAsyncKeyState(VK_F1) & 0x8000)
+    {
+        if (!bPrevF1)
+        {
+            g_ColiderRender = !g_ColiderRender;
+            bPrevF1 = true;
+        }
+    }
+    else
+    {
+        bPrevF1 = false;
+    }
+
+    CPickingManager::GetInstance()->Picking();
     return iExit;
 }
 
@@ -87,28 +113,40 @@ HRESULT CStage::Ready_Camera_Layer(const _tchar* pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE, pLayerTag, &CamInfo)))
+    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE, pLayerTag, &CamInfo)))
+    //    return E_FAIL;
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE, pLayerTag, &CamInfo)))
         return E_FAIL;
 
+    
+    return S_OK;
+}
+
+HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
+{
+    // Player
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
+    return S_OK;
+}
+
+HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
+{
+    // Monster
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
+        return E_FAIL;
     return S_OK;
 }
 
 HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
-    // Player
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE, pLayerTag)))
-        return E_FAIL;
-    
-    // Monster
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
-    //    return E_FAIL;
-
     return S_OK;
 }
 
 HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UI", SCENE_STAGE, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_HPUI", SCENE_STAGE, pLayerTag)))

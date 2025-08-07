@@ -9,6 +9,8 @@
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Color.h"
 #include "CColider_Rect.h"
+#include "CColider_Cube.h"
+#include "CColider_Sphere.h"
 
 #include "CTransform.h"
 #include "CTexture.h"
@@ -33,8 +35,8 @@ public:
 	void Clear(_uint iSceneIdx);// ÄÄÆ÷³ÍÆ® ¿øº» Á¦°Å
 
 private:
-	_uint								m_iSceneNum = 0; // ¾À °¹¼ö
-	map<const _tchar*, CComponent*>* m_mapPrototype = nullptr;	// ¿øº» ÄÄÆ÷³ÍÆ®
+	_uint								m_iSceneNum;
+	map<const _tchar*, CComponent*>* m_mapPrototype;
 	typedef map<const _tchar*, class CComponent*>		PROTOTYPES; 
 
 	

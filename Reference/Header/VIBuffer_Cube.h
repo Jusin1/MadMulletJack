@@ -18,6 +18,7 @@ public:
 	virtual CComponent* Clone(void* pArg) override;
 	static VIBuffer_Cube* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free();
+
 };
 
 END

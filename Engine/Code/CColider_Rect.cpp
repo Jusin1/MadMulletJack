@@ -2,24 +2,41 @@
 
 CColider_Rect::CColider_Rect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
+	, m_StateDesc{}
+	, m_bActive(true)
+	, m_pVB(nullptr)
+	, m_iNumVertices(0)
+	, m_iStride(0)
+	, m_dwFVF(0)
+	, m_ePrimitiveType(D3DPT_TRIANGLELIST)
+	, m_iNumPrimitive(0)
+	, m_pIB(nullptr)
+	, m_iIndicesByte(0)
+	, m_eIndexFormat(D3DFMT_INDEX16)
 {
 }
 
 CColider_Rect::CColider_Rect(const CColider_Rect& rhs)
 	: CComponent(rhs)
+	, m_StateDesc(rhs.m_StateDesc)
+	, m_bActive(rhs.m_bActive)
 	, m_pVB(rhs.m_pVB)
-	, m_pIB(rhs.m_pIB)
 	, m_iNumVertices(rhs.m_iNumVertices)
-	, m_dwFVF(rhs.m_dwFVF)
 	, m_iStride(rhs.m_iStride)
+	, m_dwFVF(rhs.m_dwFVF)
 	, m_ePrimitiveType(rhs.m_ePrimitiveType)
 	, m_iNumPrimitive(rhs.m_iNumPrimitive)
-
+	, m_pIB(rhs.m_pIB)
+	, m_iIndicesByte(rhs.m_iIndicesByte)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
 {
 	memcpy(m_vPoint, rhs.m_vPoint, sizeof(_vec3) * 4);
-	m_pVB->AddRef();
-	m_pIB->AddRef();
+
+	if (m_pVB) m_pVB->AddRef();
+	if (m_pIB) m_pIB->AddRef();
 }
+
+
 
 // 기본 설정 크기(1x1)
 HRESULT CColider_Rect::Ready_Colider()
@@ -32,15 +49,12 @@ HRESULT CColider_Rect::Ready_Colider()
 	m_ePrimitiveType = D3DPT_TRIANGLELIST;
 	m_iNumPrimitive = 2;
 
-	/* 정점들을 할당했다. */
 	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_iNumVertices * m_iStride, 0, m_dwFVF, D3DPOOL_MANAGED, &m_pVB, 0)))
 		return E_FAIL;
 
 	VTXTEX* pVertices = nullptr;
 
-	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
-
-	//_float3 InitPos = _float3(40.f, 5.f, 25.f);
+	m_pVB->Lock(0, 0, (void**)&pVertices, 0);
 
 	pVertices[0].vPosition = m_vPoint[0] = _vec3(-0.5f, 0.5f, 0.f);// + InitPos;
 	pVertices[0].vTexUV = _vec2(0.0f, 0.f);
@@ -83,6 +97,7 @@ HRESULT CColider_Rect::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 	{
+		m_bIsInverse = false; 
 		memcpy(&m_StateDesc, pArg, sizeof(COLIDERINFO));
 
 		m_iNumVertices = 4;
@@ -90,14 +105,12 @@ HRESULT CColider_Rect::Initialize(void* pArg)
 		m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1;
 		m_ePrimitiveType = D3DPT_TRIANGLELIST;
 		m_iNumPrimitive = 2;
-
-		/* 정점들을 할당했다. */
 		if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_iNumVertices * m_iStride, 0, m_dwFVF, D3DPOOL_MANAGED, &m_pVB, 0)))
 			return E_FAIL;
 
 		VTXTEX* pVertices = nullptr;
 
-		m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
+		m_pVB->Lock(0, 0, (void**)&pVertices, 0);
 
 		pVertices[0].vPosition = m_vPoint[0] = _vec3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
 		pVertices[0].vTexUV = _vec2(0.0f, 0.f);
@@ -162,7 +175,6 @@ HRESULT CColider_Rect::Update_ColliderBox(_matrix WorldMatrix)
 
 	for (size_t i = 0; i < 4; ++i)
 	{
-		// 1x4 * 4x4
 		D3DXVec3TransformCoord(&m_vPoint[i], &m_vPoint[i], &m_StateDesc.StateMatrix);
 	}
 
@@ -172,8 +184,13 @@ HRESULT CColider_Rect::Update_ColliderBox(_matrix WorldMatrix)
 // 충돌체 그리기(디버깅용 와이어프레임)
 HRESULT CColider_Rect::Render_ColliderBox()
 {
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
+	// 재질 적용
+	D3DMATERIAL9 mtrl = {};
+	mtrl.Diffuse = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);  // 초록색
+	mtrl.Ambient = mtrl.Diffuse;
+	m_pGraphicDev->SetMaterial(&mtrl);
 
+	// 와이어프레임 모드
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
 	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, m_iStride);
@@ -182,9 +199,8 @@ HRESULT CColider_Rect::Render_ColliderBox()
 
 	m_pGraphicDev->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
 
+	// 원래대로 
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
-
 	return S_OK;
 }
 
@@ -199,7 +215,6 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 	_vec3		vDestMin, vDestMax, vDestCenter;
 	_vec3		vDistance = _vec3(0, 0, 0);
 
-	// 자신의 충돌 영역 계산
 	if (m_bIsInverse)
 	{
 		vSourMin = m_vPoint[2];
@@ -213,7 +228,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 
 	vSourCenter = (vSourMax + vSourMin) * 0.5f;
 
-	// 대상 충돌 영역 계산
+	// Flip Min and Max if pOther is Scaled by -1 (X-Axis)
 	if (pTarget->m_bIsInverse)
 	{
 		vDestMin = pOther->m_vPoint[2];
@@ -228,7 +243,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 	vDestCenter = (vDestMax + vDestMin) * 0.5f;
 
 
-	// X축 충돌 판정
+
 	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
 		return false;
 	else
@@ -241,7 +256,7 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 			vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
 	}
 
-	// Z축 충돌 판정
+
 	if (min(vSourMax.z, vDestMax.z) < max(vSourMin.z, vDestMin.z))
 		return false;
 	else
@@ -254,12 +269,13 @@ _bool CColider_Rect::Collision_Check(CColider_Rect* pTarget, _vec3* pOutDistance
 			vDistance.z = min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z);
 	}
 
-	// 거리 저장
+
 	if (pOutDistance != nullptr)
 		*pOutDistance = vDistance;
 
 	return true;
 }
+
 
 CColider_Rect* CColider_Rect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {

@@ -5,9 +5,14 @@
 
 IMPLEMENT_SINGLETON(CManagement)
 
-CManagement::CManagement() 
+CManagement::CManagement()
+	: m_pCurrentScene(nullptr)
+	, m_iPrevSceneIndex(0)
+	, m_iSceneIndex(0)
+	, m_iLastSceneIndex(0)
 {
 }
+
 CManagement::~CManagement()
 {
     Free();

@@ -1,10 +1,15 @@
 #pragma once
+<<<<<<< HEAD
 #include "CGameObject.h"
 #include "CComponentMgr.h"
 #include "Clinet_Define.h"
 
 class CUI :
     public CGameObject
+=======
+#include "CUIBase.h"
+class CUI : public CUIBase
+>>>>>>> develop
 {
 protected:
 	explicit CUI(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -20,8 +25,6 @@ public:
 
 protected:
 	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	VIBuffer_Color* m_pColBufferCom = nullptr;
 
@@ -31,7 +34,7 @@ protected:
 
 protected:
 	virtual HRESULT			Set_Component();
-
+	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -5,11 +5,11 @@ const _tchar* CCamera::m_pTransformTag = L"Com_Transform";
 
 
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+	: CGameObject(pGraphicDev), m_camInfo{} 
 {
 }
 
-CCamera::CCamera(const CCamera& rhs) : CGameObject(rhs)
+CCamera::CCamera(const CCamera& rhs) : CGameObject(rhs), m_camInfo(rhs.m_camInfo)
 {
 }
 
@@ -26,20 +26,20 @@ HRESULT CCamera::Ready_GameObject()
 HRESULT CCamera::Initialize(void* pArg)
 {
 	// 컴포넌트 생성
-	m_pTransform = CTransform::Create(m_pGraphicDev);
-	if (m_pTransform == nullptr)
+	m_pTransformCom = CTransform::Create(m_pGraphicDev);
+	if (m_pTransformCom == nullptr)
 		return E_FAIL;
 
 	// 카메라 설정값 복사
 	memcpy(&m_camInfo, pArg, sizeof(CAMINFO));
 
-	m_pTransform->Set_Info(INFO_POS, m_camInfo.vEye); // 위치
-	m_pTransform->LookAt(m_camInfo.vAt); // 방향
-	m_pTransform->SetTransformInfo(m_camInfo.TransformInfo); // 정보 설정
+	m_pTransformCom->Set_Info(INFO_POS, m_camInfo.vEye); // 위치
+	m_pTransformCom->LookAt(m_camInfo.vAt); // 방향
+	m_pTransformCom->SetTransformInfo(m_camInfo.TransformInfo); // 정보 설정
 
 	// 컴포넌트로 등록
-	m_mapComponent.emplace(m_pTransformTag, m_pTransform);
-	m_pTransform->Add_Ref(); // 참조 카운트 증가
+	m_mapComponent.emplace(m_pTransformTag, m_pTransformCom);
+	m_pTransformCom->Add_Ref(); // 참조 카운트 증가
 	return S_OK;
 }
 
@@ -61,7 +61,7 @@ HRESULT CCamera::Render()
 // View 및 Project행렬 설정
 HRESULT CCamera::Apply_ViewPorjection()
 {
-	_matrix matWorld = *m_pTransform->Get_World();
+	_matrix matWorld = *m_pTransformCom->Get_World();
 
 	_matrix matView = *D3DXMatrixInverse(&matView, nullptr, &matWorld);
 	_matrix matProj = *D3DXMatrixPerspectiveFovLH(&matProj, m_camInfo.fFov, m_camInfo.fAspect, m_camInfo.fNear, m_camInfo.fFar);
@@ -75,5 +75,5 @@ HRESULT CCamera::Apply_ViewPorjection()
 void CCamera::Free()
 {
 	CGameObject::Free();
-	Safe_Release(m_pTransform);
+	Safe_Release(m_pTransformCom);
 }

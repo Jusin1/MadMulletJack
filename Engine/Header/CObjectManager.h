@@ -21,6 +21,7 @@ public:
 	HRESULT Readay_ObjectManager(_uint iSceneNum); // 씬 개수 만큼 Layer 컨테이너 생성
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, CGameObject* pProtoType); // 원본 등록
 	HRESULT Add_GameObject(const _tchar* pPrototypeTag, _uint iSceneIdx, const _tchar* pLayerTag, void* pArg = nullptr); // 복제 후 추가
+	CGameObject* Clone_GameObject(const _tchar* pPrototypeTag, _uint iSceneIdx, const _tchar* pLayerTag, void* pArg = nullptr); // 복제 후 추가 후 반환
 	void Update(_float fTimeDelta); 
 	void Late_Update(_float fTImeDelta);
 	void Clear(_uint iSceneIdx); // 특정 씬 정리

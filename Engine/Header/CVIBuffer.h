@@ -16,6 +16,9 @@ public:
 	virtual HRESULT			Initialize(void* pArg) override;
 	virtual void			Render_Buffer();
 
+public:
+	virtual _bool Picking(class CTransform* pTransform, _vec3* pOut = nullptr) { return true; };
+
 
 protected:
 	LPDIRECT3DVERTEXBUFFER9		m_pVB;

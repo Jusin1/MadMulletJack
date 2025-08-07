@@ -1,6 +1,14 @@
 #pragma once
 #include "CUI.h"
 
+<<<<<<< HEAD
+=======
+namespace Engine
+{
+	class VIBuffer_Color;
+}
+
+>>>>>>> develop
 class CHpBarUI : public CUI
 {
 public:
@@ -28,5 +36,9 @@ public:
 
 private:
     _float		m_fHPPercent; // 체력 비율
+<<<<<<< HEAD
+=======
+	VIBuffer_Color *m_pColBufferCom = nullptr;
+>>>>>>> develop
 };
 

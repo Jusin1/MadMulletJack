@@ -7,10 +7,13 @@
 #include "CFrameMgr.h"
 #include "CRenderer.h"
 #include "CFontMgr.h"
+#include "VIBuffer_Color.h"
 #include "CDInputMgr.h"
 #include "CColiderManager.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
+#include "CPicking.h"
+#include "CPickingManager.h"
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
 , m_pRenderer(nullptr)
@@ -26,6 +29,10 @@ HRESULT CMainApp::Ready_MainApp()
 {
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
+		return E_FAIL;
+
+	// 픽킹 초기화
+	if(FAILED(CPicking::GetInstance()->Initialize(g_hWnd, m_pGraphicDev)))
 		return E_FAIL;
 
 	// 객체 그룹 설정
@@ -53,6 +60,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 	CManagement::GetInstance()->Update_Scene(fTimeDelta); // 씬 업데이트
 	CObjectManager::GetInstance()->Update(fTimeDelta); // 오브젝트 업데이트
+	CPicking::GetInstance()->Update();
 
 	return 0;
 }
@@ -79,6 +87,20 @@ void CMainApp::Render_MainApp()
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 	m_pRenderer->Render_GameObject(); // 모든 렌더 대상 렌더링
 	m_pDeviceClass->Render_End();
+
+		// FPS 출력
+	m_fFPSTime += CTimerMgr::GetInstance()->Get_TimeDelta(TEXT("Timer_60"));
+	++m_iFPSCnt;
+
+	if (m_fFPSTime >= 1.f)
+	{
+		wchar_t szFPS[128];
+		swprintf_s(szFPS, 128, L"FPS : %d", m_iFPSCnt);
+		SetWindowText(g_hWnd, szFPS);
+
+		m_fFPSTime = 0.f;
+		m_iFPSCnt = 0;
+	}
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
@@ -107,9 +129,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
 		return E_FAIL;
 
-
 	// 텍스처 필터
-
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
@@ -134,7 +154,6 @@ HRESULT CMainApp::Ready_Scene(SCENE eScene)
 
 HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 {
-
 	// Transform
 	if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
 		return E_FAIL;
@@ -143,16 +162,36 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer", Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+<<<<<<< HEAD
 	// RectColorBuffer
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Color_Buffer", Engine::VIBuffer_Color::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// Colider
+=======
+	// Colider_Rect
+>>>>>>> develop
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Rect", Engine::CColider_Rect::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Colider_Cube
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Cube", Engine::CColider_Cube::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Colider_Sphere
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Sphere", Engine::CColider_Sphere::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// Renderer
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// calculator 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// RectColorBuffer
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Color_Buffer", Engine::VIBuffer_Color::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 }
@@ -177,11 +216,13 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pGraphicDev);
 	CColiderManager::GetInstance()->DestroyInstance();
+	CPicking::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CDInputMgr::GetInstance()->DestroyInstance();
+	CPickingManager::GetInstance()->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
 }

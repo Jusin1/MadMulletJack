@@ -100,7 +100,6 @@ void CTerrain::SetUp_TerrainY()
 
 }
 
-
 CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CTerrain* pTerrain = new CTerrain(pGraphicDev);

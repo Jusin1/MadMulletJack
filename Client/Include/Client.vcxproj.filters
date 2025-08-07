@@ -31,20 +31,11 @@
     <Filter Include="02. GameObject\00. BackGround">
       <UniqueIdentifier>{339f2345-7ecf-41a6-9988-7ed0d488a1c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. Player">
-      <UniqueIdentifier>{f08c1684-9e59-4a1f-91db-a39404b50522}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Monster">
-      <UniqueIdentifier>{2d2d0674-1e7e-4d1e-9841-94446ae2ffbd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\03. Terrain">
       <UniqueIdentifier>{bb8e5189-9757-475d-bfd1-5b68823a8462}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\02. Loading">
       <UniqueIdentifier>{d8c4b272-1c4a-46ca-b9c9-68997636653a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. DynamicCamera">
-      <UniqueIdentifier>{2e80ddbf-44c7-4b9f-8e48-31f9c9c4cf57}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{a9a06ec8-c157-42ed-b807-cd9033af1dd8}</UniqueIdentifier>
@@ -58,11 +49,49 @@
     <Filter Include="02. GameObject\06. UI">
       <UniqueIdentifier>{6c2dbcfb-e0a4-4bfc-9de5-7c1adc6984cc}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="02. GameObject\06. UI\02. HpBar">
       <UniqueIdentifier>{51995eca-9031-4d87-a505-7457fc9cffc5}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. UI\01. CLifeCount">
       <UniqueIdentifier>{94a0d041-d062-49fd-9b25-66ac99b58ed9}</UniqueIdentifier>
+=======
+    <Filter Include="02. GameObject\04. Camera">
+      <UniqueIdentifier>{4c937395-abb0-45dd-bfb4-62be4974441d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\01. DynamicCamera">
+      <UniqueIdentifier>{2e80ddbf-44c7-4b9f-8e48-31f9c9c4cf57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\02. CameraFPS">
+      <UniqueIdentifier>{cf77e855-0e9e-4432-86be-9b0eda930f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character">
+      <UniqueIdentifier>{2ad78b57-748a-4475-bc97-521d18e4def9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\01. Player">
+      <UniqueIdentifier>{f08c1684-9e59-4a1f-91db-a39404b50522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\02. Monster">
+      <UniqueIdentifier>{2d2d0674-1e7e-4d1e-9841-94446ae2ffbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{5362bf18-7c21-4327-a4b4-94d9be3df2b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\PickingManager">
+      <UniqueIdentifier>{f9b54d02-4e72-4866-9974-02b9f5233c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI">
+      <UniqueIdentifier>{f5c42883-adff-44ca-81b8-c6f4edd619e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerHandUI">
+      <UniqueIdentifier>{396b671f-4a22-47ee-b4df-70168e3aee84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerGunHI">
+      <UniqueIdentifier>{f01e7319-8097-41f7-b834-985e7e25c19a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\HpBar_UI">
+      <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
+>>>>>>> develop
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +120,10 @@
       <Filter>02. GameObject\00. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPlayer.h">
-      <Filter>02. GameObject\01. Player</Filter>
+      <Filter>02. GameObject\01. Character\01. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMonster.h">
-      <Filter>02. GameObject\02. Monster</Filter>
+      <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -102,11 +131,8 @@
     <ClInclude Include="..\Header\CStage.h">
       <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLoading_Scene.h">
-      <Filter>01. Scene\02. Loading</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -120,8 +146,37 @@
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\06. UI</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Header\CHpBarUI.h">
       <Filter>02. GameObject\06. UI\02. HpBar</Filter>
+=======
+    <ClInclude Include="Client_Global.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoading_Scene.h">
+      <Filter>01. Scene\02. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraFPS.h">
+      <Filter>02. GameObject\04. Camera\02. CameraFPS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCharacter.h">
+      <Filter>02. GameObject\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPickingManager.h">
+      <Filter>03. Manager\PickingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUIBase.h">
+      <Filter>02. GameObject\06. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Hand.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Gun.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+>>>>>>> develop
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,11 +195,8 @@
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CPlayer.cpp">
-      <Filter>02. GameObject\01. Player</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CMonster.cpp">
-      <Filter>02. GameObject\02. Monster</Filter>
+      <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -156,7 +208,7 @@
       <Filter>01. Scene\02. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -167,8 +219,37 @@
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\02. HpBar</Filter>
+=======
+    <ClCompile Include="Clinet_Global.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer.cpp">
+      <Filter>02. GameObject\01. Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraFPS.cpp">
+      <Filter>02. GameObject\04. Camera\02. CameraFPS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCharacter.cpp">
+      <Filter>02. GameObject\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPickingManager.cpp">
+      <Filter>03. Manager\PickingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUIBase.cpp">
+      <Filter>02. GameObject\06. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Hand.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Gun.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+>>>>>>> develop
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

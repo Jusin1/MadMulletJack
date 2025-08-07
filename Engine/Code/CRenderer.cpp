@@ -25,11 +25,8 @@ HRESULT CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
-
 	m_RenderGroup[eType].push_back(pGameObject);
-
 	pGameObject->Add_Ref();
-
 	return S_OK;
 }
 

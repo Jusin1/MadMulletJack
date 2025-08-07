@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Headers">
+      <UniqueIdentifier>{48a2e9b2-029e-4030-ad89-f95f166b17e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC">
+      <UniqueIdentifier>{2984d317-34e3-4692-a052-83de5911ce11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC\imgui">
+      <UniqueIdentifier>{ba2cd1eb-246e-491e-b0c6-deaff5106276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC\imGuizmo">
+      <UniqueIdentifier>{48151439-c676-4822-8007-bd64b3b40509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Headers\Andromeda">
+      <UniqueIdentifier>{bfb542bb-9c49-4052-a507-4410bb30b0ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. EditorApplication">
+      <UniqueIdentifier>{010def09-6940-435e-9c0d-d1982557cdc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. EditorApplication\00. main">
+      <UniqueIdentifier>{abfc6b6b-0ff3-4696-9b07-03409c255337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ETC\imgui\impl">
+      <UniqueIdentifier>{af875e43-0514-4fc3-8171-b30f85576c5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{fdf20e53-9e1e-468b-95f9-dbd994a2f652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Camera">
+      <UniqueIdentifier>{d899c018-5e6a-436e-a8da-64d6b89b1a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component">
+      <UniqueIdentifier>{71f096fc-57bf-4a1f-af40-4ce723b5a552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Loader">
+      <UniqueIdentifier>{6651524d-eb82-4ddf-9d2c-3407063ff306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI">
+      <UniqueIdentifier>{a8bb9748-d214-4f0c-8d03-59534f358564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element">
+      <UniqueIdentifier>{cff62c8d-fba9-42ae-be46-f8f6dff5a097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Base">
+      <UniqueIdentifier>{3c361479-bfee-48c7-af99-8ba628db30a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Button">
+      <UniqueIdentifier>{ed356b75-57fd-49e9-b9fc-d9a2d032adb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Text">
+      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Panel">
+      <UniqueIdentifier>{ea27ae45-282b-40e7-975d-c4522b416a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject">
+      <UniqueIdentifier>{fc014be5-b044-437a-ad7c-17609aefac59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\GridPanel">
+      <UniqueIdentifier>{0e0420a1-c6ec-467a-9cfc-e3937b692287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Thumbnail">
+      <UniqueIdentifier>{9dc81b83-b9a7-41bb-976b-ddcf5b085085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Transform">
+      <UniqueIdentifier>{7b7bd83c-38f7-4f6d-84d0-0324219aad53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>00. EditorApplication\00. main</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx9.h">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>98. ETC\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphEditor.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImCurveEdit.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGradient.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImSequencer.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImZoomSlider.h">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorApplication.h">
+      <Filter>00. EditorApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorScene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor_Define.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorCamera.h">
+      <Filter>02. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditLoader.h">
+      <Filter>05. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorLoadingScene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGridPanel.h">
+      <Filter>04. GameObject\GridPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiBase.h">
+      <Filter>06. GUI\Element\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_InputText.h">
+      <Filter>06. GUI\Element\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Button.h">
+      <Filter>06. GUI\Element\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Panel.h">
+      <Filter>06. GUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiManager.h">
+      <Filter>06. GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Thumbnail.h">
+      <Filter>06. GUI\Element\Thumbnail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Transform.h">
+      <Filter>06. GUI\Element\Transform</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>00. EditorApplication\00. main</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx9.cpp">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>98. ETC\imgui\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>98. ETC\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphEditor.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImCurveEdit.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGradient.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImSequencer.cpp">
+      <Filter>98. ETC\imGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>99. Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorApplication.cpp">
+      <Filter>00. EditorApplication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorScene.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorCamera.cpp">
+      <Filter>02. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditLoader.cpp">
+      <Filter>05. Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorLoadingScene.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGridPanel.cpp">
+      <Filter>04. GameObject\GridPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiBase.cpp">
+      <Filter>06. GUI\Element\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_InputText.cpp">
+      <Filter>06. GUI\Element\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Button.cpp">
+      <Filter>06. GUI\Element\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Panel.cpp">
+      <Filter>06. GUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiManager.cpp">
+      <Filter>06. GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Thumbnail.cpp">
+      <Filter>06. GUI\Element\Thumbnail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Transform.cpp">
+      <Filter>06. GUI\Element\Transform</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Editor.ico">
+      <Filter>99. Headers\Andromeda</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>99. Headers\Andromeda</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc">
+      <Filter>99. Headers\Andromeda</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

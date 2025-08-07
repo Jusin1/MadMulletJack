@@ -11,9 +11,17 @@
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
+<<<<<<< HEAD
 #include "CUI.h"
 #include "CHpBarUI.h"
+=======
+#include "CUIBase.h"
+#include "CCameraFPS.h"
+>>>>>>> develop
 
+// UI
+#include "CHpBarUI.h"
+#include "CPlayer_Hand.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -70,7 +78,7 @@ HRESULT CLoader::Loading_Logo()
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 	// BackGround
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOGO, L"Prototype_Component_Texture_BackGround",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/IU.jpg", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/BACK.png", 1))))
 		return E_FAIL;
 
 	// 객체 생성 중
@@ -107,12 +115,40 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 #pragma endregion 플레이어 테스트
 
+<<<<<<< HEAD
 #pragma region UI 테스트
 	// UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UITest",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/UITEST.png", 1))))
 		return E_FAIL;
 
+=======
+#pragma region 몬스터 테스트
+	// Monster
+	// IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/idle%03d.png", 12))))
+		return E_FAIL;
+
+	// AIM
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
+		return E_FAIL;
+#pragma endregion 몬스터 테스트
+
+#pragma region UI 테스트
+	// Player UI
+
+	// Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/HAND_IDLE%03d.png", 9))))
+		return E_FAIL;
+
+	// Shot
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/PISTOL_SHOT%03d.png", 6))))
+		return E_FAIL;
+>>>>>>> develop
 
 #pragma endregion UI 테스트
 
@@ -128,10 +164,15 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	//// Camera_Dynamic
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_Dynamic",
-		CDynamicCamera::Create(m_pGraphicDev))))
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_Dynamic",
+	//	CDynamicCamera::Create(m_pGraphicDev))))
+	//	return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
+		CCameraFPS::Create(m_pGraphicDev))))
 		return E_FAIL;
-	
+
+
 	// Player
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Player",
 		CPlayer::Create(m_pGraphicDev))))
@@ -143,15 +184,28 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	// UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UI",
-		CUI::Create(m_pGraphicDev))))
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIRoot",
+		CUIBase::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+<<<<<<< HEAD
 	// HpBarUI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
 		CHpBarUI:: Create(m_pGraphicDev))))
 		return E_FAIL;
 
+=======
+	// 손 UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandUI",
+		CPlayer_Hand::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	//// HpBarUI
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
+	//	CHpBarUI::Create(m_pGraphicDev))))
+	//	return E_FAIL;
+
+>>>>>>> develop
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_TerrianBuffer", Engine::CVIBuffer_Terrian::Create(m_pGraphicDev))))
@@ -161,9 +215,12 @@ HRESULT CLoader::Loading_ForStage()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+
+
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
-
+	
+	return S_OK;
 }
 
 CLoader* CLoader::Create(LPDIRECT3DDEVICE9 pGrahpicDev, SCENE eNextScene)

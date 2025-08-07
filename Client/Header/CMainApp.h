@@ -31,6 +31,9 @@ private:
 private:
 	Engine::CGraphicDev* m_pDeviceClass;
 	Engine::CRenderer* m_pRenderer;
+private:
+	float m_fFPSTime = 0.f;
+	int   m_iFPSCnt = 0;
 
 	LPDIRECT3DDEVICE9		m_pGraphicDev;
 
@@ -39,6 +42,5 @@ public:
 
 private:
 	virtual void	Free();			// °´Ã¼ ¼Ò¸ê ÇÔ¼ö
-
 };
 

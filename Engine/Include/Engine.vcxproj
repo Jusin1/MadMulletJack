@@ -156,8 +156,15 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CColiderManager.h" />
+    <ClInclude Include="..\Header\CColider_Cube.h" />
     <ClInclude Include="..\Header\CColider_Rect.h" />
+    <ClInclude Include="..\Header\CColider_Sphere.h" />
     <ClInclude Include="..\Header\CComponent.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\Header\CPicking.h" />
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel.h" />
+>>>>>>> develop
     <ClInclude Include="..\Header\VIBuffer_Color.h" />
     <ClInclude Include="..\Header\VIBuffer_Cube.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
@@ -191,8 +198,15 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CColiderManager.cpp" />
+    <ClCompile Include="..\Code\CColider_Cube.cpp" />
     <ClCompile Include="..\Code\CColider_Rect.cpp" />
+    <ClCompile Include="..\Code\CColider_Sphere.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="..\Code\CPicking.cpp" />
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp" />
+>>>>>>> develop
     <ClCompile Include="..\Code\VIBuffer_Color.cpp" />
     <ClCompile Include="..\Code\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />

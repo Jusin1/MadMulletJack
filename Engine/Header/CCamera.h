@@ -38,7 +38,6 @@ public:
 
 protected:
 	static const _tchar* m_pTransformTag; // Transform 키 태그
-	CTransform* m_pTransform = nullptr; // Transform 컴포넌트
 	CAMINFO			  m_camInfo; // 카메라 설정 값 저장
 
 public:

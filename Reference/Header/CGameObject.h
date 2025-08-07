@@ -1,7 +1,7 @@
 #pragma once
 #include "CBase.h"
 #include "CComponent.h"
-
+#include "CTransform.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CGameObject : public CBase
@@ -25,14 +25,28 @@ public:
 	_bool Get_Dead() { return m_bDead; }
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
+	void Set_Active(bool bActive) { m_bActive = bActive; }
+	bool Is_Active() const { return m_bActive; }
 
+public:
+	virtual _bool Picking(_vec3* PickingPoint) { return true; }
+	virtual void PickingTrue() {};
+public:
+	CTransform* GetTransform() const { return m_pTransformCom; }
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent;
 	_vec3									m_vPosition;
-	_float									m_fRadius = 0.5f; // 충돌 반지름(원충돌)
-	_bool									m_bDead = false;
+	_float									m_fRadius;
+	_bool									m_bDead;
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
+	bool m_bActive;
+
+
+
+	// Trnasform Component
+protected:
+	CTransform* m_pTransformCom;
 
 protected:
 	// 컴포넌트 추가

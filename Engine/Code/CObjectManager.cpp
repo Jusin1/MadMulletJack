@@ -5,8 +5,9 @@
 IMPLEMENT_SINGLETON(CObjectManager)
 
 CObjectManager::CObjectManager()
+	: m_iSceneNum(0)
+	, m_pLayers(nullptr)
 {
-
 }
 
 CObjectManager::~CObjectManager()
@@ -63,6 +64,32 @@ HRESULT CObjectManager::Add_GameObject(const _tchar* pPrototypeTag, _uint iScene
 		pLayer->Add_GameObject(pGameObject);
 	}
 	return S_OK;
+}
+
+CGameObject* CObjectManager::Clone_GameObject(const _tchar* pPrototypeTag, _uint iSceneIdx, const _tchar* pLayerTag, void* pArg)
+{
+	CGameObject* pPrototype = Find_Prototype(pPrototypeTag);
+	if (nullptr == pPrototype)
+		return nullptr;
+
+	CGameObject* pGameObject = pPrototype->Clone(pArg);
+	if (nullptr == pGameObject)
+		return nullptr;
+
+	CLayer* pLayer = Find_Layer(iSceneIdx, pLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+		pLayer->Add_GameObject(pGameObject);
+		m_pLayers[iSceneIdx].emplace(pLayerTag, pLayer);
+	}
+	else
+	{
+		pLayer->Add_GameObject(pGameObject);
+	}
+
+	return pGameObject;
 }
 
 void CObjectManager::Update(_float fTimeDelta)

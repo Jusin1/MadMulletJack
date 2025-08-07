@@ -13,6 +13,7 @@
 extern HWND				g_hWnd;
 extern HINSTANCE		g_hInst;
 
+#include "Engine_Macro.h"
 
 #include <d3d9.h>
 #include <d3dx9.h>
