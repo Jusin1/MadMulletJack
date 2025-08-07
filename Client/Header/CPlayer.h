@@ -8,10 +8,17 @@
 class CPlayer : public CCharacter
 {
 public:
-	enum STATE { IDLE, WALK, PLAYER_END };
+	enum PLAYERSTATE {
+		IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
+		ATTACK_INSTANT, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END
+	};// 얘는 define으로 옮기
+	enum WEAPON { WP_NON, WP_PISTOL, WP_RIFLE, WP_KATANA, WP_SNIPER, WAP_END };
+	enum WEAPON2 { WP_KICK, WP_CLEAVER, WP_BOOK, WAP2_END };
+	enum MOVEKEY { MOVE_NORMAL, MOVE_LR, MOVE_NON, MOVE_STOP, MOVE_END };
+
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPlayer(const CGameObject& rhs);
+	explicit CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer();
 
 public:
@@ -21,11 +28,104 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	//state func -> private 해도..?
+public:
+	void ChangeState(PLAYERSTATE  _e);
+	void StateNormalSet();
+
+	void StateBegin(PLAYERSTATE _e);
+	void StateEnd(PLAYERSTATE _e);
+	void StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta);
+
+	void IDLE_Begin();
+	void IDLE_On(const _float& fTimeDelta);
+	void IDLE_End();
+
+	void JUMP_Begin();
+	void JUMP_On(const _float& fTimeDelta);
+	void JUMP_End();
+
+	void DASH_ATTACK_Begin();
+	void DASH_ATTACK_On(const _float& fTimeDelta);
+	void DASH_ATTACK_End();
+
+	void DASH_Begin();
+	void DASH_On(const _float& fTimeDelta);
+	void DASH_End();
+
+	void SLIED_Begin();
+	void SLIED_On(const _float& fTimeDelta);
+	void SLIED_End();
+
+	void KICK_Begin();
+	void KICK_On(const _float& fTimeDelta);
+	void KICK_End();
+
+	void ATTACK_Begin();
+	void ATTACK_On(const _float& fTimeDelta);
+	void ATTACK_End();
+
+	void ATTACK_INSTANT_Begin();
+	void ATTACK_INSTANT_On(const _float& fTimeDelta);
+	void ATTACK_INSTANT_End();
+
+	void RELOAD_Begin();
+	void RELOAD_On(const _float& fTimeDelta);
+	void RELOAD_End();
+
+	void HIT_Begin();
+	void HIT_On(const _float& fTimeDelta);
+	void HIT_End();
+
+	void DOPING_Begin();
+	void DOPING_On(const _float& fTimeDelta);
+	void DOPING_End();
+
+	void WALL_Begin();
+	void WALL_On(const _float& fTimeDelta);
+	void WALL_End();
+
+	void OPENING_Begin();
+	void OPENING_On(const _float& fTimeDelta);
+	void OPENING_End();
+
+	void PLAYERDEAD_Begin();
+	void PLAYERDEAD_On(const _float& fTimeDelta);
+	void PLAYERDEAD_End();
+
+	void KeyInput(const _float& fTimeDelta);
+	void Set_State_Idle();
+
+	bool Is_Anim_Finished(); // frame 다 돌면 state -> idle
+	const TCHAR* StateToString(PLAYERSTATE eState); //debug
+
+
+	// getter setter func
 public:
 	_vec3 Get_Pos();
 	_vec3 Get_Look();
 	_vec3 Get_Right();
 	void Set_GroundY(float _fY) { m_fGround_Height = _fY; }
+
+	PLAYERSTATE Get_State() { return m_eState; }
+	void Set_State(PLAYERSTATE _e) { m_eState = _e; }
+	PLAYERSTATE Get_PrevState() { return m_ePrevState; }
+	void Set_PrevState(PLAYERSTATE _e) { m_ePrevState = _e; }
+	MOVEKEY Get_MoveKey() { return m_eMove; }
+	void Set_MoveKey(MOVEKEY _e) { m_eMove = _e; }
+
+	_float Get_GroundHeight() { return m_fGround_Height; }
+	void Set_GroundHeight(_float _fGroundHeight) {m_fGround_Height = _fGroundHeight;}
+
+
+	_bool	Get_HpbarOn() { return m_bHpBarOn; }
+	void	Set_HpbarOn(_bool _bHpbarOn) { m_bHpBarOn = _bHpbarOn; }
+	_bool	Get_KeyInput() { return m_bKeyInput; }
+	void	Set_KeyInput(_bool _bKeyInput) { m_bKeyInput = _bKeyInput; }
+	_bool	Get_IsInvincible() { return m_bIsInvincible; }
+	void	Set_IsInvincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; }
+	_bool Get_Attack() { return m_bAttack; }
+	void Set_Attack(_bool _bAttack) { m_bAttack = _bAttack; }
 
 private:
 	HRESULT			Set_Component();
@@ -45,10 +145,19 @@ private:
 	map<const _tchar*, CTexture*> m_mapTexture;
 
 private:
-	STATE m_eState = IDLE;
-	STATE m_ePrevState = PLAYER_END;
-	const _tchar* m_TimerTag = TEXT("");
-	_float m_fGround_Height = 0.f;
+	PLAYERSTATE m_eState;
+	PLAYERSTATE m_ePrevState;
+	MOVEKEY m_eMove;
+
+	const _tchar* m_TimerTag;
+	_float m_fGround_Height;
+
+	_bool m_bHpBarOn;
+	_bool m_bKeyInput;
+	_bool m_bIsInvincible;
+	_bool m_bAttack;
+
+	
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
