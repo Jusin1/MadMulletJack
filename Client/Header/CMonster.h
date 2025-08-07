@@ -9,7 +9,7 @@ class CMonster : public CCharacter
 {
 private:
 	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMonster(const CGameObject& rhs);
+	explicit CMonster(const CMonster& rhs);
 	virtual ~CMonster();
 
 public:
