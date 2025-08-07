@@ -1,7 +1,4 @@
-﻿  pch.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\crtdbg.h(307,1): warning C4005: '_malloca': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\malloc.h(124,1): message : see previous definition of '_malloca'
-  CBackGround.cpp
+﻿  CBackGround.cpp
   CCameraFPS.cpp
   CCharacter.cpp
   CDynamicCamera.cpp
@@ -14,7 +11,6 @@ C:\Users\PC\Documents\MadMulletJack\Client\Code\CDynamicCamera.cpp(62,27): warni
   CMonster.cpp
   CPickingManager.cpp
   CPlayer.cpp
-  CPlayer_Gun.cpp
   CPlayer_Hand.cpp
   CSkyBox.cpp
   CStage.cpp
@@ -27,8 +23,4 @@ C:\Users\PC\Documents\MadMulletJack\Client\Code\CUIBase.cpp(76): warning C4715: 
 C:\Users\PC\Documents\MadMulletJack\Client\Code\CUI.cpp(79): warning C4715: 'CUI::Set_Component': not all control paths return a value
 C:\Users\PC\Documents\MadMulletJack\Client\Code\CMainApp.cpp(189): warning C4715: 'CMainApp::Ready_Prototype_Component': not all control paths return a value
 C:\Users\PC\Documents\MadMulletJack\Client\Code\CLogo.cpp(45): warning C4715: 'CLogo::Update_Scene': not all control paths return a value
-  Compiling...
-  Clinet_Global.cpp
-  Generating Code...
-     Creating library ../Bin\Client.lib and object ../Bin\Client.exp
   Client.vcxproj -> C:\Users\PC\Documents\MadMulletJack\Client\Bin\Client.exe

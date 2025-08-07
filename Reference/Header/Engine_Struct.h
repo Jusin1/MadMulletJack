@@ -57,7 +57,6 @@ namespace Engine
 	typedef struct tagGridPanelData
 	{
 		PanelType eType = PanelType::NONE;
-		unsigned short dwIncline = 0;
 		unsigned long dwCountX = 0;
 		unsigned long dwCountY = 0;
 		unsigned long dwCountZ = 0;
@@ -74,7 +73,7 @@ namespace Engine
 
 	typedef struct tagTextureData
 	{
-		wstring TexturePath = L"";
+		wstring FilePath = L"";
 	} TEXTUREDATA;
 
 	typedef struct tagMapObjectData
