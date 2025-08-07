@@ -98,9 +98,7 @@ public:
 
 	bool Is_Anim_Finished(); // frame ´Ù µ¹¸é state -> idle
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
-
 	void CountHp(const _float& fTimeDelta);
-
 
 	// getter setter func
 public:
@@ -126,8 +124,8 @@ public:
 	void	Set_KeyInput(_bool _bKeyInput) { m_bKeyInput = _bKeyInput; }
 	_bool	Get_IsInvincible() { return m_bIsInvincible; }
 	void	Set_IsInvincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; }
-	_bool	Get_Attack() { return m_bAttack; }
-	void	Set_Attack(_bool _bAttack) { m_bAttack = _bAttack; }
+	_bool Get_Attack() { return m_bAttack; }
+	void Set_Attack(_bool _bAttack) { m_bAttack = _bAttack; }
 
 private:
 	HRESULT			Set_Component();

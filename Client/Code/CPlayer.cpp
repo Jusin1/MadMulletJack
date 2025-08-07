@@ -43,14 +43,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
+	m_fHp = 10.f;
+
 	return S_OK;
 }
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	/*if (m_bDead)
+		return DEAD;*/
+
 	CGameObject::Update_GameObject(fTimeDelta);
 	
-
 	// state change & update
 	ChangeState(m_eState);
 	StateUpdate(m_eState, fTimeDelta);
@@ -63,8 +67,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	//Key_Input(fTimeDelta);
-
 	//Set_OnTerrain();
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
@@ -229,7 +231,6 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	CountHp(fTimeDelta);
 	KeyInput(fTimeDelta);
-	
 }
 
 void CPlayer::StateNormalSet()
@@ -563,20 +564,22 @@ bool CPlayer::Is_Anim_Finished()
 	return (textInfo.m_iCurrentTex == textInfo.m_iEndTex-1);
 }
 
+
 void CPlayer::CountHp(const _float& fTimeDelta)
 {
 	// 0이면 죽음
 	if (m_fHp <= 0)
 	{
 		OutputDebugString(L"플레이어가 죽었습니다. (HP <= 0)\n");
-		m_bDead = true;
+		m_eState = PLAYERDEAD;
 	}
 
 
-	m_fHp -= 10000 / fTimeDelta;
+	m_fHp -= 1.f * fTimeDelta;
 
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
+
 
 HRESULT CPlayer::Set_Component()
 {
