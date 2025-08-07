@@ -227,7 +227,9 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		PLAYERDEAD_On(fTimeDelta);break;
 	}
 
+	CountHp(fTimeDelta);
 	KeyInput(fTimeDelta);
+	
 }
 
 void CPlayer::StateNormalSet()
@@ -559,6 +561,21 @@ bool CPlayer::Is_Anim_Finished()
 {
 	Engine::CTexture::TEXINFO textInfo = m_pTextureCom->Get_Frame();
 	return (textInfo.m_iCurrentTex == textInfo.m_iEndTex-1);
+}
+
+void CPlayer::CountHp(const _float& fTimeDelta)
+{
+	// 0이면 죽음
+	if (m_fHp <= 0)
+	{
+		OutputDebugString(L"플레이어가 죽었습니다. (HP <= 0)\n");
+		m_bDead = true;
+	}
+
+
+	m_fHp -= 10000 / fTimeDelta;
+
+	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
 
 HRESULT CPlayer::Set_Component()
