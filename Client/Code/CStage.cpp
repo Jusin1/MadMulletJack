@@ -134,7 +134,7 @@ HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
     // Monster
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster_Suit"), SCENE_STAGE, pLayerTag)))
         return E_FAIL;
     return S_OK;
 }
