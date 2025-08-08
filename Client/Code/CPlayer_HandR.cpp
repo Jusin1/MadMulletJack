@@ -1,26 +1,17 @@
 #include "pch.h"
 #include "CPlayer_HandR.h"
 #include "CTimerMgr.h"
-<<<<<<< HEAD
 #include "CPlayer_StateInfo.h"
 
-CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev)
-=======
 
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev),m_tInfo({ PLAYER_END, WP_END, WP2_END })
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
 {
 }
 
 CPlayer_HandR::CPlayer_HandR(const CPlayer_HandR& rhs)
-<<<<<<< HEAD
-    : CUI(rhs)
-=======
     : CUI(rhs), m_tInfo(rhs.m_tInfo)
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
 {
 }
 
@@ -41,11 +32,8 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-<<<<<<< HEAD
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHand"))))
-=======
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
+
         return E_FAIL;
 
     m_fSizeX = 200.f;
@@ -69,13 +57,12 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
     __super::Update_GameObject(fTimeDelta);
     if (m_pTextureCom->Is_AnimFinished())
     {
-<<<<<<< HEAD
+
         //if (m_CurrentAnimTag != TEXT("Com_Texture_Hand_Idle"))
         //{
         //    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
         //}
-=======
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
+
         m_bAniFinish = true;
     }
     return NO_EVENT;
@@ -173,11 +160,8 @@ HRESULT CPlayer_HandR::Set_Texture()
     }
 
     else if (m_tInfo.ePlayerState == ATTACK_INSTANT) {
-<<<<<<< HEAD
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-=======
         if (m_tInfo.eWeapon2 == WP_PISTOL) {
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
+
             Change_Texture(TEXT("Com_Texture_Hand_Idle"));
         }
 

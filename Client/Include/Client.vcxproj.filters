@@ -76,17 +76,32 @@
     <Filter Include="02. GameObject\06. UI\PlayerUI">
       <UniqueIdentifier>{f5c42883-adff-44ca-81b8-c6f4edd619e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerHandUI">
-      <UniqueIdentifier>{396b671f-4a22-47ee-b4df-70168e3aee84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\06. UI\PlayerUI\PlayerGunHI">
-      <UniqueIdentifier>{f01e7319-8097-41f7-b834-985e7e25c19a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. UI\HpBar_UI">
       <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
       <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\01. HandR">
+      <UniqueIdentifier>{d933b52e-de6a-42d6-88e9-934d87db3fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\PlayerStateInfo">
+      <UniqueIdentifier>{a476c76f-d398-4a38-be02-fe198286bb35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header\Global">
+      <UniqueIdentifier>{faa7976c-34af-4f46-bbc6-f6ce369b9656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header\Define">
+      <UniqueIdentifier>{54ad33ad-7e57-4c02-abc5-fe8740743b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\02. HandL">
+      <UniqueIdentifier>{1766b44a-8536-4119-ad23-8fbceca7c235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\03. Foot">
+      <UniqueIdentifier>{1a589127-940d-4a5b-9925-25a05cae7388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\PlayerUI\04. Arm">
+      <UniqueIdentifier>{c1f62a87-9555-4298-b2e6-0e131ac4d2f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,17 +147,11 @@
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="Clinet_Define.h">
-      <Filter>99. Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CLoader.h">
       <Filter>01. Scene\02. Loading\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\06. UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Client_Global.h">
-      <Filter>99. Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoading_Scene.h">
       <Filter>01. Scene\02. Loading</Filter>
@@ -159,17 +168,32 @@
     <ClInclude Include="..\Header\CUIBase.h">
       <Filter>02. GameObject\06. UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CPlayer_Hand.h">
-      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CPlayer_Gun.h">
-      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CHpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMonster_Suit.h">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_StateInfo.h">
+      <Filter>03. Manager\PlayerStateInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Client_Global.h">
+      <Filter>99. Header\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Clinet_Define.h">
+      <Filter>99. Header\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_HandL.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\02. HandL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_HandR.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\01. HandR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Foot.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\03. Foot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_Arm.h">
+      <Filter>02. GameObject\06. UI\PlayerUI\04. Arm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +233,6 @@
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
-    <ClCompile Include="Clinet_Global.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CPlayer.cpp">
       <Filter>02. GameObject\01. Character\01. Player</Filter>
     </ClCompile>
@@ -227,12 +248,6 @@
     <ClCompile Include="..\Code\CUIBase.cpp">
       <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CPlayer_Hand.cpp">
-      <Filter>02. GameObject\06. UI\PlayerUI\PlayerHandUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPlayer_Gun.cpp">
-      <Filter>02. GameObject\06. UI\PlayerUI\PlayerGunHI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClCompile>
@@ -241,6 +256,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster.cpp">
       <Filter>02. GameObject\01. Character\02. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_StateInfo.cpp">
+      <Filter>03. Manager\PlayerStateInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Clinet_Global.cpp">
+      <Filter>99. Header\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_HandL.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\02. HandL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_HandR.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\01. HandR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Foot.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\03. Foot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_Arm.cpp">
+      <Filter>02. GameObject\06. UI\PlayerUI\04. Arm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

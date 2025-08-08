@@ -108,7 +108,7 @@ HRESULT CLoader::Loading_ForStage()
 #pragma region 플레이어 테스트
 	// Player
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_PlayerTest",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/ZVG_fly%03d.png", 5))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
 		return E_FAIL;
 #pragma endregion 플레이어 테스트
 
