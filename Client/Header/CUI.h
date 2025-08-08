@@ -1,5 +1,6 @@
 #pragma once
 #include "CUIBase.h"
+#include "CPlayer_StateInfo.h"
 class CUI : public CUIBase
 {
 protected:
