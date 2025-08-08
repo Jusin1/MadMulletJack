@@ -2,6 +2,7 @@
 #include "CMonster.h"
 class CMonster_Suit : public CMonster
 {
+	enum MON_STATE {IDLE,  };
 private:
 	explicit CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonster_Suit(const CMonster_Suit& rhs);

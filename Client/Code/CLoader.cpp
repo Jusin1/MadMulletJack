@@ -15,7 +15,8 @@
 
 // UI
 #include "CHpBarUI.h"
-#include "CPlayer_Hand.h"
+#include "CPlayer_HandR.h"
+#include "CPlayer_HandL.h"
 
 // 몬스터
 #include "CMonster_Suit.h"
@@ -178,7 +179,12 @@ HRESULT CLoader::Loading_ForStage()
 
 	// 손 UI 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandUI",
-		CPlayer_Hand::Create(m_pGraphicDev))))
+		CPlayer_HandR::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// 손 UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
+		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	//// HpBarUI

@@ -2,12 +2,12 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUIBase(pGraphicDev)
+	: CUIBase(pGraphicDev), m_bAniFinish(false)
 {
 }
 
 CUI::CUI(const CUI& rhs)
-	: CUIBase(rhs)
+	: CUIBase(rhs), m_bAniFinish(rhs.m_bAniFinish)
 {
 }
 

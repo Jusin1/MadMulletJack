@@ -9,12 +9,6 @@ class CUIBase;
 class CPlayer : public CCharacter
 {
 public:
-	enum PLAYERSTATE {
-		IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
-		ATTACK_INSTANT, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END
-	};// 얘는 define으로 옮기
-	enum WEAPON { WP_NON, WP_PISTOL, WP_RIFLE, WP_KATANA, WP_SNIPER, WAP_END };
-	enum WEAPON2 { WP_KICK, WP_CLEAVER, WP_BOOK, WAP2_END };
 	enum MOVEKEY { MOVE_NORMAL, MOVE_LR, MOVE_NON, MOVE_STOP, MOVE_END };
 
 private:
@@ -108,10 +102,10 @@ public:
 	_vec3 Get_Right();
 	void Set_GroundY(float _fY) { m_fGround_Height = _fY; }
 
-	PLAYERSTATE Get_State() { return m_eState; }
-	void Set_State(PLAYERSTATE _e) { m_eState = _e; }
-	PLAYERSTATE Get_PrevState() { return m_ePrevState; }
-	void Set_PrevState(PLAYERSTATE _e) { m_ePrevState = _e; }
+	PlayerStateInfo Get_State() { return m_tPlayerInfo; }
+	void Set_State(PlayerStateInfo _tInfo) { m_tPlayerInfo = _tInfo; }
+	PlayerStateInfo Get_PrevState() { return m_tPrePlayerInfo; }
+	void Set_PrevState(PlayerStateInfo _tInfo) { m_tPrePlayerInfo = _tInfo; }
 	MOVEKEY Get_MoveKey() { return m_eMove; }
 	void Set_MoveKey(MOVEKEY _e) { m_eMove = _e; }
 
@@ -131,7 +125,6 @@ public:
 private:
 	HRESULT			Set_Component();
 	void			Set_Collider(void);
-	void			Key_Input(const _float& fTimeDelta);
 
 private:
 	HRESULT Texture_Clone();
@@ -144,9 +137,14 @@ private:
 	map<const _tchar*, CTexture*> m_mapTexture;
 
 private:
-	PLAYERSTATE m_eState;
-	PLAYERSTATE m_ePrevState;
+	PlayerStateInfo m_tPlayerInfo;
+	PlayerStateInfo m_tPrePlayerInfo;
 	MOVEKEY m_eMove;
+
+	WEAPON m_eWeapon;
+	WEAPON m_ePrevWeapon;
+	WEAPON m_eWeapon2;
+	WEAPON m_ePrevWeapon2;
 
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
@@ -156,10 +154,9 @@ private:
 	_bool m_bIsInvincible;
 	_bool m_bAttack;
 
-	
 
 private:
-	CUIBase* m_pUIPlayer = nullptr;
+	CUIBase* m_pPlayerUI = nullptr;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
