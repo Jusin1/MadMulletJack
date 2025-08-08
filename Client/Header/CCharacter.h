@@ -18,7 +18,7 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-public:
+protected:
 	HRESULT	Set_Component();
 	void	Set_OnTerrain();
 
@@ -43,7 +43,7 @@ public:
 
 protected:
 	Engine::CCalculator* m_pCalculatorCom; // terrain충돌 위함
-
+	Engine::CVIBuffer_Rect* m_pBufferCom;
 protected:
 	OBJID m_eObjID; //OBJ_END
 	_bool m_bPickingTrue;

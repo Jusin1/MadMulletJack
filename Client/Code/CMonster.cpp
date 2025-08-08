@@ -23,7 +23,7 @@ CMonster::~CMonster()
 
 HRESULT CMonster::Ready_GameObject()
 {
-	if (FAILED(CGameObject::Ready_GameObject()))
+	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -37,9 +37,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
-
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-	m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
 	return S_OK;
 }
 
@@ -47,6 +44,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
+	__super::Update_GameObject(fTimeDelta);
 	CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 그룹에서 지워줌
 	CGameObject::Update_GameObject(fTimeDelta);
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this); // collider 그룹에 넣어줌
@@ -56,6 +54,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	__super::LateUpdate_GameObject(fTimeDelta);
 	//Key_Input(); // 테스트용 지워야 함
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	SetUp_BillBoard();
@@ -66,6 +65,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMonster::Render_GameObject()
 {
+	__super::Render_GameObject();
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();
@@ -86,29 +86,20 @@ void CMonster::Render_GameObject()
 
 }
 
-HRESULT CMonster::Set_Component(void* pArg)
+HRESULT CMonster::Set_Component()
 {
-	CTransform::TRANSFORMINFO TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+	// Collider
+	CColider_Sphere::COLLINFO CollSphereInfo;
+	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
+	CollSphereInfo.fRadius = 1.f;
+	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
 
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
-
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
+	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderCom, &CollSphereInfo)))
 		return E_FAIL;
-
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
+	m_pColiderCom->Set_Transform(m_pTransformCom);
 
 	// Texture
-	if (Texture_Clone())
-		return E_FAIL;
-
-	// Render
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
+	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
 	return S_OK;

@@ -115,13 +115,13 @@ HRESULT CLoader::Loading_ForStage()
 	// Monster
 	// IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/idle%03d.png", 12))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/sm_idle%03d.png", 12))))
 		return E_FAIL;
 
 	// AIM
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Aim",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
-		return E_FAIL;
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Aim",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
+	//	return E_FAIL;
 #pragma endregion 몬스터 테스트
 
 #pragma region UI 테스트
@@ -182,9 +182,9 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	//// HpBarUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
-		CHpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
+	//	CHpBarUI::Create(m_pGraphicDev))))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex

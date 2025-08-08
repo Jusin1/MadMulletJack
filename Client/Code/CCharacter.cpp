@@ -47,7 +47,7 @@ HRESULT CCharacter::Initialize(void* pArg)
 _int CCharacter::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
-	Set_OnTerrain();
+	//Set_OnTerrain();
 
 	return NO_EVENT;
 }
@@ -64,10 +64,11 @@ void CCharacter::Render_GameObject()
 
 HRESULT	CCharacter::Set_Component()
 {
-	// CCalculator
 	if (FAILED(Add_Components(L"Com_Calculator", SCENE_STATIC, L"Proto_Calculator", (CComponent**)&m_pCalculatorCom)))
 		return E_FAIL;
 
+	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
 	return S_OK;
 }
 

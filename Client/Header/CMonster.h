@@ -20,7 +20,7 @@ public:
 	virtual			void		Render_GameObject();
 
 protected:
-	virtual HRESULT Set_Component(void* pArg = nullptr);
+	HRESULT	Set_Component();
 
 protected: 
 	virtual _bool Picking(_vec3* PickingPoint) override;
@@ -34,8 +34,7 @@ protected:
 	virtual HRESULT Change_Texture(const _tchar* LayerTag);
 	
 protected:
-	Engine::CVIBuffer_Rect* m_pBufferCom;
-	Engine::CRenderer* m_pRendererCom;
+	Engine::CColider_Sphere* m_pColiderCom;
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
 	map<const _tchar*, CTexture*> m_mapTexture;
 

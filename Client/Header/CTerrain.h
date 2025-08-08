@@ -27,7 +27,6 @@ private:
 private:
 	Engine::CVIBuffer_Terrian* m_pBufferCom;
 	Engine::CTexture*	m_pTextureCom;
-	Engine::CRenderer* m_pRendererCom;
 
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphicDev);

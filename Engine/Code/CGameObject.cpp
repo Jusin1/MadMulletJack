@@ -4,6 +4,7 @@
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev)
     , m_pTransformCom(nullptr)
+    , m_pRendererCom(nullptr)
     , m_vPosition(0.f, 0.f, 0.f)
     , m_fRadius(0.5f)
     , m_bDead(false)
@@ -37,6 +38,12 @@ HRESULT CGameObject::Ready_GameObject()
 {
     return S_OK;
 }
+HRESULT CGameObject::Initialize(void* pArg)
+{
+    Set_Component();
+    return S_OK;
+}
+
 
 _int CGameObject::Update_GameObject(const _float& fTimeDelta)
 {
@@ -46,6 +53,16 @@ _int CGameObject::Update_GameObject(const _float& fTimeDelta)
 void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 
+}
+
+HRESULT CGameObject::Set_Component()
+{
+    if (FAILED(Add_Components(L"Com_Transform", 0, L"Proto_Transform", (CComponent**)&m_pTransformCom)))
+        return E_FAIL;
+
+    if (FAILED(Add_Components(L"Com_Renderer", 0, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
+        return E_FAIL;
+    return S_OK;
 }
 
 // ÄÄÆ÷³ÍÃ÷ Ãß°¡ - º¹Á¦ ±â¹Ý

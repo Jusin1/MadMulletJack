@@ -188,9 +188,6 @@
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CMonster.cpp">
-      <Filter>02. GameObject\01. Character\02. Monster</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClCompile>
@@ -241,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster_Suit.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

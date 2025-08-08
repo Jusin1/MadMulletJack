@@ -38,6 +38,7 @@ HRESULT CPlayer_Hand::Initialize(void* pArg)
     m_fX = WINCX * 0.5f + 450.f;
     m_fY = WINCY * 0.5f + 300.f;
 
+
     m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
     m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
 

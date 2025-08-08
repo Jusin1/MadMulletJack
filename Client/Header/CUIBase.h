@@ -28,9 +28,6 @@ protected:
     virtual HRESULT			Set_Component();
 
 protected:
-    CRenderer* m_pRendererCom = nullptr;
-
-protected:
     vector<CUIBase*> m_vecChildren; // ÀÚ½Äµé
 
 protected:

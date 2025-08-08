@@ -22,8 +22,9 @@ HRESULT CUIBase::Ready_GameObject()
 
 HRESULT CUIBase::Initialize(void* pArg)
 {
-    if (FAILED(Set_Component()))
+    if (FAILED(__super::Set_Component()))
         return E_FAIL;
+
     return S_OK;
 }
 
@@ -70,9 +71,7 @@ void CUIBase::Render_GameObject() // 자식 Render
 
 HRESULT CUIBase::Set_Component()
 {
-    // Renderer
-    if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-        return E_FAIL;
+    return S_OK;
 }
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가

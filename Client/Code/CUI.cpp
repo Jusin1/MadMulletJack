@@ -18,15 +18,15 @@ CUI::~CUI()
 
 HRESULT CUI::Ready_GameObject()
 {
-	if (FAILED(CGameObject::Ready_GameObject()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 HRESULT CUI::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
@@ -69,15 +69,7 @@ HRESULT CUI::Set_Component()
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	// Transform
-	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
+	return S_OK;
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

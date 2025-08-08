@@ -31,6 +31,15 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	// Transform
+	CTransform::TRANSFORMINFO		TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
+	TransformInfo.vStartPos = *(_vec3*)pArg;
+	m_pTransformCom->SetTransformInfo(TransformInfo);
+
 	if (FAILED(Set_Component(pArg)))
 		return E_FAIL;
 
@@ -69,10 +78,6 @@ void CTerrain::Render_GameObject()
 
 HRESULT CTerrain::Set_Component(void* pArg)
 {
-	// Renderer
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
 	// Texture
 	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_Terrian", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
@@ -81,16 +86,6 @@ HRESULT CTerrain::Set_Component(void* pArg)
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_TerrianBuffer", (CComponent**)&m_pBufferCom)))
 		return E_FAIL;
 
-	// Transform
-	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
-	TransformInfo.vStartPos = *(_vec3*)pArg;
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
 
 	return S_OK;
 }

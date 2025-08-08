@@ -15,27 +15,9 @@ public:
 	virtual			void		Render_GameObject();
 
 protected:
-	virtual HRESULT Set_Component(void* pArg = nullptr);
-	virtual void			Set_Collider(void);
-
-protected:
+	virtual HRESULT Texture_Clone() override;
 	virtual _bool Picking(_vec3* PickingPoint) override;
-
-protected:
-	void SetUp_BillBoard();
-
-protected:
-	virtual HRESULT Texture_Clone();
-
-protected:
-	Engine::CVIBuffer_Rect* m_pBufferCom;
-	Engine::CRenderer* m_pRendererCom;
-	Engine::CColider_Sphere* m_pColiderHead;
-	Engine::CColider_Sphere* m_pColiderBody;
-	Engine::CColider_Sphere* m_pColiderBall;
-	Engine::CColider_Sphere* m_pColiderLeg;
-	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
-	map<const _tchar*, CTexture*> m_mapTexture;
+	void Set_Collider();
 
 public:
 	static CMonster_Suit* Create(LPDIRECT3DDEVICE9 pGrahpicDev);

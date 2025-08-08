@@ -3,11 +3,9 @@
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
 
-
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
-
 }
 
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
@@ -21,7 +19,7 @@ CMonster_Suit::~CMonster_Suit()
 
 HRESULT CMonster_Suit::Ready_GameObject()
 {
-	if (FAILED(CGameObject::Ready_GameObject()))
+	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -29,17 +27,22 @@ HRESULT CMonster_Suit::Ready_GameObject()
 
 HRESULT CMonster_Suit::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Set_Component()))
-		return E_FAIL;
+	// 위치 정보 세팅
+	CTransform::TRANSFORMINFO TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+	TransformInfo.vStartPos = _vec3(4.f, 0.f, 0.f);
 
-	//Test
-	Change_Texture(TEXT("Com_Texture_Idle"));
-
+	m_pTransformCom->SetTransformInfo(TransformInfo);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
 	m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
+
+	Change_Texture(TEXT("Com_Texture_Idle"));
+
 	return S_OK;
 }
 
@@ -47,41 +50,35 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
+	__super::Update_GameObject(fTimeDelta);
 	return NO_EVENT;
 }
 
 void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Set_Collider();
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
+	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CMonster_Suit::Render_GameObject()
 {
 	__super::Render_GameObject();
+
 #ifdef _DEBUG
-	if (g_ColiderRender && m_pColiderHead != nullptr)
-		m_pColiderHead->Render_ColliderSphere();
+	if (g_ColiderRender && m_pColiderCom)
+		m_pColiderCom->Render_ColliderSphere();
 #endif
 }
 
-
-HRESULT CMonster_Suit::Set_Component(void* pArg)
+void CMonster_Suit::Set_Collider()
 {
-	CColider_Sphere::COLLINFO CollSphereInfo;
-	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
-	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
-	// Colider_Sphere
-	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderHead, &CollSphereInfo)))
-		return E_FAIL;
-	m_pColiderHead->Set_Transform(m_pTransformCom); // set tranform을 해줘야함 <- 그 전에 transform 생성 해줘야 하고
-}
+	m_pColiderCom->Update_ColliderSphere();
 
-void CMonster_Suit::Set_Collider(void)
-{
-	m_pColiderHead->Update_ColliderSphere();
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	if (CColiderManager::GetInstance()->CollisionGroup(
+		CColiderManager::COLLISION_PLAYER,
+		this,
+		CColiderManager::COLLISION_SPHERE,
+		nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
@@ -99,36 +96,35 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
 	return true;
 }
 
-
-
-
-
 HRESULT CMonster_Suit::Texture_Clone()
 {
-	CTexture::TEXINFO		TextureInfo;
+	CTexture::TEXINFO TextureInfo;
 	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
 
 	// IDLE
 	TextureInfo.m_iStart = 0;
 	TextureInfo.m_iEndTex = 12;
-	TextureInfo.m_fSpeed = 6;
+	TextureInfo.m_fSpeed = 6.f;
 	TextureInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle", (CComponent**)&m_pTextureCom, &TextureInfo)))
+
+	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Idle",
+		(CComponent**)&m_pTextureCom, &TextureInfo)))
 		return E_FAIL;
-	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle"), m_pTextureCom));
+	m_mapTexture.insert({ TEXT("Com_Texture_Idle"), m_pTextureCom });
 
 	// AIM
-	TextureInfo.m_iStart = 0;
-	TextureInfo.m_iEndTex = 9;
-	TextureInfo.m_fSpeed = 6;
-	TextureInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim", (CComponent**)&m_pTextureCom, &TextureInfo)))
-		return E_FAIL;
-	m_mapTexture.insert(make_pair(TEXT("Com_Texture_AIM"), m_pTextureCom));
+	//TextureInfo.m_iStart = 0;
+	//TextureInfo.m_iEndTex = 9;
+	//TextureInfo.m_fSpeed = 6.f;
+	//TextureInfo.m_bLoop = true;
+
+	//if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim",
+	//	(CComponent**)&m_pTextureCom, &TextureInfo)))
+	//	return E_FAIL;
+	//m_mapTexture.insert({ TEXT("Com_Texture_AIM"), m_pTextureCom });
 
 	return S_OK;
 }
-
 
 CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
@@ -136,7 +132,7 @@ CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
-		MSG_BOX("pMonster Create Failed");
+		MSG_BOX("CMonster_Suit Create Failed");
 		Safe_Release(pInstance);
 	}
 
@@ -149,7 +145,7 @@ CGameObject* CMonster_Suit::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("pMonster Clone Failed");
+		MSG_BOX("CMonster_Suit Clone Failed");
 		Safe_Release(pInstance);
 	}
 
@@ -158,5 +154,5 @@ CGameObject* CMonster_Suit::Clone(void* pArg)
 
 void CMonster_Suit::Free()
 {
-	Engine::CGameObject::Free();
+	__super::Free();
 }

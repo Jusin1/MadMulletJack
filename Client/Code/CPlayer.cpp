@@ -80,7 +80,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	// collider group 해줌
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_PLAYER, this);
-	m_pRenderCom->Add_RenderGroup(RENDER_ALPHA, this);
+	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	return S_OK;
 }
 
@@ -92,8 +92,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	// 콜라이더 set
 	Set_Collider();
 
-	if (nullptr != m_pRenderCom)
-		m_pRenderCom->Add_RenderGroup(RENDER_NONALPHA, this);
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -119,10 +119,10 @@ void CPlayer::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 #ifdef _DEBUG
-	if (g_ColiderRender && m_pColliderCom != nullptr)
-	{
-		m_pColliderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
-	}
+	//if (g_ColiderRender && m_pColliderCom != nullptr)
+	//{
+	//	m_pColliderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
+	//}
 	if (g_ColiderRender && m_pColiderSphere != nullptr)
 	{
 		m_pColiderSphere->Render_ColliderSphere(); // 충돌체 디버그 렌더
@@ -606,41 +606,23 @@ HRESULT CPlayer::Set_Component()
 	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
 
-	// Render
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
-		return E_FAIL;
-
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
-
 	// Texture
 	if (Texture_Clone())
 		return E_FAIL;
 
-	CTransform::TRANSFORMINFO TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+	//CColider_Cube::COLLRECTDESC CollCubeDesc;
+	//ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
+	//CollCubeDesc.fRadiusY = 1.f;
+	//CollCubeDesc.fRadiusX = 1.f;
+	//CollCubeDesc.fRadiusZ = 1.f;
+	//CollCubeDesc.fOffSetX = 0.f;
+	//CollCubeDesc.fOffSetY = 0.f;
+	//CollCubeDesc.fOffsetZ = 0.f;
 
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
-
-	CColider_Cube::COLLRECTDESC CollCubeDesc;
-	ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
-	CollCubeDesc.fRadiusY = 1.f;
-	CollCubeDesc.fRadiusX = 1.f;
-	CollCubeDesc.fRadiusZ = 1.f;
-	CollCubeDesc.fOffSetX = 0.f;
-	CollCubeDesc.fOffSetY = 0.f;
-	CollCubeDesc.fOffsetZ = 0.f;
-
-	// Colider_Cube
-	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
-		return E_FAIL;
-	m_pColliderCom->Set_Transform(m_pTransformCom);
+	//// Colider_Cube
+	//if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
+	//	return E_FAIL;
+	//m_pColliderCom->Set_Transform(m_pTransformCom);
 
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;

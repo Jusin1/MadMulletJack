@@ -138,8 +138,6 @@ private:
 	HRESULT Change_Texture(const _tchar* componentTag);
 
 private:
-	Engine::CVIBuffer_Rect* m_pBufferCom;
-	Engine::CRenderer* m_pRenderCom;
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
 	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
 	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐

@@ -1,41 +1,5 @@
-﻿  CCalculator.cpp
-  CCamera.cpp
-  CColiderManager.cpp
-  CColider_Cube.cpp
-  CColider_Rect.cpp
-  CColider_Sphere.cpp
-  CComponent.cpp
-  CFileManager.cpp
-  CPicking.cpp
-  CVIBuffer_GridPanel.cpp
-  VIBuffer_Color.cpp
-  VIBuffer_Cube.cpp
-  CDInputMgr.cpp
-  CFont.cpp
-  CFontMgr.cpp
-  CFrame.cpp
-  CFrameMgr.cpp
-  CGameObject.cpp
-  CGraphicDev.cpp
-  CLayer.cpp
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  CManagement.cpp
-  CObjectManager.cpp
-  CComponentMgr.cpp
-  CVIBuffer_Rect.cpp
-  CRenderer.cpp
-  CScene.cpp
-  CVIBuffer_Terrian.cpp
-  CTexture.cpp
-C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Code\CTexture.cpp(127,30): warning C4244: '=': 'int'에서 'Engine::_float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  CTimer.cpp
-  CTimerMgr.cpp
-  CTransform.cpp
-  CVIBuffer.cpp
-  코드를 생성하고 있습니다...
-     ../Bin\Engine.lib 라이브러리 및 ../Bin\Engine.exp 개체를 생성하고 있습니다.
-  Engine.vcxproj -> C:\Users\조한웅\Desktop\git\MadMulletJack\Engine\Bin\Engine.dll
+﻿  CGameObject.cpp
+  Engine.vcxproj -> C:\Users\조한웅\Desktop\Git\MadMulletJack\Engine\Bin\Engine.dll
   '//'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
   배치 파일이 아닙니다.
   .\Engine\Bin\Engine.dll
