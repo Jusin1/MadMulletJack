@@ -1,11 +1,11 @@
 #pragma once
 #include "CUI.h"
-class CPlayer_HandL :public CUI
+class CPlayer_Foot :public CUI
 {
 private:
-    explicit CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev);
-    explicit CPlayer_HandL(const CPlayer_HandL& rhs);
-    virtual ~CPlayer_HandL();
+    explicit CPlayer_Foot(LPDIRECT3DDEVICE9 pGraphicDev);
+    explicit CPlayer_Foot(const CPlayer_Foot& rhs);
+    virtual ~CPlayer_Foot();
 
 public:
     virtual HRESULT Ready_GameObject() override;
@@ -22,17 +22,14 @@ private:
     HRESULT Texture_Clone();
 
 private:
-    map<const _tchar*, CTexture*> m_mapTextures; // 애니메이션 텍스쳐
-    wstring m_CurrentAnimTag; // 현재 애니메이션 태그
+    map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
+    wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
 
 private:
     PlayerStateInfo m_tInfo;
 
 public:
-    static CPlayer_HandL* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+    static CPlayer_Foot* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;
     virtual void Free() override;
 };
-
-
-

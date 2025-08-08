@@ -190,6 +190,7 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 		PLAYERDEAD_Begin();break;
 	}
 
+	// 변경된 player info 전달
 	CPlayer_StateInfo::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
 }
 

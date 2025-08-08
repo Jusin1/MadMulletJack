@@ -159,7 +159,6 @@ private:
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;
-	//CUIBase* m_pUIHandL = nullptr;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

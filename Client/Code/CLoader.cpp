@@ -16,7 +16,8 @@
 
 // UI
 #include "CHpBarUI.h"
-#include "CPlayer_Hand.h"
+#include "CPlayer_HandR.h"
+#include "CPlayer_HandL.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -176,7 +177,12 @@ HRESULT CLoader::Loading_ForStage()
 
 	// 颊 UI 积己
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandUI",
-		CPlayer_Hand::Create(m_pGraphicDev))))
+		CPlayer_HandR::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// 颊 UI 积己
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
+		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	//// HpBarUI

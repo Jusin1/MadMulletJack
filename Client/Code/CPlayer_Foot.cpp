@@ -1,34 +1,23 @@
 #include "pch.h"
-#include "CPlayer_HandR.h"
+#include "CPlayer_Foot.h"
 #include "CTimerMgr.h"
-<<<<<<< HEAD
-#include "CPlayer_StateInfo.h"
-
-CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev)
-=======
 
 
-CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev),m_tInfo({ PLAYER_END, WP_END, WP2_END })
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
+CPlayer_Foot::CPlayer_Foot(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
 {
 }
 
-CPlayer_HandR::CPlayer_HandR(const CPlayer_HandR& rhs)
-<<<<<<< HEAD
-    : CUI(rhs)
-=======
-    : CUI(rhs), m_tInfo(rhs.m_tInfo)
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
+CPlayer_Foot::CPlayer_Foot(const CPlayer_Foot& rhs)
+    : CUI(rhs),m_tInfo(rhs.m_tInfo)
 {
 }
 
-CPlayer_HandR::~CPlayer_HandR()
+CPlayer_Foot::~CPlayer_Foot()
 {
 }
 
-HRESULT CPlayer_HandR::Ready_GameObject()
+HRESULT CPlayer_Foot::Ready_GameObject()
 {
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
@@ -36,22 +25,18 @@ HRESULT CPlayer_HandR::Ready_GameObject()
     return S_OK;
 }
 
-HRESULT CPlayer_HandR::Initialize(void* pArg)
+HRESULT CPlayer_Foot::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-<<<<<<< HEAD
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHand"))))
-=======
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
         return E_FAIL;
 
     m_fSizeX = 200.f;
     m_fSizeY = 200.f;
 
-    m_fX = WINCX * 0.5f + 450.f;
+    m_fX = WINCX * 0.5f;
     m_fY = WINCY * 0.5f + 300.f;
 
     m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
@@ -64,24 +49,17 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
     return S_OK;
 }
 
-_int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
-{   
+_int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
+{
     __super::Update_GameObject(fTimeDelta);
     if (m_pTextureCom->Is_AnimFinished())
     {
-<<<<<<< HEAD
-        //if (m_CurrentAnimTag != TEXT("Com_Texture_Hand_Idle"))
-        //{
-        //    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        //}
-=======
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
         m_bAniFinish = true;
     }
     return NO_EVENT;
 }
 
-void CPlayer_HandR::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
@@ -93,12 +71,12 @@ void CPlayer_HandR::LateUpdate_GameObject(const _float& fTimeDelta)
 
 }
 
-void CPlayer_HandR::Render_GameObject()
+void CPlayer_Foot::Render_GameObject()
 {
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-   
+
 
     m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
     m_pTextureCom->MoveFrame();
@@ -116,7 +94,7 @@ void CPlayer_HandR::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
-HRESULT CPlayer_HandR::Texture_Clone()
+HRESULT CPlayer_Foot::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
     texInfo.m_iStart = 0;
@@ -140,66 +118,24 @@ HRESULT CPlayer_HandR::Texture_Clone()
     return S_OK;
 }
 
-HRESULT CPlayer_HandR::Set_Texture()
+HRESULT CPlayer_Foot::Set_Texture()
 {
-    if (m_tInfo.ePlayerState == ATTACK) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-        }
-
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-        }
+    if (m_tInfo.ePlayerState == KICK) {
+        Change_Texture(TEXT("Com_Texture_Hand_Shot"));
     }
 
-    else if (m_tInfo.ePlayerState == OPENING) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-        }
-
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-        }
-    }
-
-    else if (m_tInfo.ePlayerState == RELOAD) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
-
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
-    }
-
-    else if (m_tInfo.ePlayerState == ATTACK_INSTANT) {
-<<<<<<< HEAD
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-=======
-        if (m_tInfo.eWeapon2 == WP_PISTOL) {
->>>>>>> 4edc41e (feat : player ui ?ùÏÑ±)
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
-
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+    else if (m_tInfo.ePlayerState == SLIED) {
+        Change_Texture(TEXT("Com_Texture_Hand_Idle"));
     }
 
     else {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
-
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+        m_bActive = false;
     }
 
     return S_OK;
 }
 
-HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
+HRESULT CPlayer_Foot::Change_Texture(const _tchar* pTextureTag)
 {
     if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
         return E_FAIL;
@@ -209,29 +145,29 @@ HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
     return S_OK;
 }
 
-CPlayer_HandR* CPlayer_HandR::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CPlayer_Foot* CPlayer_Foot::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CPlayer_HandR* pInstance = new CPlayer_HandR(pGraphicDev);
+    CPlayer_Foot* pInstance = new CPlayer_Foot(pGraphicDev);
     if (FAILED(pInstance->Ready_GameObject()))
     {
-        MSG_BOX("CPlayer_HandR Create Failed");
+        MSG_BOX("CPlayer_Foot Create Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
 }
 
-CGameObject* CPlayer_HandR::Clone(void* pArg)
+CGameObject* CPlayer_Foot::Clone(void* pArg)
 {
-    CPlayer_HandR* pInstance = new CPlayer_HandR(*this);
+    CPlayer_Foot* pInstance = new CPlayer_Foot(*this);
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CPlayer_HandR Clone Failed");
+        MSG_BOX("CPlayer_Foot Clone Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
 }
 
-void CPlayer_HandR::Free()
+void CPlayer_Foot::Free()
 {
     __super::Free();
 }
