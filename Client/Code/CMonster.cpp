@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "CMonster.h"
-#include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CColiderManager.h"

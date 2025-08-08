@@ -12,6 +12,7 @@
 
 #/Reference
 /Reference/Header/**
+!/Reference/Header/json.hpp
 /Reference/Library/**
 
 /GameData/**

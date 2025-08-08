@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "CBackGround.h"
-#include "CProtoMgr.h"
 #include "CRenderer.h"
 
 CBackGround::CBackGround(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "CTerrain.h"
-#include "CProtoMgr.h"
 #include "CRenderer.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphicDev)

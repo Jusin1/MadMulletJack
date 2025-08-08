@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CLogo.h"
 #include "CBackGround.h"
-#include "CProtoMgr.h"
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CTerrain.h"
