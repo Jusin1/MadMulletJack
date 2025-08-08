@@ -2,12 +2,12 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUIBase(pGraphicDev)
+	: CUIBase(pGraphicDev), m_bAniFinish(false)
 {
 }
 
 CUI::CUI(const CUI& rhs)
-	: CUIBase(rhs)
+	: CUIBase(rhs), m_bAniFinish(rhs.m_bAniFinish)
 {
 }
 
@@ -18,9 +18,6 @@ CUI::~CUI()
 
 HRESULT CUI::Ready_GameObject()
 {
-	if (FAILED(CGameObject::Ready_GameObject()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -29,8 +26,10 @@ HRESULT CUI::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
+	if (FAILED(Set_Component()))
+		return E_FAIL;
 
+	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
 
 	return S_OK;
 }
@@ -38,7 +37,7 @@ HRESULT CUI::Initialize(void* pArg)
 
 _int CUI::Update_GameObject(const _float& fTimeDelta)
 {
-
+	__super::Update_GameObject(fTimeDelta);
 	return NO_EVENT;
 }
 
@@ -63,19 +62,14 @@ void CUI::Render_GameObject()
 
 HRESULT CUI::Set_Component()
 {
+	if (FAILED(__super::Set_Component()))
+		return E_FAIL;
+
 	// VIBUFFER
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	// Transform
-	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
+	return S_OK;
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

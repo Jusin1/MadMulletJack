@@ -54,10 +54,6 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
     m_pTransformCom->Set_Info(INFO_POS, vPlayerPos);
 
-
-
-
-
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;
     return NO_EVENT;

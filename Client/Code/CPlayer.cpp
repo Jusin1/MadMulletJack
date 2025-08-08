@@ -3,20 +3,22 @@
 #include "CRenderer.h"
 #include "CColiderManager.h"
 #include "CTimerMgr.h"
-#include "CPlayer_Hand.h"
+#include "CPlayer_HandR.h"
 #include "CObjectManager.h"
 #include "CUIBase.h"
 #include "CDInputMgr.h"
+#include "CPlayer_StateInfo.h"
+#include "CPlayer_HandL.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_eState(OPENING), m_ePrevState(PLAYER_END),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING,WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
 	m_bHpBarOn(true), m_bKeyInput(true), m_bIsInvincible(true), m_bAttack(true)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CCharacter(rhs), m_eState(rhs.m_eState), m_ePrevState(rhs.m_ePrevState),
+	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
 	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
 	m_bHpBarOn(rhs.m_bHpBarOn), m_bKeyInput(rhs.m_bKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bAttack(rhs.m_bAttack)
 {
@@ -39,20 +41,30 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pUIPlayer = dynamic_cast<CUIBase*>(
+	m_pPlayerUI = dynamic_cast<CUIBase*>(
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
 
-	if (m_pUIPlayer == nullptr)
+	if (m_pPlayerUI == nullptr)
 		return E_FAIL;
 
 	// 손 UI 생성
-	CPlayer_Hand* pHandUI = dynamic_cast<CPlayer_Hand*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandUI", SCENE_STAGE, L"UI_Layer"));
+	CPlayer_HandR* pHandUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandUI", SCENE_STAGE, L"UI_Layer"));
 
 	if (pHandUI)
 	{
 		pHandUI->Initialize(nullptr); // 필요 시 인자 전달
 		pHandUI->Set_ObjTag(L"HandUI");
-		m_pUIPlayer->Add_Child(pHandUI); // 루트 UI에 등록
+		m_pPlayerUI->Add_Child(pHandUI); // 루트 UI에 등록
+	}
+
+	// 손 UI 생성
+	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE, L"UI_Layer"));
+
+	if (pHandLUI)
+	{
+		pHandLUI->Initialize(nullptr); // 필요 시 인자 전달
+		pHandLUI->Set_ObjTag(L"HandLUI");
+		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
 	}
 
 	if (FAILED(Set_Component()))
@@ -75,12 +87,12 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 	
 	// state change & update
-	ChangeState(m_eState);
-	StateUpdate(m_eState, fTimeDelta);
+	ChangeState(m_tPlayerInfo.ePlayerState);
+	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta);
 
 	// collider group 해줌
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_PLAYER, this);
-	m_pRenderCom->Add_RenderGroup(RENDER_ALPHA, this);
+	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	return S_OK;
 }
 
@@ -92,8 +104,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	// 콜라이더 set
 	Set_Collider();
 
-	if (nullptr != m_pRenderCom)
-		m_pRenderCom->Add_RenderGroup(RENDER_NONALPHA, this);
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -119,10 +131,10 @@ void CPlayer::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 #ifdef _DEBUG
-	if (g_ColiderRender && m_pColliderCom != nullptr)
-	{
-		m_pColliderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
-	}
+	//if (g_ColiderRender && m_pColliderCom != nullptr)
+	//{
+	//	m_pColliderCom->Render_ColliderBox(); // 충돌체 디버그 렌더
+	//}
 	if (g_ColiderRender && m_pColiderSphere != nullptr)
 	{
 		m_pColiderSphere->Render_ColliderSphere(); // 충돌체 디버그 렌더
@@ -133,13 +145,13 @@ void CPlayer::Render_GameObject()
 void CPlayer::ChangeState(PLAYERSTATE _e)
 {
 
-	if (m_ePrevState == _e)
+	if (m_tPrePlayerInfo.ePlayerState == _e)
 		return;
 
-	StateEnd(m_ePrevState);
+	StateEnd(m_tPrePlayerInfo.ePlayerState);
 	StateNormalSet(); // 전체적으로 적용하는 setting
 	StateBegin(_e);
-	m_ePrevState = _e;
+	m_tPrePlayerInfo.ePlayerState = _e;
 }
 
 
@@ -177,6 +189,9 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 	case PLAYERDEAD:
 		PLAYERDEAD_Begin();break;
 	}
+
+	// 변경된 player info 전달
+	CPlayer_StateInfo::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
 }
 
 void CPlayer::StateEnd(PLAYERSTATE _e)
@@ -211,6 +226,8 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 	case PLAYERDEAD:
 		PLAYERDEAD_End();break;
 	}
+
+	
 }
 
 void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
@@ -248,7 +265,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		PLAYERDEAD_On(fTimeDelta);break;
 	}
 
-	CountHp(fTimeDelta);
+	//CountHp(fTimeDelta);
 	KeyInput(fTimeDelta);
 }
 
@@ -353,6 +370,7 @@ void CPlayer::SLIED_Begin()
 
 void CPlayer::SLIED_On(const _float& fTimeDelta)
 {
+
 }
 
 void CPlayer::SLIED_End()
@@ -382,8 +400,12 @@ void CPlayer::ATTACK_Begin()
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		Set_State_Idle();
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	if (pFound)
+	{
+		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+			Set_State_Idle();
+	}
 }
 
 void CPlayer::ATTACK_End()
@@ -399,8 +421,12 @@ void CPlayer::ATTACK_INSTANT_Begin()
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		Set_State_Idle();
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	if (pFound)
+	{
+		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+			Set_State_Idle();
+	}
 }
 
 void CPlayer::ATTACK_INSTANT_End()
@@ -416,8 +442,12 @@ void CPlayer::RELOAD_Begin()
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		Set_State_Idle();
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	if (pFound)
+	{
+		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+			Set_State_Idle();
+	}
 }
 
 void CPlayer::RELOAD_End()
@@ -435,7 +465,7 @@ void CPlayer::HIT_On(const _float& fTimeDelta)
 {
 	// hp-
 	if (m_fHp <= 0)
-		m_eState = PLAYERDEAD;
+		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
 }
 
 void CPlayer::HIT_End()
@@ -452,8 +482,12 @@ void CPlayer::DOPING_Begin()
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		Set_State_Idle();
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	if (pFound)
+	{
+		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+			Set_State_Idle();
+	}
 }
 
 void CPlayer::DOPING_End()
@@ -485,8 +519,13 @@ void CPlayer::OPENING_Begin()
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		Set_State_Idle();
+
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	if (pFound)
+	{
+		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+			Set_State_Idle();
+	}
 }
 
 void CPlayer::OPENING_End()
@@ -503,6 +542,13 @@ void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
 {
 	if (Is_Anim_Finished())
 		m_bDead = true;
+
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+		if (pFound)
+		{
+			if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
+				Set_State_Idle();
+		}
 	
 }
 
@@ -551,30 +597,30 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	if (m_bKeyInput) {
 		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT) & 0x80)
 		{
-			m_eState = DASH;
+			m_tPlayerInfo.ePlayerState = DASH;
 		}
 
 		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80) // 좌클릭
 		{
-			m_eState = ATTACK;
+			m_tPlayerInfo.ePlayerState = ATTACK;
 		}
 
 		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
 		{
-			m_eState = JUMP;
+			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
 	}
 
 	if (m_bAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)) // 우클릭
 	{
-		m_eState = DASH_ATTACK;
+		m_tPlayerInfo.ePlayerState = DASH_ATTACK;
 	}
 }
 
 void CPlayer::Set_State_Idle()
 {
-	m_eState = IDLE;
+	m_tPlayerInfo.ePlayerState = IDLE;
 }
 
 bool CPlayer::Is_Anim_Finished()
@@ -590,7 +636,7 @@ void CPlayer::CountHp(const _float& fTimeDelta)
 	if (m_fHp <= 0)
 	{
 		OutputDebugString(L"플레이어가 죽었습니다. (HP <= 0)\n");
-		m_eState = PLAYERDEAD;
+		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
 	}
 
 
@@ -605,41 +651,23 @@ HRESULT CPlayer::Set_Component()
 	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
 
-	// Render
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRenderCom)))
-		return E_FAIL;
-
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
-
 	// Texture
 	if (Texture_Clone())
 		return E_FAIL;
 
-	CTransform::TRANSFORMINFO TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+	//CColider_Cube::COLLRECTDESC CollCubeDesc;
+	//ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
+	//CollCubeDesc.fRadiusY = 1.f;
+	//CollCubeDesc.fRadiusX = 1.f;
+	//CollCubeDesc.fRadiusZ = 1.f;
+	//CollCubeDesc.fOffSetX = 0.f;
+	//CollCubeDesc.fOffSetY = 0.f;
+	//CollCubeDesc.fOffsetZ = 0.f;
 
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
-
-	CColider_Cube::COLLRECTDESC CollCubeDesc;
-	ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
-	CollCubeDesc.fRadiusY = 1.f;
-	CollCubeDesc.fRadiusX = 1.f;
-	CollCubeDesc.fRadiusZ = 1.f;
-	CollCubeDesc.fOffSetX = 0.f;
-	CollCubeDesc.fOffSetY = 0.f;
-	CollCubeDesc.fOffsetZ = 0.f;
-
-	// Colider_Cube
-	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
-		return E_FAIL;
-	m_pColliderCom->Set_Transform(m_pTransformCom);
+	//// Colider_Cube
+	//if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
+	//	return E_FAIL;
+	//m_pColliderCom->Set_Transform(m_pTransformCom);
 
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;
@@ -671,46 +699,6 @@ void CPlayer::Set_Collider(void)
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	}
-}
-
-void CPlayer::Key_Input(const _float& fTimeDelta)
-{
-	if (GetAsyncKeyState(VK_UP))
-	{
-		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
-	}
-
-	if (GetAsyncKeyState(VK_DOWN))
-	{
-		m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
-	}
-
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
-	}
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
-	} 
-	if (GetAsyncKeyState(VK_LBUTTON))
-	{
-		CUIBase* pFound = m_pUIPlayer->Find_Child_ByTag(L"HandUI");
-		if (pFound)
-		{
-			CPlayer_Hand* pHand = dynamic_cast<CPlayer_Hand*>(pFound);
-			if (pHand)
-				pHand->Change_Texture(L"Com_Texture_Hand_Shot");
-		}
-	}
-	if (GetAsyncKeyState('R'))
-	{
-		m_pUIPlayer->Set_Active(false);
-	}
-	if (GetAsyncKeyState('T'))
-	{
-		m_pUIPlayer->Set_Active(true);
 	}
 }
 

@@ -7,7 +7,6 @@
 // TEST
 #include "CBackGround.h"
 #include "CPlayer.h"
-#include "CMonster.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
@@ -16,8 +15,11 @@
 
 // UI
 #include "CHpBarUI.h"
-#include "CPlayer_Hand.h"
+#include "CPlayer_HandR.h"
+#include "CPlayer_HandL.h"
 
+// 몬스터
+#include "CMonster_Suit.h"
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
 {
@@ -113,14 +115,14 @@ HRESULT CLoader::Loading_ForStage()
 #pragma region 몬스터 테스트
 	// Monster
 	// IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/idle%03d.png", 12))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/sm_idle%03d.png", 12))))
 		return E_FAIL;
 
 	// AIM
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
-		return E_FAIL;
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Aim",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
+	//	return E_FAIL;
 #pragma endregion 몬스터 테스트
 
 #pragma region UI 테스트
@@ -165,8 +167,9 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	//// Monster
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster",
-		CMonster::Create(m_pGraphicDev))))
+	// Monster_Suit 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Suit",
+		CMonster_Suit::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// UI
@@ -176,7 +179,12 @@ HRESULT CLoader::Loading_ForStage()
 
 	// 손 UI 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandUI",
-		CPlayer_Hand::Create(m_pGraphicDev))))
+		CPlayer_HandR::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// 손 UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
+		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	//// HpBarUI
@@ -194,7 +202,6 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 
-
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
 	
@@ -204,24 +211,19 @@ HRESULT CLoader::Loading_ForStage()
 CLoader* CLoader::Create(LPDIRECT3DDEVICE9 pGrahpicDev, SCENE eNextScene)
 {
 	CLoader* pInstance = new CLoader(pGrahpicDev);
-
 	if (FAILED(pInstance->Ready_Loading(eNextScene)))
 	{
 		MSG_BOX("Failed to Created : CLoader");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
 void CLoader::Free()
 {
 	WaitForSingleObject(m_hThread, INFINITE);
-
 	CloseHandle(m_hThread);
-
 	DeleteCriticalSection(&m_Crt);
-
 	Safe_Release(m_pGraphicDev);
 }
 

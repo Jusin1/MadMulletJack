@@ -85,6 +85,9 @@
     <Filter Include="02. GameObject\06. UI\HpBar_UI">
       <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
+      <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="..\Header\CHpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Suit.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -181,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CMonster.cpp">
-      <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -232,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Suit.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

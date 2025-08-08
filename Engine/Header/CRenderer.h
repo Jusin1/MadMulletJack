@@ -18,7 +18,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	// 특정 렌더 그룹에 오브젝트 추가
-	HRESULT		Add_RenderGroup(RENDERID eType, CGameObject* pGameObject); 
+	HRESULT		Add_RenderGroup(RENDERID eType, class CGameObject* pGameObject); 
 	// 등록된 오브젝트들을 순서대로 렌더링
 	HRESULT		Render_GameObject();
 
@@ -30,7 +30,7 @@ private:
 
 private:
 	// 렌더 그룹 오브젝트 리스트 배열
-	list<CGameObject*>			m_RenderGroup[RENDER_END]; 
+	list<class CGameObject* > m_RenderGroup[RENDER_END];
 	typedef list<class CGameObject*>		GAMEOBJECTS;
 
 public:

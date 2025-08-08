@@ -24,7 +24,6 @@ private:
 private:
 	Engine::VIBuffer_Cube* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
-	Engine::CRenderer* m_pRendererCom;
 
 public:
 	static CSkyBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -1,5 +1,6 @@
 #pragma once
 #include "CUIBase.h"
+#include "CPlayer_StateInfo.h"
 class CUI : public CUIBase
 {
 protected:
@@ -14,16 +15,24 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	
+
 protected:
 	CTexture* m_pTextureCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 
+public:
+	_bool Get_AniFinish() { return m_bAniFinish; }
+	void Set_AniFinish(_bool _bAniFinish) { m_bAniFinish = _bAniFinish; }
+
 protected:
 	_matrix					m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_bool m_bAniFinish; // animation 끝났는지 다른 클래스에게 전해주기 위해
 
 protected:
 	virtual HRESULT			Set_Component();
+	virtual			HRESULT Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
 	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

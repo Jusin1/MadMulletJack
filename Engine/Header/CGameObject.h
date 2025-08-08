@@ -3,6 +3,7 @@
 #include "CComponent.h"
 #include "CTransform.h"
 BEGIN(Engine)
+class CRenderer;
 
 class ENGINE_DLL CGameObject : public CBase
 {
@@ -13,7 +14,7 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject(); // 초기생성 호출
-	virtual			HRESULT		Initialize(void* pArg) { return S_OK; } // 복사생성 호출
+	virtual			HRESULT		Initialize(void* pArg); // 복사생성 호출
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject() {}
@@ -27,6 +28,9 @@ public:
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
 	void Set_Active(bool bActive) { m_bActive = bActive; }
 	bool Is_Active() const { return m_bActive; }
+
+protected:
+	HRESULT	Set_Component();
 
 public:
 	virtual _bool Picking(_vec3* PickingPoint) { return true; }
@@ -43,11 +47,10 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	bool m_bActive;
 
-
-
 	// Trnasform Component
 protected:
 	CTransform* m_pTransformCom;
+	CRenderer* m_pRendererCom;
 
 protected:
 	// 컴포넌트 추가

@@ -21,13 +21,17 @@ CHpBarUI::~CHpBarUI()
 
 HRESULT	CHpBarUI::Ready_GameObject()
 {
-
+	if (FAILED(__super::Ready_GameObject()))
+		return E_FAIL;
 	return S_OK;
 }
 
 HRESULT		CHpBarUI::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
+
+	// CUI 컴포넌트 접근
+	if (FAILED(Set_Component()))
 		return E_FAIL;
 
 	// 위치 표시(핸드폰 UI에 고정하는 것으로 변경 예정)
@@ -37,12 +41,8 @@ HRESULT		CHpBarUI::Initialize(void* pArg)
 	m_fX = 130.f;
 	m_fY = 130.f;
 
-	// CUI 컴포넌트 접근
-	if(FAILED(Set_Component()))
-		return E_FAIL;
-	
+
 	m_pTransformCom->Set_Scale(m_fSizeX , m_fSizeY , 1.f);
-	
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -(m_fY - WINCY * 0.5f), 0.f));
 
 	return S_OK;
@@ -52,7 +52,6 @@ _int		CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	// 체력 비율에 따라 조절
 	__super::Update_GameObject(fTimeDelta);
-
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY * fTimeDelta, 1.f);
 
 	return NO_EVENT;
@@ -71,10 +70,9 @@ void		CHpBarUI::Render_GameObject()
 	_matrix ViewMatrix;
 	D3DXMatrixIdentity(&ViewMatrix);
 
+	m_pColBufferCom->Render_Buffer();
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
-
-	m_pColBufferCom->Render_Buffer();
 }
 
 void CHpBarUI::Key_UI(const _float& fTimeDelta)
@@ -122,6 +120,16 @@ CGameObject* CHpBarUI::Clone(void* pArg)
 void CHpBarUI::Free()
 {
 	Engine::CGameObject::Free();
+}
+
+HRESULT CHpBarUI::Set_Component()
+{
+	if (__super::Set_Component())
+		return E_FAIL;
+	if (FAILED(Add_Components(L"Com_Color", SCENE_STATIC, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 // 체력 상호작용 받아오기

@@ -8,6 +8,7 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
+#include "CPlayer_StateInfo.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -134,7 +135,7 @@ HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
     // Monster
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster"), SCENE_STAGE, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster_Suit"), SCENE_STAGE, pLayerTag)))
         return E_FAIL;
     return S_OK;
 }
@@ -148,6 +149,9 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
+
+    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_HPUI", SCENE_STAGE, pLayerTag)))
+    //    return E_FAIL;
 
     return S_OK;
 }
@@ -171,4 +175,6 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CStage::Free()
 {
     Engine::CScene::Free();
+
+    CPlayer_StateInfo::Destroy_Instance();
 }

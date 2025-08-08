@@ -28,6 +28,13 @@ HRESULT CSkyBox::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	// Transform
+	CTransform::TRANSFORMINFO		TransformInfo;
+	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
+	TransformInfo.fSpeed = 5.f;
+	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
+
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
@@ -74,27 +81,10 @@ void CSkyBox::Render_GameObject()
 
 HRESULT CSkyBox::Set_Component()
 {
-	/* For.Com_Renderer */
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC , L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	/* For.Com_Texture */
 	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_SkyBox", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	/* For.Com_VIBuffer */
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_CubeBuffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
-
-
-	// Transform
-	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
 		return E_FAIL;
 
 	return S_OK;

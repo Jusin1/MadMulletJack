@@ -1,22 +1,23 @@
 #include "pch.h"
-#include "CPlayer_Hand.h"
+#include "CPlayer_Arm.h"
 #include "CTimerMgr.h"
 
-CPlayer_Hand::CPlayer_Hand(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev)
+
+CPlayer_Arm::CPlayer_Arm(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END }), m_bChange(false)
 {
 }
 
-CPlayer_Hand::CPlayer_Hand(const CPlayer_Hand& rhs)
-    : CUI(rhs)
+CPlayer_Arm::CPlayer_Arm(const CPlayer_Arm& rhs)
+    : CUI(rhs),m_tInfo(rhs.m_tInfo), m_bChange(rhs.m_bChange)
 {
 }
 
-CPlayer_Hand::~CPlayer_Hand()
+CPlayer_Arm::~CPlayer_Arm()
 {
 }
 
-HRESULT CPlayer_Hand::Ready_GameObject()
+HRESULT CPlayer_Arm::Ready_GameObject()
 {
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
@@ -24,7 +25,7 @@ HRESULT CPlayer_Hand::Ready_GameObject()
     return S_OK;
 }
 
-HRESULT CPlayer_Hand::Initialize(void* pArg)
+HRESULT CPlayer_Arm::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -35,7 +36,7 @@ HRESULT CPlayer_Hand::Initialize(void* pArg)
     m_fSizeX = 200.f;
     m_fSizeY = 200.f;
 
-    m_fX = WINCX * 0.5f + 450.f;
+    m_fX = WINCX * 0.5f;
     m_fY = WINCY * 0.5f + 300.f;
 
     m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
@@ -48,30 +49,40 @@ HRESULT CPlayer_Hand::Initialize(void* pArg)
     return S_OK;
 }
 
-_int CPlayer_Hand::Update_GameObject(const _float& fTimeDelta)
-{   
+_int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
+{
     __super::Update_GameObject(fTimeDelta);
-    if (m_pTextureCom->Is_AnimFinished())
+    if (m_pTextureCom->Is_AnimFinished()  )
     {
-        if (m_CurrentAnimTag != TEXT("Com_Texture_Hand_Idle"))
+        if (m_bChange)
         {
             Change_Texture(TEXT("Com_Texture_Hand_Idle"));
         }
+
+        else
+            m_bAniFinish = true;
     }
     return NO_EVENT;
 }
 
-void CPlayer_Hand::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
+
+    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    {
+        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        Set_Texture();
+    }
+
 }
 
-void CPlayer_Hand::Render_GameObject()
+void CPlayer_Arm::Render_GameObject()
 {
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-   
+
 
     m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
     m_pTextureCom->MoveFrame();
@@ -89,7 +100,7 @@ void CPlayer_Hand::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
-HRESULT CPlayer_Hand::Texture_Clone()
+HRESULT CPlayer_Arm::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
     texInfo.m_iStart = 0;
@@ -113,7 +124,21 @@ HRESULT CPlayer_Hand::Texture_Clone()
     return S_OK;
 }
 
-HRESULT CPlayer_Hand::Change_Texture(const _tchar* pTextureTag)
+HRESULT CPlayer_Arm::Set_Texture()
+{
+    if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
+        Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+        m_bChange = true;
+    }
+
+    else {
+        m_bActive = false;
+    }
+
+    return S_OK;
+}
+
+HRESULT CPlayer_Arm::Change_Texture(const _tchar* pTextureTag)
 {
     if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
         return E_FAIL;
@@ -123,29 +148,29 @@ HRESULT CPlayer_Hand::Change_Texture(const _tchar* pTextureTag)
     return S_OK;
 }
 
-CPlayer_Hand* CPlayer_Hand::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CPlayer_Arm* CPlayer_Arm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CPlayer_Hand* pInstance = new CPlayer_Hand(pGraphicDev);
+    CPlayer_Arm* pInstance = new CPlayer_Arm(pGraphicDev);
     if (FAILED(pInstance->Ready_GameObject()))
     {
-        MSG_BOX("CPlayer_Hand Create Failed");
+        MSG_BOX("CPlayer_Arms Create Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
 }
 
-CGameObject* CPlayer_Hand::Clone(void* pArg)
+CGameObject* CPlayer_Arm::Clone(void* pArg)
 {
-    CPlayer_Hand* pInstance = new CPlayer_Hand(*this);
+    CPlayer_Arm* pInstance = new CPlayer_Arm(*this);
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CPlayer_Hand Clone Failed");
+        MSG_BOX("CPlayer_Arms Clone Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
 }
 
-void CPlayer_Hand::Free()
+void CPlayer_Arm::Free()
 {
     __super::Free();
 }

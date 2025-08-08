@@ -2,10 +2,10 @@
 #include "CMonster.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include "CColiderManager.h"
 #include "CObjectManager.h"
 #include "CTimerMgr.h"
 #include "CPickingManager.h"
+#include "CColiderManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -23,7 +23,7 @@ CMonster::~CMonster()
 
 HRESULT CMonster::Ready_GameObject()
 {
-	if (FAILED(CGameObject::Ready_GameObject()))
+	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -37,11 +37,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
-	//Test
-	Change_Texture(TEXT("Com_Texture_Idle"));
-
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-	m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
 	return S_OK;
 }
 
@@ -49,6 +44,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
+	__super::Update_GameObject(fTimeDelta);
 	CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 그룹에서 지워줌
 	CGameObject::Update_GameObject(fTimeDelta);
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this); // collider 그룹에 넣어줌
@@ -58,10 +54,10 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	__super::LateUpdate_GameObject(fTimeDelta);
 	//Key_Input(); // 테스트용 지워야 함
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	SetUp_BillBoard();
-	Set_Collider();
 	CPickingManager::GetInstance()->Add_PickingGroup(this); // picking 그룹에 넣어줌
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
@@ -69,6 +65,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMonster::Render_GameObject()
 {
+	__super::Render_GameObject();
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();
@@ -87,98 +84,31 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-#ifdef _DEBUG
-	if (g_ColiderRender && m_pColiderCom != nullptr)
-		m_pColiderCom->Render_ColliderBox();
-
-	if (g_ColiderRender && m_pColiderSpherCom != nullptr)
-		m_pColiderSpherCom->Render_ColliderSphere();
-#endif
 }
 
-HRESULT CMonster::Set_Component(void* pArg)
+HRESULT CMonster::Set_Component()
 {
-	CTransform::TRANSFORMINFO TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+	// Collider
+	CColider_Sphere::COLLINFO CollSphereInfo;
+	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
+	CollSphereInfo.fRadius = 1.f;
+	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
 
-	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
-
-
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom, &TransformInfo)))
-		return E_FAIL;
-
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
-
-	// Texture
-	if (Texture_Clone())
-		return E_FAIL;
-
-	// Render
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	CColider_Cube::COLLRECTDESC CollCubeDesc;
-	ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
-	CollCubeDesc.fRadiusY = 1.f;
-	CollCubeDesc.fRadiusX = 1.f;
-	CollCubeDesc.fRadiusZ = 1.f;
-	CollCubeDesc.fOffSetX = 0.f;
-	CollCubeDesc.fOffSetY = 0.25f;
-	CollCubeDesc.fOffsetZ = 0.f;
-
-	// Colider
-	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColiderCom, &CollCubeDesc)))
+	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderCom, &CollSphereInfo)))
 		return E_FAIL;
 	m_pColiderCom->Set_Transform(m_pTransformCom);
 
-	CColider_Sphere::COLLINFO CollSphereInfo;
-	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
-	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
-	// Colider_Sphere
-	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSpherCom, &CollSphereInfo)))
+	// Texture
+	if (FAILED(Texture_Clone()))
 		return E_FAIL;
-	m_pColiderSpherCom->Set_Transform(m_pTransformCom); // set tranform을 해줘야함 <- 그 전에 transform 생성 해줘야 하고
+
 	return S_OK;
 }
 
-void CMonster::Set_Collider(void)
-{
-	m_pColiderCom->Update_ColliderBox();
-	m_pColiderSpherCom->Update_ColliderSphere();
 
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_CUBE, nullptr))
-	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	}
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
-	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	}
-}
-
-void CMonster::Key_Input()
-{
-	if (GetAsyncKeyState('R'))
-	{
-		Change_Texture(TEXT("Com_Texture_AIM"));
-	}
-}
 
 _bool CMonster::Picking(_vec3* PickingPoint)
 {
-	if (true == m_pBufferCom->Picking(m_pTransformCom, PickingPoint))
-	{
-		//m_vecOutPos = *PickingPoint;
-		Change_Texture(TEXT("Com_Texture_AIM"));
-		return true;
-	}
-	else
-		return false;
 	return true;
 }
 
@@ -205,27 +135,6 @@ void CMonster::SetUp_BillBoard()
 
 HRESULT CMonster::Texture_Clone()
 {
-	CTexture::TEXINFO		TextureInfo;
-	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
-
-	// IDLE
-	TextureInfo.m_iStart = 0;
-	TextureInfo.m_iEndTex = 12;
-	TextureInfo.m_fSpeed = 6;
-	TextureInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_MonsterIdle", (CComponent**)&m_pTextureCom, &TextureInfo)))
-		return E_FAIL;
-	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle"), m_pTextureCom));
-
-	// AIM
-	TextureInfo.m_iStart = 0;
-	TextureInfo.m_iEndTex = 9;
-	TextureInfo.m_fSpeed = 6;
-	TextureInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim", (CComponent**)&m_pTextureCom, &TextureInfo)))
-		return E_FAIL;
-	m_mapTexture.insert(make_pair(TEXT("Com_Texture_AIM"), m_pTextureCom));
-
 	return S_OK;
 }
 
