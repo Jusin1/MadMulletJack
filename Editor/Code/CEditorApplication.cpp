@@ -13,6 +13,8 @@
 #include "CRenderer.h"
 #include "CManagement.h"
 #include "CEditorLoadingScene.h"
+#include "CEditorPickingManager.h"
+#include "CPicking.h"
 #include "CGuiManager.h"
 #include "CFileManager.h"
 #include "CGui_Panel.h"
@@ -41,8 +43,7 @@ void CEditorApplication::Free()
 	Engine::CManagement::GetInstance()->DestroyInstance();
 	Engine::CObjectManager::GetInstance()->DestroyInstance();
 	Engine::CDInputMgr::GetInstance()->DestroyInstance();
-	
-	m_pDeviceClass->DestroyInstance();
+	Engine::CPicking::GetInstance()->DestroyInstance();
 
 	Engine::Safe_Release(m_pRenderer);
 	Engine::Safe_Release(m_pDeviceClass);
@@ -50,10 +51,13 @@ void CEditorApplication::Free()
 
 	CGuiManager::GetInstance()->DestroyInstance();
 	CFileManager::GetInstance()->DestroyInstance();
+	CEditorPickingManager::GetInstance()->DestroyInstance();
 
 	::ImGui_ImplDX9_Shutdown();
 	::ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+	m_pDeviceClass->DestroyInstance();
 }
 
 CEditorApplication *CEditorApplication::Create()
@@ -71,6 +75,9 @@ CEditorApplication *CEditorApplication::Create()
 HRESULT CEditorApplication::Ready_EditorApplication()
 {
 	if (FAILED(DefaultSetting(&m_pGraphicDevice)))
+		return E_FAIL;
+
+	if (FAILED(Engine::CPicking::GetInstance()->Initialize(g_hWnd, m_pGraphicDevice)))
 		return E_FAIL;
 
 	if (FAILED(Engine::CObjectManager::GetInstance()->Readay_ObjectManager(SCENE_END)))
@@ -106,6 +113,7 @@ _int CEditorApplication::Update_EditorApplication()
 	Engine::CDInputMgr::GetInstance()->Update_InputDev();
 	Engine::CManagement::GetInstance()->Update_Scene(0.00166f);
 	Engine::CObjectManager::GetInstance()->Update(0.00166f);
+	Engine::CPicking::GetInstance()->Update();
 	return 0;
 }
 

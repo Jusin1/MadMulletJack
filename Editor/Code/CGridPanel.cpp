@@ -2,13 +2,15 @@
 #include "CTexture.h"
 #include "CComponentMgr.h"
 #include "Editor_Define.h"
+#include "CGuiManager.h"
+#include "CEditorPickingManager.h"
 #include "CTransform.h"
 #include "CVIBuffer_GridPanel.h"
 #include "CRenderer.h"
 
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
-	: Engine::CGameObject(pGraphicDevice), m_pBuffer(nullptr), m_pRenderer(nullptr)
-	, m_pTexture(nullptr), m_pTransform(nullptr)
+	: Engine::CGameObject(pGraphicDevice), m_pBuffer(nullptr)
+	, m_pTexture(nullptr)
 {
 }
 
@@ -76,29 +78,49 @@ HRESULT CGridPanel::Initialize(void *pArg)
 
 _int CGridPanel::Update_GameObject(const _float &fTimeDelta)
 {
-	CGameObject::Update_GameObject(fTimeDelta);
+	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pRenderer->Add_RenderGroup(RENDER_ALPHA, this);
+	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	
 	return 0;
 }
 
 void CGridPanel::LateUpdate_GameObject(const _float &fTimeDelta)
 {
-	Update_Position(m_pTransform->Get_Info(INFO_POS));
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
+	CEditorPickingManager::GetInstance()->Add_PickingGroup(this);
+	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CGridPanel::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pTransform->Apply_WorldMatrix();
+	m_pTransformCom->Apply_WorldMatrix();
 	m_pTexture->Set_Texture();
 	m_pBuffer->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+_bool CGridPanel::Picking(_vec3 *PickingPoint)
+{
+	if (!PickingPoint || !GetBuffer())
+		return FALSE;
+
+	if (m_pBuffer->Picking(m_pTransformCom, PickingPoint))
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void CGridPanel::PickingTrue()
+{
+	CGuiManager::GetInstance()->SetTarget(this);
 }
 
 void CGridPanel::ExportData(void *pData)
@@ -170,9 +192,6 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 		MAPOBJECTDATA tdata;
 		::memcpy(&tdata, pArg, sizeof(MAPOBJECTDATA));
 	}
-	// Render
-	if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent **)&m_pRenderer)))
-		return E_FAIL;
 
 	// VIBuffer
 	if (FAILED(Add_Components(L"Com_Buffer", SCENE_LOADING, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
@@ -185,10 +204,6 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	CTransform::TRANSFORMINFO TransformInfo;
 	::ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
-
-	// Transform
-	if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent **)&m_pTransform, &TransformInfo)))
-		return E_FAIL;
 
 	return S_OK;
 }

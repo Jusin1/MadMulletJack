@@ -166,6 +166,7 @@
     <ClInclude Include="..\Header\CGuiBase.h" />
     <ClInclude Include="..\Header\CGui_Thumbnail.h" />
     <ClInclude Include="..\Header\CGui_Transform.h" />
+    <ClInclude Include="..\Header\CEditorPickingManager.h" />
     <ClInclude Include="Editor_Define.h" />
     <ClInclude Include="GraphEditor.h" />
     <ClInclude Include="imconfig.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="..\Code\CGuiBase.cpp" />
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp" />
     <ClCompile Include="..\Code\CGui_Transform.cpp" />
+    <ClCompile Include="..\Code\CEditorPickingManager.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="ImCurveEdit.cpp" />
     <ClCompile Include="ImGradient.cpp" />

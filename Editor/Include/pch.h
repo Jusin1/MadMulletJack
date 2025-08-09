@@ -5,6 +5,7 @@
 
 #include <string>
 #include <functional>
+#include <unordered_set>
 
 using std::string;
 using std::wstring;

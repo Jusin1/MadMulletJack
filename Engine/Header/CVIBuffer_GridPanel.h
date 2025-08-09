@@ -16,6 +16,7 @@ private:
 public:
 	virtual CComponent *Clone(void *pArg) override;
 	static CVIBuffer_GridPanel *Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg = nullptr);
+	virtual _bool Picking(class CTransform *pTransform, _vec3 *pOut = nullptr) override;
 public:
 	const PANELDATA *Get_Data() { return &m_tData; }
 	void Set_Data(void *pData) { ::memcpy(&m_tData, pData, sizeof(PANELDATA)); }
@@ -24,9 +25,10 @@ private:
 	HRESULT Ready_HorizonWallBuffer();
 	HRESULT Ready_VerticalWallBuffer();
 	HRESULT Ready_PlaneBuffer();
-
+	_bool IntersectRayWithPlane(_vec3 *pOut);
 private:
 	PANELDATA m_tData;
+	_vec3 *m_pVerticesData;
 };
 
 END

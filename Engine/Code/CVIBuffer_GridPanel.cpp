@@ -1,21 +1,27 @@
+#include "CPicking.h"
+#include "CTransform.h"
 #include "CVIBuffer_GridPanel.h"
 
 CVIBuffer_GridPanel::CVIBuffer_GridPanel()
+    : m_pVerticesData(nullptr)
 {
 }
 
 CVIBuffer_GridPanel::CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CVIBuffer(pGraphicDev)
+    : CVIBuffer(pGraphicDev), m_pVerticesData(nullptr)
 {
 }
 
 CVIBuffer_GridPanel::CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs)
     : CVIBuffer(rhs), m_tData(rhs.m_tData)
 {
+    m_pVerticesData = new _vec3[m_dwVtxCnt];
+    ::memcpy(m_pVerticesData, rhs.m_pVerticesData, sizeof(_vec3) * m_dwVtxCnt);
 }
 
 CVIBuffer_GridPanel::~CVIBuffer_GridPanel()
 {
+    
 }
 
 HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
@@ -62,6 +68,8 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
 
     VTXTEX *pVertex = NULL;
 
+    m_pVerticesData = new _vec3[m_dwVtxCnt];
+
     m_pVB->Lock(0, 0, (void **)&pVertex, 0);
 
     _ulong  dwIndex(0);
@@ -81,6 +89,8 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
             pVertex[dwIndex].vTexUV = {
                                         (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
                                         (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
+
+            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }
     }
 
@@ -134,6 +144,8 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
 
     VTXTEX *pVertex = NULL;
 
+    m_pVerticesData = new _vec3[m_dwVtxCnt];
+
     m_pVB->Lock(0, 0, (void **)&pVertex, 0);
 
     _ulong  dwIndex(0);
@@ -153,6 +165,8 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
             pVertex[dwIndex].vTexUV = {
                                         (_float)j / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1),
                                         (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
+
+            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }
     }
 
@@ -206,6 +220,8 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
 
     VTXTEX *pVertex = NULL;
 
+    m_pVerticesData = new _vec3[m_dwVtxCnt];
+
     m_pVB->Lock(0, 0, (void **)&pVertex, 0);
 
     _ulong  dwIndex(0);
@@ -224,6 +240,8 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
             pVertex[dwIndex].vTexUV = {
                                         (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
                                         (_float)i / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1) };
+
+            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }
     }
 
@@ -262,6 +280,74 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
     return S_OK;
 }
 
+_bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
+{
+    CPicking *pPickingSystem = CPicking::GetInstance();
+    pPickingSystem->Add_Ref();
+
+    _int iColMax{ 0 };
+    _int iRowMax{ 0 };
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    {
+        iColMax = m_tData.dwCountX;
+        iRowMax = m_tData.dwCountY;
+    } break;
+    case PanelType::WALL_VER:
+    {
+        iColMax = m_tData.dwCountZ;
+        iRowMax = m_tData.dwCountY;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        iColMax = m_tData.dwCountX;
+        iRowMax = m_tData.dwCountZ;
+    } break;
+    default:
+    {
+        MSG_BOX("CVIBuffer_GridPanel::IntersectRayWithPlane, type is wrong");
+        return FALSE;
+    }
+    }
+
+    _ulong  dwIndex{ 0 };
+    _int iLeftTop{ 0 };
+    _int iRightTop{ 0 };
+    _int iRightBottom{ 0 };
+    _int iLeftBottom{ 0 };
+
+    for (int iRow = 0; iRow < iRowMax; ++iRow)
+    {
+        for (int iCol = 0; iCol < iColMax; ++iCol)
+        {
+            dwIndex = iRow * iColMax + iCol;
+            iLeftTop = dwIndex + iColMax;
+            iRightTop = dwIndex + iColMax + 1;
+            iRightBottom = dwIndex + 1;
+            iLeftBottom = dwIndex;
+            if (pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
+                m_pVerticesData[iRightTop],
+                m_pVerticesData[iRightBottom],
+                pOut)
+                ||
+                pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
+                    m_pVerticesData[iRightBottom],
+                    m_pVerticesData[iLeftBottom],
+                    pOut))
+            {
+                Safe_Release(pPickingSystem);
+                return TRUE;
+            }
+        }
+    }
+    
+    Safe_Release(pPickingSystem);
+    return FALSE;
+}
+
 CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
 {
     CVIBuffer_GridPanel *pInstance = new CVIBuffer_GridPanel(*this);
@@ -288,6 +374,31 @@ CVIBuffer_GridPanel *CVIBuffer_GridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
     return pGridPanel;
 }
 
+_bool CVIBuffer_GridPanel::Picking(CTransform *pTransform, _vec3 *pOut)
+{
+    CPicking *pPickingSystem = CPicking::GetInstance();
+    pPickingSystem->Add_Ref();
+
+    const _matrix *pMatWorld = pTransform->Get_World();
+    _matrix matInvWorld;
+    D3DXMatrixInverse(&matInvWorld, nullptr, pMatWorld);
+
+    pPickingSystem->TransformRayToLocalSpace(matInvWorld);
+
+    _ulong  dwIndex(0);
+    _ulong  dwTriCnt(0);
+
+    if(IntersectRayWithPlane(pOut))
+    {
+        ::D3DXVec3TransformCoord(pOut, pOut, pMatWorld);
+        Safe_Release(pPickingSystem);
+        return TRUE;
+    }
+
+    Safe_Release(pPickingSystem);
+    return FALSE;
+}
+
 HRESULT CVIBuffer_GridPanel::Initialize(void *pArg)
 {
     return Ready_Buffer(pArg);
@@ -297,4 +408,7 @@ HRESULT CVIBuffer_GridPanel::Initialize(void *pArg)
 void CVIBuffer_GridPanel::Free()
 {
     CVIBuffer::Free();
+    if (m_pVerticesData)
+        delete[] m_pVerticesData;
+    m_pVerticesData = nullptr;
 }

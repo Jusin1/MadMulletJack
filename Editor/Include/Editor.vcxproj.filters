@@ -67,6 +67,9 @@
     <Filter Include="06. GUI\Element\Transform">
       <UniqueIdentifier>{7b7bd83c-38f7-4f6d-84d0-0324219aad53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Manager">
+      <UniqueIdentifier>{9585a290-1a2b-4864-841f-1e200c48e645}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="..\Header\CGui_Transform.h">
       <Filter>06. GUI\Element\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEditorPickingManager.h">
+      <Filter>07. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -250,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Transform.cpp">
       <Filter>06. GUI\Element\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorPickingManager.cpp">
+      <Filter>07. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

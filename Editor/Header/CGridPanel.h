@@ -26,7 +26,9 @@ public:
 	virtual _int Update_GameObject(const _float &fTimeDelta) override;
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
-
+	
+	virtual _bool Picking(_vec3 *PickingPoint) override;
+	virtual void PickingTrue() override;
 	virtual void ExportData(void *pData) override;
 
 	HRESULT Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg = nullptr);
@@ -35,12 +37,8 @@ private:
 	HRESULT			Set_Component(void *pArg);
 public:
 	CVIBuffer_GridPanel *GetBuffer() { return m_pBuffer; }
-	Engine::CRenderer *GetRenderer() { return m_pRenderer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
-	Engine::CTransform *GetTransform() { return m_pTransform; }
 private:
 	CVIBuffer_GridPanel *m_pBuffer;
-	Engine::CRenderer	*m_pRenderer;
 	Engine::CTexture	*m_pTexture;
-	Engine::CTransform	*m_pTransform;
 };

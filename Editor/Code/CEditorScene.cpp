@@ -5,6 +5,7 @@
 #include "CFileManager.h"
 #include "CGuiManager.h"
 #include "CTexture.h"
+#include "CEditorPickingManager.h"
 #include "CObjectManager.h"
 #include "CEditorCamera.h"
 
@@ -45,6 +46,10 @@ HRESULT CEditorScene::Ready_Scene()
 
     if (FAILED(Ready_EditLogic_Layer(L"EditLogic_Layer")))
         return E_FAIL;
+
+    if (FAILED(CEditorPickingManager::GetInstance()->Ready_Picking()))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -52,6 +57,7 @@ _int CEditorScene::Update_Scene(const _float &fTimeDelta)
 {
     _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
+    CEditorPickingManager::GetInstance()->Picking();
     return iExit;
 }
 
@@ -101,7 +107,6 @@ HRESULT CEditorScene::Ready_EditLogic_Layer(const _tchar *pLayerTag)
     
     CGameObject *pObj = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 1);
     CGameObject *pObj2 = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 0);
-    CGuiManager::GetInstance()->SetTarget(pObj2);
     static_cast<CGridPanel *>(pObj2)->Change_Texture(SCENE_STATIC,L"Proto_Component_Texture_PanelTest");
     static_cast<CGridPanel *>(pObj)->Change_Buffer(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest");
     return S_OK;
