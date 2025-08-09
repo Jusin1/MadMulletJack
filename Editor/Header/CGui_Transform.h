@@ -6,7 +6,6 @@ class CGui_InputText;
 
 enum class TransformDataType
 {
-	SCALE,
 	ROTATION,
 	POSITION,
 	NONE
@@ -26,7 +25,6 @@ public:
 	virtual void Render() override;
 
 private:
-	void ScaleRender();
 	void PositionRender();
 	void RotationRender();
 
@@ -35,7 +33,8 @@ private:
 	void AllReset();
 private:
 	float m_fPadding;
+	TransformDataType m_eType;
 	vector<CGui_Button *> m_vecButtons;
-	vector<CGui_InputText*> m_vecTextInfos;
+	vector<CGui_InputText *> m_vecTextInfos;
 };
 

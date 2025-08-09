@@ -10,13 +10,16 @@
 #include "ImZoomSlider.h"
 #include "ImCurveEdit.h"
 #include "GraphEditor.h"
+#include "CGui_Button.h"
 #include "CRenderer.h"
+#include "CVIBuffer_GridPanel.h"
 #include "CManagement.h"
 #include "CEditorLoadingScene.h"
 #include "CEditorPickingManager.h"
 #include "CPicking.h"
 #include "CGuiManager.h"
 #include "CFileManager.h"
+#include "CGridPanel.h"
 #include "CGui_Panel.h"
 #include "CGui_Thumbnail.h"
 #include "CGraphicDev.h"
@@ -210,6 +213,36 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 		{
 			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Test Thumbnail");
 			pNewPanel->AddElement(pThumbnail);
+
+			CGui_Button *pGuiButton1 = CGui_Button::Create("Row Increase Button", []()->void {
+				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+				{
+					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_RowBuffer();
+				}
+			});
+			CGui_Button *pGuiButton2 = CGui_Button::Create("Row Decrease Button", []()->void {
+				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+				{
+					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_RowBuffer();
+				}
+			});
+			CGui_Button *pGuiButton3 = CGui_Button::Create("Col Increase Button", []()->void {
+				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+				{
+					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_ColBuffer();
+				}
+				});
+			CGui_Button *pGuiButton4 = CGui_Button::Create("Col Decrease Button", []()->void {
+				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+				{
+					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
+				}
+				});
+
+			pNewPanel->AddElement(pGuiButton1);
+			pNewPanel->AddElement(pGuiButton2);
+			pNewPanel->AddElement(pGuiButton3);
+			pNewPanel->AddElement(pGuiButton4);
 		}
 	}
 

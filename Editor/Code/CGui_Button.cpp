@@ -16,7 +16,7 @@ void CGui_Button::Free()
 
 CGui_Button *CGui_Button::Create(const string &_label, std::function<void()> _func)
 {
-	return nullptr;
+	return new CGui_Button(_label, _func);
 }
 
 void CGui_Button::Render()

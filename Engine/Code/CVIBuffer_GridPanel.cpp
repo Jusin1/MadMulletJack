@@ -2,6 +2,9 @@
 #include "CTransform.h"
 #include "CVIBuffer_GridPanel.h"
 
+#define MAXMAX_HOR 65
+#define MAXMAX_VER 65
+
 CVIBuffer_GridPanel::CVIBuffer_GridPanel()
     : m_pVerticesData(nullptr)
 {
@@ -63,70 +66,7 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
-        return E_FAIL;
-
-    VTXTEX *pVertex = NULL;
-
-    m_pVerticesData = new _vec3[m_dwVtxCnt];
-
-    m_pVB->Lock(0, 0, (void **)&pVertex, 0);
-
-    _ulong  dwIndex(0);
-
-    for (_ulong i = 0; i < m_tData.dwCountY; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountX; ++j)
-        {
-            dwIndex = i * m_tData.dwCountX + j;
-
-            pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
-                                           (_float)i *m_tData.dwInterval,
-                                            0,
-                                           
-            };
-
-            pVertex[dwIndex].vTexUV = {
-                                        (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
-                                        (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
-
-            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
-        }
-    }
-
-    m_pVB->Unlock();
-
-    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
-        return E_FAIL;
-
-    INDEX32 *pIndex = NULL;
-
-    _ulong      dwTriCnt(0);
-
-    m_pIB->Lock(0, 0, (void **)&pIndex, 0);
-
-    for (_ulong i = 0; i < m_tData.dwCountY-1; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountX-1; ++j)
-        {
-            dwIndex = i * m_tData.dwCountX + j;
-
-            // 오른쪽 위
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountX;
-            pIndex[dwTriCnt]._1 = dwIndex + m_tData.dwCountX + 1;
-            pIndex[dwTriCnt]._2 = dwIndex + 1;
-            dwTriCnt++;
-
-            // 왼쪽 아래
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountX;
-            pIndex[dwTriCnt]._1 = dwIndex + 1;
-            pIndex[dwTriCnt]._2 = dwIndex;
-            dwTriCnt++;
-        }
-    }
-
-    m_pIB->Unlock();
-    return S_OK;
+    return Set_Buffer(m_tData.dwCountY, m_tData.dwCountX);
 }
 
 HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
@@ -139,70 +79,7 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
-        return E_FAIL;
-
-    VTXTEX *pVertex = NULL;
-
-    m_pVerticesData = new _vec3[m_dwVtxCnt];
-
-    m_pVB->Lock(0, 0, (void **)&pVertex, 0);
-
-    _ulong  dwIndex(0);
-
-    for (_ulong i = 0; i < m_tData.dwCountY; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountZ; ++j)
-        {
-            dwIndex = i * m_tData.dwCountZ + j;
-
-            pVertex[dwIndex].vPosition = { 0,
-                                           (_float)i * m_tData.dwInterval,
-                                           (_float)j *m_tData.dwInterval,
-
-            };
-
-            pVertex[dwIndex].vTexUV = {
-                                        (_float)j / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1),
-                                        (_float)i / (m_tData.dwCountY - 1) * (m_tData.dwCountY - 1) };
-
-            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
-        }
-    }
-
-    m_pVB->Unlock();
-
-    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
-        return E_FAIL;
-
-    INDEX32 *pIndex = NULL;
-
-    _ulong      dwTriCnt(0);
-
-    m_pIB->Lock(0, 0, (void **)&pIndex, 0);
-
-    for (_ulong i = 0; i < m_tData.dwCountY-1; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountZ-1; ++j)
-        {
-            dwIndex = i * m_tData.dwCountZ + j;
-
-            // 오른쪽 위
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountZ;
-            pIndex[dwTriCnt]._1 = dwIndex + m_tData.dwCountZ + 1;
-            pIndex[dwTriCnt]._2 = dwIndex + 1;
-            dwTriCnt++;
-
-            // 왼쪽 아래
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountZ;
-            pIndex[dwTriCnt]._1 = dwIndex + 1;
-            pIndex[dwTriCnt]._2 = dwIndex;
-            dwTriCnt++;
-        }
-    }
-
-    m_pIB->Unlock();
-    return S_OK;
+    return Set_Buffer(m_tData.dwCountY, m_tData.dwCountZ);
 }
 
 HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
@@ -215,69 +92,27 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
-        return E_FAIL;
+    return Set_Buffer(m_tData.dwCountZ, m_tData.dwCountX);
+}
 
-    VTXTEX *pVertex = NULL;
+HRESULT CVIBuffer_GridPanel::Create_VertexBuffer()
+{
+    return m_pGraphicDev->CreateVertexBuffer(MAXMAX_HOR * MAXMAX_VER * m_dwVtxSize,
+        D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
+        m_dwFVF,
+        D3DPOOL_DEFAULT,
+        &m_pVB,
+        NULL);
+}
 
-    m_pVerticesData = new _vec3[m_dwVtxCnt];
-
-    m_pVB->Lock(0, 0, (void **)&pVertex, 0);
-
-    _ulong  dwIndex(0);
-
-    for (_ulong i = 0; i < m_tData.dwCountZ; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountX; ++j)
-        {
-            dwIndex = i * m_tData.dwCountX + j;
-
-            pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
-                                           0,
-                                           (_float)i * m_tData.dwInterval
-            };
-
-            pVertex[dwIndex].vTexUV = {
-                                        (_float)j / (m_tData.dwCountX - 1) * (m_tData.dwCountX - 1),
-                                        (_float)i / (m_tData.dwCountZ - 1) * (m_tData.dwCountZ - 1) };
-
-            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
-        }
-    }
-
-    m_pVB->Unlock();
-
-    if (FAILED(CVIBuffer::Ready_Index_Buffer()))
-        return E_FAIL;
-
-    INDEX32 *pIndex = NULL;
-
-    _ulong      dwTriCnt(0);
-
-    m_pIB->Lock(0, 0, (void **)&pIndex, 0);
-
-    for (_ulong i = 0; i < m_tData.dwCountZ - 1; ++i)
-    {
-        for (_ulong j = 0; j < m_tData.dwCountX - 1; ++j)
-        {
-            dwIndex = i * m_tData.dwCountX + j;
-
-            // 오른쪽 위
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountX;
-            pIndex[dwTriCnt]._1 = dwIndex + m_tData.dwCountX + 1;
-            pIndex[dwTriCnt]._2 = dwIndex + 1;
-            dwTriCnt++;
-
-            // 왼쪽 아래
-            pIndex[dwTriCnt]._0 = dwIndex + m_tData.dwCountX;
-            pIndex[dwTriCnt]._1 = dwIndex + 1;
-            pIndex[dwTriCnt]._2 = dwIndex;
-            dwTriCnt++;
-        }
-    }
-
-    m_pIB->Unlock();
-    return S_OK;
+HRESULT CVIBuffer_GridPanel::Create_IndexBuffer()
+{
+    return m_pGraphicDev->CreateIndexBuffer((MAXMAX_HOR-1) * (MAXMAX_VER-1) * 2 * m_dwIdxSize,
+        D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
+        m_IdxFmt,
+        D3DPOOL_DEFAULT,
+        &m_pIB,
+        NULL);
 }
 
 _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
@@ -319,9 +154,9 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     _int iRightBottom{ 0 };
     _int iLeftBottom{ 0 };
 
-    for (int iRow = 0; iRow < iRowMax; ++iRow)
+    for (int iRow = 0; iRow < iRowMax-1; ++iRow)
     {
-        for (int iCol = 0; iCol < iColMax; ++iCol)
+        for (int iCol = 0; iCol < iColMax-1; ++iCol)
         {
             dwIndex = iRow * iColMax + iCol;
             iLeftTop = dwIndex + iColMax;
@@ -346,6 +181,327 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     
     Safe_Release(pPickingSystem);
     return FALSE;
+}
+
+HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
+{
+    if (FAILED(Create_VertexBuffer()))
+        return E_FAIL;
+
+    VTXTEX *pVertex = NULL;
+
+    m_pVerticesData = new _vec3[MAXMAX_HOR * MAXMAX_VER];
+
+    m_pVB->Lock(0, 0, (void **)&pVertex, D3DLOCK_DISCARD);
+
+    _ulong  dwIndex(0);
+
+    for (_ulong i = 0; i < iRowMax; ++i)
+    {
+        for (_ulong j = 0; j < iColMax; ++j)
+        {
+            dwIndex = i * iColMax + j;
+
+            switch (m_tData.eType)
+            {
+            case PanelType::WALL_HOR:
+            {
+                pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
+                                           (_float)i * m_tData.dwInterval,
+                                           0
+                };
+            } break;
+            case PanelType::WALL_VER:
+            {
+                pVertex[dwIndex].vPosition = { 0,
+                                           (_float)i *m_tData.dwInterval,
+                                           (_float)j *m_tData.dwInterval
+                };
+            } break;
+            case PanelType::INCLINE:
+            case PanelType::FLOOR:
+            case PanelType::CEILING:
+            {
+                pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
+                                           0,
+                                           (_float)i * m_tData.dwInterval
+                };
+            } break;
+            default:
+            {
+                MSG_BOX("PanelData.eType is None");
+            } break;
+            }
+
+            pVertex[dwIndex].vTexUV = {
+                                        (_float)j / (iColMax - 1) * (iColMax - 1),
+                                        (_float)i / (iRowMax - 1) * (iRowMax - 1) };
+
+            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
+        }
+    }
+
+    m_pVB->Unlock();
+
+    if (FAILED(Create_IndexBuffer()))
+        return E_FAIL;
+
+    INDEX32 *pIndex = NULL;
+
+    _ulong      dwTriCnt(0);
+
+    m_pIB->Lock(0, 0, (void **)&pIndex, D3DLOCK_DISCARD);
+
+    for (_ulong i = 0; i < iRowMax - 1; ++i)
+    {
+        for (_ulong j = 0; j < iColMax - 1; ++j)
+        {
+            dwIndex = i * iColMax + j;
+
+            // 오른쪽 위
+            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
+            pIndex[dwTriCnt]._1 = dwIndex + iColMax + 1;
+            pIndex[dwTriCnt]._2 = dwIndex + 1;
+            dwTriCnt++;
+
+            // 왼쪽 아래
+            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
+            pIndex[dwTriCnt]._1 = dwIndex + 1;
+            pIndex[dwTriCnt]._2 = dwIndex;
+            dwTriCnt++;
+        }
+    }
+
+    m_pIB->Unlock();
+    return S_OK;
+}
+
+void CVIBuffer_GridPanel::Increase_RowBuffer()
+{
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    case PanelType::WALL_VER:
+    {
+        m_tData.dwCountY += 1;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        m_tData.dwCountZ += 1;
+    } break;
+    default:
+    {
+        MSG_BOX("PanelData.eType is None");
+    } break;
+    }
+
+    Update_BufferInfo();
+}
+
+void CVIBuffer_GridPanel::Increase_ColBuffer()
+{
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    {
+        m_tData.dwCountX += 1;
+    } break;
+    case PanelType::WALL_VER:
+    {
+        m_tData.dwCountZ += 1;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        m_tData.dwCountX += 1;
+    } break;
+    default:
+    {
+        MSG_BOX("PanelData.eType is None");
+    } break;
+    }
+
+    Update_BufferInfo();
+}
+
+void CVIBuffer_GridPanel::Decrease_RowBuffer()
+{
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    case PanelType::WALL_VER:
+    {
+        m_tData.dwCountY -= 1;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        m_tData.dwCountZ -= 1;
+    } break;
+    default:
+    {
+        MSG_BOX("PanelData.eType is None");
+    } break;
+    }
+
+    Update_BufferInfo();
+}
+
+void CVIBuffer_GridPanel::Decrease_ColBuffer()
+{
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    {
+        m_tData.dwCountX -= 1;
+    } break;
+    case PanelType::WALL_VER:
+    {
+        m_tData.dwCountZ -= 1;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        m_tData.dwCountX -= 1;
+    } break;
+    default:
+    {
+        MSG_BOX("PanelData.eType is None");
+    } break;
+    }
+
+    Update_BufferInfo();
+}
+
+void CVIBuffer_GridPanel::Update_BufferInfo()
+{
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    {
+        Update_BufferInfo_Horizon();
+        return Update_Buffer(m_tData.dwCountY, m_tData.dwCountX);
+    }        
+    case PanelType::WALL_VER:
+    {
+        Update_BufferInfo_Vertical();
+        return Update_Buffer(m_tData.dwCountY, m_tData.dwCountZ);
+    }
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        Update_BufferInfo_Plane();
+        return Update_Buffer(m_tData.dwCountZ, m_tData.dwCountX);
+    }
+    default:
+    {
+        MSG_BOX("PanelData.eType is None");
+    } break;
+    }
+}
+
+void CVIBuffer_GridPanel::Update_BufferInfo_Horizon()
+{
+    m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountY;
+    m_dwTriCnt = (m_tData.dwCountX - 1) * (m_tData.dwCountY - 1) * 2;
+}
+
+void CVIBuffer_GridPanel::Update_BufferInfo_Vertical()
+{
+    m_dwVtxCnt = m_tData.dwCountZ * m_tData.dwCountY;
+    m_dwTriCnt = (m_tData.dwCountZ - 1) * (m_tData.dwCountY - 1) * 2;
+}
+
+void CVIBuffer_GridPanel::Update_BufferInfo_Plane()
+{
+    m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountZ;
+    m_dwTriCnt = (m_tData.dwCountX - 1) * (m_tData.dwCountZ - 1) * 2;
+}
+
+void CVIBuffer_GridPanel::Update_Buffer(_ulong iRowMax, _ulong iColMax)
+{
+    VTXTEX *pVertex = NULL;
+    m_pVB->Lock(0, 0, (void **)&pVertex, D3DLOCK_DISCARD);
+    _ulong  dwIndex(0);
+
+    for (_ulong i = 0; i < iRowMax; ++i)
+    {
+        for (_ulong j = 0; j < iColMax; ++j)
+        {
+            dwIndex = i * iColMax + j;
+
+            switch (m_tData.eType)
+            {
+            case PanelType::WALL_HOR:
+            {
+                pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
+                                           (_float)i * m_tData.dwInterval,
+                                           0
+                };
+            } break;
+            case PanelType::WALL_VER:
+            {
+                pVertex[dwIndex].vPosition = { 0,
+                                           (_float)i * m_tData.dwInterval,
+                                           (_float)j * m_tData.dwInterval
+                };
+            } break;
+            case PanelType::INCLINE:
+            case PanelType::FLOOR:
+            case PanelType::CEILING:
+            {
+                pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
+                                           0,
+                                           (_float)i * m_tData.dwInterval
+                };
+            } break;
+            default:
+            {
+                MSG_BOX("PanelData.eType is None");
+            } break;
+            }
+
+            pVertex[dwIndex].vTexUV = {
+                                        (_float)j / (iColMax - 1) * (iColMax - 1),
+                                        (_float)i / (iRowMax - 1) * (iRowMax - 1) };
+
+            m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
+        }
+    }
+
+    m_pVB->Unlock();
+
+    INDEX32 *pIndex = NULL;
+    _ulong      dwTriCnt(0);
+    m_pIB->Lock(0, 0, (void **)&pIndex, D3DLOCK_DISCARD);
+
+    for (_ulong i = 0; i < iRowMax - 1; ++i)
+    {
+        for (_ulong j = 0; j < iColMax - 1; ++j)
+        {
+            dwIndex = i * iColMax + j;
+
+            // 오른쪽 위
+            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
+            pIndex[dwTriCnt]._1 = dwIndex + iColMax + 1;
+            pIndex[dwTriCnt]._2 = dwIndex + 1;
+            dwTriCnt++;
+
+            // 왼쪽 아래
+            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
+            pIndex[dwTriCnt]._1 = dwIndex + 1;
+            pIndex[dwTriCnt]._2 = dwIndex;
+            dwTriCnt++;
+        }
+    }
+
+    m_pIB->Unlock();
 }
 
 CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
@@ -410,5 +566,6 @@ void CVIBuffer_GridPanel::Free()
     CVIBuffer::Free();
     if (m_pVerticesData)
         delete[] m_pVerticesData;
+
     m_pVerticesData = nullptr;
 }

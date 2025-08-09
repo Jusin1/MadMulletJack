@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine_Define.h"
 #include "CGuiBase.h"
+#include "CGuiManager.h"
+#include "CGui_Button.h"
 #include "CGui_Panel.h"
 
 CGui_Panel::CGui_Panel(const string &_title)

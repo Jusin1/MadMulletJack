@@ -5,14 +5,10 @@
 #include "CGui_InputText.h"
 
 CGui_Transform::CGui_Transform(TransformDataType _eType)
-	: CGuiBase(""), m_fPadding(30.f)
+	: CGuiBase(""), m_fPadding(30.f), m_eType(_eType)
 {
-	switch (_eType)
+	switch (m_eType)
 	{
-	case TransformDataType::SCALE:
-	{
-		m_label = "Scale";
-	} break;
 	case TransformDataType::ROTATION:
 	{
 		m_label = "Rotation";
@@ -48,6 +44,7 @@ void CGui_Transform::Free()
 
 HRESULT CGui_Transform::Ready_GuiTransform()
 {
+	
 	return S_OK;
 }
 
@@ -66,22 +63,41 @@ CGui_Transform *CGui_Transform::Create(TransformDataType _eType)
 
 void CGui_Transform::Render()
 {
-
-}
-
-void CGui_Transform::ScaleRender()
-{
-
+	switch (m_eType)
+	{
+	case TransformDataType::ROTATION:
+		RotationRender();
+		break;
+	case TransformDataType::POSITION:
+		PositionRender();
+		break;
+	default:
+		break;
+	}
 }
 
 void CGui_Transform::PositionRender()
 {
+	if (CGameObject *pTarget = CGuiManager::GetInstance()->GetTarget())
+	{
 
+	}
+	else
+	{
+		AllReset();
+	}
 }
 
 void CGui_Transform::RotationRender()
 {
+	if (CGameObject *pTarget = CGuiManager::GetInstance()->GetTarget())
+	{
 
+	}
+	else
+	{
+		AllReset();
+	}
 }
 
 void CGui_Transform::ApplySetInfo()
