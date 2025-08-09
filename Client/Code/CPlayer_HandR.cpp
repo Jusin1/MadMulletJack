@@ -36,14 +36,7 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
 
         return E_FAIL;
 
-    m_fSizeX = 150.f;
-    m_fSizeY = 150.f;
-
-    m_fX = WINCX * 0.5f + 450.f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+    Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 450.f , WINCY * 0.5f + 350.f);
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
@@ -58,6 +51,14 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
     {
         m_bAniFinish = true;
     }
+    
+    if (m_tInfo.ePlayerState == PLAYERDEAD)
+    {
+        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+
+        m_pTransformCom->Set_Info(INFO_POS, { vPos.x, vPos.y - fTimeDelta * 10.f, vPos.z });
+    }
+
     return NO_EVENT;
 }
 
@@ -200,12 +201,8 @@ HRESULT CPlayer_HandR::Set_Texture()
     case PLAYERDEAD:
             Change_Texture(TEXT("Com_Texture_HandR_Dead"));
 
-            m_fSizeX = 200.f;
-            m_fSizeY = 200.f;
+            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f, WINCY * 0.5f + 280);
 
-            m_fX = WINCX * 0.5f + 450.f;
-            m_fY = WINCY * 0.5f + 300.f;
-            m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
             m_bRenderOn = true;
         break;
     default:

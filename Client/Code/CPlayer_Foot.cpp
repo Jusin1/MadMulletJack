@@ -33,15 +33,7 @@ HRESULT CPlayer_Foot::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerFoot"))))
         return E_FAIL;
 
-    m_fSizeX = 200.f;
-    m_fSizeY = 200.f;
-
-    m_fX = WINCX * 0.5f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+    Set_UISizeAndPos(200.f, 200.f, WINCX * 0.5f, WINCY * 0.5f + 300.f);
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;

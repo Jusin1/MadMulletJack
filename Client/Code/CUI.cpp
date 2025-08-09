@@ -72,6 +72,18 @@ HRESULT CUI::Set_Component()
 	return S_OK;
 }
 
+void CUI::Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY)
+{
+	m_fSizeX = _fSizeX;
+	m_fSizeY = _fSizeY;
+
+	m_fX = _fX;
+	m_fY = _fY;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+}
+
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CUI* pUI = new CUI(pGraphicDev);

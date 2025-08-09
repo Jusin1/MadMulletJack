@@ -26,8 +26,10 @@ protected:
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
 protected:
-	virtual HRESULT			Set_Component();
-	virtual			HRESULT Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
+	virtual		HRESULT	Set_Component();
+	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
+
+	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY);
 	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
