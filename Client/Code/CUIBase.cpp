@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "CUIBase.h"
 CUIBase::CUIBase(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+    : CGameObject(pGraphicDev) ,m_bAniFinish(false)
 {
 }
 
 CUIBase::CUIBase(const CUIBase& rhs)
-    : CGameObject(rhs)
+    : CGameObject(rhs), m_bAniFinish(rhs.m_bAniFinish)
 {
 
 }
@@ -31,7 +31,7 @@ HRESULT CUIBase::Initialize(void* pArg)
 _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
 {
     if (!m_bActive)
-        return NO_EVENT;
+        NO_EVENT;
 
     if (nullptr != m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
@@ -64,7 +64,7 @@ void CUIBase::Render_GameObject() // 자식 Render
 
     for (auto& pChild : m_vecChildren)
     {
-        if (pChild)
+        if (pChild && pChild->Get_RenderOn())
             pChild->Render_GameObject();
     }
 }

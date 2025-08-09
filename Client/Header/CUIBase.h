@@ -20,9 +20,13 @@ public:
 public:
     void Add_Child(CUIBase* pChild); // 자식 추가
     CUIBase* Find_Child_ByTag(const _tchar* pTag); // 자식 찾을 때 태그로 찾음
+
 public:
     void Set_ObjTag(const _tchar* pTag) { m_pObjTag = pTag; } // 태그 세팅
     const _tchar* Get_ObjTag() const { return m_pObjTag; } // 태그 가져오기
+
+    _bool Get_AniFinish() { return m_bAniFinish; }
+    void Set_AniFinish(_bool _bAniFinish) { m_bAniFinish = _bAniFinish; }
 
 protected:
     virtual HRESULT			Set_Component();
@@ -32,7 +36,8 @@ protected:
 
 protected:
     const _tchar* m_pObjTag;
-    
+    _bool	m_bAniFinish; // animation 끝났는지 다른 클래스에게 전해주기 위해
+
 public:
     static CUIBase* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;
