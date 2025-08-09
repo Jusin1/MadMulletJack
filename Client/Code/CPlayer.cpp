@@ -9,18 +9,20 @@
 #include "CDInputMgr.h"
 #include "CPlayer_StateInfo.h"
 #include "CPlayer_HandL.h"
+#include "CPlayer_Arm.h"
+#include "CPlayer_Foot.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING,WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
-	m_bHpBarOn(true), m_bKeyInput(true), m_bIsInvincible(true), m_bAttack(true)
+	m_bKeyInput(true), m_bIsInvincible(true), m_bAttack(true)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
 	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
-	m_bHpBarOn(rhs.m_bHpBarOn), m_bKeyInput(rhs.m_bKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bAttack(rhs.m_bAttack)
+	m_bKeyInput(rhs.m_bKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bAttack(rhs.m_bAttack)
 {
 }
 
@@ -47,24 +49,40 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (m_pPlayerUI == nullptr)
 		return E_FAIL;
 
-	// 손 UI 생성
-	CPlayer_HandR* pHandUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandUI", SCENE_STAGE, L"UI_Layer"));
-
-	if (pHandUI)
+	// habdR UI 생성
+	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STAGE, L"UI_Layer"));
+	if (pHandRUI)
 	{
-		pHandUI->Initialize(nullptr); // 필요 시 인자 전달
-		pHandUI->Set_ObjTag(L"HandUI");
-		m_pPlayerUI->Add_Child(pHandUI); // 루트 UI에 등록
+		pHandRUI->Initialize(nullptr); // 필요 시 인자 전달
+		pHandRUI->Set_ObjTag(L"HandRUI");
+		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
 	}
 
-	// 손 UI 생성
+	// handL UI 생성
 	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE, L"UI_Layer"));
-
 	if (pHandLUI)
 	{
 		pHandLUI->Initialize(nullptr); // 필요 시 인자 전달
 		pHandLUI->Set_ObjTag(L"HandLUI");
 		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
+	}
+
+	// foot UI 생성
+	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE, L"UI_Layer"));
+	if (pFootUI)
+	{
+		pFootUI->Initialize(nullptr); // 필요 시 인자 전달
+		pFootUI->Set_ObjTag(L"FootUI");
+		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
+	}
+
+	// arm UI 생성
+	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STAGE, L"UI_Layer"));
+	if (pArmUI)
+	{
+		pArmUI->Initialize(nullptr); // 필요 시 인자 전달
+		pArmUI->Set_ObjTag(L"ArmUI");
+		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
 	}
 
 	if (FAILED(Set_Component()))
@@ -226,8 +244,6 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 	case PLAYERDEAD:
 		PLAYERDEAD_End();break;
 	}
-
-	
 }
 
 void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
@@ -265,14 +281,13 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		PLAYERDEAD_On(fTimeDelta);break;
 	}
 
-	//CountHp(fTimeDelta);
+	CountHp(fTimeDelta);
 	KeyInput(fTimeDelta);
 }
 
 void CPlayer::StateNormalSet()
 {
 	m_bKeyInput		= false;
-	m_bHpBarOn		= true;
 	m_bIsInvincible = false;
 	m_bAttack		= false;
 	m_bJumping		= false;
@@ -400,12 +415,7 @@ void CPlayer::ATTACK_Begin()
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-	if (pFound)
-	{
-		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-			Set_State_Idle();
-	}
+
 }
 
 void CPlayer::ATTACK_End()
@@ -415,18 +425,12 @@ void CPlayer::ATTACK_End()
 // attack instant
 void CPlayer::ATTACK_INSTANT_Begin()
 {
-	m_bHpBarOn = false;
 	m_eMove = MOVE_NON;
 }
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 {
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-	if (pFound)
-	{
-		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-			Set_State_Idle();
-	}
+
 }
 
 void CPlayer::ATTACK_INSTANT_End()
@@ -436,18 +440,12 @@ void CPlayer::ATTACK_INSTANT_End()
 // reload
 void CPlayer::RELOAD_Begin()
 {
-	m_bHpBarOn = false;
 	m_bKeyInput = true;
 }
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-	if (pFound)
-	{
-		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-			Set_State_Idle();
-	}
+
 }
 
 void CPlayer::RELOAD_End()
@@ -482,12 +480,7 @@ void CPlayer::DOPING_Begin()
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
 {
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-	if (pFound)
-	{
-		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-			Set_State_Idle();
-	}
+
 }
 
 void CPlayer::DOPING_End()
@@ -513,19 +506,12 @@ void CPlayer::WALL_End()
 // opening
 void CPlayer::OPENING_Begin()
 {
-	m_bHpBarOn = false;
 	m_eMove = MOVE_NON;
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
 {
-
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-	if (pFound)
-	{
-		if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-			Set_State_Idle();
-	}
+	UIAniFinish(TEXT("ArmUI"));
 }
 
 void CPlayer::OPENING_End()
@@ -540,15 +526,12 @@ void CPlayer::PLAYERDEAD_Begin()
 
 void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
 {
-	if (Is_Anim_Finished())
-		m_bDead = true;
-
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
+	/*CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
 		if (pFound)
 		{
 			if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
 				Set_State_Idle();
-		}
+		}*/
 	
 }
 
@@ -623,19 +606,12 @@ void CPlayer::Set_State_Idle()
 	m_tPlayerInfo.ePlayerState = IDLE;
 }
 
-bool CPlayer::Is_Anim_Finished()
-{
-	Engine::CTexture::TEXINFO textInfo = m_pTextureCom->Get_Frame();
-	return (textInfo.m_iCurrentTex == textInfo.m_iEndTex-1);
-}
-
-
 void CPlayer::CountHp(const _float& fTimeDelta)
 {
 	// 0이면 죽음
 	if (m_fHp <= 0)
 	{
-		OutputDebugString(L"플레이어가 죽었습니다. (HP <= 0)\n");
+		OutputDebugString(L"플레이어가 죽었습니다.\n");
 		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
 	}
 
@@ -643,6 +619,15 @@ void CPlayer::CountHp(const _float& fTimeDelta)
 	m_fHp -= 1.f * fTimeDelta;
 
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
+}
+
+void CPlayer::UIAniFinish(const _tchar* pTag)
+{
+	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(pTag);
+	if (pFound && pFound -> Get_AniFinish())
+	{
+		Set_State_Idle();
+	}
 }
 
 

@@ -14,8 +14,6 @@ public:
     virtual void LateUpdate_GameObject(const _float& fTimeDelta) override;
     virtual void Render_GameObject() override;
 
-    
-
 public:
     HRESULT Change_Texture(const _tchar* pTextureTag);
 
@@ -26,11 +24,10 @@ private:
 private:
     map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
     wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
+    
 
 private:
     PlayerStateInfo m_tInfo;
-
-    _bool m_bChange; // 기믹.. -> 사실 texture 이름 가져오면 되긴함
 
 public:
     static CPlayer_Arm* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -17,6 +17,8 @@
 #include "CHpBarUI.h"
 #include "CPlayer_HandR.h"
 #include "CPlayer_HandL.h"
+#include "CPlayer_Foot.h"
+#include "CPlayer_Arm.h"
 
 // 몬스터
 #include "CMonster_Suit.h"
@@ -125,20 +127,79 @@ HRESULT CLoader::Loading_ForStage()
 	//	return E_FAIL;
 #pragma endregion 몬스터 테스트
 
-#pragma region UI 테스트
+#pragma region UI
 	// Player UI
 
-	// Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/HAND_IDLE%03d.png", 9))))
+	// Arm
+	// openig1 - weapon : non
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/glove/OPENING_GLOVE%03d.png", 3))))
+		return E_FAIL;
+	// openig2 - weapon : non
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/melee/OPENING_MELEE%03d.png", 3))))
 		return E_FAIL;
 
-	// Shot
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/PISTOL_SHOT%03d.png", 6))))
+	// foot
+	// foot - kick
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIFootKick",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot%03d.png", 2))))
+		return E_FAIL;
+	// foot - slide
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIFootSlide",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/slide/slide000.png", 1))))
+		return E_FAIL;
+	
+	//	HandL
+	//	HandL - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/idle/IDLE%03d.png", 17))))
+		return E_FAIL;
+	//	HandL - Doping
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLDoping",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/doping/DRINK%03d.png", 7))))
+		return E_FAIL;
+	//	HandL - opening : rifle
+	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\player\left\opening\rifle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLOpRif",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/opening/rifle/Lhand_opeing_rifle%03d.png", 12))))
+		return E_FAIL;
+	// HandL - attack_instance - knife
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLAt2Knife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/attack2/punch%03d.png", 3))))
+		return E_FAIL;
+	// HandL - reload - pistol
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLRePistol",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/pistol/PistolR_Left%03d.png", 3))))
+		return E_FAIL;
+	// HandL - reload - shotgun
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLReShotgun",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/shotgun/ShotR_Left%03d.png", 2))))
 		return E_FAIL;
 
-#pragma endregion UI 테스트
+	// HandR
+	// // HandR - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandRIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/idle/HandR_Idle%03d.png", 5))))
+		return E_FAIL;
+	// HandR - attack_instance - knife
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandRAt2Knife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/attack2/knife/A2_knife000.png", 1))))
+		return E_FAIL;
+	// HandR - Dead
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandRDead",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/dead/DEATH%03d.png", 3))))
+		return E_FAIL;
+	// handr - op - pistol
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpPistol",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/pistol/Pistol_OpR000.png", 1))))
+		return E_FAIL;
+	// handr - op - shotgun
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpShotgun",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/shotGun/ShotG_OpR%03d.png", 4))))
+		return E_FAIL;
+
+#pragma endregion UI
 
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
@@ -177,20 +238,23 @@ HRESULT CLoader::Loading_ForStage()
 		CUIBase::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	// 손 UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandUI",
+	// Player UI
+	// HandR UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
 		CPlayer_HandR::Create(m_pGraphicDev))))
 		return E_FAIL;
-
-	// 손 UI 생성
+	// HandL UI 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
 		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
-
-	//// HpBarUI
-	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
-	//	CHpBarUI::Create(m_pGraphicDev))))
-	//	return E_FAIL;
+	// Foot UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
+		CPlayer_Foot::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Arm UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerArmUI",
+		CPlayer_Arm::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex

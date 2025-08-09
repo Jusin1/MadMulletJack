@@ -18,13 +18,12 @@ private:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual HRESULT Initialize(void* pArg)override;
+	virtual			HRESULT		Initialize(void* pArg)override;
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	//state func -> private 해도..?
-public:
+private:
 	void ChangeState(PLAYERSTATE  _e);
 	void StateNormalSet();
 
@@ -91,9 +90,10 @@ public:
 	void KeyInput(const _float& fTimeDelta);
 	void Set_State_Idle();
 
-	bool Is_Anim_Finished(); // frame 다 돌면 state -> idle
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
 	void CountHp(const _float& fTimeDelta);
+
+	void UIAniFinish(const _tchar* pTag); // ui의 animation이 끝나면 state = IDLE;
 
 	// getter setter func
 public:
@@ -112,9 +112,6 @@ public:
 	_float Get_GroundHeight() { return m_fGround_Height; }
 	void Set_GroundHeight(_float _fGroundHeight) {m_fGround_Height = _fGroundHeight;}
 
-
-	_bool	Get_HpbarOn() { return m_bHpBarOn; }
-	void	Set_HpbarOn(_bool _bHpbarOn) { m_bHpBarOn = _bHpbarOn; }
 	_bool	Get_KeyInput() { return m_bKeyInput; }
 	void	Set_KeyInput(_bool _bKeyInput) { m_bKeyInput = _bKeyInput; }
 	_bool	Get_IsInvincible() { return m_bIsInvincible; }
@@ -141,15 +138,9 @@ private:
 	PlayerStateInfo m_tPrePlayerInfo;
 	MOVEKEY m_eMove;
 
-	WEAPON m_eWeapon;
-	WEAPON m_ePrevWeapon;
-	WEAPON m_eWeapon2;
-	WEAPON m_ePrevWeapon2;
-
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
 
-	_bool m_bHpBarOn;
 	_bool m_bKeyInput;
 	_bool m_bIsInvincible;
 	_bool m_bAttack;
