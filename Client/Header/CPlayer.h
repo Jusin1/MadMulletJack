@@ -112,12 +112,14 @@ public:
 	_float Get_GroundHeight() { return m_fGround_Height; }
 	void Set_GroundHeight(_float _fGroundHeight) {m_fGround_Height = _fGroundHeight;}
 
-	_bool	Get_KeyInput() { return m_bKeyInput; }
-	void	Set_KeyInput(_bool _bKeyInput) { m_bKeyInput = _bKeyInput; }
+	_bool	Get_IsKeyInput() { return m_bIsKeyInput; }
+	void	Set_IsKeyInput(_bool _bKeyInput) { m_bIsKeyInput = _bKeyInput; }
 	_bool	Get_IsInvincible() { return m_bIsInvincible; }
 	void	Set_IsInvincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; }
-	_bool Get_Attack() { return m_bAttack; }
-	void Set_Attack(_bool _bAttack) { m_bAttack = _bAttack; }
+	_bool	Get_IsAttack() { return m_bIsAttack; }
+	void	Set_IsAttack(_bool _bAttack) { m_bIsAttack = _bAttack; }
+	_bool	Get_IsCountHp() { return m_bIsCountHp; }
+	void	Set_IsCountHp(_bool _bCountHp) { m_bIsCountHp = _bCountHp; }
 
 private:
 	HRESULT			Set_Component();
@@ -141,9 +143,10 @@ private:
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
 
-	_bool m_bKeyInput;
+	_bool m_bIsKeyInput;
 	_bool m_bIsInvincible;
-	_bool m_bAttack;
+	_bool m_bIsAttack;
+	_bool m_bIsCountHp;
 
 
 private:

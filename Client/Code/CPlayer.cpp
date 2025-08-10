@@ -15,14 +15,15 @@
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
-	m_bKeyInput(true), m_bIsInvincible(true), m_bAttack(true)
+	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
 	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
-	m_bKeyInput(rhs.m_bKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bAttack(rhs.m_bAttack)
+	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
+	, m_bIsCountHp(rhs.m_bIsCountHp)
 {
 }
 
@@ -92,7 +93,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
-	m_fHp = 10.f;
+	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 
 	return S_OK;
 }
@@ -281,16 +282,21 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		PLAYERDEAD_On(fTimeDelta);break;
 	}
 
-	CountHp(fTimeDelta);
+	if (m_bIsCountHp)
+	{
+		CountHp(fTimeDelta);
+	}
+	
 	KeyInput(fTimeDelta);
 }
 
 void CPlayer::StateNormalSet()
 {
-	m_bKeyInput		= false;
+	m_bIsKeyInput		= false;
 	m_bIsInvincible = false;
-	m_bAttack		= false;
+	m_bIsAttack		= false;
 	m_bJumping		= false;
+	m_bIsCountHp = true;
 
 	m_eMove = MOVE_NORMAL;
 
@@ -300,8 +306,8 @@ void CPlayer::StateNormalSet()
 // idle
 void CPlayer::IDLE_Begin()
 {
-	m_bKeyInput = true;
-	m_bAttack	= true;
+	m_bIsKeyInput = true;
+	m_bIsAttack	= true;
 }
 
 void CPlayer::IDLE_On(const _float& fTimeDelta)
@@ -379,7 +385,7 @@ void CPlayer::DASH_End()
 void CPlayer::SLIED_Begin()
 {
 	m_eMove = MOVE_LR;
-	m_bAttack = true;
+	m_bIsAttack = true;
 	m_pTransformCom->GetTransformInfo().fSpeed = 10.f;
 }
 
@@ -410,7 +416,7 @@ void CPlayer::KICK_End()
 // attack
 void CPlayer::ATTACK_Begin()
 {
-	m_bKeyInput = true;
+	m_bIsKeyInput = true;
 }
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
@@ -440,7 +446,7 @@ void CPlayer::ATTACK_INSTANT_End()
 // reload
 void CPlayer::RELOAD_Begin()
 {
-	m_bKeyInput = true;
+	m_bIsKeyInput = true;
 }
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
@@ -455,8 +461,8 @@ void CPlayer::RELOAD_End()
 // hit
 void CPlayer::HIT_Begin()
 {
-	m_bKeyInput = true;
-	m_bAttack = true;
+	m_bIsKeyInput = true;
+	m_bIsAttack = true;
 }
 
 void CPlayer::HIT_On(const _float& fTimeDelta)
@@ -473,8 +479,8 @@ void CPlayer::HIT_End()
 // doping
 void CPlayer::DOPING_Begin()
 {
-	m_bKeyInput = true;
-	m_bAttack = true;
+	m_bIsKeyInput = true;
+	m_bIsAttack = true;
 	m_fHp += 5.f;
 }
 
@@ -492,7 +498,7 @@ void CPlayer::DOPING_End()
 void CPlayer::WALL_Begin()
 {
 	m_eMove = MOVE_NON;
-	m_bAttack = true;
+	m_bIsAttack = true;
 }
 
 void CPlayer::WALL_On(const _float& fTimeDelta)
@@ -507,6 +513,7 @@ void CPlayer::WALL_End()
 void CPlayer::OPENING_Begin()
 {
 	m_eMove = MOVE_NON;
+	m_bIsCountHp = false;
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -577,7 +584,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	}
 
 	// 상태 전환 키
-	if (m_bKeyInput) {
+	if (m_bIsKeyInput) {
 		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT) & 0x80)
 		{
 			m_tPlayerInfo.ePlayerState = DASH;
@@ -595,7 +602,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 	}
 
-	if (m_bAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)) // 우클릭
+	if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)) // 우클릭
 	{
 		m_tPlayerInfo.ePlayerState = DASH_ATTACK;
 	}
