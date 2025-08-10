@@ -195,6 +195,10 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures");
 			pInspector->AddElement(pThumbnail);
 
+#pragma region GridPanelState_Dropbox
+
+#pragma endregion
+
 #pragma region GridSize_ButtonsList
 			vector<string> _labels{ 4 };
 			vector<std::function<void()>> _funcs{ 4 };
