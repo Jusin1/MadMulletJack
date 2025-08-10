@@ -18,6 +18,7 @@
 #include "CEditorPickingManager.h"
 #include "CPicking.h"
 #include "CGuiManager.h"
+#include "CGui_Log.h"
 #include "CFileManager.h"
 #include "CGridPanel.h"
 #include "CGui_Panel.h"
@@ -178,13 +179,21 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
-	
-	// Panel
+	// Console
 	{
-		CGui_Panel *pNewPanel = CGuiManager::GetInstance()->GetInspector();
+		CGui_Panel *pConsole = CGuiManager::GetInstance()->GetConsole();
+		{
+			CGui_Log *pLog = CGui_Log::Create();
+			pConsole->AddElement(pLog);
+		}
+	}
+
+	// Inspector
+	{
+		CGui_Panel *pInspector = CGuiManager::GetInstance()->GetInspector();
 		{
 			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures");
-			pNewPanel->AddElement(pThumbnail);			
+			pInspector->AddElement(pThumbnail);
 
 #pragma region GridSize_ButtonsList
 			vector<string> _labels{ 4 };
@@ -196,6 +205,7 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_RowBuffer();
+					EDITOR_CONSOLE("test");
 				}
 			};
 
@@ -225,13 +235,44 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
 				}
 			};
+
+			CGui_ButtonList *GridSizeButtonsList = CGui_ButtonList::Create("Grid Size", _labels, _funcs);
+			pInspector->AddElement(GridSizeButtonsList);
+
+			_labels.clear();
+			_funcs.clear();
 #pragma endregion
 
-			CGui_ButtonList *pNewButtonList = CGui_ButtonList::Create("Grid Size", _labels, _funcs);
-			pNewPanel->AddElement(pNewButtonList);
+#pragma region Wall_ButtonsList
+			_labels.resize(2);
+			_funcs.resize(2);
+
+			_labels[0] = "Create";
+			_funcs[0] =
+				[]()->void {
+				CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, L"EditLogic_Layer");
+			};
+
+			_labels[1] = "Delete";
+			_funcs[1] =
+				[]()->void {
+				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+				{
+					pGo->Set_Dead(TRUE);
+					EDITOR_CONSOLE("SetDead");
+				}
+			};
+
+			CGui_ButtonList *WallButtonsList = CGui_ButtonList::Create("Wall Create", _labels, _funcs);
+			pInspector->AddElement(WallButtonsList);
+
+			_labels.clear();
+			_funcs.clear();
+
+#pragma endregion
 
 			CGui_Transform *pTransform = CGui_Transform::Create(TransformDataType::POSITION);
-			pNewPanel->AddElement(pTransform);
+			pInspector->AddElement(pTransform);
 		}
 	}
 

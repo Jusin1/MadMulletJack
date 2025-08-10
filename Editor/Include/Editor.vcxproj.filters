@@ -79,6 +79,9 @@
     <Filter Include="06. GUI\Element\ButtonList">
       <UniqueIdentifier>{cc603ed8-5a8f-4dd3-973c-22b84214f50e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. GUI\Element\Log">
+      <UniqueIdentifier>{14cf2e56-dce0-477d-bf14-86cf89dcc2d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -192,6 +195,9 @@
     <ClInclude Include="..\Header\CGui_ButtonList.h">
       <Filter>06. GUI\Element\ButtonList</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGui_Log.h">
+      <Filter>06. GUI\Element\Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -286,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_ButtonList.cpp">
       <Filter>06. GUI\Element\ButtonList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Log.cpp">
+      <Filter>06. GUI\Element\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

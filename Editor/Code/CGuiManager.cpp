@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CGameObject.h"
 #include "CGui_Thumbnail.h"
+#include "CGui_Log.h"
 #include "CComponentMgr.h"
 #include "CTexture.h"
 #include "CGui_Panel.h"
@@ -34,7 +35,7 @@ HRESULT CGuiManager::Ready_CGuiManager(LPDIRECT3DDEVICE9 pGraphicDevce)
         return E_FAIL;
     if (!(m_pPanels[CONSOLE] = CGui_Panel::Create("Console")))
         return E_FAIL;
-    
+
     m_pGraphicDevice = pGraphicDevce;
     pGraphicDevce->AddRef();
 	return S_OK;
@@ -137,6 +138,15 @@ HRESULT CGuiManager::AddTexture_AddThumbnail(const string &ThumnailName, const _
 
     pThumbnail->Add_Thumbnail(ThumnailName, CompName, pTexture);
     return S_OK;
+}
+
+void CGuiManager::AddLog(const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    static_cast<CGui_Log *>(GetConsole()->GetElement("Log"))->Add_LogV(fmt, args);
+
+    va_end(args);
 }
 
 void CGuiManager::Render()
