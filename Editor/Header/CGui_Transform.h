@@ -2,7 +2,7 @@
 #include "CGuiBase.h"
 
 class CGui_Button;
-class CGui_InputText;
+class CGui_InputFloat;
 
 enum class TransformDataType
 {
@@ -25,16 +25,11 @@ public:
 	virtual void Render() override;
 
 private:
-	void PositionRender();
-	void RotationRender();
-
-	void ApplySetInfo();
-	void ResetInfo();
-	void AllReset();
+	void PositionInit();
+	void RotationInit();
 private:
 	float m_fPadding;
 	TransformDataType m_eType;
-	vector<CGui_Button *> m_vecButtons;
-	vector<CGui_InputText *> m_vecTextInfos;
+	vector<CGui_InputFloat *> m_vecInfos;
 };
 

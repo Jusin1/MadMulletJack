@@ -49,9 +49,6 @@
     <Filter Include="06. GUI\Element\Button">
       <UniqueIdentifier>{ed356b75-57fd-49e9-b9fc-d9a2d032adb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. GUI\Element\Text">
-      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. GUI\Panel">
       <UniqueIdentifier>{ea27ae45-282b-40e7-975d-c4522b416a60}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,12 @@
     </Filter>
     <Filter Include="07. Manager">
       <UniqueIdentifier>{9585a290-1a2b-4864-841f-1e200c48e645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\InputFloat">
+      <UniqueIdentifier>{37868dc4-5215-4c30-a8ac-75e1dc1bfb57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\InputText">
+      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -154,7 +157,7 @@
       <Filter>06. GUI\Element\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGui_InputText.h">
-      <Filter>06. GUI\Element\Text</Filter>
+      <Filter>06. GUI\Element\InputText</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGui_Button.h">
       <Filter>06. GUI\Element\Button</Filter>
@@ -173,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEditorPickingManager.h">
       <Filter>07. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_InputFloat.h">
+      <Filter>06. GUI\Element\InputFloat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +246,7 @@
       <Filter>06. GUI\Element\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGui_InputText.cpp">
-      <Filter>06. GUI\Element\Text</Filter>
+      <Filter>06. GUI\Element\InputText</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Button.cpp">
       <Filter>06. GUI\Element\Button</Filter>
@@ -259,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEditorPickingManager.cpp">
       <Filter>07. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_InputFloat.cpp">
+      <Filter>06. GUI\Element\InputFloat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -154,9 +154,9 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     _int iRightBottom{ 0 };
     _int iLeftBottom{ 0 };
 
-    for (int iRow = 0; iRow < iRowMax-1; ++iRow)
+    for (int iRow = 0; iRow < iRowMax - 1; ++iRow)
     {
-        for (int iCol = 0; iCol < iColMax-1; ++iCol)
+        for (int iCol = 0; iCol < iColMax - 1; ++iCol)
         {
             dwIndex = iRow * iColMax + iCol;
             iLeftTop = dwIndex + iColMax;

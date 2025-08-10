@@ -22,6 +22,7 @@
 #include "CGridPanel.h"
 #include "CGui_Panel.h"
 #include "CGui_Thumbnail.h"
+#include "CGui_Transform.h"
 #include "CGraphicDev.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
@@ -231,18 +232,21 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_ColBuffer();
 				}
-				});
+			});
 			CGui_Button *pGuiButton4 = CGui_Button::Create("Col Decrease Button", []()->void {
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
 				}
-				});
+			});
 
 			pNewPanel->AddElement(pGuiButton1);
 			pNewPanel->AddElement(pGuiButton2);
 			pNewPanel->AddElement(pGuiButton3);
 			pNewPanel->AddElement(pGuiButton4);
+
+			CGui_Transform *pTransform = CGui_Transform::Create(TransformDataType::POSITION);
+			pNewPanel->AddElement(pTransform);
 		}
 	}
 
