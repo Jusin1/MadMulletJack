@@ -33,7 +33,6 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
         return E_FAIL;
 
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
-
         return E_FAIL;
 
     Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 450.f , WINCY * 0.5f + 350.f);
@@ -97,9 +96,9 @@ HRESULT CPlayer_HandR::Texture_Clone()
 
     // IDLE
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 5;
+    texInfo.m_iEndTex = 1;
     texInfo.m_fSpeed = 1.f;
-    texInfo.m_bLoop = true;
+    texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandR_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Idle"), m_pTextureCom });
@@ -154,76 +153,132 @@ HRESULT CPlayer_HandR::Set_Texture()
     case ATTACK:
         m_bRenderOn = false;
         break;
+
     case OPENING:
     {
         if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_HandR_Op_Pistol"));
-            m_bRenderOn = true;
-        }
+            if(FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Pistol"))))
+                return E_FAIL;
 
-        else if (m_tInfo.eWeapon == WP_SHOTGUN) {
-            Change_Texture(TEXT("Com_Texture_HandR_Op_Shotgun"));
-            m_bRenderOn = true;
-        }
+            Set_UISizeAndPos(120.f, 320.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 280.f); // pos를 정하고
 
-        else {
-            m_bRenderOn = false;
-        }
-    }
-        break;
-    case RELOAD:
-    {
-        if (m_tInfo.eWeapon == WP_SHOTGUN) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-            m_bRenderOn = true;
-        }
-
-        else {
-            m_bRenderOn = false;
-        }
-    }
-        break;
-    case ATTACK_INSTANT:
-    {
-        if (m_tInfo.eWeapon == WP_KNIFE) {
-            Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"));
-            m_bRenderOn = true;
-        }
-
-        else {
-            m_bRenderOn = false;
-        }
-    }
-        break;
-    case PLAYERDEAD:
-            Change_Texture(TEXT("Com_Texture_HandR_Dead"));
-
-            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f, WINCY * 0.5f + 280); // pos를 정하고
-            
-            TransformInfo.fSpeed = 5.f;
+            //// info를 새로 맞춰줌
+            //TransformInfo.fSpeed = 10.f;
             TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
             TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
             m_pTransformCom->SetTransformInfo(TransformInfo);
 
-            m_eMove = MV_DOWN;
+            m_bRenderOn = true;
+        }
+
+        else if (m_tInfo.eWeapon == WP_SHOTGUN) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Shotgun"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 300.f); // pos를 정하고
+
+            //// info를 새로 맞춰줌
+            //TransformInfo.fSpeed = 10.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
 
             m_bRenderOn = true;
+        }
+
+        else {
+            m_bRenderOn = false;
+        }
+    }
         break;
-    default:
-        Change_Texture(TEXT("Com_Texture_Hand_Idle"));
 
-        Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 350.f); // pos를 정하고
+    case RELOAD:
+    {
+        if (m_tInfo.eWeapon == WP_SHOTGUN) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_Hand_Idle"))))
+                return E_FAIL;
 
-        // info를 새로 맞춰줌
-        TransformInfo.fSpeed = 10.f;
+            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 350.f); // pos를 정하고
+
+            //// info를 새로 맞춰줌
+            //TransformInfo.fSpeed = 10.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1);
+
+            m_bRenderOn = true;
+        }
+
+        else {
+            m_bRenderOn = false;
+        }
+    }
+        break;
+
+    case ATTACK_INSTANT:
+    {
+        if (m_tInfo.eWeapon == WP_KNIFE) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(200.f, 200.f, WINCX * 0.5f + 450.f, WINCY * 0.5f - 100.f); // pos를 정하고
+
+            //// info를 새로 맞춰줌
+            //TransformInfo.fSpeed = 10.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(5.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+
+            m_bRenderOn = true;
+        }
+
+        else {
+            m_bRenderOn = false;
+        }
+    }
+        break;
+
+    case PLAYERDEAD:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Dead"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(150.f, 150.f, WINCX * 0.5f, WINCY * 0.5f + 240); // pos를 정하고
+
+        TransformInfo.fSpeed = 5.f;
         TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
         TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
         m_pTransformCom->SetTransformInfo(TransformInfo);
 
-        m_eMove     = MV_RL;
-        m_fRange = 10.f;
+        m_eMove = MV_DOWN;
 
         m_bRenderOn = true;
+    }
+        break;
+
+    default:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Idle"))))
+            return E_FAIL;
+
+        // idle pos
+        Set_UISizeAndPos(80.f, 80.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 300.f); // pos를 정하고
+
+        // info를 새로 맞춰줌
+        TransformInfo.fSpeed = 50.f;
+        TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+        TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+        m_pTransformCom->SetTransformInfo(TransformInfo);
+
+        m_eMove = MV_RL;
+        m_fRange = 30.f;
+
+        m_bRenderOn = true;
+    }
         break;
     }
     

@@ -49,6 +49,8 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
         m_bAniFinish = true;
     }
 
+    Move_UI(fTimeDelta);
+
     return NO_EVENT;
 }
 
@@ -121,7 +123,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // Attack_Instance - knife
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 3.f;
+    texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -130,7 +132,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 0.8f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -139,7 +141,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - shotgun
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 2;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 0.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Shotgun", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLReShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -150,13 +152,27 @@ HRESULT CPlayer_HandL::Texture_Clone()
 
 HRESULT CPlayer_HandL::Set_Texture()
 {
+    CTransform::TRANSFORMINFO TransformInfo;    // »õ·Ó°Ô transinfo¸¦ ÀúÀåÇØÁÜ
+    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
     // switch -> state ÆÇº°
     // if -> ¹«±â ÆÇº°
     switch (m_tInfo.ePlayerState) {
     case OPENING:
     {
         if (m_tInfo.eWeapon == WP_RIFLE) {
-            Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"));
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(150.f, 250.f, WINCX * 0.5f - 250.f, WINCY * 0.5f + 250.f);
+
+            TransformInfo.fSpeed = 10.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(-10.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_eMove = MV_ROTATIONZ;
+            m_bRenderOn = true;
+
             m_bRenderOn = true;
         }
 
@@ -169,12 +185,40 @@ HRESULT CPlayer_HandL::Set_Texture()
     case RELOAD: 
     {
         if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"));
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(150.f, 300.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 200.f); //idle pos
+
+            //// info¸¦ »õ·Î ¸ÂÃçÁÜ
+            TransformInfo.fSpeed = 300.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+
+            m_eMove = MV_RIGHT;
+
             m_bRenderOn = true;
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
-            Change_Texture(TEXT("Com_Texture_HandL_Re_Shotgun"));
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Shotgun"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(120.f, 300.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f);
+
+            //// info¸¦ »õ·Î ¸ÂÃçÁÜ
+            TransformInfo.fSpeed = 200.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+
+            m_eMove = MV_RIGHT;
+
             m_bRenderOn = true;
         }
 
@@ -187,7 +231,21 @@ HRESULT CPlayer_HandL::Set_Texture()
     case ATTACK_INSTANT:
     {
         if (m_tInfo.eWeapon2 == WP_KNIFE) {
-            Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"));
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(120.f, 300.f, 100.f, WINCY * 0.5f - 80.f); //idle pos
+
+            //// info¸¦ »õ·Î ¸ÂÃçÁÜ
+            TransformInfo.fSpeed = 140.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+
+            m_eMove = MV_RIGHT;
+
             m_bRenderOn = true;
         }
 
@@ -199,14 +257,21 @@ HRESULT CPlayer_HandL::Set_Texture()
 
     case DOPING:
     {
-        Change_Texture(TEXT("Com_Texture_HandL_Doping"));
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Doping"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(110.f, 110.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
+
         m_bRenderOn = true;
     }
     break;
 
     default:
     {
-        Change_Texture(TEXT("Com_Texture_HandL_Idle"));
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Idle"))))
+            return E_FAIL;
+        Set_UISizeAndPos(120.f, 300.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 200.f); //idle pos
+
         m_bRenderOn = true;
     }
         break;

@@ -33,8 +33,6 @@ HRESULT CPlayer_Foot::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerFoot"))))
         return E_FAIL;
 
-    Set_UISizeAndPos(200.f, 200.f, WINCX * 0.5f, WINCY * 0.5f + 300.f);
-
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
@@ -47,11 +45,13 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
   
-
     if (m_pTextureCom->Is_AnimFinished())
     {
         m_bAniFinish = true;
     }
+
+    Move_UI(fTimeDelta);
+
     return NO_EVENT;
 }
 
@@ -116,18 +116,42 @@ HRESULT CPlayer_Foot::Texture_Clone()
 
 HRESULT CPlayer_Foot::Set_Texture()
 {
+    CTransform::TRANSFORMINFO TransformInfo;    // »õ·Ó°Ô transinfo¸¦ ÀúÀåÇØÁÜ
+    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
     switch (m_tInfo.ePlayerState)
     {
     case KICK:
-        if(FAILED(Change_Texture(TEXT("Com_Texture_Foots_Kick"))))
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Kick"))))
             return E_FAIL;
+
+        Set_UISizeAndPos(120.f, 200.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
+
         m_bRenderOn = true;
+    }
         break;
+
     case SLIED:
+    {
         if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Slide"))))
             return E_FAIL;
+
+        Set_UISizeAndPos(350.f, 240.f, WINCX * 0.5f, WINCY * 0.5f + 180);
+
+        // info¸¦ »õ·Î ¸ÂÃçÁÜ
+        TransformInfo.fSpeed = 80.f;
+        TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+        TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+        m_pTransformCom->SetTransformInfo(TransformInfo);
+
+        m_fRange = 10.f;
+        m_eMove = MV_UpDown;
+
         m_bRenderOn = true;
+    }
         break;
+
     default:
         m_bRenderOn = false;
     }
