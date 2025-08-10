@@ -34,6 +34,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
@@ -56,6 +57,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 	//Key_Input(); // 테스트용 지워야 함
+
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	SetUp_BillBoard();
 	CPickingManager::GetInstance()->Add_PickingGroup(this); // picking 그룹에 넣어줌
@@ -69,6 +71,7 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();
+
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
 	m_pTextureCom->MoveFrame();
@@ -85,6 +88,7 @@ void CMonster::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 }
+
 
 HRESULT CMonster::Set_Component()
 {
@@ -104,7 +108,6 @@ HRESULT CMonster::Set_Component()
 
 	return S_OK;
 }
-
 
 
 _bool CMonster::Picking(_vec3* PickingPoint)
@@ -143,8 +146,9 @@ HRESULT CMonster::Change_Texture(const _tchar* LayerTag)
 	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	m_pTextureCom->Set_Zero_Frame();
-
+	if (m_pTextureCom) {
+		m_pTextureCom->Set_Zero_Frame();
+	}
 	return S_OK;
 }
 

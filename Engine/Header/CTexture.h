@@ -38,6 +38,8 @@ public:
 	void Resume_Anim() { m_bStopAnim = false; } // 다시재생
 	void SetOriginCompName(std::wstring _wstr) { m_OriginComponentName = _wstr; }
 	std::wstring GetOriginCompName() { return m_OriginComponentName; }
+	bool GetFrameSize(UINT index, UINT& w, UINT& h) const;
+
 private:
 	_uint								m_iNumTextures = 0; // 텍스쳐 수
 	vector<IDirect3DBaseTexture9*>		m_vecTexture; // 텍스쳐 컨테이너

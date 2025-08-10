@@ -20,6 +20,8 @@
 
 // 몬스터
 #include "CMonster_Suit.h"
+
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
 {
@@ -35,19 +37,11 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 {
 	CLoader* pLoader = (CLoader*)pArg;
 
-	EnterCriticalSection(pLoader->Get_Crt());
-
 	switch (pLoader->Get_NextSceneID())
 	{
-	case SCENE_LOGO:
-		pLoader->Loading_Logo();
-		break;
-	case SCENE_STAGE:
-		pLoader->Loading_ForStage();
-		break;
+	case SCENE_LOGO:  pLoader->Loading_Logo();  break;
+	case SCENE_STAGE: pLoader->Loading_ForStage(); break;
 	}
-
-	LeaveCriticalSection(pLoader->Get_Crt());
 	return 0;
 }
 
@@ -112,18 +106,54 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 #pragma endregion 플레이어 테스트
 
-#pragma region 몬스터 테스트
+#pragma region 슈트 몬스터
 	// Monster
 	// IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/sm_idle%03d.png", 12))))
 		return E_FAIL;
 
+	// CHASE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Chase",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/chasing/SM_CHASING%03d.png", 12))))
+		return E_FAIL;
+
 	// AIM
-	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Aim",
-	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
-	//	return E_FAIL;
-#pragma endregion 몬스터 테스트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Aim",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/Aim/aim%03d.png", 9))))
+		return E_FAIL;
+
+	// SHOT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Shot",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/Shot/shoot%02d.png", 8))))
+		return E_FAIL;
+
+	// Jump
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Jump",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/jump/jumping/sm_jump%03d.png", 22))))
+		return E_FAIL;
+
+	// HEAD_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/head/normal/flyb_death%02d.png", 21))))
+		return E_FAIL;
+
+	// BODY_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/hit/SM_HIT%03d.png", 8))))
+		return E_FAIL;
+	
+	// BALL_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/ball/SM_HIT_BALL%03d.png", 23))))
+		return E_FAIL;
+
+	// DEATH
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/fb_death%02d.png", 21))))
+		return E_FAIL;
+
+#pragma endregion 슈트 몬스터
 
 #pragma region UI 테스트
 	// Player UI

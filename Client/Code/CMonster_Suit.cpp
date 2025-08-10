@@ -1,15 +1,34 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonster_Suit.h"
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
+#include "CObjectManager.h"
 
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
+	, m_eMonState(IDLE)
+	, m_ePrevState(IDLE)
+	, m_pPlayerTr(nullptr)
+	, m_fChaseRadius(12.f)
+	, m_fAimRadius(6.f)
+	, m_fLoseRadius(16.f)
+	, m_jumpCD(0.f)
+	, m_jumpDir(0)
+	, m_bKillAfterHit(false)
 {
 }
 
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
 	: CMonster(rhs)
+	, m_eMonState(rhs.m_eMonState)
+	, m_ePrevState(rhs.m_ePrevState)
+	, m_pPlayerTr(nullptr)       
+	, m_fChaseRadius(rhs.m_fChaseRadius)
+	, m_fAimRadius(rhs.m_fAimRadius)
+	, m_fLoseRadius(rhs.m_fLoseRadius)
+	, m_jumpCD(rhs.m_jumpCD)
+	, m_jumpDir(rhs.m_jumpDir)
+	, m_bKillAfterHit(rhs.m_bKillAfterHit)
 {
 }
 
@@ -30,7 +49,8 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
   	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	// À§Ä¡ Á¤º¸ ¼¼ÆÃ
+	m_fHp = 2;
+
 	CTransform::TRANSFORMINFO TransformInfo;
 	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 	TransformInfo.fSpeed = 5.f;
@@ -39,9 +59,13 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 
 	m_pTransformCom->SetTransformInfo(TransformInfo);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-	m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
-	Change_Texture(TEXT("Com_Texture_Idle"));
+	GetPlayerTransform();
+
+	m_jumpCD = 1.f + (rand() % 2001) / 1000.f;  
+
+	SetState(IDLE);
 
 	return S_OK;
 }
@@ -50,6 +74,7 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
+	OnUpdateState(m_eMonState, fTimeDelta);  
 	__super::Update_GameObject(fTimeDelta);
 	return NO_EVENT;
 }
@@ -88,7 +113,6 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
 {
 	if (true == m_pBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
-		Change_Texture(TEXT("Com_Texture_AIM"));
 		return true;
 	}
 	else
@@ -96,34 +120,257 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
 	return true;
 }
 
+void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
+{
+	_matrix W = *m_pTransformCom->Get_World();
+	_matrix WInv; D3DXMatrixInverse(&WInv, nullptr, &W);
+	_vec3 pL; D3DXVec3TransformCoord(&pL, &hitPosWorld, &WInv);
+	HIT_PART part = ClassifyHit_Local(pL);
+
+	const wchar_t* anim = L"Com_Texture_Hit_Body";
+	int dmg = 1;
+	switch (part) {
+	case HIT_HEAD:  anim = L"Com_Texture_Hit_Head";  dmg = 2; break; 
+	case HIT_BALLS: anim = L"Com_Texture_Hit_Balls"; dmg = 2; break; 
+	case HIT_LEG:   anim = L"Com_Texture_Hit_Leg";   dmg = 1; break; 
+	case HIT_BODY:  anim = L"Com_Texture_Hit_Body";  dmg = 1; break; 
+	default:        anim = L"Com_Texture_Hit_Body";  dmg = 1; break;
+	}
+	Change_Texture(anim);
+	if (m_pTextureCom) {
+		m_pTextureCom->Set_Zero_Frame();
+		m_pTextureCom->Resume_Anim();
+	}
+	ApplyDamage(part, dmg);
+}
+
+void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
+{
+	m_fHp -= dmg;
+
+	if (m_fHp <= 0) {
+		if (part == HIT_HEAD || part == HIT_BALLS) {
+			m_bKillAfterHit = true;
+			SetState(HIT);
+		}
+		else {
+			m_bKillAfterHit = false;
+			SetState(DEATH);
+		}
+	}
+	else {
+		m_bKillAfterHit = false;
+		SetState(HIT);
+	}
+}
+
+CMonster_Suit::HIT_PART CMonster_Suit::ClassifyHit_Local(const _vec3& pL) const
+{
+	const _vec3 sc = m_pTransformCom->Get_Scale();
+	float nx = (sc.x > 0.f) ? (pL.x / sc.x) : pL.x;   
+	float ny = (sc.y > 0.f) ? (pL.y / sc.y) : pL.y;  
+
+	UINT fw = 0, fh = 0;
+	if (m_pTextureCom->GetFrameSize(m_pTextureCom->Get_Frame().m_iCurrentTex, fw, fh) && fw && fh) {
+		float aspect = (float)fw / (float)fh; 
+		nx /= aspect; 
+	}
+
+	const float HEAD_MIN = 0.55f;   
+	if (ny >= HEAD_MIN) return HIT_HEAD;
+
+	{	const float cx = 0.0f, cy = -0.10f;
+		const float rx = 0.18f, ry = 0.16f;
+		float dx = nx - cx, dy = ny - cy;
+		if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f) return HIT_BALLS;
+	}
+
+	if (ny >= -0.35f) return HIT_BODY;
+	return HIT_LEG;
+}
+ 
 HRESULT CMonster_Suit::Texture_Clone()
 {
-	CTexture::TEXINFO TextureInfo;
-	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
+	CTexture::TEXINFO info{};
 
-	// IDLE
-	TextureInfo.m_iStart = 0;
-	TextureInfo.m_iEndTex = 12;
-	TextureInfo.m_fSpeed = 6.f;
-	TextureInfo.m_bLoop = true;
+	struct AnimDef {const wchar_t* tag;const wchar_t* proto;int start;int end;float speed;bool loop;};
 
-	if (FAILED(Add_Components(L"Com_Texture_Idle", SCENE_STAGE, L"Prototype_Component_Texture_Monster_Suit_Idle",
-		(CComponent**)&m_pTextureCom, &TextureInfo)))
-		return E_FAIL;
-	m_mapTexture.insert({ TEXT("Com_Texture_Idle"), m_pTextureCom });
+	AnimDef anims[] = {{ L"Com_Texture_Idle",  L"Prototype_Component_Texture_Monster_Suit_Idle",  0, 12,  6.f,  true },
+					  { L"Com_Texture_Chase", L"Prototype_Component_Texture_Monster_Suit_Chase", 0, 13, 20.f,  true },
+					  { L"Com_Texture_Aim",   L"Prototype_Component_Texture_Monster_Suit_Aim",   0,  9,  15.f,  true },
+					  { L"Com_Texture_Shot",   L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8,  15.f,  true},
+					  { L"Com_Texture_Jump",   L"Prototype_Component_Texture_Monster_Suit_Jump",   0,  22,  15.f,  true},
+					  { L"Com_Texture_Hit_Head",   L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",   0,  21,  16.f,  true},
+					  { L"Com_Texture_Hit_Body",   L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",   0,  8,  16.f,  true},
+					  { L"Com_Texture_Hit_Balls",   L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",   0,  23,  16.f,  true},
+					  { L"Com_Texture_Death",   L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0,  21,  16.f,  true},
+	};
 
-	// AIM
-	//TextureInfo.m_iStart = 0;
-	//TextureInfo.m_iEndTex = 9;
-	//TextureInfo.m_fSpeed = 6.f;
-	//TextureInfo.m_bLoop = true;
+	for (auto& a : anims)
+	{
+		ZeroMemory(&info, sizeof(info));
+		info.m_iStart = a.start;
+		info.m_iEndTex = a.end;
+		info.m_fSpeed = a.speed;
+		info.m_bLoop = a.loop;
 
-	//if (FAILED(Add_Components(L"Com_Texture_AIM", SCENE_STAGE, L"Prototype_Component_Texture_MonsterAim",
-	//	(CComponent**)&m_pTextureCom, &TextureInfo)))
-	//	return E_FAIL;
-	//m_mapTexture.insert({ TEXT("Com_Texture_AIM"), m_pTextureCom });
+		if (FAILED(Add_Components(a.tag, SCENE_STAGE, a.proto, (CComponent**)&m_pTextureCom, &info)))
+			return E_FAIL;
+
+		m_mapTexture.insert({ a.tag, m_pTextureCom });
+	}
 
 	return S_OK;
+}
+
+void CMonster_Suit::SetState(MON_STATE next)
+{
+	m_ePrevState = m_eMonState;
+	m_eMonState = next;
+	OnEnterState(next);
+}
+
+void CMonster_Suit::OnEnterState(MON_STATE s)
+{
+	const wchar_t* tag = L"Com_Texture_Idle";
+
+	switch (s)
+	{
+	case IDLE:  tag = L"Com_Texture_Idle";  break;
+	case CHASE: tag = L"Com_Texture_Chase"; break;
+	case AIM:   tag = L"Com_Texture_Aim";   break;
+	case SHOT:  tag = L"Com_Texture_Shot";  break;
+	case JUMP:  tag = L"Com_Texture_Jump";  break;
+	case HIT:
+		if (m_pTextureCom) {
+			m_pTextureCom->Set_Zero_Frame();
+			m_pTextureCom->Resume_Anim();
+		}
+		return;
+
+	case DEATH: tag = L"Com_Texture_Death"; break;
+	}
+
+	Change_Texture(tag);
+
+	if (m_pTextureCom) {
+		m_pTextureCom->Set_Zero_Frame();
+		m_pTextureCom->Resume_Anim();
+	}
+}
+
+void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
+{
+	if (!m_pTextureCom) return;
+	GetPlayerTransform(); 
+	const float dist = DistanceToPlayer();
+
+	switch (s)
+	{
+	case IDLE:
+		if (dist <= m_fChaseRadius)
+			SetState(CHASE);
+		break;
+
+	case CHASE:
+		if (!m_pPlayerTr) break;
+		if (dist <= m_fAimRadius) {
+			SetState(AIM);
+			break;
+		}
+		if (dist > m_fLoseRadius) {
+			SetState(IDLE);
+			break;
+		}
+		{
+			_vec3 my = m_pTransformCom->Get_Info(INFO_POS);
+			_vec3 pl = m_pPlayerTr->Get_Info(INFO_POS);
+			_vec3 dir = pl - my;
+			m_pTransformCom->LookAt(pl);
+			m_pTransformCom->Move_PosDir(dt, dir); 
+		}
+		break;
+
+	case AIM:
+		m_jumpCD -= dt;
+		if (m_jumpCD <= 0.f) {
+			m_jumpDir = (rand() & 1) ? +1 : -1; 
+			SetState(JUMP);
+			break;
+		}
+
+		if (dist > m_fChaseRadius) {
+			SetState(CHASE);
+			break;
+		}
+		if (m_pPlayerTr)
+			m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
+		if (m_pTextureCom->Is_AnimFinished())
+			SetState(SHOT);
+		break;
+
+	case SHOT:
+		if (m_pTextureCom->Is_AnimFinished())
+			SetState(AIM);
+		break;
+	case HIT:
+		if (m_pTextureCom->Is_AnimFinished()) {
+			if (m_bKillAfterHit) {
+				m_bDead = true;
+			}
+			else {
+				SetState((m_ePrevState == DEATH) ? DEATH : IDLE);
+			}
+		}
+		break;
+
+	case JUMP:
+	{
+		const _matrix& W = *m_pTransformCom->Get_World();
+		_vec3 right(W._11, W._12, W._13);
+		right.y = 0.f;
+		D3DXVec3Normalize(&right, &right);
+		if (m_jumpDir < 0) right = -right; 
+
+		m_pTransformCom->Move_PosDir(dt * 0.25f, right);
+
+		if (m_pTextureCom->Is_AnimFinished()) {
+			m_jumpCD = 3.f + (rand() % 4001) * 0.001f; 
+			if (dist <= m_fAimRadius)        SetState(AIM);
+			else if (dist <= m_fChaseRadius) SetState(CHASE);
+			else                             SetState(IDLE);
+		}
+		break;
+	}
+	break;
+
+	case DEATH:
+		if (m_pTextureCom->Is_AnimFinished())
+			m_bDead = true;
+		break;
+
+	default: break;
+	}
+}
+
+CTransform* CMonster_Suit::GetPlayerTransform()
+{
+	if (!m_pPlayerTr)
+	{
+		m_pPlayerTr = dynamic_cast<CTransform*>(
+			CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, L"Player_Layer", L"Com_Transform", 0)
+			);
+	}
+	return m_pPlayerTr;
+}
+
+float CMonster_Suit::DistanceToPlayer() const
+{
+	if (!m_pPlayerTr) return FLT_MAX;
+	_vec3 my = m_pTransformCom->Get_Info(INFO_POS);
+	_vec3 pl = m_pPlayerTr->Get_Info(INFO_POS);
+	_vec3 diff = pl - my; 
+	return D3DXVec3Length(&diff);
 }
 
 CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -156,3 +403,4 @@ void CMonster_Suit::Free()
 {
 	__super::Free();
 }
+	

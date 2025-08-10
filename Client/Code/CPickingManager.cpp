@@ -50,49 +50,45 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 // 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
-	if(m_bMouseInUI)
-		return false;
+    if (m_bMouseInUI) return false;
 
-	// 마우스 왼쪽 버튼이 눌리지 않으면 픽킹 하지 않음
-	if (!(GetAsyncKeyState(VK_LBUTTON) & 0x8000))
-		return false;
+    if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001))
+        return false;
 
-	vector<CGameObject*> vecPicked;
-	vector<_vec3> vecPos;
-	_vec3 vPos;
+    vector<CGameObject*> vecPicked;
+    vector<_vec3> vecPos;
 
-	// 모든 오브젝트 중 레이와 충돌한 것 수집
-	for (auto& pGameObject : m_PickingList)
-	{
-		if (pGameObject->Picking(&vPos))
-		{
-			vecPicked.push_back(pGameObject);
-			vecPos.push_back(vPos);
-		}
-	}
+    for (auto it = m_PickingList.begin(); it != m_PickingList.end(); )
+    {
+        CGameObject* obj = *it;
 
-	// 하나라도 충돌한 게 있다면
-	if (!vecPicked.empty())
-	{
-		_vec3 vecNearPos;
-		int NearNum = 0;
-		// 가장 가까운 오브젝트 찾기 (z값 기준)
-		for (_uint i = 0; i < vecPos.size(); ++i)
-		{
-			if (vecPos[i].z <= vecNearPos.z || i == 0)
-			{
-				vecNearPos = vecPos[i];
-				NearNum = i;
-			}
-		}
+        if (!obj || obj->Get_Dead() || !obj->Is_Active()) {
+            it = m_PickingList.erase(it);
+            continue;
+        }
 
-		m_vPickingPos = vecNearPos;
-		vecPicked[NearNum]->PickingTrue(); // 해당 오브젝트에 알림
+        _vec3 hit;
+        if (obj->Picking(&hit)) { 
+            vecPicked.push_back(obj);
+            vecPos.push_back(hit);
+        }
+        ++it;
+    }
 
-		return true;
-	}
+    if (vecPicked.empty()) return false;
 
-	return false;
+    // 가장 가까운(z가 작은) 점 선택
+    size_t nearIdx = 0;
+    float minZ = vecPos[0].z;
+    for (size_t i = 1; i < vecPos.size(); ++i) {
+        if (vecPos[i].z < minZ) { minZ = vecPos[i].z; nearIdx = i; }
+    }
+
+    m_vPickingPos = vecPos[nearIdx];
+    m_pPickingObject = vecPicked[nearIdx];
+    m_pPickingObject->PickingTrue();
+    m_pPickingObject->HitAt(m_vPickingPos);
+    return true;
 }
 
 // 현재 픽킹된 오브젝트 해제

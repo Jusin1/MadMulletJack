@@ -65,6 +65,7 @@ HRESULT CGameObject::Set_Component()
     return S_OK;
 }
 
+
 // 컴포넌츠 추가 - 복제 기반
 HRESULT CGameObject::Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg)
 {

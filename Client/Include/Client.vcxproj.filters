@@ -275,6 +275,9 @@
     <ClCompile Include="..\Code\CPlayer_Arm.cpp">
       <Filter>02. GameObject\06. UI\PlayerUI\04. Arm</Filter>
     </ClCompile>
+    <ClCompile Include="..\Header\Client_Global.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

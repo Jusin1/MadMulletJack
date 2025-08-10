@@ -79,7 +79,6 @@ _bool CPicking::IntersectRayWithTriangleInWorld(_vec3 vPointA, _vec3 vPointB, _v
 	if (TRUE == D3DXIntersectTri(&vPointA, &vPointB, &vPointC, &m_vRayPos, &m_vRayDir, &fU, &fV, &fDist))
 	{
 		*pOut = m_vRayPos + m_vRayDir * fDist;
-
 		return true;
 	}
 

@@ -33,8 +33,9 @@ protected:
 	HRESULT	Set_Component();
 
 public:
-	virtual _bool Picking(_vec3* PickingPoint) { return true; }
+	virtual _bool Picking(_vec3* PickingPoint) { return false; }
 	virtual void PickingTrue() {};
+	virtual void HitAt(const _vec3& hitPosWorld) {} // 맞은 지점 전달
 	virtual void ExportData(void *pData) {};
 public:
 	CTransform* GetTransform() const { return m_pTransformCom; }
@@ -47,7 +48,6 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	bool m_bActive;
 
-	// Trnasform Component
 protected:
 	CTransform* m_pTransformCom;
 	CRenderer* m_pRendererCom;

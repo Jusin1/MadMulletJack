@@ -102,7 +102,6 @@ namespace Engine
 				Pair.second = NULL;
 		}
 	};
-
 }
 
 #endif // Engine_Function_h__

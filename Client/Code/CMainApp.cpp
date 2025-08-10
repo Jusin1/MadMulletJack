@@ -27,6 +27,13 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
+	// 전역 랜덤 시드 1회
+	LARGE_INTEGER qpc{};
+	QueryPerformanceCounter(&qpc);
+	unsigned seed = (unsigned)(qpc.QuadPart ^ GetTickCount64() ^ GetCurrentProcessId());
+	srand(seed);
+
+
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
