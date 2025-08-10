@@ -15,13 +15,14 @@ public:
 
 	TEnum GetState() const { return m_eState; }
 private:
+	TEnum m_ePrevState;
 	TEnum m_eState;
 	vector<std::string> m_Names;
 };
 
 template<typename TEnum>
 inline CGui_Dropbox<TEnum>::CGui_Dropbox(string _label, TEnum _eState, const vector<std::string> &_Names)
-	: CGuiBae(_label), m_eState(_eState), m_Names(_Names)
+	: CGuiBase(_label), m_eState(_eState), m_Names(_Names)
 {
 }
 
@@ -46,7 +47,7 @@ inline _bool CGui_Dropbox<TEnum>::Render()
 {
 	_int curState{ static_cast<_int>(m_eState) };
 	_bool changed{ FALSE };
-	if (ImGui::BeginCombo(m_label.c_str(), m_names[curState]))
+	if (ImGui::BeginCombo(m_label.c_str(), m_Names[curState]))
 	{
 		for (size_t i = 0; i < m_Names.size(); ++i)
 		{
@@ -55,7 +56,7 @@ inline _bool CGui_Dropbox<TEnum>::Render()
 			{
 				if (curState != i)
 				{
-					m_state = static_cast<TEnum>(i);
+					m_eState = static_cast<TEnum>(i);
 					changed = true;
 				}
 			}
