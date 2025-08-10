@@ -73,6 +73,12 @@
     <Filter Include="06. GUI\Element\InputText">
       <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. GUI\Element\Dropbox">
+      <UniqueIdentifier>{e6af0aeb-2355-4f75-827f-e96e6ea857fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\ButtonList">
+      <UniqueIdentifier>{cc603ed8-5a8f-4dd3-973c-22b84214f50e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -180,6 +186,12 @@
     <ClInclude Include="..\Header\CGui_InputFloat.h">
       <Filter>06. GUI\Element\InputFloat</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGui_Dropbox.h">
+      <Filter>06. GUI\Element\Dropbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_ButtonList.h">
+      <Filter>06. GUI\Element\ButtonList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -268,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_InputFloat.cpp">
       <Filter>06. GUI\Element\InputFloat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Dropbox.cpp">
+      <Filter>06. GUI\Element\Dropbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_ButtonList.cpp">
+      <Filter>06. GUI\Element\ButtonList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

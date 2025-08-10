@@ -22,6 +22,7 @@
 #include "CGridPanel.h"
 #include "CGui_Panel.h"
 #include "CGui_Thumbnail.h"
+#include "CGui_ButtonList.h"
 #include "CGui_Transform.h"
 #include "CGraphicDev.h"
 #include "CObjectManager.h"
@@ -33,7 +34,7 @@
 
 CEditorApplication::CEditorApplication()
 	: m_pDeviceClass(nullptr), m_pGraphicDevice(nullptr), m_pManagementClass(nullptr)
-	, m_pRenderer(nullptr), m_bShowDemoWindow(false), m_bShowAnotherWindow(false)
+	, m_pRenderer(nullptr), m_bShowDemoWindow(false)
 {
 }
 
@@ -84,6 +85,9 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 	if (FAILED(Engine::CPicking::GetInstance()->Initialize(g_hWnd, m_pGraphicDevice)))
 		return E_FAIL;
 
+	if (FAILED(CGuiManager::GetInstance()->Ready_CGuiManager(m_pGraphicDevice)))
+		return E_FAIL;
+
 	if (FAILED(Engine::CObjectManager::GetInstance()->Readay_ObjectManager(SCENE_END)))
 		return E_FAIL;
 
@@ -96,7 +100,7 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 	if (FAILED(Ready_Scene()))
 		return E_FAIL;
 
-	if (FAILED(ImGuiInitialize()))
+	if (FAILED(CGuiManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
 	return S_OK;
@@ -166,36 +170,6 @@ HRESULT CEditorApplication::DefaultSetting(LPDIRECT3DDEVICE9 *ppGraphicDevice)
 	return S_OK;
 }
 
-HRESULT CEditorApplication::ImGuiInitialize()
-{
-	::IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO();
-	(void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // 키보드 컨트롤 허용
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // 게임패드 컨트롤 허용
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Docking 허용
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // multi-viewport
-	
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
-
-	ImGuiStyle &style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
-
-	::ImGui_ImplWin32_Init(g_hWnd);
-	::ImGui_ImplDX9_Init(m_pGraphicDevice);
-
-	m_bShowDemoWindow = true;
-	m_bShowAnotherWindow = false;
-
-	return S_OK;
-}
-
 HRESULT CEditorApplication::Ready_Prototype_Component()
 {
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDevice))))
@@ -205,132 +179,105 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 		return E_FAIL;
 
 	
-	// Texture_PanelDefault
 	// Panel
 	{
-		CGui_Panel *pNewPanel = CGui_Panel::Create("Test");
-		CGuiManager::GetInstance()->AddPanel(pNewPanel);
-		// Test
+		CGui_Panel *pNewPanel = CGuiManager::GetInstance()->GetInspector();
 		{
-			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Test Thumbnail");
-			pNewPanel->AddElement(pThumbnail);
+			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures");
+			pNewPanel->AddElement(pThumbnail);			
 
-			CGui_Button *pGuiButton1 = CGui_Button::Create("Row Increase Button", []()->void {
+#pragma region GridSize_ButtonsList
+			vector<string> _labels{ 4 };
+			vector<std::function<void()>> _funcs{ 4 };
+
+			_labels[0] = "++Row";
+			_funcs[0] =
+			[]()->void {
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_RowBuffer();
 				}
-			});
-			CGui_Button *pGuiButton2 = CGui_Button::Create("Row Decrease Button", []()->void {
+			};
+
+			_labels[1] = "--Row";
+			_funcs[1] =
+				[]()->void {
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_RowBuffer();
 				}
-			});
-			CGui_Button *pGuiButton3 = CGui_Button::Create("Col Increase Button", []()->void {
+			};
+
+			_labels[2] = "++Col";
+			_funcs[2] =
+				[]()->void {
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_ColBuffer();
 				}
-			});
-			CGui_Button *pGuiButton4 = CGui_Button::Create("Col Decrease Button", []()->void {
+			};
+
+			_labels[3] = "--Col";
+			_funcs[3] =
+				[]()->void {
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
 				}
-			});
+			};
+#pragma endregion
 
-			pNewPanel->AddElement(pGuiButton1);
-			pNewPanel->AddElement(pGuiButton2);
-			pNewPanel->AddElement(pGuiButton3);
-			pNewPanel->AddElement(pGuiButton4);
+			CGui_ButtonList *pNewButtonList = CGui_ButtonList::Create("Grid Size", _labels, _funcs);
+			pNewPanel->AddElement(pNewButtonList);
 
 			CGui_Transform *pTransform = CGui_Transform::Create(TransformDataType::POSITION);
 			pNewPanel->AddElement(pTransform);
 		}
 	}
 
-	CGui_Thumbnail *pThumbnail = static_cast<CGui_Thumbnail*>(CGuiManager::GetInstance()->GetPanel("Test")->GetElement("Test Thumbnail"));
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Default", L"Proto_Component_Texture_PanelDefault",
+		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png")))
 		return E_FAIL;
-	auto pTexture = static_cast<CTexture*>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelDefault"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("GridBox_Default", L"Proto_Component_Texture_PanelDefault", pTexture);
 
-#pragma region 테스트
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Trigger", L"Proto_Component_Texture_PanelTest",
+		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("GridBox_Trigger", L"Proto_Component_Texture_PanelTest", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_NoDraw", L"Proto_Component_Texture_PanelTest2",
+		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest2"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("GridBox_NoDraw", L"Proto_Component_Texture_PanelTest2", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Collider", L"Proto_Component_Texture_PanelTest3",
+		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest3"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("GridBox_Collider", L"Proto_Component_Texture_PanelTest3", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest4",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 1", L"Proto_Component_Texture_PanelTest4",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest4"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 1", L"Proto_Component_Texture_PanelTest4", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest5",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 2", L"Proto_Component_Texture_PanelTest5",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest5"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 2", L"Proto_Component_Texture_PanelTest5", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest6",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 3", L"Proto_Component_Texture_PanelTest6",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest6"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 3", L"Proto_Component_Texture_PanelTest6", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest7",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 4", L"Proto_Component_Texture_PanelTest7",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest7"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 4", L"Proto_Component_Texture_PanelTest7", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest8",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 5", L"Proto_Component_Texture_PanelTest8",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest8"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 5", L"Proto_Component_Texture_PanelTest8", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest9",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 6", L"Proto_Component_Texture_PanelTest9",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest9"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 6", L"Proto_Component_Texture_PanelTest9", pTexture);
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Texture_PanelTest10",
-		CTexture::Create(m_pGraphicDevice, TEX_NORMAL, L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png", 1))))
+	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 7", L"Proto_Component_Texture_PanelTest10",
+		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png")))
 		return E_FAIL;
-	pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, L"Proto_Component_Texture_PanelTest10"))
-		->Get_Texture();
-	pThumbnail->Add_Thumbnail("FLOOR 7", L"Proto_Component_Texture_PanelTest10", pTexture);
-
-#pragma endregion
-
 
 	return S_OK;
 }
@@ -356,45 +303,11 @@ void CEditorApplication::RenderImGuiRender()
 
 	ImGuiIO &io = ImGui::GetIO();
 
-	if (m_bShowDemoWindow)
-		ImGui::ShowDemoWindow(&m_bShowDemoWindow);
+	/*if (m_bShowDemoWindow)
+		ImGui::ShowDemoWindow(&m_bShowDemoWindow);*/
 
 	{
 		CGuiManager::GetInstance()->Render();
-	}
-
-	{
-		static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, World");
-
-		ImGui::Text("This is some useful text.");
-		ImGui::Checkbox("Demo Window", &m_bShowDemoWindow);
-		ImGui::Checkbox("Another Window", &m_bShowAnotherWindow);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-		ImGui::ColorEdit3("clear color", (float *)&vClear_Color);
-
-		if (ImGui::Button("Button"))
-			counter++;
-
-		ImGui::SameLine();
-		ImGui::Text("counter - %d", counter);
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.f / io.Framerate, io.Framerate);
-
-		ImGui::End();
-	}
-
-	if (m_bShowAnotherWindow)
-	{
-		ImGui::Begin("Another Window", &m_bShowAnotherWindow);
-		ImGui::Text("Hello from another window!");
-		if (ImGui::Button("Close Me"))
-			m_bShowAnotherWindow = false;
-
-		ImGui::End();
 	}
 
 	//RenderGui

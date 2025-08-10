@@ -81,9 +81,18 @@ CGui_Transform *CGui_Transform::Create(TransformDataType _eType)
 
 void CGui_Transform::Render()
 {
-	for (size_t i = 0; i < m_vecInfos.size(); ++i)
+	if (ImGui::CollapsingHeader(m_label.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		m_vecInfos[i]->Render();
+		if (ImGui::BeginTable(m_label.c_str(), (int)m_vecInfos.size(),
+			ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV))
+		{
+			ImGui::TableNextRow();
+			for (std::size_t i = 0; i < m_vecInfos.size(); ++i) {
+				ImGui::TableSetColumnIndex((int)i);
+				m_vecInfos[i]->Render();
+			}
+			ImGui::EndTable();
+		}
 	}
 }
 

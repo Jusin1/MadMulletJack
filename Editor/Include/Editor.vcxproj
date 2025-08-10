@@ -160,6 +160,8 @@
     <ClInclude Include="..\Header\CEditLoader.h" />
     <ClInclude Include="..\Header\CGuiManager.h" />
     <ClInclude Include="..\Header\CGui_Button.h" />
+    <ClInclude Include="..\Header\CGui_ButtonList.h" />
+    <ClInclude Include="..\Header\CGui_Dropbox.h" />
     <ClInclude Include="..\Header\CGui_InputFloat.h" />
     <ClInclude Include="..\Header\CGui_InputText.h" />
     <ClInclude Include="..\Header\CGui_Panel.h" />
@@ -197,6 +199,8 @@
     <ClCompile Include="..\Code\CEditLoader.cpp" />
     <ClCompile Include="..\Code\CGuiManager.cpp" />
     <ClCompile Include="..\Code\CGui_Button.cpp" />
+    <ClCompile Include="..\Code\CGui_ButtonList.cpp" />
+    <ClCompile Include="..\Code\CGui_Dropbox.cpp" />
     <ClCompile Include="..\Code\CGui_InputFloat.cpp" />
     <ClCompile Include="..\Code\CGui_InputText.cpp" />
     <ClCompile Include="..\Code\CGui_Panel.cpp" />

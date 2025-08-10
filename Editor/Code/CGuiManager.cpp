@@ -1,12 +1,15 @@
 #include "pch.h"
 #include "CGameObject.h"
+#include "CGui_Thumbnail.h"
+#include "CComponentMgr.h"
+#include "CTexture.h"
 #include "CGui_Panel.h"
 #include "CGuiManager.h"
 
 IMPLEMENT_SINGLETON(CGuiManager)
 
 CGuiManager::CGuiManager()
-	: m_pTarget(nullptr)
+	: m_pTarget(nullptr), m_pGraphicDevice(nullptr)
 {
 }
 
@@ -17,31 +20,128 @@ CGuiManager::~CGuiManager()
 
 void CGuiManager::Free()
 {
-	for_each(m_pPanels.begin(), m_pPanels.end(), [](std::pair<const string, CGui_Panel *> &pair)->void {
-		Safe_Release(pair.second);
-		});
-	m_pPanels.clear();
+    for (CGui_Panel *&element : m_pPanels)
+    {
+        Safe_Release(element);
+    }
+
+    Safe_Release(m_pGraphicDevice);
+}
+
+HRESULT CGuiManager::Ready_CGuiManager(LPDIRECT3DDEVICE9 pGraphicDevce)
+{
+    if (!(m_pPanels[INSPECTOR] = CGui_Panel::Create("Inspector")))
+        return E_FAIL;
+    if (!(m_pPanels[CONSOLE] = CGui_Panel::Create("Console")))
+        return E_FAIL;
+    
+    m_pGraphicDevice = pGraphicDevce;
+    pGraphicDevce->AddRef();
+	return S_OK;
+}
+
+HRESULT CGuiManager::Initialize()
+{
+    ::IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsLight();
+
+    ImGuiStyle &style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    ::ImGui_ImplWin32_Init(g_hWnd);
+    ::ImGui_ImplDX9_Init(m_pGraphicDevice);
+
+    return S_OK;
+}
+
+void CGuiManager::ShowEditorDockspace()
+{
+    const ImGuiViewport *vp = ImGui::GetMainViewport();
+    const ImVec2 screenPos = vp->Pos;
+    const ImVec2 screenSize = vp->Size;
+
+    constexpr float fMargin = 25.f;
+
+    constexpr float fFull_W = 1850.f;
+    constexpr float fFull_H = 980.f;
+    
+    constexpr float VIEW_W = 1366.0f;
+    constexpr float VIEW_H = 768.0f;
+
+    const ImVec2 areaPos = ImVec2(screenPos.x, screenPos.y);
+    const ImVec2 areaSize = ImVec2(screenSize.x, screenSize.y);
+
+    const float leftColW = VIEW_W;
+    const float consoleH = (std::max)(0.0f, areaSize.y - VIEW_H);
+
+    m_pPanelInfos[INSPECTOR].Position = ImVec2(areaPos.x + leftColW, areaPos.y);
+    m_pPanelInfos[INSPECTOR].Size = ImVec2(fFull_W - VIEW_W, fFull_H);
+
+    m_pPanelInfos[CONSOLE].Position = ImVec2(areaPos.x, areaPos.y + VIEW_H);
+    m_pPanelInfos[CONSOLE].Size = ImVec2(fFull_W - m_pPanelInfos[INSPECTOR].Size.x - fMargin, fFull_H - VIEW_H);
+}
+
+void CGuiManager::ShowInspector()
+{
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+    ImGui::SetNextWindowPos(m_pPanelInfos[INSPECTOR].Position, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(m_pPanelInfos[INSPECTOR].Size, ImGuiCond_Once);
+
+    if (ImGui::Begin(m_pPanels[INSPECTOR]->GetTitle().c_str(), nullptr, flags))
+    {
+        m_pPanels[INSPECTOR]->Render();
+    }
+
+    ImGui::End();
+}
+
+void CGuiManager::ShowConsole()
+{
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+    ImGui::SetNextWindowPos(m_pPanelInfos[CONSOLE].Position, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(m_pPanelInfos[CONSOLE].Size, ImGuiCond_Once);
+
+    if (ImGui::Begin(m_pPanels[CONSOLE]->GetTitle().c_str(),nullptr , flags))
+    {
+        m_pPanels[CONSOLE]->Render();
+    }
+
+    ImGui::End();
+}
+
+HRESULT CGuiManager::AddTexture_AddThumbnail(const string &ThumnailName, const _tchar *CompName, const wstring &Path)
+{
+    CGui_Thumbnail *pThumbnail = static_cast<CGui_Thumbnail *>(CGuiManager::GetInstance()->GetInspector()->GetElement("Textures"));
+
+    if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, CompName,
+        CTexture::Create(m_pGraphicDevice, TEX_NORMAL, Path.c_str(), 1))))
+        return E_FAIL;
+
+    auto pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, CompName))
+        ->Get_Texture();
+    if (!pTexture)
+        return E_FAIL;
+
+    pThumbnail->Add_Thumbnail(ThumnailName, CompName, pTexture);
+    return S_OK;
 }
 
 void CGuiManager::Render()
 {
-	for_each(m_pPanels.begin(), m_pPanels.end(), [](std::pair<const string, CGui_Panel *> &pair)
-		->void{ pair.second->Render(); });
-}
-
-void CGuiManager::AddPanel(CGui_Panel *_p)
-{
-	if (!_p)
-		return;
-
-	m_pPanels.insert(map<const string, CGui_Panel *>::value_type(_p->GetTitle(), _p));
-}
-
-CGui_Panel *CGuiManager::GetPanel(const string &_keyName)
-{
-	map<string, CGui_Panel *>::iterator itr = m_pPanels.find(_keyName);
-	if (itr == m_pPanels.end())
-		return nullptr;
-
-	return itr->second;
+    ShowEditorDockspace();
+    ShowInspector();
+    ShowConsole();
 }
