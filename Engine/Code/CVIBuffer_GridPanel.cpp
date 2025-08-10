@@ -18,8 +18,8 @@ CVIBuffer_GridPanel::CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev)
 CVIBuffer_GridPanel::CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs)
     : CVIBuffer(rhs), m_tData(rhs.m_tData)
 {
-    m_pVerticesData = new _vec3[m_dwVtxCnt];
-    ::memcpy(m_pVerticesData, rhs.m_pVerticesData, sizeof(_vec3) * m_dwVtxCnt);
+    m_pVerticesData = new _vec3[MAXMAX_HOR * MAXMAX_VER];
+    ::memcpy(m_pVerticesData, rhs.m_pVerticesData, sizeof(_vec3) * MAXMAX_HOR * MAXMAX_VER);
 }
 
 CVIBuffer_GridPanel::~CVIBuffer_GridPanel()
