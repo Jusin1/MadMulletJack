@@ -109,10 +109,10 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 
 void CEditorApplication::Run_EditorApplication()
 {
+	RenderImGuiRender();
+
 	Update_EditorApplication();
 	LateUpdate_EditorApplication();
-
-	RenderImGuiRender();
 
 	Render_EditorApplication();
 }
@@ -259,6 +259,7 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 				{
 					pGo->Set_Dead(TRUE);
+					CGuiManager::GetInstance()->SetTarget(nullptr);
 					EDITOR_CONSOLE("SetDead");
 				}
 			};

@@ -24,8 +24,10 @@ CGridPanel::~CGridPanel()
 }
 
 void CGridPanel::Free()
+
 {
 	__super::Free();
+	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 }
 
 CGridPanel *CGridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -78,16 +80,22 @@ HRESULT CGridPanel::Initialize(void *pArg)
 
 _int CGridPanel::Update_GameObject(const _float &fTimeDelta)
 {
+	if (m_bDead)
+		return DEAD;
+
 	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	
-	return 0;
+	return NO_EVENT;
 }
 
 void CGridPanel::LateUpdate_GameObject(const _float &fTimeDelta)
 {
+	if (m_bDead)
+		return;
+
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	CEditorPickingManager::GetInstance()->Add_PickingGroup(this);
@@ -96,6 +104,9 @@ void CGridPanel::LateUpdate_GameObject(const _float &fTimeDelta)
 
 void CGridPanel::Render_GameObject()
 {
+	if (m_bDead)
+		return;
+
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();
@@ -194,7 +205,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	}
 
 	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_LOADING, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
+	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
 		return E_FAIL;
 
 	// Texture

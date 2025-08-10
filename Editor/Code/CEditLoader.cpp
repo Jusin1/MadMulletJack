@@ -108,7 +108,7 @@ HRESULT CEditLoader::Loading_Editor()
 	tTestData.dwInterval = 1;
 
 	// Buffer_PanelDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice, &tTestData))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice, &tTestData))))
 		return E_FAIL;
 
 	tTestData;

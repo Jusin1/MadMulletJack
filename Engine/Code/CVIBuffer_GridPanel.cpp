@@ -18,8 +18,6 @@ CVIBuffer_GridPanel::CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev)
 CVIBuffer_GridPanel::CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs)
     : CVIBuffer(rhs), m_tData(rhs.m_tData)
 {
-    m_pVerticesData = new _vec3[MAXMAX_HOR * MAXMAX_VER];
-    ::memcpy(m_pVerticesData, rhs.m_pVerticesData, sizeof(_vec3) * MAXMAX_HOR * MAXMAX_VER);
 }
 
 CVIBuffer_GridPanel::~CVIBuffer_GridPanel()
@@ -31,8 +29,8 @@ HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
 {
     if (!pArg)
     {
-        MSG_BOX("CVIBuffer_GridPanel::Ready_Buffer, PanelBufferData is nullptr");
-        return S_OK;
+        //MSG_BOX("CVIBuffer_GridPanel::Ready_Buffer, PanelBufferData is nullptr");
+        //return S_OK;
     }
     else
         Set_Data(pArg);
