@@ -107,7 +107,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     // Op1
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Arm_Op1", SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -116,7 +116,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     // Op2
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -129,6 +129,7 @@ HRESULT CPlayer_Arm::Set_Texture()
 {
     if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
         Change_Texture(TEXT("Com_Texture_Arm_Op1"));
+        Set_UISizeAndPos(350.f, 350.f, WINCX * 0.5f, WINCY * 0.5f + 300);
         m_bRenderOn = true;
     }
 

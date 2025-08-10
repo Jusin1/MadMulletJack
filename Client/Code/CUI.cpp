@@ -2,12 +2,12 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUIBase(pGraphicDev)
+	: CUIBase(pGraphicDev), m_eMove(MV_END), m_fRange(0.f)
 {
 }
 
 CUI::CUI(const CUI& rhs)
-	: CUIBase(rhs)
+	: CUIBase(rhs), m_eMove(rhs.m_eMove), m_fRange(rhs.m_fRange)
 {
 }
 
@@ -82,6 +82,18 @@ void CUI::Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _f
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+}
+
+void CUI::Move_UI(const _float& fTimeDelta)
+{
+	switch (m_eMove) {
+	case MV_RL:
+		m_pTransformCom->Move_RL(fTimeDelta, m_fRange);
+		break;
+	case MV_DOWN:
+		m_pTransformCom->Move_YDown(fTimeDelta);
+		break;
+	}
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

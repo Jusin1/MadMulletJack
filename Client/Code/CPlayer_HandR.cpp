@@ -52,12 +52,7 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
         m_bAniFinish = true;
     }
     
-    if (m_tInfo.ePlayerState == PLAYERDEAD)
-    {
-        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-
-        m_pTransformCom->Set_Info(INFO_POS, { vPos.x, vPos.y - fTimeDelta * 10.f, vPos.z });
-    }
+    Move_UI(fTimeDelta); // ui 움직임 함수
 
     return NO_EVENT;
 }
@@ -151,6 +146,8 @@ HRESULT CPlayer_HandR::Texture_Clone()
 
 HRESULT CPlayer_HandR::Set_Texture()
 {
+    CTransform::TRANSFORMINFO TransformInfo;    // 새롭게 transinfo를 저장해줌
+    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 
     switch (m_tInfo.ePlayerState)
     {
@@ -201,12 +198,31 @@ HRESULT CPlayer_HandR::Set_Texture()
     case PLAYERDEAD:
             Change_Texture(TEXT("Com_Texture_HandR_Dead"));
 
-            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f, WINCY * 0.5f + 280);
+            Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f, WINCY * 0.5f + 280); // pos를 정하고
+            
+            TransformInfo.fSpeed = 5.f;
+            TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+            m_pTransformCom->SetTransformInfo(TransformInfo);
+
+            m_eMove = MV_DOWN;
 
             m_bRenderOn = true;
         break;
     default:
         Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+
+        Set_UISizeAndPos(100.f, 100.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 350.f); // pos를 정하고
+
+        // info를 새로 맞춰줌
+        TransformInfo.fSpeed = 10.f;
+        TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
+        TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+        m_pTransformCom->SetTransformInfo(TransformInfo);
+
+        m_eMove     = MV_RL;
+        m_fRange = 10.f;
+
         m_bRenderOn = true;
         break;
     }

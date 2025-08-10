@@ -1,7 +1,7 @@
 #include "CTransform.h"
 
-CTransform::CTransform()
-{
+CTransform::CTransform() 
+{ 
 	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
 }
@@ -15,6 +15,7 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CTransform::CTransform(const CTransform& rhs)
 	: CComponent(rhs), m_matWorld(rhs.m_matWorld), m_TransformInfo(rhs.m_TransformInfo)
+	,m_fDir(rhs.m_fDir)
 {
 }
 
@@ -198,6 +199,44 @@ void CTransform::Rotation(_vec3 vAxis, _float fTimeDelta)
 	Set_Info(INFO_RIGHT, vRight);
 	Set_Info(INFO_UP, vUp);
 	Set_Info(INFO_LOOK, vLook);
+}
+
+void CTransform::Move_YUp(_float fTimeDelta, _float fHeight)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.y += fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_YDown(_float fTimeDelta, _float fHeight)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	vPos.y -= fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_RL(_float fTimeDelta, _float fRange,_float fHeight)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	// 방향에 맞춰 이동
+	vPos.x += m_fDir * m_TransformInfo.fSpeed * fTimeDelta;
+
+	// 범위 체크 후 반전
+	if (vPos.x > m_TransformInfo.vStartPos.x + fRange)
+	{
+		vPos.x = m_TransformInfo.vStartPos.x + fRange;
+		m_fDir = -1.f;
+	}
+	else if (vPos.x < m_TransformInfo.vStartPos.x - fRange)
+	{
+		vPos.x = m_TransformInfo.vStartPos.x - fRange;
+		m_fDir = 1.f;
+	}
+
+	Set_Info(INFO_POS, vPos);
 }
 
 void CTransform::ChaseTarget(_vec3 TargetPos, _vec3 distance)
