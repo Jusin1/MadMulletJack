@@ -38,7 +38,7 @@ protected:
 	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
 
 	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY);
-	void		Move_UI(const _float& fTimeDelta);
+	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
 	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -87,11 +87,32 @@ void CUI::Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _f
 void CUI::Move_UI(const _float& fTimeDelta)
 {
 	switch (m_eMove) {
-	case MV_RL:
+	case MV_RIGHT:
+		m_pTransformCom->Move_PosRight(fTimeDelta);
+		break;
+
+	case MV_LEFT:
+		m_pTransformCom->Move_Left(fTimeDelta);
+		break;
+
+	case MV_RL: // range 만큼 좌우로 움직임
 		m_pTransformCom->Move_RL(fTimeDelta, m_fRange);
 		break;
-	case MV_DOWN:
+
+	case MV_UP: // y기준으로 위 아래로 움직임
+		m_pTransformCom->Move_YUp(fTimeDelta);
+		break;
+
+	case MV_DOWN: 
 		m_pTransformCom->Move_YDown(fTimeDelta);
+		break;
+
+	case MV_ROTATIONZ: // z축 기준으로 회전
+		m_pTransformCom->Rotation({0.f,0.f,1.f}, fTimeDelta);
+		break;
+
+	case MV_UpDown:
+		m_pTransformCom->Move_YUpDown(fTimeDelta, m_fRange);
 		break;
 	}
 }

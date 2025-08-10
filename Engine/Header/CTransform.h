@@ -46,10 +46,6 @@ public:
 	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
 
-	void Move_YUp(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
-	void Move_YDown(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
-	void Move_RL(_float fTimeDelta,_float  fRange,_float fHeight = NONE_HEIGHT);
-
 public:
 	// 월드 좌표 기준 이동
 	void Move_PosUp(_float fTimeDelta);
@@ -58,6 +54,12 @@ public:
 	void Move_PosRight(_float fTimeDelta);
 	void Move_PosTarget(_float fTimeDelta, _vec3 TargetPos, _vec3 distance);
 	void Move_PosDir(_float fTimeDelta, _vec3 _vDir);
+
+	// UIMove용 func
+	void Move_YUp(_float fTimeDelta);
+	void Move_YDown(_float fTimeDelta);
+	void Move_RL(_float fTimeDelta, _float  fRange);
+	void Move_YUpDown(_float fTimeDelta, _float  fRange);
 
 public:
 	void LookAt(_vec3 _targetPos);

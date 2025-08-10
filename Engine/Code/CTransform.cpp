@@ -162,8 +162,6 @@ void CTransform::Move_PosDir(_float fTimeDelta, _vec3 _vDir)
 	Set_Info(INFO_POS, vPos);
 }
 
-
-
 void CTransform::LookAt(_vec3 TargetPos)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
@@ -201,28 +199,28 @@ void CTransform::Rotation(_vec3 vAxis, _float fTimeDelta)
 	Set_Info(INFO_LOOK, vLook);
 }
 
-void CTransform::Move_YUp(_float fTimeDelta, _float fHeight)
+void CTransform::Move_YUp(_float fTimeDelta)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
-	vPos.y += fTimeDelta * m_TransformInfo.fSpeed;
+	vPos += _vec3({0.f,1.f,0.f}) *fTimeDelta* m_TransformInfo.fSpeed;
 
 	Set_Info(INFO_POS, vPos);
 }
 
-void CTransform::Move_YDown(_float fTimeDelta, _float fHeight)
+void CTransform::Move_YDown(_float fTimeDelta)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
-	vPos.y -= fTimeDelta * m_TransformInfo.fSpeed;
+	vPos -= _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
 
 	Set_Info(INFO_POS, vPos);
 }
 
-void CTransform::Move_RL(_float fTimeDelta, _float fRange,_float fHeight)
+void CTransform::Move_RL(_float fTimeDelta, _float fRange)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
 
 	// 방향에 맞춰 이동
-	vPos.x += m_fDir * m_TransformInfo.fSpeed * fTimeDelta;
+	vPos += m_fDir * _vec3({ 1.f,0.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
 
 	// 범위 체크 후 반전
 	if (vPos.x > m_TransformInfo.vStartPos.x + fRange)
@@ -233,6 +231,28 @@ void CTransform::Move_RL(_float fTimeDelta, _float fRange,_float fHeight)
 	else if (vPos.x < m_TransformInfo.vStartPos.x - fRange)
 	{
 		vPos.x = m_TransformInfo.vStartPos.x - fRange;
+		m_fDir = 1.f;
+	}
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_YUpDown(_float fTimeDelta, _float fRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	// 방향에 맞춰 이동
+	vPos += m_fDir * _vec3({ 0.f,1.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
+
+	// 범위 체크 후 반전
+	if (vPos.y > m_TransformInfo.vStartPos.y + fRange)
+	{
+		vPos.y = m_TransformInfo.vStartPos.y + fRange;
+		m_fDir = -1.f;
+	}
+	else if (vPos.y < m_TransformInfo.vStartPos.y - fRange)
+	{
+		vPos.y = m_TransformInfo.vStartPos.y - fRange;
 		m_fDir = 1.f;
 	}
 
