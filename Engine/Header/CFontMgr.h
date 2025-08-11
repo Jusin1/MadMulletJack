@@ -27,6 +27,11 @@ public:
 		const _vec2* pPos,
 		D3DXCOLOR Color);
 
+	bool Measure(const wchar_t* fontTag, const wchar_t* text, _vec2* outSize, float wrapWidth = 0.f);
+	bool Render_Font_Scaled(const wchar_t* tag, const wchar_t* text, const _vec2* leftTop, D3DXCOLOR color, float scale);
+	bool Render_Font_ScaledCenteredRot(const wchar_t* tag, const wchar_t* text, const _vec2* center, D3DXCOLOR color, float scale, float angleDeg);
+	bool Measure_Scaled(const wchar_t* tag, const wchar_t* text, _vec2* out, float scale);
+
 private:
 	CFont* Find_Font(const _tchar* pFontTag);
 

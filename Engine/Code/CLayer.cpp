@@ -28,16 +28,19 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 
 void CLayer::Update_Layer(const _float& fTimeDelta)
 {
-	for (auto& pGameObject : m_objList)
+	for (auto it = m_objList.begin(); it != m_objList.end(); )
 	{
-		if (nullptr != pGameObject)
+		if (*it)
 		{
-			int iEvent = pGameObject->Update_GameObject(fTimeDelta);
+			int iEvent = (*it)->Update_GameObject(fTimeDelta);
 			if (iEvent == DEAD)
 			{
-				Safe_Release(pGameObject);
+				Safe_Release(*it);
+				it = m_objList.erase(it); 
+				continue;
 			}
 		}
+		++it;
 	}
 }
 

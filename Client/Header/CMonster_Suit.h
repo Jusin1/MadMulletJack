@@ -35,6 +35,9 @@ private:
 	void OnEnterState(MON_STATE s);
 	void OnUpdateState(MON_STATE s, const _float& dt);
 
+	_vec3 GetHeadWorldPos() const;
+	bool  WorldToScreen(const _vec3& world, float& sx, float& sy) const;
+
 private:
 	CTransform* GetPlayerTransform();
 	float DistanceToPlayer() const;
@@ -48,5 +51,9 @@ private:
 	float m_jumpCD;
 	int   m_jumpDir;
 	bool m_bKillAfterHit;
+	HIT_PART m_lastFatalPart = HIT_BODY;   
+	bool     m_pendingDeathUI = false;     
+
+	void     TrySpawnDeathUI();           
 };
 

@@ -134,9 +134,29 @@ HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
-    // Monster
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster_Suit"), SCENE_STAGE, pLayerTag)))
-        return E_FAIL;
+    const float baseX = -8.f;   
+    const float gap = 4.f;    
+    const float posY = 1.f;
+    const float posZ = 0.f;
+
+    for (int i = 0; i < 5; ++i) {
+        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE, pLayerTag))) {
+            MSG_BOX("Monster spawn failed");
+            // 실패해도 계속 가려면 continue
+            return E_FAIL;
+
+        }
+    }
+
+    for (int i = 0; i < 5; ++i) {
+        auto tr = dynamic_cast<CTransform*>(
+            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, pLayerTag, L"Com_Transform", i));
+        if (tr) {
+            const float x = baseX + gap * i;           // 좌→우로 늘어놓기
+            tr->Set_Info(INFO_POS, _vec3(x, posY, posZ));
+            tr->LookAt(_vec3(x, posY, posZ + 1.f));    // 필요하면 정면 보정
+        }
+    }
     return S_OK;
 }
 

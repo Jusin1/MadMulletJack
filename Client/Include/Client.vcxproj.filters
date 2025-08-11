@@ -76,9 +76,6 @@
     <Filter Include="02. GameObject\06. UI\PlayerUI">
       <UniqueIdentifier>{f5c42883-adff-44ca-81b8-c6f4edd619e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\HpBar_UI">
-      <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
       <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="02. GameObject\06. UI\PlayerUI\04. Arm">
       <UniqueIdentifier>{c1f62a87-9555-4298-b2e6-0e131ac4d2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\EffectUI">
+      <UniqueIdentifier>{2400726f-f279-430f-bde0-49174f1e6a32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,9 +168,6 @@
     <ClInclude Include="..\Header\CUIBase.h">
       <Filter>02. GameObject\06. UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CHpBarUI.h">
-      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CMonster_Suit.h">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CPlayer_Arm.h">
       <Filter>02. GameObject\06. UI\PlayerUI\04. Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffectUI.h">
+      <Filter>02. GameObject\06. UI\EffectUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,9 +248,6 @@
     <ClCompile Include="..\Code\CUIBase.cpp">
       <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CHpBarUI.cpp">
-      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CMonster_Suit.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Suit</Filter>
     </ClCompile>
@@ -277,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="..\Header\Client_Global.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffectUI.cpp">
+      <Filter>02. GameObject\06. UI\EffectUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

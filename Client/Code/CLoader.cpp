@@ -14,9 +14,9 @@
 #include "CCameraFPS.h"
 
 // UI
-#include "CHpBarUI.h"
 #include "CPlayer_HandR.h"
 #include "CPlayer_HandL.h"
+#include "CEffectUI.h"
 
 // 몬스터
 #include "CMonster_Suit.h"
@@ -157,7 +157,6 @@ HRESULT CLoader::Loading_ForStage()
 
 #pragma region UI 테스트
 	// Player UI
-
 	// Idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/HAND_IDLE%03d.png", 9))))
@@ -169,6 +168,13 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 #pragma endregion UI 테스트
+
+
+#pragma region 일반 UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HealEffect",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/LIKES.png", 1))))
+		return E_FAIL;
+#pragma endregion 일반UI
 
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
@@ -217,10 +223,9 @@ HRESULT CLoader::Loading_ForStage()
 		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	//// HpBarUI
-	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HPUI",
-	//	CHpBarUI::Create(m_pGraphicDev))))
-	//	return E_FAIL;
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
+		CEffectUI::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex

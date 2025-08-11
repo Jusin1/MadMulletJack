@@ -131,6 +131,14 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Jinji", L"궁서", 20, 10, FW_THIN)))
 		return E_FAIL;
 
+	CFontMgr::GetInstance()->Ready_Font(
+		m_pGraphicDev,
+		L"DefaultFont",   // ← CEfffectUI에서 쓰는 태그와 동일해야 함
+		L"맑은 고딕",     // 폰트 이름 (설치된 폰트면 뭐든 OK)
+		20,               // Width
+		40,               // Height
+		FW_BOLD);         // Weight
+
 	// DInput
 
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))

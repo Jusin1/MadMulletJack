@@ -10,6 +10,7 @@
 #include "CColider_Rect.h"
 #include "CColider_Cube.h"
 #include "CColider_Sphere.h"
+#include "VIBuffer_Color.h"
 
 #include "CTransform.h"
 #include "CTexture.h"

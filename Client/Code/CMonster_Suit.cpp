@@ -3,6 +3,7 @@
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
 #include "CObjectManager.h"
+#include "CEffectUI.h"
 
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
@@ -146,7 +147,13 @@ void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
 
 void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 {
+	float prevHp = m_fHp;                     
 	m_fHp -= dmg;
+
+	if (prevHp > 0.f && m_fHp <= 0.f) {          
+		m_lastFatalPart = part;
+		m_pendingDeathUI = true;               
+	}
 
 	if (m_fHp <= 0) {
 		if (part == HIT_HEAD || part == HIT_BALLS) {
@@ -241,14 +248,20 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
 	case AIM:   tag = L"Com_Texture_Aim";   break;
 	case SHOT:  tag = L"Com_Texture_Shot";  break;
 	case JUMP:  tag = L"Com_Texture_Jump";  break;
+
 	case HIT:
+		if (m_bKillAfterHit) {
+			TrySpawnDeathUI();  
+		}
 		if (m_pTextureCom) {
 			m_pTextureCom->Set_Zero_Frame();
 			m_pTextureCom->Resume_Anim();
 		}
 		return;
 
-	case DEATH: tag = L"Com_Texture_Death"; break;
+	case DEATH:
+		tag = L"Com_Texture_Death";
+		break;
 	}
 
 	Change_Texture(tag);
@@ -256,6 +269,10 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
 	if (m_pTextureCom) {
 		m_pTextureCom->Set_Zero_Frame();
 		m_pTextureCom->Resume_Anim();
+	}
+
+	if (s == DEATH) {
+		TrySpawnDeathUI();  
 	}
 }
 
@@ -314,6 +331,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 			SetState(AIM);
 		break;
 	case HIT:
+	{
 		if (m_pTextureCom->Is_AnimFinished()) {
 			if (m_bKillAfterHit) {
 				m_bDead = true;
@@ -322,8 +340,8 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 				SetState((m_ePrevState == DEATH) ? DEATH : IDLE);
 			}
 		}
-		break;
-
+	}
+	break;
 	case JUMP:
 	{
 		const _matrix& W = *m_pTransformCom->Get_World();
@@ -340,14 +358,15 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 			else if (dist <= m_fChaseRadius) SetState(CHASE);
 			else                             SetState(IDLE);
 		}
-		break;
 	}
 	break;
-
 	case DEATH:
-		if (m_pTextureCom->Is_AnimFinished())
+	{
+		if (m_pTextureCom->Is_AnimFinished()) {
 			m_bDead = true;
-		break;
+		}
+	}
+	break;
 
 	default: break;
 	}
@@ -371,6 +390,87 @@ float CMonster_Suit::DistanceToPlayer() const
 	_vec3 pl = m_pPlayerTr->Get_Info(INFO_POS);
 	_vec3 diff = pl - my; 
 	return D3DXVec3Length(&diff);
+}
+
+void CMonster_Suit::TrySpawnDeathUI()
+{
+	if (!m_pendingDeathUI) return;
+	m_pendingDeathUI = false;
+
+	_vec3 headW = GetHeadWorldPos();
+	float sx = 0.f, sy = 0.f;
+	WorldToScreen(headW, sx, sy);
+	sy -= 40.f;
+
+	const bool isHead = (m_lastFatalPart == HIT_HEAD || m_lastFatalPart == HIT_BALLS);
+	const float secsAdd = isHead ? 3.0f : 2.0f;
+
+	if (auto ui = dynamic_cast<CEffectUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE, L"UI_Layer")))
+	{
+		ui->SetImageSize(18.f, 18.f);
+		ui->SetBoxSize(200.f, 30.f);
+		ui->SetTargetBounds(130.f, 1250.f);
+		ui->SetMoveSpeed(1000.f, false);
+
+		ui->Show(isHead ? L"+ 3 SEC" : L"+ 2 SEC",
+			L"Com_Tex_Heal", secsAdd,
+			sx, sy, 0.f, 0.85f,
+			L"DefaultFont", D3DXCOLOR(1, 1, 1, 1));
+	}
+
+	if (auto banner = dynamic_cast<CEffectUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE, L"UI_Layer")))
+	{
+		const wchar_t* msg = isHead ? L"HEADSHOT" : L"FINISHED";
+
+		banner->SetBannerExtraWidth(100.f);      
+
+		banner->ShowBanner(
+			isHead ? L"HEADSHOT" : L"FINISHED",
+			1.10f,        
+			200.f, 140.f,  
+			2.5f, 1.0f,     
+			L"DefaultFont",
+			D3DXCOLOR(1, 1, 1, 1),
+			0.85f,
+			-10.f        
+		);
+	}
+}
+
+_vec3 CMonster_Suit::GetHeadWorldPos() const
+{
+	float headOffsetY = 0.9f; 
+	if (m_pColiderCom) {
+		headOffsetY = m_pColiderCom->Get_SphereDesc().fRadius; 
+	}
+	else {
+		headOffsetY = m_pTransformCom->Get_Scale().y * 1.0f;
+	}
+
+	_vec3 pos = m_pTransformCom->Get_Info(INFO_POS);
+	pos.y += headOffsetY;
+	return pos;
+}
+
+bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) const
+{
+	D3DXMATRIX view, proj, id;
+	D3DVIEWPORT9 vp{};
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &view);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &proj);
+	m_pGraphicDev->GetViewport(&vp);
+	D3DXMatrixIdentity(&id);
+
+	D3DXVECTOR3 in(world.x, world.y, world.z), out;
+	D3DXVec3Project(&out, &in, &vp, &proj, &view, &id);
+
+	sx = out.x;
+	sy = out.y;
+	return (out.z >= 0.f && out.z <= 1.f);
 }
 
 CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
