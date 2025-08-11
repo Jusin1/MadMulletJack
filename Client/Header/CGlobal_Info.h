@@ -1,13 +1,13 @@
 #pragma once
 #include "Clinet_Define.h"
 
-class CPlayer_StateInfo
+class CGlobal_Info
 {
 public:
-	CPlayer_StateInfo();
-	CPlayer_StateInfo(const CPlayer_StateInfo&) = delete;
-	CPlayer_StateInfo& operator=(const CPlayer_StateInfo&) = delete;
-	~CPlayer_StateInfo();
+	CGlobal_Info();
+	CGlobal_Info(const CGlobal_Info&) = delete;
+	CGlobal_Info& operator=(const CGlobal_Info&) = delete;
+	~CGlobal_Info();
 
 public:
 	void Initialize(); // 값 초기화가 필요할 때
@@ -16,11 +16,11 @@ public:
 	void Set_PlayerInfo( PlayerStateInfo _tInfo) { m_tPlayerInfo = _tInfo; }
 
 public:
-	static CPlayer_StateInfo* Get_Instance()
+	static CGlobal_Info* Get_Instance()
 	{
 		if (!m_pInstance)
 		{
-			m_pInstance = new CPlayer_StateInfo;
+			m_pInstance = new CGlobal_Info;
 		}
 
 		return m_pInstance;
@@ -36,7 +36,7 @@ public:
 	}
 
 private:
-	static CPlayer_StateInfo* m_pInstance;
+	static CGlobal_Info* m_pInstance;
 
 private:
 	PlayerStateInfo m_tPlayerInfo;
