@@ -26,49 +26,53 @@ CGui_Thumbnail *CGui_Thumbnail::Create(const string &_label, _uint _reserve)
 
 _bool CGui_Thumbnail::Render(_int _iState)
 {
-	ImGui::BeginChild("ThumbRegion", ImVec2(0, m_fAreaHeight), true, ImGuiWindowFlags_HorizontalScrollbar);
-	ImGui::BeginTable("ThumbnailTable", m_iCol,
-		ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_NoBordersInBody);
-
-	int iCount = 0;
-	for (size_t i = 0; i < m_vecThumbnails[_iState].size(); ++i)
+	if (ImGui::CollapsingHeader(m_label.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (iCount % m_iCol == 0)
-			ImGui::TableNextRow();
+		ImGui::BeginChild("ThumbRegion", ImVec2(0, m_fAreaHeight), true, ImGuiWindowFlags_HorizontalScrollbar);
+		ImGui::BeginTable("ThumbnailTable", m_iCol,
+			ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_NoBordersInBody);
 
-		ImGui::TableSetColumnIndex(iCount % m_iCol);
-
-		ImGui::PushID(static_cast<int>(i));
-		ImGui::BeginGroup();
-
-		float cellWidth = m_fThumbnailSize;
-		float availWidth = ImGui::GetContentRegionAvail().x;
-		float offsetX = (availWidth - cellWidth) * 0.5f;
-		if (offsetX > 0) ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
-
-		if (ImGui::ImageButton(
-			m_vecThumbnails[_iState][i].name.c_str(),
-			m_vecThumbnails[_iState][i].imguiID,
-			ImVec2(m_fThumbnailSize, m_fThumbnailSize)))
+		int iCount = 0;
+		for (size_t i = 0; i < m_vecThumbnails[_iState].size(); ++i)
 		{
-			m_iSelectedIndex = static_cast<int>(i);
-			Change_Texture(_iState);
+			if (iCount % m_iCol == 0)
+				ImGui::TableNextRow();
+
+			ImGui::TableSetColumnIndex(iCount % m_iCol);
+
+			ImGui::PushID(static_cast<int>(i));
+			ImGui::BeginGroup();
+
+			float cellWidth = m_fThumbnailSize;
+			float availWidth = ImGui::GetContentRegionAvail().x;
+			float offsetX = (availWidth - cellWidth) * 0.5f;
+			if (offsetX > 0) ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
+
+			if (ImGui::ImageButton(
+				m_vecThumbnails[_iState][i].name.c_str(),
+				m_vecThumbnails[_iState][i].imguiID,
+				ImVec2(m_fThumbnailSize, m_fThumbnailSize)))
+			{
+				m_iSelectedIndex = static_cast<int>(i);
+				Change_Texture(_iState);
+			}
+
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
+			ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + m_fThumbnailSize);
+			ImGui::TextWrapped("%s", m_vecThumbnails[_iState][i].name.c_str());
+			ImGui::PopTextWrapPos();
+
+			ImGui::EndGroup();
+			ImGui::PopID();
+
+			iCount++;
 		}
 
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
-		ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + m_fThumbnailSize);
-		ImGui::TextWrapped("%s", m_vecThumbnails[_iState][i].name.c_str());
-		ImGui::PopTextWrapPos();
-
-		ImGui::EndGroup();
-		ImGui::PopID();
-
-		iCount++;
+		ImGui::EndTable();
+		ImGui::EndChild();
 	}
 
-	ImGui::EndTable();
-	ImGui::EndChild();
-
+	ImGui::Spacing();
 	return FALSE;
 }
 

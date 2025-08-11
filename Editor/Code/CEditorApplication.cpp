@@ -183,17 +183,30 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 												CTexture::Create(m_pGraphicDevice, TEX_NORMAL, Path, 1))))						\
 												return E_FAIL
 
-	AddTextureForThumbnail(L"Proto_PanelDefault", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png");
-	AddTextureForThumbnail(L"Proto_PanelTrigger", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png");
-	AddTextureForThumbnail(L"Proto_PanelNoDraw", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png");
-	AddTextureForThumbnail(L"Proto_PanelCollider", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_1", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_2", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_3", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_4", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_5", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_6", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png");
-	AddTextureForThumbnail(L"Proto_PanelFloor_7", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png");
+	AddTextureForThumbnail(L"Proto_GridDefault", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png");
+	AddTextureForThumbnail(L"Proto_GridTrigger", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png");
+	AddTextureForThumbnail(L"Proto_GridNoDraw", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png");
+	AddTextureForThumbnail(L"Proto_GridCollider", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png");
+	AddTextureForThumbnail(L"Proto_Floor_1", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png");
+	AddTextureForThumbnail(L"Proto_Floor_2", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png");
+	AddTextureForThumbnail(L"Proto_Floor_3", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png");
+	AddTextureForThumbnail(L"Proto_Floor_4", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png");
+	AddTextureForThumbnail(L"Proto_Floor_5", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png");
+	AddTextureForThumbnail(L"Proto_Floor_6", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png");
+	AddTextureForThumbnail(L"Proto_Floor_7", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png");
+	AddTextureForThumbnail(L"Proto_Acid_Floor_1", L"../../Client/Bin/Resource/MapObject/Acid/ACID A.png");
+	AddTextureForThumbnail(L"Proto_Acid_Floor_2", L"../../Client/Bin/Resource/MapObject/Acid/ACID D.png");
+	AddTextureForThumbnail(L"Proto_Acid_Wall_1", L"../../Client/Bin/Resource/MapObject/Acid/ACID B.png");
+	AddTextureForThumbnail(L"Proto_Acid_Wall_2", L"../../Client/Bin/Resource/MapObject/Acid/ACID C.png");
+	AddTextureForThumbnail(L"Proto_Acid_Env", L"../../Client/Bin/Resource/MapObject/Acid/acid dash.png");
+	AddTextureForThumbnail(L"Proto_Rug_1", L"../../Client/Bin/Resource/MapObject/Rug/RUG 1.png");
+	AddTextureForThumbnail(L"Proto_Rug_2", L"../../Client/Bin/Resource/MapObject/Rug/RUG 2.png");
+	AddTextureForThumbnail(L"Proto_Rug_3", L"../../Client/Bin/Resource/MapObject/Rug/RUG 3.png");
+	AddTextureForThumbnail(L"Proto_Rug_4", L"../../Client/Bin/Resource/MapObject/Rug/RUG 4.png");
+	AddTextureForThumbnail(L"Proto_Concrete_Wall", L"../../Client/Bin/Resource/MapObject/Wall/CONCRETE WALL.png");
+	AddTextureForThumbnail(L"Proto_Electric_Wall", L"../../Client/Bin/Resource/MapObject/Wall/ELECTRIC WALL.png");
+	AddTextureForThumbnail(L"Proto_Slidedash_Wall", L"../../Client/Bin/Resource/MapObject/Wall/SIDE DASH WALL.png");
+
 
 	return S_OK;
 }
@@ -210,8 +223,6 @@ HRESULT CEditorApplication::Ready_Scene()
 
 void CEditorApplication::RenderImGuiRender()
 {
-	ImVec4 vClear_Color = ImVec4(0.45f, 0.55f, 0.6f, 1.f);
-
 	//ImGui
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();

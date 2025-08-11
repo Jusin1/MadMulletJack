@@ -51,7 +51,9 @@ inline _bool CGui_Dropbox<TEnum>::Render(_int _iState)
 {
 	_int curState{ static_cast<_int>(m_eShowState) };
 	_bool changed{ FALSE };
-	if (ImGui::BeginCombo(m_label.c_str(), m_Names[curState].c_str()))
+	ImGui::Text("%s", m_label.c_str());
+	std::string comboId = "##" + m_label;
+	if (ImGui::BeginCombo(comboId.c_str(), m_Names[curState].c_str()))
 	{
 		for (size_t i = 0; i < m_Names.size(); ++i)
 		{
@@ -71,6 +73,7 @@ inline _bool CGui_Dropbox<TEnum>::Render(_int _iState)
 
 		ImGui::EndCombo();
 	}
-
+	ImGui::Spacing();
+	ImGui::Spacing();
 	return changed;
 }

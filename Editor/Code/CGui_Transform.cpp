@@ -95,6 +95,7 @@ _bool CGui_Transform::Render(_int _iState)
 		}
 	}
 
+	ImGui::Spacing();
 	return FALSE;
 }
 

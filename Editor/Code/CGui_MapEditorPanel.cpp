@@ -359,12 +359,12 @@ CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MapEditorWallTypeCount);
 
-	AddThumbnail("Default", L"Proto_PanelDefault", pThumbnail, MapEditorWallType::WALL_HOR);
-	AddThumbnail("Trigger", L"Proto_PanelTrigger", pThumbnail, MapEditorWallType::WALL_VER);
-	AddThumbnail("NoDraw", L"Proto_PanelNoDraw", pThumbnail, MapEditorWallType::INCLINE);
-	AddThumbnail("Collider", L"Proto_PanelCollider", pThumbnail, MapEditorWallType::FLOOR);
-	AddThumbnail("Floor_1", L"Proto_PanelFloor_1", pThumbnail, MapEditorWallType::FLOOR);
-	AddThumbnail("Floor_2", L"Proto_PanelFloor_2", pThumbnail, MapEditorWallType::CEILING);
+	AddThumbnail("Default", L"Proto_GridDefault", pThumbnail, MapEditorWallType::WALL_HOR);
+	AddThumbnail("Trigger", L"Proto_GridTrigger", pThumbnail, MapEditorWallType::WALL_VER);
+	AddThumbnail("NoDraw", L"Proto_GridNoDraw", pThumbnail, MapEditorWallType::INCLINE);
+	AddThumbnail("Collider", L"Proto_GridCollider", pThumbnail, MapEditorWallType::FLOOR);
+	AddThumbnail("Floor_1", L"Proto_Floor_1", pThumbnail, MapEditorWallType::FLOOR);
+	AddThumbnail("Floor_2", L"Proto_Floor_2", pThumbnail, MapEditorWallType::CEILING);
 
 	return pThumbnail;
 }
@@ -373,11 +373,11 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MapEditorTileTypeCount);
 
-	AddThumbnail("Floor_3", L"Proto_PanelFloor_3", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_4", L"Proto_PanelFloor_4", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_5", L"Proto_PanelFloor_5", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_6", L"Proto_PanelFloor_6", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_7", L"Proto_PanelFloor_7", pThumbnail, MapEditorTileType::tmp);
+	AddThumbnail("Floor_3", L"Proto_Floor_3", pThumbnail, MapEditorTileType::tmp);
+	AddThumbnail("Floor_4", L"Proto_Floor_4", pThumbnail, MapEditorTileType::tmp);
+	AddThumbnail("Floor_5", L"Proto_Floor_5", pThumbnail, MapEditorTileType::tmp);
+	AddThumbnail("Floor_6", L"Proto_Floor_6", pThumbnail, MapEditorTileType::tmp);
+	AddThumbnail("Floor_7", L"Proto_Floor_7", pThumbnail, MapEditorTileType::tmp);
 
 	return pThumbnail;
 }

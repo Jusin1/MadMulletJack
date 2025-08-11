@@ -51,6 +51,7 @@ _bool CGui_ButtonList::Render(_int _iState)
 		}
 	}
 
+	ImGui::Spacing();
 	return FALSE;
 }
 
