@@ -14,14 +14,14 @@
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
-	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
+	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END), m_fMaxHp(10.f),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
-	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
+	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove), m_fMaxHp(rhs.m_fMaxHp),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp)
 {
@@ -440,6 +440,30 @@ void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 }
 
 void CPlayer::ATTACK_INSTANT_End()
+{
+}
+
+void CPlayer::ZOOMING_Begin()
+{
+}
+
+void CPlayer::ZOOMING_On(const _float& fTimeDelta)
+{
+}
+
+void CPlayer::ZOOMING_End()
+{
+}
+
+void CPlayer::ZOOM_Begin()
+{
+}
+
+void CPlayer::ZOOM_On(const _float& fTimeDelta)
+{
+}
+
+void CPlayer::ZOOM_End()
 {
 }
 
