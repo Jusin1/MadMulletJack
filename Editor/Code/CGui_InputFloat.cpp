@@ -20,7 +20,7 @@ CGui_InputFloat *CGui_InputFloat::Create(string _label, std::function<_float(CGa
 	return new CGui_InputFloat(_label, onEvent, endEvnet);
 }
 
-void CGui_InputFloat::Render()
+_bool CGui_InputFloat::Render(_int _iState)
 {
 	ImGui::TextUnformatted(m_label.c_str());
 	ImGui::SetNextItemWidth(m_fWidth);
@@ -58,6 +58,8 @@ void CGui_InputFloat::Render()
 		Reset();
 		ImGui::InputFloat(("##" + m_label).c_str(), &m_fValue);
 	}
+
+	return FALSE;
 }
 
 void CGui_InputFloat::Reset()

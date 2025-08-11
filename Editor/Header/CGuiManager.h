@@ -1,6 +1,7 @@
 #pragma once
 #include "CBase.h"
 #include "CGuiBase.h"
+#include "Editor_Define.h"
 #include "Engine_Define.h"
 
 #define EDITOR_CONSOLE(fmt, ...) \
@@ -43,14 +44,20 @@ public:
 	void ShowInspector();
 	void ShowConsole();
 
-	HRESULT AddTexture_AddThumbnail(const string &ThumnailName, const _tchar *CompName, const wstring &Path);
+	HRESULT AddThumbnail(const string &ThumnailName, const _tchar *CompName, CGui_Thumbnail *_pThumbnail, _uint iType);
 
 	void AddLog(const char *fmt, ...);
 
 	void Render();
 	Engine::CGameObject *GetTarget() const { return m_pTarget; }
-	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }
-	
+	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }	
+
+	MapEditorObjectCategory GetCategory() { return m_eCategory; }
+	void SetCategory(MapEditorObjectCategory _e) { m_eCategory = _e; }
+
+	_uint GetObjectType() { return m_iObjectType; }
+	void SetObjectType(_uint _i) { m_iObjectType = _i; }
+
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> *GetPanelList() { return &m_pPanels; }
 	CGui_Panel *GetConsole() { return m_pPanels[CONSOLE]; }
 	CGui_Panel *GetInspector() { return m_pPanels[INSPECTOR]; }
@@ -59,4 +66,6 @@ private:
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;
 	std::array<PANELINFO, (_ulong)(PANEL::NONE)> m_pPanelInfos;
+	MapEditorObjectCategory m_eCategory;
+	_uint m_iObjectType;
 };

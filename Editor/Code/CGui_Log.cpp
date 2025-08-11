@@ -20,7 +20,7 @@ CGui_Log *CGui_Log::Create()
 	return new CGui_Log();
 }
 
-void CGui_Log::Render()
+_bool CGui_Log::Render(_int _iState)
 {
 	for (const auto &Log : m_vecLogs)
 	{
@@ -32,6 +32,8 @@ void CGui_Log::Render()
 		ImGui::SetScrollHereY(1.0f);
 		m_bScrollToBottom = false;
 	}
+
+	return FALSE;
 }
 
 void CGui_Log::Add_LogV(const char *fmt, va_list args)

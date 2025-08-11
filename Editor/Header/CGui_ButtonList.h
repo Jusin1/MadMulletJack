@@ -1,7 +1,6 @@
 #pragma once
+#include "CGui_Button.h"
 #include "CGuiBase.h"
-
-class CGui_Button;
 
 class CGui_ButtonList : public CGuiBase
 {
@@ -12,7 +11,7 @@ private:
 	virtual void Free() override;
 public:
 	static CGui_ButtonList *Create(const string &_label,const vector<string> &_buttonsLabel, const vector<std::function<void()>> &_buttonsEvent);
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 private:
 	HRESULT Ready_ButtonList(const vector<string> &_buttonsLabel,const vector<std::function<void()>> &_buttonsEvent);
 private:

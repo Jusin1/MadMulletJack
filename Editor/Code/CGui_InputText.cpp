@@ -20,8 +20,10 @@ CGui_InputText *CGui_InputText::Create(const string &_label)
 	return nullptr;
 }
 
-void CGui_InputText::Render()
+_bool CGui_InputText::Render(_int _iState)
 {
 	//std::vector<char> buffer{ 256 };
 	ImGui::InputText(m_label.c_str(), m_value.data(), m_value.size());
+
+	return FALSE;
 }

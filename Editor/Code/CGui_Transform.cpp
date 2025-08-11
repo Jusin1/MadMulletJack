@@ -79,7 +79,7 @@ CGui_Transform *CGui_Transform::Create(TransformDataType _eType)
 	return pNew;
 }
 
-void CGui_Transform::Render()
+_bool CGui_Transform::Render(_int _iState)
 {
 	if (ImGui::CollapsingHeader(m_label.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -94,6 +94,8 @@ void CGui_Transform::Render()
 			ImGui::EndTable();
 		}
 	}
+
+	return FALSE;
 }
 
 void CGui_Transform::PositionInit()

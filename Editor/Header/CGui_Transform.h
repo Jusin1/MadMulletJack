@@ -22,7 +22,7 @@ private:
 public:
 	HRESULT Ready_GuiTransform();
 	static CGui_Transform *Create(TransformDataType _eType);
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 
 private:
 	void PositionInit();

@@ -86,9 +86,6 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 	if (FAILED(Engine::CPicking::GetInstance()->Initialize(g_hWnd, m_pGraphicDevice)))
 		return E_FAIL;
 
-	if (FAILED(CGuiManager::GetInstance()->Ready_CGuiManager(m_pGraphicDevice)))
-		return E_FAIL;
-
 	if (FAILED(Engine::CObjectManager::GetInstance()->Readay_ObjectManager(SCENE_END)))
 		return E_FAIL;
 
@@ -99,6 +96,9 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 		return E_FAIL;
 
 	if (FAILED(Ready_Scene()))
+		return E_FAIL;
+
+	if (FAILED(CGuiManager::GetInstance()->Ready_CGuiManager(m_pGraphicDevice)))
 		return E_FAIL;
 
 	if (FAILED(CGuiManager::GetInstance()->Initialize()))
@@ -179,151 +179,21 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 	if (FAILED(Engine::CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
-	// Console
-	{
-		CGui_Panel *pConsole = CGuiManager::GetInstance()->GetConsole();
-		{
-			CGui_Log *pLog = CGui_Log::Create();
-			pConsole->AddElement(pLog);
-		}
-	}
+#define AddTextureForThumbnail(CompName, Path) if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, CompName,	\
+												CTexture::Create(m_pGraphicDevice, TEX_NORMAL, Path, 1))))						\
+												return E_FAIL
 
-	// Inspector
-	{
-		CGui_Panel *pInspector = CGuiManager::GetInstance()->GetInspector();
-		{
-			CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures");
-			pInspector->AddElement(pThumbnail);
-
-#pragma region GridPanelState_Dropbox
-
-#pragma endregion
-
-#pragma region GridSize_ButtonsList
-			vector<string> _labels{ 4 };
-			vector<std::function<void()>> _funcs{ 4 };
-
-			_labels[0] = "++Row";
-			_funcs[0] =
-			[]()->void {
-				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
-				{
-					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_RowBuffer();
-					EDITOR_CONSOLE("test");
-				}
-			};
-
-			_labels[1] = "--Row";
-			_funcs[1] =
-				[]()->void {
-				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
-				{
-					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_RowBuffer();
-				}
-			};
-
-			_labels[2] = "++Col";
-			_funcs[2] =
-				[]()->void {
-				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
-				{
-					static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_ColBuffer();
-				}
-			};
-
-			_labels[3] = "--Col";
-			_funcs[3] =
-				[]()->void {
-				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
-				{
-					static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
-				}
-			};
-
-			CGui_ButtonList *GridSizeButtonsList = CGui_ButtonList::Create("Grid Size", _labels, _funcs);
-			pInspector->AddElement(GridSizeButtonsList);
-
-			_labels.clear();
-			_funcs.clear();
-#pragma endregion
-
-#pragma region Wall_ButtonsList
-			_labels.resize(2);
-			_funcs.resize(2);
-
-			_labels[0] = "Create";
-			_funcs[0] =
-				[]()->void {
-				CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, L"EditLogic_Layer");
-			};
-
-			_labels[1] = "Delete";
-			_funcs[1] =
-				[]()->void {
-				if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
-				{
-					pGo->Set_Dead(TRUE);
-					CGuiManager::GetInstance()->SetTarget(nullptr);
-					EDITOR_CONSOLE("SetDead");
-				}
-			};
-
-			CGui_ButtonList *WallButtonsList = CGui_ButtonList::Create("Wall Create", _labels, _funcs);
-			pInspector->AddElement(WallButtonsList);
-
-			_labels.clear();
-			_funcs.clear();
-
-#pragma endregion
-
-			CGui_Transform *pTransform = CGui_Transform::Create(TransformDataType::POSITION);
-			pInspector->AddElement(pTransform);
-		}
-	}
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Default", L"Proto_Component_Texture_PanelDefault",
-		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Trigger", L"Proto_Component_Texture_PanelTest",
-		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_NoDraw", L"Proto_Component_Texture_PanelTest2",
-		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("GridBox_Collider", L"Proto_Component_Texture_PanelTest3",
-		L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 1", L"Proto_Component_Texture_PanelTest4",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 2", L"Proto_Component_Texture_PanelTest5",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 3", L"Proto_Component_Texture_PanelTest6",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 4", L"Proto_Component_Texture_PanelTest7",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 5", L"Proto_Component_Texture_PanelTest8",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 6", L"Proto_Component_Texture_PanelTest9",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png")))
-		return E_FAIL;
-
-	if (FAILED(CGuiManager::GetInstance()->AddTexture_AddThumbnail("FLOOR 7", L"Proto_Component_Texture_PanelTest10",
-		L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png")))
-		return E_FAIL;
+	AddTextureForThumbnail(L"Proto_PanelDefault", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Default.png");
+	AddTextureForThumbnail(L"Proto_PanelTrigger", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Trigger.png");
+	AddTextureForThumbnail(L"Proto_PanelNoDraw", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_NoDraw.png");
+	AddTextureForThumbnail(L"Proto_PanelCollider", L"../../Client/Bin/Resource/MapObject/Grid/GridBox_Collider.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_1", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 1.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_2", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 2.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_3", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 3.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_4", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 4.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_5", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 5.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_6", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 6.png");
+	AddTextureForThumbnail(L"Proto_PanelFloor_7", L"../../Client/Bin/Resource/MapObject/Floor/FLOOR 7.png");
 
 	return S_OK;
 }

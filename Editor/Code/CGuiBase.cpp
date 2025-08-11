@@ -14,3 +14,8 @@ void CGuiBase::Free()
 {
 	
 }
+
+_bool CGuiBase::Render(_int _iState)
+{
+	return FALSE;
+}

@@ -33,9 +33,9 @@ CGui_ButtonList *CGui_ButtonList::Create(const string &_label, const vector<stri
 	return pNew;
 }
 
-void CGui_ButtonList::Render()
+_bool CGui_ButtonList::Render(_int _iState)
 {
-	if (m_vecButtons.empty()) return;
+	if (m_vecButtons.empty()) return FALSE;
 
 	if (ImGui::CollapsingHeader(m_label.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -50,6 +50,8 @@ void CGui_ButtonList::Render()
 			ImGui::EndTable();
 		}
 	}
+
+	return FALSE;
 }
 
 HRESULT CGui_ButtonList::Ready_ButtonList(const vector<string> &_buttonsLabel, const vector<std::function<void()>> &_buttonsEvent)

@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Engine_Define.h"
 #include "CGuiBase.h"
 #include "CGuiManager.h"
 #include "CGui_Button.h"
@@ -16,41 +15,33 @@ CGui_Panel::~CGui_Panel()
 
 void CGui_Panel::Free()
 {
-	for_each(m_pElements.begin(), m_pElements.end(), [](std::pair<const string, CGuiBase *> &pair)->void {
-		Safe_Release(pair.second);
-		});
-	m_pElements.clear();
+	for (size_t i = 0; i < m_pElements.size(); ++i)
+	{
+		Safe_Release(m_pElements[i]);
+	}
 }
 
-CGui_Panel *CGui_Panel::Create(const string &_title)
+HRESULT CGui_Panel::Ready_Panel()
 {
-	return new CGui_Panel(_title);
+	return S_OK;
 }
 
-void CGui_Panel::AddElement(CGuiBase *pElement)
+void CGui_Panel::AddElement(_uint _iType, CGuiBase *pElement)
 {
-	if (!pElement)
+	if (_iType < 0 || !pElement)
 		return;
 
-	m_pElements.insert(map<const string, CGuiBase *>::value_type(pElement->GetLabel(), pElement));
+	m_pElements[_iType] = pElement;
+}
+
+CGuiBase *CGui_Panel::GetElement(_uint _iType)
+{
+	if (_iType < 0)
+		return nullptr;
+
+	return m_pElements[_iType];
 }
 
 void CGui_Panel::Render()
 {
-	ImGui::Begin(m_title.c_str());
-
-	for_each(m_pElements.begin(), m_pElements.end(), [](std::pair<const string, CGuiBase *> &pair)->void {
-		pair.second->Render();
-		});
-
-	ImGui::End();
-}
-
-CGuiBase *CGui_Panel::GetElement(const string &_keyName)
-{
-	map<string, CGuiBase *>::iterator itr = m_pElements.find(_keyName);
-	if (itr == m_pElements.end())
-		return nullptr;
-
-	return itr->second;
 }

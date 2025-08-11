@@ -9,7 +9,7 @@ private:
 	virtual void Free() override;
 public:
 	static CGui_InputFloat *Create(string _label, std::function<_float(CGameObject *)> onEvent = nullptr, std::function<void(_float)> endEvnet = nullptr);
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 	void Reset();
 public:
 	void SetOnEvent(std::function<_float(CGameObject *)> _func) { m_OnEvent = _func; }

@@ -161,10 +161,12 @@
     <ClInclude Include="..\Header\CGuiManager.h" />
     <ClInclude Include="..\Header\CGui_Button.h" />
     <ClInclude Include="..\Header\CGui_ButtonList.h" />
+    <ClInclude Include="..\Header\CGui_Console.h" />
     <ClInclude Include="..\Header\CGui_Dropbox.h" />
     <ClInclude Include="..\Header\CGui_InputFloat.h" />
     <ClInclude Include="..\Header\CGui_InputText.h" />
     <ClInclude Include="..\Header\CGui_Log.h" />
+    <ClInclude Include="..\Header\CGui_MapEditorPanel.h" />
     <ClInclude Include="..\Header\CGui_Panel.h" />
     <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CGuiBase.h" />
@@ -201,10 +203,12 @@
     <ClCompile Include="..\Code\CGuiManager.cpp" />
     <ClCompile Include="..\Code\CGui_Button.cpp" />
     <ClCompile Include="..\Code\CGui_ButtonList.cpp" />
+    <ClCompile Include="..\Code\CGui_Console.cpp" />
     <ClCompile Include="..\Code\CGui_Dropbox.cpp" />
     <ClCompile Include="..\Code\CGui_InputFloat.cpp" />
     <ClCompile Include="..\Code\CGui_InputText.cpp" />
     <ClCompile Include="..\Code\CGui_Log.cpp" />
+    <ClCompile Include="..\Code\CGui_MapEditorPanel.cpp" />
     <ClCompile Include="..\Code\CGui_Panel.cpp" />
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGuiBase.cpp" />

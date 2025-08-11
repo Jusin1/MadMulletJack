@@ -1,16 +1,19 @@
 #include "pch.h"
 #include "CGameObject.h"
 #include "CGui_Thumbnail.h"
+#include "Engine_Define.h"
+#include "Editor_Define.h"
 #include "CGui_Log.h"
 #include "CComponentMgr.h"
 #include "CTexture.h"
-#include "CGui_Panel.h"
+#include "CGui_MapEditorPanel.h"
+#include "CGui_Console.h"
 #include "CGuiManager.h"
 
 IMPLEMENT_SINGLETON(CGuiManager)
 
 CGuiManager::CGuiManager()
-	: m_pTarget(nullptr), m_pGraphicDevice(nullptr)
+	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(MapEditorObjectCategory::WALL), m_iObjectType(0)
 {
 }
 
@@ -31,9 +34,9 @@ void CGuiManager::Free()
 
 HRESULT CGuiManager::Ready_CGuiManager(LPDIRECT3DDEVICE9 pGraphicDevce)
 {
-    if (!(m_pPanels[INSPECTOR] = CGui_Panel::Create("Inspector")))
+    if (!(m_pPanels[INSPECTOR] = CGui_MapEditorPanel::Create()))
         return E_FAIL;
-    if (!(m_pPanels[CONSOLE] = CGui_Panel::Create("Console")))
+    if (!(m_pPanels[CONSOLE] = CGui_Console::Create()))
         return E_FAIL;
 
     m_pGraphicDevice = pGraphicDevce;
@@ -123,20 +126,16 @@ void CGuiManager::ShowConsole()
     ImGui::End();
 }
 
-HRESULT CGuiManager::AddTexture_AddThumbnail(const string &ThumnailName, const _tchar *CompName, const wstring &Path)
+HRESULT CGuiManager::AddThumbnail(const string &ThumnailName, const _tchar *CompName, CGui_Thumbnail *_pThumbnail, _uint iType)
 {
-    CGui_Thumbnail *pThumbnail = static_cast<CGui_Thumbnail *>(CGuiManager::GetInstance()->GetInspector()->GetElement("Textures"));
-
-    if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, CompName,
-        CTexture::Create(m_pGraphicDevice, TEX_NORMAL, Path.c_str(), 1))))
-        return E_FAIL;
-
-    auto pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, CompName))
-        ->Get_Texture();
+    IDirect3DBaseTexture9 *pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, CompName))->Get_Texture();
     if (!pTexture)
+    {
+        MSG_BOX("CGuiManager::AddThumbnail, Texture is null");
         return E_FAIL;
+    }
 
-    pThumbnail->Add_Thumbnail(ThumnailName, CompName, pTexture);
+    _pThumbnail->Add_Thumbnail(iType, ThumnailName, CompName, pTexture);
     return S_OK;
 }
 
@@ -144,7 +143,7 @@ void CGuiManager::AddLog(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    static_cast<CGui_Log *>(GetConsole()->GetElement("Log"))->Add_LogV(fmt, args);
+    static_cast<CGui_Log *>(GetConsole()->GetElement(0))->Add_LogV(fmt, args);
 
     va_end(args);
 }

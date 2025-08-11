@@ -11,7 +11,7 @@ private:
 	virtual void Free() override;
 public:
 	static CGui_Log *Create();
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 	void Add_Log(const char *fmt, ...);
 	void Add_LogV(const char *fmt, va_list args);
 private:
