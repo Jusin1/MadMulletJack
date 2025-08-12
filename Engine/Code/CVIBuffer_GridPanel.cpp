@@ -181,6 +181,102 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     return FALSE;
 }
 
+_bool CVIBuffer_GridPanel::IntersectRayWithPlaneForEditor(_vec3 *pOut)
+{
+    CPicking *pPickingSystem = CPicking::GetInstance();
+    pPickingSystem->Add_Ref();
+
+    _int iColMax{ 0 };
+    _int iRowMax{ 0 };
+    switch (m_tData.eType)
+    {
+    case PanelType::WALL_HOR:
+    {
+        iColMax = m_tData.dwCountX;
+        iRowMax = m_tData.dwCountY;
+    } break;
+    case PanelType::WALL_VER:
+    {
+        iColMax = m_tData.dwCountZ;
+        iRowMax = m_tData.dwCountY;
+    } break;
+    case PanelType::INCLINE:
+    case PanelType::FLOOR:
+    case PanelType::CEILING:
+    {
+        iColMax = m_tData.dwCountX;
+        iRowMax = m_tData.dwCountZ;
+    } break;
+    default:
+    {
+        MSG_BOX("CVIBuffer_GridPanel::IntersectRayWithPlane, type is wrong");
+        return FALSE;
+    }
+    }
+
+    _ulong  dwIndex{ 0 };
+    _int iLeftTop{ 0 };
+    _int iRightTop{ 0 };
+    _int iRightBottom{ 0 };
+    _int iLeftBottom{ 0 };
+
+    for (int iRow = 0; iRow < iRowMax - 1; ++iRow)
+    {
+        for (int iCol = 0; iCol < iColMax - 1; ++iCol)
+        {
+            dwIndex = iRow * iColMax + iCol;
+            iLeftTop = dwIndex + iColMax;
+            iRightTop = dwIndex + iColMax + 1;
+            iRightBottom = dwIndex + 1;
+            iLeftBottom = dwIndex;
+            if (pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
+                m_pVerticesData[iRightTop],
+                m_pVerticesData[iRightBottom],
+                pOut)
+                ||
+                pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
+                    m_pVerticesData[iRightBottom],
+                    m_pVerticesData[iLeftBottom],
+                    pOut))
+            {
+                switch (m_tData.eType)
+                {
+                case PanelType::WALL_HOR:
+                {
+                    (*pOut).x = m_pVerticesData[iLeftBottom].x +0.5f;
+                    (*pOut).y = m_pVerticesData[iLeftBottom].y +0.5f;
+                    (*pOut).z = 0.f;
+                } break;
+                case PanelType::WALL_VER:
+                {
+                    (*pOut).x = 0.f;
+                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
+                    (*pOut).y = m_pVerticesData[iLeftBottom].y + 0.5f;
+                } break;
+                case PanelType::INCLINE:
+                case PanelType::FLOOR:
+                {
+                    (*pOut).x = m_pVerticesData[iLeftBottom].x + 0.5f;
+                    (*pOut).y = 0.f;
+                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
+                } break;
+                case PanelType::CEILING:
+                {
+                    (*pOut).x = m_pVerticesData[iLeftBottom].x + 0.5f;
+                    (*pOut).y = 0.f;
+                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
+                } break;
+                }
+                Safe_Release(pPickingSystem);
+                return TRUE;
+            }
+        }
+    }
+
+    Safe_Release(pPickingSystem);
+    return FALSE;
+}
+
 HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
 {
     if (FAILED(Create_VertexBuffer()))
@@ -542,7 +638,7 @@ _bool CVIBuffer_GridPanel::Picking(CTransform *pTransform, _vec3 *pOut)
     _ulong  dwIndex(0);
     _ulong  dwTriCnt(0);
 
-    if(IntersectRayWithPlane(pOut))
+    if(IntersectRayWithPlaneForEditor(pOut))
     {
         ::D3DXVec3TransformCoord(pOut, pOut, pMatWorld);
         Safe_Release(pPickingSystem);

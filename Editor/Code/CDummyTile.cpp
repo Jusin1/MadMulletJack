@@ -5,6 +5,7 @@
 #include "CGridPanel.h"
 #include "CPicking.h"
 #include "CVIBuffer_GridPanel.h"
+#include "CObjectManager.h"
 #include "CTexture.h"
 #include "CDummyTile.h"
 
@@ -121,15 +122,44 @@ void CDummyTile::PosUpdate()
 		{
 			if (CVIBuffer_GridPanel *pBuffer = static_cast<CVIBuffer_GridPanel *>(pGridPanel->GetBuffer()))
 			{
-				/*switch (pBuffer->Get_Data()->eType)
-				{
-					
-				}*/
+				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
-				pickPos.x = (_float)(FastRound(pickPos.x));
-				pickPos.y = (_float)(FastRound(pickPos.y));
-				pickPos.z = (_float)(FastRound(pickPos.z));
-				GetTransform()->Set_Info(INFO::INFO_POS, pickPos);
+				pTransform->Set_Info(INFO::INFO_POS, pickPos);
+
+				switch (pBuffer->Get_Data()->eType)
+				{
+					case PanelType::WALL_HOR:
+					{
+						
+					} break;
+					case PanelType::WALL_VER:
+					{
+
+					} break;
+					case PanelType::INCLINE:
+					{
+
+					} break;
+					case PanelType::FLOOR:
+					{
+
+					} break;
+					case PanelType::CEILING:
+					{
+
+					} break;
+				}
+
+				if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000))
+				{
+					MAPOBJECTDATA tTestData;
+					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
+					tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
+					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile Layer", &tTestData)))
+					{
+						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+					}
+				}					
 			}
 		}
 	}

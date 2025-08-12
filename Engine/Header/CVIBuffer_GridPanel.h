@@ -33,6 +33,7 @@ private:
 	HRESULT Create_VertexBuffer();
 	HRESULT Create_IndexBuffer();
 	_bool IntersectRayWithPlane(_vec3 *pOut);
+	_bool IntersectRayWithPlaneForEditor(_vec3 *pOut);
 
 	HRESULT Set_Buffer(_ulong iRowMax, _ulong iColMax);
 
