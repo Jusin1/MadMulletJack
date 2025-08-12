@@ -28,7 +28,6 @@ HRESULT CUI::Initialize(void* pArg)
 
 	if (FAILED(Set_Component()))
 		return E_FAIL;
-
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
 
 	return S_OK;
@@ -59,6 +58,8 @@ void CUI::Render_GameObject()
 
 	m_pVIBufferCom->Render_Buffer();
 }
+
+
 
 HRESULT CUI::Set_Component()
 {

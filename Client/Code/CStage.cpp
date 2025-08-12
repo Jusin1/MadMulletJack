@@ -9,6 +9,7 @@
 #include "CSkyBox.h"
 #include "CPickingManager.h"
 #include "CPlayer_StateInfo.h"
+#include "CUIManager.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -75,6 +76,12 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+    // 테스트용
+    if (GetAsyncKeyState('P'))
+    {
+        CUIManager::GetInstance()->CreateEnterUI();
+    }
 }
 
 void CStage::Render_Scene()
@@ -170,8 +177,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
 
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_HPUI", SCENE_STAGE, pLayerTag)))
-    //    return E_FAIL;
+    
 
     return S_OK;
 }

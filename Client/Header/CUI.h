@@ -24,6 +24,13 @@ protected:
 public:
 	_bool Get_AniFinish() { return m_bAniFinish; }
 	void Set_AniFinish(_bool _bAniFinish) { m_bAniFinish = _bAniFinish; }
+	void Set_UIPosition(_float fX, _float fY, _float fSizeX, _float fSizeY)
+	{
+		m_fX = fX;
+		m_fY = fY;
+		m_fSizeX = fSizeX;
+		m_fSizeY = fSizeY;
+	}
 
 protected:
 	_matrix					m_ProjMatrix;

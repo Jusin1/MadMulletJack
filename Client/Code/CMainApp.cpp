@@ -14,6 +14,7 @@
 #include "CComponentMgr.h"
 #include "CPicking.h"
 #include "CPickingManager.h"
+#include "CUIManager.h"
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
 , m_pRenderer(nullptr)
@@ -224,6 +225,7 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pGraphicDev);
 	CColiderManager::GetInstance()->DestroyInstance();
 	CPicking::GetInstance()->DestroyInstance();
+	CUIManager::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();

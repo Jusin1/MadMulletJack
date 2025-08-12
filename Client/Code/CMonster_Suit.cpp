@@ -60,7 +60,7 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 
 	m_pTransformCom->SetTransformInfo(TransformInfo);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
 
 	GetPlayerTransform();
 
@@ -174,26 +174,33 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 CMonster_Suit::HIT_PART CMonster_Suit::ClassifyHit_Local(const _vec3& pL) const
 {
 	const _vec3 sc = m_pTransformCom->Get_Scale();
-	float nx = (sc.x > 0.f) ? (pL.x / sc.x) : pL.x;   
-	float ny = (sc.y > 0.f) ? (pL.y / sc.y) : pL.y;  
+	float nx = (sc.x != 0.f) ? (pL.x / sc.x) : pL.x; 
+	float ny = (sc.y != 0.f) ? (pL.y / sc.y) : pL.y;
 
+	nx *= 2.f;
+	ny *= 2.f;
+
+	// 3) 가로 종횡비 보정
 	UINT fw = 0, fh = 0;
 	if (m_pTextureCom->GetFrameSize(m_pTextureCom->Get_Frame().m_iCurrentTex, fw, fh) && fw && fh) {
-		float aspect = (float)fw / (float)fh; 
-		nx /= aspect; 
+		float aspect = (float)fw / (float)fh; // >1: 가로로 넓음
+		nx /= aspect;
 	}
 
-	const float HEAD_MIN = 0.55f;   
+	// 4) 기존 임계값 그대로 사용 가능
+	const float HEAD_MIN = 0.4f;     // 머리 경계
 	if (ny >= HEAD_MIN) return HIT_HEAD;
 
-	{	const float cx = 0.0f, cy = -0.10f;
+	{   // 고환 타원
+		const float cx = 0.0f, cy = -0.10f;
 		const float rx = 0.18f, ry = 0.16f;
 		float dx = nx - cx, dy = ny - cy;
-		if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f) return HIT_BALLS;
+		if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f)
+			return HIT_BALLS;
 	}
 
-	if (ny >= -0.35f) return HIT_BODY;
-	return HIT_LEG;
+	if (ny >= -0.2f) return HIT_BODY;
+	return HIT_LEG;;
 }
  
 HRESULT CMonster_Suit::Texture_Clone()
@@ -409,8 +416,8 @@ void CMonster_Suit::TrySpawnDeathUI()
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE, L"UI_Layer")))
 	{
-		ui->SetImageSize(18.f, 18.f);
-		ui->SetBoxSize(200.f, 30.f);
+		ui->SetImageSize(36.f, 36.f);
+		ui->SetBoxSize(230.f, 50.f);
 		ui->SetTargetBounds(130.f, 1250.f);
 		ui->SetMoveSpeed(1000.f, false);
 
@@ -426,17 +433,17 @@ void CMonster_Suit::TrySpawnDeathUI()
 	{
 		const wchar_t* msg = isHead ? L"HEADSHOT" : L"FINISHED";
 
-		banner->SetBannerExtraWidth(100.f);      
+		banner->SetBannerExtraWidth(80.f);   
 
 		banner->ShowBanner(
 			isHead ? L"HEADSHOT" : L"FINISHED",
-			1.10f,        
-			200.f, 140.f,  
-			2.5f, 1.0f,     
-			L"DefaultFont",
-			D3DXCOLOR(1, 1, 1, 1),
-			0.85f,
-			-10.f        
+			1.10f,  // 생명주기
+			175.f, 200.f,   // 위치 (x,y)
+			4.f, 1.0f,     // 시작 크기, 원래크기
+			L"DefaultFont", // 폰트이름
+			D3DXCOLOR(1, 1, 1, 1), // 배경색깔
+			0.85f, // 알파값
+			-5.f  // 각도
 		);
 	}
 }

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CPickingManager.h"
 #include "CTransform.h"
+#include "CObjectManager.h"
+#include "CCamera.h"
 
 IMPLEMENT_SINGLETON(CPickingManager)
 
@@ -47,13 +49,10 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 	}
 }
 
-// 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
     if (m_bMouseInUI) return false;
-
-    if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001))
-        return false;
+    if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001)) return false;
 
     vector<CGameObject*> vecPicked;
     vector<_vec3> vecPos;
@@ -61,31 +60,31 @@ _bool CPickingManager::Picking()
     for (auto it = m_PickingList.begin(); it != m_PickingList.end(); )
     {
         CGameObject* obj = *it;
-
-        if (!obj || obj->Get_Dead() || !obj->Is_Active()) {
-            it = m_PickingList.erase(it);
-            continue;
-        }
+        if (!obj || obj->Get_Dead() || !obj->Is_Active()) { it = m_PickingList.erase(it); continue; }
 
         _vec3 hit;
-        if (obj->Picking(&hit)) { 
+        if (obj->Picking(&hit)) {
             vecPicked.push_back(obj);
-            vecPos.push_back(hit);
+            vecPos.push_back(hit);  
         }
         ++it;
     }
-
     if (vecPicked.empty()) return false;
 
-    // 가장 가까운(z가 작은) 점 선택
-    size_t nearIdx = 0;
-    float minZ = vecPos[0].z;
-    for (size_t i = 1; i < vecPos.size(); ++i) {
-        if (vecPos[i].z < minZ) { minZ = vecPos[i].z; nearIdx = i; }
-    }
+    int best = -1;
+    float bestZ = FLT_MAX;
 
-    m_vPickingPos = vecPos[nearIdx];
-    m_pPickingObject = vecPicked[nearIdx];
+    for (int i = 0; i < (int)vecPos.size(); ++i)
+    {
+        _vec3 v;
+        D3DXVec3TransformCoord(&v, &vecPos[i], &CCamera::m_matView); 
+
+        if (v.z > 0.f && v.z < bestZ) { bestZ = v.z; best = i; }
+    }
+    if (best < 0) return false;
+
+    m_vPickingPos = vecPos[best];
+    m_pPickingObject = vecPicked[best];
     m_pPickingObject->PickingTrue();
     m_pPickingObject->HitAt(m_vPickingPos);
     return true;

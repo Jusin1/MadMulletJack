@@ -40,6 +40,10 @@ protected:
 	static const _tchar* m_pTransformTag; // Transform 키 태그
 	CAMINFO			  m_camInfo; // 카메라 설정 값 저장
 
+
+public:
+	static _matrix m_matView;
+	static _matrix m_matProj;
 public:
 	virtual		CCamera* Clone(void* pArg) = 0;
 	virtual		void		Free();

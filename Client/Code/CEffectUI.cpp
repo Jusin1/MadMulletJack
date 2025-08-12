@@ -166,8 +166,6 @@ void CEffectUI::RenderBox(float cx, float cy, float w, float h, float alpha, flo
     if (!m_pBgBufferCom) return;
 
     m_pBgBufferCom->SetColor(D3DXCOLOR(0.f, 0.f, 0.f, alpha));
-
-    // DX9 half-texel 보정: 스프라이트와 정확히 맞춤
     const float wx = -WINCX * 0.5f + cx - 0.5f;
     const float wy = WINCY * 0.5f - cy + 0.5f;
 

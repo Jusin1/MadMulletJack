@@ -103,6 +103,18 @@
     <Filter Include="02. GameObject\06. UI\EffectUI">
       <UniqueIdentifier>{2400726f-f279-430f-bde0-49174f1e6a32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\TutorialUI">
+      <UniqueIdentifier>{ffd1df42-4de9-457f-97b8-dc6c3c5a0d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\00. UIManager">
+      <UniqueIdentifier>{5160bab5-ff78-4e60-b5e1-66438b3f6a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI">
+      <UniqueIdentifier>{f19cb03f-d78e-42df-abfa-bb60da841d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\HeartUI">
+      <UniqueIdentifier>{10f4f2a4-b01b-46bc-888c-b2ee4a1543df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -195,6 +207,15 @@
     <ClInclude Include="..\Header\CEffectUI.h">
       <Filter>02. GameObject\06. UI\EffectUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CUIManager.h">
+      <Filter>03. Manager\00. UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLisaUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHeartUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +298,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffectUI.cpp">
       <Filter>02. GameObject\06. UI\EffectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUIManager.cpp">
+      <Filter>03. Manager\00. UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLisaUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHeartUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

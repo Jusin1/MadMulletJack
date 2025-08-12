@@ -18,6 +18,11 @@
 #include "CPlayer_HandL.h"
 #include "CEffectUI.h"
 
+
+// UI - 게임진입 UI
+#include "CHeartUI.h"
+
+
 // 몬스터
 #include "CMonster_Suit.h"
 
@@ -176,6 +181,18 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 #pragma endregion 일반UI
 
+#pragma region 게임 진입 UI
+	// HEART
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HeartUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART%03d.png", 5))))
+		return E_FAIL;
+	// HEART LINE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_LINE",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART LINE.png", 1))))
+		return E_FAIL;
+
+#pragma endregion 게임 진입 UI
+
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
 	//// Terrian
@@ -223,9 +240,18 @@ HRESULT CLoader::Loading_ForStage()
 		CPlayer_HandL::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	// 몬스터 피격 이펙트
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
 		CEffectUI::Create(m_pGraphicDev))))
 		return E_FAIL;
+
+#pragma region 게임 진입 UI들 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HeartUI",
+		CHeartUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+
+#pragma endregion 게임 진입 UI들 생성
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex
