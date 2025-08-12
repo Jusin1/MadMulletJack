@@ -2,12 +2,12 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUIBase(pGraphicDev), m_bAniFinish(false)
+	: CUIBase(pGraphicDev), m_eMove(MV_END), m_fRange(0.f)
 {
 }
 
 CUI::CUI(const CUI& rhs)
-	: CUIBase(rhs), m_bAniFinish(rhs.m_bAniFinish)
+	: CUIBase(rhs), m_eMove(rhs.m_eMove), m_fRange(rhs.m_fRange)
 {
 }
 
@@ -71,6 +71,60 @@ HRESULT CUI::Set_Component()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CUI::Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY)
+{
+	m_fSizeX = _fSizeX;
+	m_fSizeY = _fSizeY;
+
+	m_fX = _fX;
+	m_fY = _fY;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+}
+
+void CUI::Set_UISize(_float _fSizeX, _float _fSizeY)
+{
+	m_fSizeX = _fSizeX;
+	m_fSizeY = _fSizeY;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+}
+
+void CUI::Move_UI(const _float& fTimeDelta)
+{
+	switch (m_eMove) {
+	case MV_RIGHT:
+		m_pTransformCom->Move_PosRight(fTimeDelta);
+		break;
+
+	case MV_LEFT:
+		m_pTransformCom->Move_Left(fTimeDelta);
+		break;
+
+	case MV_RL: // range 만큼 좌우로 움직임
+		m_pTransformCom->Move_RL(fTimeDelta, m_fRange);
+		break;
+
+	case MV_UP: // y기준으로 위 아래로 움직임
+		m_pTransformCom->Move_YUp(fTimeDelta);
+		break;
+
+	case MV_DOWN: 
+		m_pTransformCom->Move_YDown(fTimeDelta);
+		break;
+
+	case MV_ROTATIONZ: // z축 기준으로 회전
+		m_pTransformCom->Rotation({0.f,0.f,1.f}, fTimeDelta);
+		m_fRotSum += m_pTransformCom->GetTransformInfo().fSpeed * fTimeDelta;
+		break;
+
+	case MV_UpDown:
+		m_pTransformCom->Move_YUpDown(fTimeDelta, m_fRange);
+		break;
+	}
 }
 
 CUI* CUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "CPlayer_HandR.h"
 #include "CTimerMgr.h"
-#include "CPlayer_StateInfo.h"
-
-
+#include "CGlobal_Info.h"
+#include "CObjectManager.h"
+#include "CPistol_Gun.h"
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev),m_tInfo({ PLAYER_END, WP_END, WP2_END })
@@ -33,22 +33,14 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
         return E_FAIL;
 
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
-
         return E_FAIL;
-
-    m_fSizeX = 200.f;
-    m_fSizeY = 200.f;
-
-    m_fX = WINCX * 0.5f + 450.f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
-    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+    if (FAILED(Set_WeaponUI()))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -57,14 +49,11 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
     __super::Update_GameObject(fTimeDelta);
     if (m_pTextureCom->Is_AnimFinished())
     {
-
-        //if (m_CurrentAnimTag != TEXT("Com_Texture_Hand_Idle"))
-        //{
-        //    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        //}
-
         m_bAniFinish = true;
     }
+    
+    Move_UI(fTimeDelta); // ui 움직임 함수
+
     return NO_EVENT;
 }
 
@@ -72,12 +61,13 @@ void CPlayer_HandR::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    Update_Weapon_Pistol();
+
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
-
 }
 
 void CPlayer_HandR::Render_GameObject()
@@ -106,80 +96,180 @@ void CPlayer_HandR::Render_GameObject()
 HRESULT CPlayer_HandR::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
-    texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 9;
-    texInfo.m_fSpeed = 1.f;
-    texInfo.m_bLoop = true;
-    // IDLE
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-        return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Idle"), m_pTextureCom });
 
-    // SHOT
+    // IDLE
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 6;
+    texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 10.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Shot", SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Shot"), m_pTextureCom });
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_Idle"), m_pTextureCom });
+
+    // Attack_Instance - knife
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_At2_Knife"), m_pTextureCom });
+
+    // Dead
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 2.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Dead", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRDead", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_Dead"), m_pTextureCom });
+
+    // Opening - Pistol
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Pistol", SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpPistol", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Pistol"), m_pTextureCom });
+
+    // Opening - Shotgun
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 4;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Shotgun", SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Shotgun"), m_pTextureCom });
+
 
     return S_OK;
 }
 
 HRESULT CPlayer_HandR::Set_Texture()
 {
-    if (m_tInfo.ePlayerState == ATTACK) {
+    // 아까 돌렸다면
+    if(m_fRotSum != 0.f)
+        Set_Origin_Rot();
+    
+
+    switch (m_tInfo.ePlayerState)
+    {
+    case ATTACK:
+        m_bRenderOn = false;
+        break;
+
+    case OPENING:
+    {
         if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+            if(FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Pistol"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 300.f); // pos를 정하고
+
+            //// info를 새로 맞춰줌
+            Set_New_TransInfo(30.f, 0.f);
+
+            m_eMove = MV_UP;
+            m_fRange = 10.f;
+
+            m_bRenderOn = true;
+        }
+
+        else if (m_tInfo.eWeapon == WP_SHOTGUN) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Shotgun"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(200.f, 200.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 300.f); // pos를 정하고
+
+            //// info를 새로 맞춰줌
+            Set_New_TransInfo(0.f, 0.f);
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else if (m_tInfo.ePlayerState == OPENING) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+    case RELOAD:
+    {
+        if (m_tInfo.eWeapon == WP_SHOTGUN) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_Hand_Idle"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(200.f, 200.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 350.f); // pos를 정하고
+
+            Set_New_TransInfo(0.f, 0.f);
+
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1);
+            m_fRotSum += D3DXToRadian(0.f) * 1;
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else if (m_tInfo.ePlayerState == RELOAD) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+    case ATTACK_INSTANT:
+    {
+        if (m_tInfo.eWeapon == WP_KNIFE) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(400.f, 400.f, WINCX * 0.5f + 450.f, WINCY * 0.5f - 100.f); // pos를 정하고
+
+            Set_New_TransInfo(0.f, 5.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian(5.f) * 1;
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else if (m_tInfo.ePlayerState == ATTACK_INSTANT) {
-        if (m_tInfo.eWeapon2 == WP_PISTOL) {
+    case PLAYERDEAD:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Dead"))))
+            return E_FAIL;
 
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+        Set_UISizeAndPos(280.f, 280.f, WINCX * 0.5f, WINCY * 0.5f + 240); // pos를 정하고
 
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+        Set_New_TransInfo(10.f, 0.f);
+
+        m_eMove = MV_DOWN;
+
+        m_bRenderOn = true;
     }
+        break;
 
-    else {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+    default:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Idle"))))
+            return E_FAIL;
 
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+        // idle pos
+        Set_UISizeAndPos(320.f, 600.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 500.f); // pos를 정하고
+
+        Set_New_TransInfo(50.f, 0.f);
+
+        m_eMove = MV_RL;
+        m_fRange = 30.f;
+
+        m_bRenderOn = true;
     }
-
+        break;
+    }
+    
     return S_OK;
 }
 
@@ -191,6 +281,64 @@ HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
     m_pTextureCom->Set_Zero_Frame();
     m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
     return S_OK;
+}
+
+HRESULT CPlayer_HandR::Set_WeaponUI()
+{
+    m_pWeaponUI = dynamic_cast<CUIBase*>(
+        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
+    if (m_pWeaponUI == nullptr)
+        return E_FAIL;
+    CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", SCENE_STAGE, L"UI_Layer"));
+    if (pPistolUI)
+    {
+        pPistolUI->Initialize(nullptr); // 필요 시 인자 전달
+        pPistolUI->Set_ObjTag(L"PistolUI");
+        m_pWeaponUI->Add_Child(pPistolUI); // 루트 UI에 등록
+    }
+
+    return S_OK;
+}
+
+void CPlayer_HandR::Update_Weapon_Pistol()
+{
+    // 지금 pistol이 아니면 update를 하지 않음
+    if (m_tInfo.eWeapon != WP_PISTOL)
+        return;
+
+    // pistol을 가져옴
+    CUIBase* pPistol = m_pWeaponUI->Find_Child_ByTag(L"PistolUI");
+
+    // pistol이 있다면
+    if (pPistol)
+    {
+        // player state에 따라 맞는 셋팅을 해줌
+        switch (m_tInfo.ePlayerState)
+        {
+        case IDLE:
+            // pos를 갱신
+            pPistol->Set_Active(true);
+            pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -90.f, 340.f);
+            break;
+
+        case ATTACK:
+            pPistol->Set_Active(true);
+            break;
+
+        case OPENING:
+            pPistol->Set_Active(true);
+            break;
+
+        case RELOAD:
+            pPistol->Set_Active(true);
+            break;
+
+        default:
+            pPistol->Set_Active(false);
+            pPistol->Set_RenderOn(false);
+        }
+    }
+    
 }
 
 CPlayer_HandR* CPlayer_HandR::Create(LPDIRECT3DDEVICE9 pGraphicDev)

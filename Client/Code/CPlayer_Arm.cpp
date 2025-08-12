@@ -4,12 +4,12 @@
 
 
 CPlayer_Arm::CPlayer_Arm(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END }), m_bChange(false)
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
 {
 }
 
 CPlayer_Arm::CPlayer_Arm(const CPlayer_Arm& rhs)
-    : CUI(rhs),m_tInfo(rhs.m_tInfo), m_bChange(rhs.m_bChange)
+    : CUI(rhs),m_tInfo(rhs.m_tInfo)
 {
 }
 
@@ -30,37 +30,37 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHand"))))
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerArm"))))
         return E_FAIL;
 
-    m_fSizeX = 200.f;
-    m_fSizeY = 200.f;
-
-    m_fX = WINCX * 0.5f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+    Set_UISizeAndPos(700.f, 600.f, WINCX * 0.5f, WINCY * 0.5f + 300);
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
-    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+    m_bActive = true;
+    m_bRenderOn = false;
+
     return S_OK;
 }
 
 _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
-    if (m_pTextureCom->Is_AnimFinished()  )
+    if ( m_pTextureCom->Is_AnimFinished()  )
     {
-        if (m_bChange)
+
+        if (m_CurrentAnimTag == TEXT("Com_Texture_Arm_Op1"))
         {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+            Change_Texture(TEXT("Com_Texture_Arm_Op2"));
         }
 
         else
-            m_bAniFinish = true;
+        {
+            CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+            m_bRenderOn = false;
+        }
+            
     }
     return NO_EVENT;
 }
@@ -69,12 +69,11 @@ void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
-
 }
 
 void CPlayer_Arm::Render_GameObject()
@@ -103,23 +102,24 @@ void CPlayer_Arm::Render_GameObject()
 HRESULT CPlayer_Arm::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
-    texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 9;
-    texInfo.m_fSpeed = 1.f;
-    texInfo.m_bLoop = true;
-    // IDLE
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-        return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Idle"), m_pTextureCom });
 
-    // SHOT
+    // Op1
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 6;
-    texInfo.m_fSpeed = 10.f;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Shot", SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Arm_Op1", SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Shot"), m_pTextureCom });
+    m_mapTextures.insert({ TEXT("Com_Texture_Arm_Op1"), m_pTextureCom });
+
+    // Op2
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 1.5f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STAGE, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_Arm_Op2"), m_pTextureCom });
 
     return S_OK;
 }
@@ -127,12 +127,13 @@ HRESULT CPlayer_Arm::Texture_Clone()
 HRESULT CPlayer_Arm::Set_Texture()
 {
     if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
-        Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-        m_bChange = true;
+        Change_Texture(TEXT("Com_Texture_Arm_Op1"));
+        Set_UISizeAndPos(700.f, 700.f, WINCX * 0.5f, WINCY * 0.5f + 300);
+        m_bRenderOn = true;
     }
 
     else {
-        m_bActive = false;
+        m_bRenderOn = false;
     }
 
     return S_OK;

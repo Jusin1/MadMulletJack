@@ -35,6 +35,9 @@ public:
 	void	SetTransformInfo(TRANSFORMINFO TransformInfo) { m_TransformInfo = TransformInfo; }
 	TRANSFORMINFO& GetTransformInfo() { return m_TransformInfo; }
 
+	void Set_Dir(_float _fDir) { m_fDir = _fDir; }
+	_float Get_Dir() { return m_fDir; }
+
 public:
 	// 로컬 방향 기준 이동 함수
 	void Move_Forward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
@@ -54,6 +57,12 @@ public:
 	void Move_PosTarget(_float fTimeDelta, _vec3 TargetPos, _vec3 distance);
 	void Move_PosDir(_float fTimeDelta, _vec3 _vDir);
 
+	// UIMove용 func
+	void Move_YUp(_float fTimeDelta);
+	void Move_YDown(_float fTimeDelta);
+	void Move_RL(_float fTimeDelta, _float  fRange);
+	void Move_YUpDown(_float fTimeDelta, _float  fRange);
+
 public:
 	void LookAt(_vec3 _targetPos);
 	void ChaseTarget(_vec3 TargetPos, _vec3 distance);
@@ -65,6 +74,7 @@ private:
 	_matrix			m_matWorld;
 	TRANSFORMINFO	m_TransformInfo;
 	_vec3			m_vTarget;
+	_float			m_fDir; // Move_RL 시 필요
 
 public:
 	virtual CComponent* Clone(void* pArg = nullptr) override;

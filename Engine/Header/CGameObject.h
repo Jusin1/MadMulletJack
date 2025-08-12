@@ -28,6 +28,8 @@ public:
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
 	void Set_Active(bool bActive) { m_bActive = bActive; }
 	bool Is_Active() const { return m_bActive; }
+	_bool Get_RenderOn() { return m_bRenderOn; }
+	void Set_RenderOn(_bool _bRenderOn) { m_bRenderOn = _bRenderOn; }
 
 protected:
 	HRESULT	Set_Component();
@@ -47,6 +49,7 @@ protected:
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	bool m_bActive;
+	_bool   m_bRenderOn;
 
 protected:
 	CTransform* m_pTransformCom;

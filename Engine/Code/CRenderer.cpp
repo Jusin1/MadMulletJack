@@ -99,7 +99,9 @@ HRESULT CRenderer::Render_UI()
 	{
 		if (nullptr != pGameObject)
 		{
-			pGameObject->Render_GameObject();
+			if(pGameObject->Get_RenderOn())
+				pGameObject->Render_GameObject();
+
 			Safe_Release(pGameObject);
 		}
 	}
