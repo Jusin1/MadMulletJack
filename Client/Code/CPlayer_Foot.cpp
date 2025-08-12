@@ -59,9 +59,9 @@ void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
 }
@@ -126,7 +126,7 @@ HRESULT CPlayer_Foot::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Kick"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(120.f, 200.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
+        Set_UISizeAndPos(240.f, 400.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
 
         m_bRenderOn = true;
     }
@@ -137,13 +137,9 @@ HRESULT CPlayer_Foot::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Slide"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(350.f, 240.f, WINCX * 0.5f, WINCY * 0.5f + 180);
+        Set_UISizeAndPos(700.f, 480.f, WINCX * 0.5f, WINCY * 0.5f + 180);
 
-        // info¸¦ »õ·Î ¸ÂÃçÁÜ
-        TransformInfo.fSpeed = 80.f;
-        TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-        TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
-        m_pTransformCom->SetTransformInfo(TransformInfo);
+        Set_New_TransInfo(80.f, 0.f);
 
         m_fRange = 10.f;
         m_eMove = MV_UpDown;

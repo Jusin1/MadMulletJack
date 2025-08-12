@@ -32,8 +32,6 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandL"))))
         return E_FAIL;
 
-    Set_UISizeAndPos(180.f, 200.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 300.f);
-
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
@@ -59,9 +57,9 @@ void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
     __super::LateUpdate_GameObject(fTimeDelta);
 
     // player의 상태가 달라졌을 때, texture를 새로 셋팅
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
 }
@@ -152,10 +150,14 @@ HRESULT CPlayer_HandL::Texture_Clone()
 
 HRESULT CPlayer_HandL::Set_Texture()
 {
-    CTransform::TRANSFORMINFO TransformInfo;    // 새롭게 transinfo를 저장해줌
-    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-    // switch -> state 판별
-    // if -> 무기 판별
+    // 만약 이 전에 돌려놨다면
+    if (m_fRotSum != 0)
+    {
+        // 다시 원상복귀
+        Set_Origin_Rot();
+    }
+    
+    // player state -> weapon 순으로 나누어서 texture 출력
     switch (m_tInfo.ePlayerState) {
     case OPENING:
     {
@@ -163,15 +165,11 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(150.f, 250.f, WINCX * 0.5f - 250.f, WINCY * 0.5f + 250.f);
+            Set_UISizeAndPos(300.f, 500.f, WINCX * 0.5f - 250.f, WINCY * 0.5f + 250.f);
 
-            TransformInfo.fSpeed = 10.f;
-            TransformInfo.fRotationSpeed = D3DXToRadian(-10.f);
-            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
-            m_pTransformCom->SetTransformInfo(TransformInfo);
+            Set_New_TransInfo(10.f, -10.f);
 
             m_eMove = MV_ROTATIONZ;
-            m_bRenderOn = true;
 
             m_bRenderOn = true;
         }
@@ -188,15 +186,11 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(150.f, 300.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 200.f); //idle pos
+            Set_UISizeAndPos(300.f, 600.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
 
-            //// info를 새로 맞춰줌
-            TransformInfo.fSpeed = 300.f;
-            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
-            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
-            m_pTransformCom->SetTransformInfo(TransformInfo);
-
+            Set_New_TransInfo(350.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian(-40.f) * 1;
 
             m_eMove = MV_RIGHT;
 
@@ -207,15 +201,11 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Shotgun"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(120.f, 300.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f);
+            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f);
 
-            //// info를 새로 맞춰줌
-            TransformInfo.fSpeed = 200.f;
-            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
-            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
-            m_pTransformCom->SetTransformInfo(TransformInfo);
-
+            Set_New_TransInfo(200.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian (-40.f) * 1;
 
             m_eMove = MV_RIGHT;
 
@@ -234,15 +224,11 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(120.f, 300.f, 100.f, WINCY * 0.5f - 80.f); //idle pos
+            Set_UISizeAndPos(200.f, 600.f, 100.f, WINCY * 0.5f - 80.f); //idle pos
 
-            //// info를 새로 맞춰줌
-            TransformInfo.fSpeed = 140.f;
-            TransformInfo.fRotationSpeed = D3DXToRadian(-40.f);
-            TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
-            m_pTransformCom->SetTransformInfo(TransformInfo);
-
-            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            Set_New_TransInfo(140.f, -40.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f,-1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian (-40.f) * 1;
 
             m_eMove = MV_RIGHT;
 
@@ -260,8 +246,12 @@ HRESULT CPlayer_HandL::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Doping"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(110.f, 110.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
+        Set_UISizeAndPos(220.f, 220.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
 
+        //// info를 새로 맞춰줌
+        Set_New_TransInfo(140.f, 0.f);
+
+        m_eMove = MV_NON;
         m_bRenderOn = true;
     }
     break;
@@ -270,8 +260,12 @@ HRESULT CPlayer_HandL::Set_Texture()
     {
         if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Idle"))))
             return E_FAIL;
-        Set_UISizeAndPos(120.f, 300.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 200.f); //idle pos
 
+        Set_UISizeAndPos(300.f, 800.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 380.f); //idle pos
+
+        Set_New_TransInfo(140.f, 0.f);
+
+        m_eMove = MV_NON;
         m_bRenderOn = true;
     }
         break;

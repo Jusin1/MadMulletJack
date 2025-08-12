@@ -33,7 +33,7 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerArm"))))
         return E_FAIL;
 
-    Set_UISizeAndPos(350.f, 300.f, WINCX * 0.5f, WINCY * 0.5f + 300);
+    Set_UISizeAndPos(700.f, 600.f, WINCX * 0.5f, WINCY * 0.5f + 300);
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
@@ -41,7 +41,6 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
     m_bActive = true;
     m_bRenderOn = false;
 
-    //Change_Texture(TEXT("Com_Texture_Arm_Op1"));
     return S_OK;
 }
 
@@ -58,7 +57,7 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 
         else
         {
-            m_bAniFinish = true;
+            CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
             m_bRenderOn = false;
         }
             
@@ -70,9 +69,9 @@ void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
 }
@@ -129,7 +128,7 @@ HRESULT CPlayer_Arm::Set_Texture()
 {
     if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
         Change_Texture(TEXT("Com_Texture_Arm_Op1"));
-        Set_UISizeAndPos(350.f, 350.f, WINCX * 0.5f, WINCY * 0.5f + 300);
+        Set_UISizeAndPos(700.f, 700.f, WINCX * 0.5f, WINCY * 0.5f + 300);
         m_bRenderOn = true;
     }
 
