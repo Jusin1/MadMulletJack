@@ -253,7 +253,6 @@ void CEffectUI::RenderText(float leftX, float centerY, float aMul)
         return;
     }
 
-    // FLOAT_MOVE: 좌상단 기준 선형 스케일
     const float fontScale = m_scaleStart + (m_scaleEnd - m_scaleStart) * m_progress;
 
     _vec2 szBase{ 0.f, 0.f }, szScaled{ 0.f, 0.f };

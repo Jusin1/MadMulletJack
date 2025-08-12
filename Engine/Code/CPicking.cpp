@@ -99,6 +99,22 @@ _bool CPicking::IntersectRayWithTriangleInLocal(_vec3 vPointA, _vec3 vPointB, _v
 	return false;
 }
 
+bool CPicking::IntersectRaySphere(const _vec3& ro, const _vec3& rd, const _vec3& c, float r, float* tHit)
+{
+	_vec3 oc = ro - c;
+	float b = D3DXVec3Dot(&oc, &rd);
+	float cterm = D3DXVec3Dot(&oc, &oc) - r * r;
+	float disc = b * b - cterm;
+	if (disc < 0.f) return false;
+
+	float t = -b - sqrtf(max(0.f, disc));
+	if (t < 0.f) t = -b + sqrtf(max(0.f, disc));
+	if (t < 0.f) return false;
+
+	if (tHit) *tHit = t;
+	return true;
+}
+
 void CPicking::Free()
 {
 	Safe_Release(m_pGrahpicDev);

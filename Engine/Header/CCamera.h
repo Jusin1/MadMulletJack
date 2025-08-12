@@ -26,6 +26,8 @@ protected:
 	explicit CCamera(const CCamera& rhs);
 	virtual ~CCamera();
 
+
+
 public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			HRESULT		Initialize(void* pArg); // 카메라 정보 세팅
@@ -34,16 +36,22 @@ public:
 	virtual			HRESULT     Render();
 
 public:
+	static const _matrix& GetView() { return m_matView; }
+	static const _matrix& GetProj() { return m_matProj; }
+
+public:
 	HRESULT Apply_ViewPorjection(); // View/Projection 행렬 반영
 
 protected:
 	static const _tchar* m_pTransformTag; // Transform 키 태그
 	CAMINFO			  m_camInfo; // 카메라 설정 값 저장
 
-
+	// 전역 참조용 정적 행렬
 public:
 	static _matrix m_matView;
 	static _matrix m_matProj;
+
+
 public:
 	virtual		CCamera* Clone(void* pArg) = 0;
 	virtual		void		Free();

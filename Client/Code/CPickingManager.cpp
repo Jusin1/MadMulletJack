@@ -63,25 +63,23 @@ _bool CPickingManager::Picking()
         CGameObject* obj = *it;
         if (!obj || obj->Get_Dead() || !obj->Is_Active()) { it = m_PickingList.erase(it); continue; }
 
-        _vec3 hit;
-        if (obj->Picking(&hit)) {
+        _vec3 hitW;
+        if (obj->Picking(&hitW)) {
             vecPicked.push_back(obj);
-            vecPos.push_back(hit);   
+            vecPos.push_back(hitW);
         }
         ++it;
     }
     if (vecPicked.empty()) return false;
-
+    const _matrix& view = CCamera::GetView();
 
     int best = -1;
     float bestZ = FLT_MAX;
-
     for (int i = 0; i < (int)vecPos.size(); ++i)
     {
-        _vec3 v;
-        D3DXVec3TransformCoord(&v, &vecPos[i], &CCamera::m_matView); 
-
-        if (v.z > 0.f && v.z < bestZ) { bestZ = v.z; best = i; }
+        _vec3 vEye;
+        D3DXVec3TransformCoord(&vEye, &vecPos[i], &view);
+        if (vEye.z > 0.f && vEye.z < bestZ) { bestZ = vEye.z; best = i; }
     }
     if (best < 0) return false;
 

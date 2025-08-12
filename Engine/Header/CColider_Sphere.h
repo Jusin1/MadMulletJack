@@ -29,6 +29,8 @@ public:
 	_bool Is_Active() const { return m_bActive; }
 
 	COLLINFO Get_SphereDesc() const { return m_SphereDesc; }
+	const _vec3& GetCenter() const { return m_vCenter; }
+	float GetRadius() const { return m_fRadius; }
 
 protected:
 	COLLINFO m_SphereDesc;

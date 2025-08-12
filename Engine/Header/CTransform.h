@@ -42,6 +42,8 @@ public:
 	void Move_Left(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
+	void RotationDegree(const _vec3& axis, float degrees);
+
 
 public:
 	// 월드 좌표 기준 이동
