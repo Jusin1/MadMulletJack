@@ -68,6 +68,10 @@ HRESULT CVIBuffer::Ready_Index_Buffer()
 void CVIBuffer::Free()
 {
 	CComponent::Free();
+
+	m_pGraphicDev->SetStreamSource(0, nullptr, 0, 0);
+	m_pGraphicDev->SetIndices(nullptr);
+
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

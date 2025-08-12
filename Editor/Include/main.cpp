@@ -123,6 +123,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    g_hWnd = hWnd;
 
+   SetWindowPos(g_hWnd, HWND_TOP, 50, 50, 1366, 768, SWP_NOZORDER | SWP_SHOWWINDOW);
+
    ::ShowWindow(hWnd, nCmdShow);
    ::UpdateWindow(hWnd);
 

@@ -5,12 +5,14 @@
 #include <d3dx9.h>
 
 #include <vector>
+#include <array>
 #include <list>
 #include <map>
 #include <algorithm>
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <ctime>
 
 #include "Engine_Enum.h"

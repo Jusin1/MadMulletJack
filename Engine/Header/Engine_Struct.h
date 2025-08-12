@@ -56,10 +56,10 @@ namespace Engine
 
 	typedef struct tagGridPanelData
 	{
-		PanelType eType = PanelType::NONE;
-		unsigned long dwCountX = 0;
+		PanelType eType = PanelType::FLOOR;
+		unsigned long dwCountX = 2;
 		unsigned long dwCountY = 0;
-		unsigned long dwCountZ = 0;
+		unsigned long dwCountZ = 2;
 		unsigned long dwInterval = 1;
 	} PANELDATA;
 

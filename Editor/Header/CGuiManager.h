@@ -1,32 +1,75 @@
 #pragma once
 #include "CBase.h"
+#include "CGuiBase.h"
+#include "Editor_Define.h"
 #include "Engine_Define.h"
+
+#define EDITOR_CONSOLE(fmt, ...) \
+CGuiManager::GetInstance()->AddLog("[%s] : " fmt, __FUNCSIG__, ##__VA_ARGS__)
 
 namespace Engine
 {
 	class CGameObject;
 }
 
+typedef struct tagPanelInfo
+{
+	ImVec2 Position;
+	ImVec2 Size;
+} PANELINFO;
+
+class CGui_Thumbnail;
 class CGui_Panel;
 
 class CGuiManager : public CBase
 {
 	DECLARE_SINGLETON(CGuiManager)
 private:
+	enum PANEL
+	{
+		INSPECTOR,
+		CONSOLE,
+		NONE
+	};
+private:
 	explicit CGuiManager();
 	virtual ~CGuiManager();
 
 	virtual void Free() override;
 public:
+	HRESULT Ready_CGuiManager(LPDIRECT3DDEVICE9 pGraphicDevce);
+	HRESULT Initialize();
+
+	void ShowEditorDockspace();
+	void ShowInspector();
+	void ShowConsole();
+
+	HRESULT AddThumbnail(const string &ThumnailName, const _tchar *CompName, CGui_Thumbnail *_pThumbnail, _uint iType);
+
+	void AddLog(const char *fmt, ...);
+
 	void Render();
 	Engine::CGameObject *GetTarget() const { return m_pTarget; }
-	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }
-	
-	map<string, CGui_Panel *> *GetPanelMapList() { return &m_pPanels; }
-	void AddPanel(CGui_Panel *_p);
-	CGui_Panel *GetPanel(const string &_keyName);
-private:
-	Engine::CGameObject *m_pTarget;
-	map<string, CGui_Panel *> m_pPanels;
-};
+	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }	
 
+	MapEditorObjectCategory GetCategory() { return m_eCategory; }
+	void SetCategory(MapEditorObjectCategory _e) { m_eCategory = _e; }
+
+	_uint GetObjectType() { return m_iObjectType; }
+	void SetObjectType(_uint _i) { m_iObjectType = _i; }
+
+	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> *GetPanelList() { return &m_pPanels; }
+	CGui_Panel *GetConsole() { return m_pPanels[CONSOLE]; }
+	CGui_Panel *GetInspector() { return m_pPanels[INSPECTOR]; }
+
+	_bool IsCreateMode() { return m_bCreateMode; }
+	void SetCreateMode(_bool _b, MapEditorObjectCategory _e);
+private:
+	_bool m_bCreateMode;
+	LPDIRECT3DDEVICE9 m_pGraphicDevice;
+	Engine::CGameObject *m_pTarget;
+	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;
+	std::array<PANELINFO, (_ulong)(PANEL::NONE)> m_pPanelInfos;
+	MapEditorObjectCategory m_eCategory;
+	_uint m_iObjectType;
+};

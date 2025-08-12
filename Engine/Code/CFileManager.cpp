@@ -84,10 +84,11 @@ void CFileManager::LoadObjectList(const std::wstring &filePath, _uint iSceneID, 
     json jArray;
     ifs >> jArray;
 
+    // TODO : Parsing Data Save, Scene별, 폴더별(ObjectCategory)로 저장할것
     for (const auto &jObj : jArray)
     {
         MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
-        CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", iSceneID, szLayerTag,&objData);
+        CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iSceneID, szLayerTag,&objData);
     }
     ifs.close();
 }

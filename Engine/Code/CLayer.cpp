@@ -26,7 +26,7 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 
 
 
-void CLayer::Update_Layer(const _float& fTimeDelta)
+void CLayer::Update_Layer(const _float &fTimeDelta)
 {
 	for (auto it = m_objList.begin(); it != m_objList.end(); )
 	{

@@ -1,6 +1,6 @@
 #pragma once
 #include "CBase.h"
-
+#include "Engine_Define.h"
 #pragma push_macro("new")
 #undef new
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -26,7 +26,7 @@ protected:
 
 	virtual void Free();
 public:
-	virtual void Render() = 0;
+	virtual _bool Render(_int _iState = -1) = 0;
 
 	const string &GetLabel() const { return m_label; }
 protected:

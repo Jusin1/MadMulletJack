@@ -10,7 +10,7 @@ protected:
 	virtual void Free() override;
 public:
 	static CGui_InputText *Create(const string &_label);
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 
 private:
 	std::vector<char> m_value; 

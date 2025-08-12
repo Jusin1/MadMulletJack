@@ -91,9 +91,14 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 	}*/
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)
-		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)
 		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)
+		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
+
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+		m_pTransformCom->Rotation(m_pTransformCom->Get_Info(INFO_RIGHT), -fTimeDelta);
+	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F) & 0x80)
+		m_pTransformCom->Rotation(m_pTransformCom->Get_Info(INFO_RIGHT), fTimeDelta);
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);

@@ -76,9 +76,6 @@
     <Filter Include="02. GameObject\06. UI\HpBar_UI">
       <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\PlayerUI">
-      <UniqueIdentifier>{f5c42883-adff-44ca-81b8-c6f4edd619e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
       <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
     </Filter>
@@ -126,9 +123,6 @@
     </Filter>
     <Filter Include="02. GameObject\06. UI\EffectUI">
       <UniqueIdentifier>{2400726f-f279-430f-bde0-49174f1e6a32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\06. UI\TutorialUI">
-      <UniqueIdentifier>{ffd1df42-4de9-457f-97b8-dc6c3c5a0d7d}</UniqueIdentifier>
     </Filter>
     <Filter Include="03. Manager\00. UIManager">
       <UniqueIdentifier>{5160bab5-ff78-4e60-b5e1-66438b3f6a5b}</UniqueIdentifier>

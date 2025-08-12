@@ -27,7 +27,6 @@ public:
 	LPDIRECT3DDEVICE9 GetGraphicDevice() { return m_pGraphicDevice; }
 private:
 	HRESULT DefaultSetting(LPDIRECT3DDEVICE9 *ppGraphicDevice);
-	HRESULT ImGuiInitialize();
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Scene();
 	void RenderImGuiRender();
@@ -38,6 +37,5 @@ private:
 	LPDIRECT3DDEVICE9	m_pGraphicDevice;
 
 	bool m_bShowDemoWindow;
-	bool m_bShowAnotherWindow;
 };
 

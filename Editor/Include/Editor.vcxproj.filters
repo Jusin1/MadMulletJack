@@ -49,9 +49,6 @@
     <Filter Include="06. GUI\Element\Button">
       <UniqueIdentifier>{ed356b75-57fd-49e9-b9fc-d9a2d032adb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. GUI\Element\Text">
-      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. GUI\Panel">
       <UniqueIdentifier>{ea27ae45-282b-40e7-975d-c4522b416a60}</UniqueIdentifier>
     </Filter>
@@ -66,6 +63,39 @@
     </Filter>
     <Filter Include="06. GUI\Element\Transform">
       <UniqueIdentifier>{7b7bd83c-38f7-4f6d-84d0-0324219aad53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Manager">
+      <UniqueIdentifier>{9585a290-1a2b-4864-841f-1e200c48e645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\InputFloat">
+      <UniqueIdentifier>{37868dc4-5215-4c30-a8ac-75e1dc1bfb57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\InputText">
+      <UniqueIdentifier>{343f1383-163a-4cb2-a22b-3f20688e416b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Dropbox">
+      <UniqueIdentifier>{e6af0aeb-2355-4f75-827f-e96e6ea857fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\ButtonList">
+      <UniqueIdentifier>{cc603ed8-5a8f-4dd3-973c-22b84214f50e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Log">
+      <UniqueIdentifier>{14cf2e56-dce0-477d-bf14-86cf89dcc2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Panel\Inspector">
+      <UniqueIdentifier>{918da66c-80fd-47d4-b507-0ce9a777ae8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Panel\Inspector\Map">
+      <UniqueIdentifier>{b1037676-e173-4740-9da1-36688b3986da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Panel\Console">
+      <UniqueIdentifier>{2209d2c9-0ca8-47fe-b2d7-6def234e1c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\CTile">
+      <UniqueIdentifier>{6adfc358-a3fb-4fe6-8c45-cd18a26aa52f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. GUI\Element\Checkbox">
+      <UniqueIdentifier>{947123a3-9207-487f-b1b9-2f9b4d0f934e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +181,7 @@
       <Filter>06. GUI\Element\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGui_InputText.h">
-      <Filter>06. GUI\Element\Text</Filter>
+      <Filter>06. GUI\Element\InputText</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGui_Button.h">
       <Filter>06. GUI\Element\Button</Filter>
@@ -159,14 +189,44 @@
     <ClInclude Include="..\Header\CGui_Panel.h">
       <Filter>06. GUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGuiManager.h">
-      <Filter>06. GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CGui_Thumbnail.h">
       <Filter>06. GUI\Element\Thumbnail</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGui_Transform.h">
       <Filter>06. GUI\Element\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEditorPickingManager.h">
+      <Filter>07. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_InputFloat.h">
+      <Filter>06. GUI\Element\InputFloat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Dropbox.h">
+      <Filter>06. GUI\Element\Dropbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_ButtonList.h">
+      <Filter>06. GUI\Element\ButtonList</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Log.h">
+      <Filter>06. GUI\Element\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGuiManager.h">
+      <Filter>07. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_MapEditorPanel.h">
+      <Filter>06. GUI\Panel\Inspector\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Console.h">
+      <Filter>06. GUI\Panel\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTile.h">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDummyTile.h">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Checkbox.h">
+      <Filter>06. GUI\Element\Checkbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +294,7 @@
       <Filter>06. GUI\Element\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGui_InputText.cpp">
-      <Filter>06. GUI\Element\Text</Filter>
+      <Filter>06. GUI\Element\InputText</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Button.cpp">
       <Filter>06. GUI\Element\Button</Filter>
@@ -242,14 +302,44 @@
     <ClCompile Include="..\Code\CGui_Panel.cpp">
       <Filter>06. GUI\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGuiManager.cpp">
-      <Filter>06. GUI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp">
       <Filter>06. GUI\Element\Thumbnail</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Transform.cpp">
       <Filter>06. GUI\Element\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorPickingManager.cpp">
+      <Filter>07. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_InputFloat.cpp">
+      <Filter>06. GUI\Element\InputFloat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Dropbox.cpp">
+      <Filter>06. GUI\Element\Dropbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_ButtonList.cpp">
+      <Filter>06. GUI\Element\ButtonList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Log.cpp">
+      <Filter>06. GUI\Element\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGuiManager.cpp">
+      <Filter>07. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_MapEditorPanel.cpp">
+      <Filter>06. GUI\Panel\Inspector\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Console.cpp">
+      <Filter>06. GUI\Panel\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile.cpp">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDummyTile.cpp">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Checkbox.cpp">
+      <Filter>06. GUI\Element\Checkbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

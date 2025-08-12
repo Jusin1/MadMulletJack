@@ -9,7 +9,7 @@ private:
 	virtual void Free() override;
 public:
 	static CGui_Button *Create(const string &_label, std::function<void()> _func = nullptr);
-	virtual void Render() override;
+	virtual _bool Render(_int _iState = -1) override;
 private:
 	std::function<void()> m_onClick;
 };

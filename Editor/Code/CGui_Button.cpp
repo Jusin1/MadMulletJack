@@ -16,14 +16,16 @@ void CGui_Button::Free()
 
 CGui_Button *CGui_Button::Create(const string &_label, std::function<void()> _func)
 {
-	return nullptr;
+	return new CGui_Button(_label, _func);
 }
 
-void CGui_Button::Render()
+_bool CGui_Button::Render(_int _iState)
 {
 	if (ImGui::Button(m_label.c_str()))
 	{
 		if (m_onClick)
 			m_onClick();
 	}
+
+	return FALSE;
 }
