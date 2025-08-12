@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "CUIBase.h"
 CUIBase::CUIBase(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev) ,m_bAniFinish(false)
+    : CGameObject(pGraphicDev) ,m_bAniFinish(false), m_fRotSum(0.f)
 {
 }
 
 CUIBase::CUIBase(const CUIBase& rhs)
-    : CGameObject(rhs), m_bAniFinish(rhs.m_bAniFinish)
+    : CGameObject(rhs), m_bAniFinish(rhs.m_bAniFinish), m_fRotSum(rhs.m_fRotSum)
 {
 
 }
@@ -72,6 +72,28 @@ void CUIBase::Render_GameObject() // 자식 Render
 HRESULT CUIBase::Set_Component()
 {
     return S_OK;
+}
+
+void CUIBase::Set_Origin_Rot()
+{
+    // ui는 z축 기준 회전 하므로
+    // -1.f로 반대로 돌려주기
+    // 안에서 자기 속도 곱하게 되므로 rotsum / rotspeed 값으로 들어간다
+    m_pTransformCom->Rotation({ 0.f, 0.f,-1.f }, m_fRotSum / m_pTransformCom->GetTransformInfo().fRotationSpeed);
+
+    // rotsum 0으로 초기화
+    m_fRotSum = 0.f;
+}
+
+void CUIBase::Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed)
+{
+    CTransform::TRANSFORMINFO TransformInfo;    // 새롭게 transinfo를 저장해줌
+    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+
+    TransformInfo.fSpeed = _fSpeed;
+    TransformInfo.fRotationSpeed = D3DXToRadian(_fRotSpeed);
+    TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
+    m_pTransformCom->SetTransformInfo(TransformInfo);
 }
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가

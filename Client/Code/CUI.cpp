@@ -117,6 +117,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 
 	case MV_ROTATIONZ: // z축 기준으로 회전
 		m_pTransformCom->Rotation({0.f,0.f,1.f}, fTimeDelta);
+		m_fRotSum += m_pTransformCom->GetTransformInfo().fSpeed * fTimeDelta;
 		break;
 
 	case MV_UpDown:
