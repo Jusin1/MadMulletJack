@@ -10,6 +10,7 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_bDead(false)
     , m_CollisionMatrix{}
     , m_bActive(false)
+    , m_bRenderOn(true)
 {
     if (m_pGraphicDev)
         m_pGraphicDev->AddRef();
@@ -23,6 +24,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
     , m_bDead(rhs.m_bDead)
     , m_CollisionMatrix(rhs.m_CollisionMatrix)
     , m_mapComponent(rhs.m_mapComponent) // 얕복임 (주의: 컴포넌트 깊복 필요시 따로 처리해야 함)
+    , m_bRenderOn(rhs.m_bRenderOn)
 {
     if (m_pGraphicDev)
         m_pGraphicDev->AddRef();
@@ -64,6 +66,7 @@ HRESULT CGameObject::Set_Component()
         return E_FAIL;
     return S_OK;
 }
+
 
 // 컴포넌츠 추가 - 복제 기반
 HRESULT CGameObject::Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg)

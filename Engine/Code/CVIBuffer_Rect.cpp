@@ -41,7 +41,7 @@ HRESULT CVIBuffer_Rect::Ready_Buffer()
 
     // 오른쪽 위
     pVertex[0].vPosition = { -0.5f, 0.5f, 0.f };
-    pVertex[0].vTexUV = { 0.f, 0.f};
+    pVertex[0].vTexUV = { 0.f, 0.f };
 
     pVertex[1].vPosition = { 0.5f, 0.5f, 0.f };
     pVertex[1].vTexUV = { 1.f, 0.f };

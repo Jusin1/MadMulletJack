@@ -14,6 +14,7 @@
 #include "CComponentMgr.h"
 #include "CPicking.h"
 #include "CPickingManager.h"
+#include "CUIManager.h"
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
 , m_pRenderer(nullptr)
@@ -27,6 +28,13 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
+	// 전역 랜덤 시드 1회
+	LARGE_INTEGER qpc{};
+	QueryPerformanceCounter(&qpc);
+	unsigned seed = (unsigned)(qpc.QuadPart ^ GetTickCount64() ^ GetCurrentProcessId());
+	srand(seed);
+
+
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
@@ -124,6 +132,14 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Jinji", L"궁서", 20, 10, FW_THIN)))
 		return E_FAIL;
 
+	CFontMgr::GetInstance()->Ready_Font(
+		m_pGraphicDev,
+		L"DefaultFont",   // ← CEfffectUI에서 쓰는 태그와 동일해야 함
+		L"맑은 고딕",     // 폰트 이름 (설치된 폰트면 뭐든 OK)
+		20,               // Width
+		40,               // Height
+		FW_BOLD);         // Weight
+
 	// DInput
 
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
@@ -209,6 +225,7 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pGraphicDev);
 	CColiderManager::GetInstance()->DestroyInstance();
 	CPicking::GetInstance()->DestroyInstance();
+	CUIManager::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();

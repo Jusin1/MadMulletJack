@@ -2,9 +2,6 @@
 #include "CPlayer_HandL.h"
 #include "CTimerMgr.h"
 
-
-// reload, doping, opening -> 무기로 뺄지도,  attack_instance
-
 CPlayer_HandL::CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
 {
@@ -35,19 +32,9 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandL"))))
         return E_FAIL;
 
-    m_fSizeX = 200.f;
-    m_fSizeY = 200.f;
-
-    m_fX = WINCX * 0.5f - 450.f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
-
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
-    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
     return S_OK;
 }
 
@@ -60,6 +47,8 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
         m_bAniFinish = true;
     }
 
+    Move_UI(fTimeDelta);
+
     return NO_EVENT;
 }
 
@@ -67,9 +56,10 @@ void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    // player의 상태가 달라졌을 때, texture를 새로 셋팅
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
 }
@@ -100,67 +90,185 @@ void CPlayer_HandL::Render_GameObject()
 HRESULT CPlayer_HandL::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
-    texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 9;
-    texInfo.m_fSpeed = 1.f;
-    texInfo.m_bLoop = true;
-    // IDLE -> handphon
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-        return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Idle"), m_pTextureCom });
 
-    // SHOT
+    // IDLE 
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 6;
-    texInfo.m_fSpeed = 10.f;
-    texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Shot", SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot", (CComponent**)&m_pTextureCom, &texInfo)))
+    texInfo.m_iEndTex = 17;
+    texInfo.m_fSpeed = 2.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Shot"), m_pTextureCom });
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Idle"), m_pTextureCom });
+
+    // Doping
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 7;
+    texInfo.m_fSpeed = 3.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Doping", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLDoping", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Doping"), m_pTextureCom });
+
+    // Op-rifle
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 12;
+    texInfo.m_fSpeed = 3.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Op_Rif", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLOpRif", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Op_Rif"), m_pTextureCom });
+
+    // Attack_Instance - knife
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 1.5f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_At2_Knife"), m_pTextureCom });
+
+    // reload - pistol
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 0.8f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Re_Pistol"), m_pTextureCom });
+
+    // reload - shotgun
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 2;
+    texInfo.m_fSpeed = 0.5f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Shotgun", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLReShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Re_Shotgun"), m_pTextureCom });
 
     return S_OK;
 }
 
 HRESULT CPlayer_HandL::Set_Texture()
 {
-    if (m_tInfo.ePlayerState == OPENING) {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+    // 만약 이 전에 돌려놨다면
+    if (m_fRotSum != 0)
+    {
+        // 다시 원상복귀
+        Set_Origin_Rot();
+    }
+    
+    // player state -> weapon 순으로 나누어서 texture 출력
+    switch (m_tInfo.ePlayerState) {
+    case OPENING:
+    {
+        if (m_tInfo.eWeapon == WP_RIFLE) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(300.f, 500.f, WINCX * 0.5f - 250.f, WINCY * 0.5f + 250.f);
+
+            Set_New_TransInfo(10.f, -10.f);
+
+            m_eMove = MV_ROTATIONZ;
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Shot"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else if (m_tInfo.ePlayerState == RELOAD) {
+    case RELOAD: 
+    {
         if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(300.f, 600.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
+
+            Set_New_TransInfo(350.f, -40.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian(-40.f) * 1;
+
+            m_eMove = MV_RIGHT;
+
+            m_bRenderOn = true;
+        }
+
+        else if (m_tInfo.eWeapon == WP_SHOTGUN) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Shotgun"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f);
+
+            Set_New_TransInfo(200.f, -40.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian (-40.f) * 1;
+
+            m_eMove = MV_RIGHT;
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else if (m_tInfo.ePlayerState == ATTACK_INSTANT) {
-        if (m_tInfo.eWeapon2 == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+    case ATTACK_INSTANT:
+    {
+        if (m_tInfo.eWeapon2 == WP_KNIFE) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
+                return E_FAIL;
+
+            Set_UISizeAndPos(200.f, 600.f, 100.f, WINCY * 0.5f - 80.f); //idle pos
+
+            Set_New_TransInfo(140.f, -40.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f,-1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian (-40.f) * 1;
+
+            m_eMove = MV_RIGHT;
+
+            m_bRenderOn = true;
         }
 
         else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+            m_bRenderOn = false;
         }
     }
+        break;
 
-    else {
-        if (m_tInfo.eWeapon == WP_PISTOL) {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+    case DOPING:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Doping"))))
+            return E_FAIL;
 
-        else {
-            Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-        }
+        Set_UISizeAndPos(220.f, 220.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
+
+        //// info를 새로 맞춰줌
+        Set_New_TransInfo(140.f, 0.f);
+
+        m_eMove = MV_NON;
+        m_bRenderOn = true;
+    }
+    break;
+
+    default:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Idle"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(300.f, 800.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 380.f); //idle pos
+
+        Set_New_TransInfo(140.f, 0.f);
+
+        m_eMove = MV_NON;
+        m_bRenderOn = true;
+    }
+        break;
     }
 
     return S_OK;

@@ -19,6 +19,15 @@ public:
 	_bool IntersectRayWithTriangleInWorld(_vec3 vPointA, _vec3 vPointB, _vec3 vPointC, _vec3* pOut); // 월드 레이 충돌 검사
 	_bool IntersectRayWithTriangleInLocal(_vec3 vPointA, _vec3 vPointB, _vec3 vPointC, _vec3* pOut); // 로컬 레이 충돌 검사
 
+public:
+	static bool IntersectRaySphere(const _vec3& ro, const _vec3& rd, const _vec3& c, float r, float* tHit = nullptr); // 레이 원 충돌 검사
+
+public:
+	const _vec3& GetRayPosWorld() const { return m_vRayPos; }
+	const _vec3& GetRayDirWorld() const { return m_vRayDir; }
+	const _vec3& GetRayOrigin() const { return m_vRayPos; }
+	const _vec3& GetRayDir()   const { return m_vRayDir; }
+
 private:
 	LPDIRECT3DDEVICE9		m_pGrahpicDev;
 	HWND					m_hWnd;

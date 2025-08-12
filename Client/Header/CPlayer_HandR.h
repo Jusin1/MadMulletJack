@@ -2,7 +2,7 @@
 #include "CUI.h"
 class CPlayer_HandR :public CUI
 {
-private:
+protected:
     explicit CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev);
     explicit CPlayer_HandR(const CPlayer_HandR& rhs);
     virtual ~CPlayer_HandR();
@@ -14,22 +14,29 @@ public:
     virtual void LateUpdate_GameObject(const _float& fTimeDelta) override;
     virtual void Render_GameObject() override;
 
-
 public:
     HRESULT Change_Texture(const _tchar* pTextureTag);
 
 private:
-    virtual HRESULT Set_Texture() override;
+    virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
     HRESULT Texture_Clone();
+    HRESULT Set_WeaponUI();
+
+    void Update_Weapon_Pistol();
 
 private:
     map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
     wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
 
+    //getter setter func
+public:
+    PlayerStateInfo Get_Info() const { return m_tInfo; }
+    void Set_Info(PlayerStateInfo _tPlayerStateInfo) { m_tInfo = _tPlayerStateInfo; }
+
 private:
     PlayerStateInfo m_tInfo;
+    CUIBase* m_pWeaponUI = nullptr;
     
-
 public:
     static CPlayer_HandR* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -28,13 +28,16 @@ public:
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
 	void Set_Active(bool bActive) { m_bActive = bActive; }
 	bool Is_Active() const { return m_bActive; }
+	_bool Get_RenderOn() { return m_bRenderOn; }
+	void Set_RenderOn(_bool _bRenderOn) { m_bRenderOn = _bRenderOn; }
 
 protected:
 	HRESULT	Set_Component();
 
 public:
-	virtual _bool Picking(_vec3* PickingPoint) { return true; }
+	virtual _bool Picking(_vec3* PickingPoint) { return false; }
 	virtual void PickingTrue() {};
+	virtual void HitAt(const _vec3& hitPosWorld) {} // 맞은 지점 전달
 	virtual void ExportData(void *pData) {};
 public:
 	CTransform* GetTransform() const { return m_pTransformCom; }
@@ -46,8 +49,8 @@ protected:
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	bool m_bActive;
+	_bool   m_bRenderOn;
 
-	// Trnasform Component
 protected:
 	CTransform* m_pTransformCom;
 	CRenderer* m_pRendererCom;

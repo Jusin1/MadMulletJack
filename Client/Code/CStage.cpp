@@ -8,7 +8,8 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
-#include "CPlayer_StateInfo.h"
+#include "CUIManager.h"
+#include "CGlobal_Info.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -75,6 +76,12 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+    // 테스트용
+    if (GetAsyncKeyState('P'))
+    {
+        CUIManager::GetInstance()->CreateEnterUI();
+    }
 }
 
 void CStage::Render_Scene()
@@ -134,9 +141,29 @@ HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
-    // Monster
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Monster_Suit"), SCENE_STAGE, pLayerTag)))
-        return E_FAIL;
+    const float baseX = -8.f;   
+    const float gap = 4.f;    
+    const float posY = 1.f;
+    const float posZ = 0.f;
+
+    for (int i = 0; i < 5; ++i) {
+        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE, pLayerTag))) {
+            MSG_BOX("Monster spawn failed");
+            // 실패해도 계속 가려면 continue
+            return E_FAIL;
+
+        }
+    }
+
+    for (int i = 0; i < 5; ++i) {
+        auto tr = dynamic_cast<CTransform*>(
+            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, pLayerTag, L"Com_Transform", i));
+        if (tr) {
+            const float x = baseX + gap * i;           // 좌→우로 늘어놓기
+            tr->Set_Info(INFO_POS, _vec3(x, posY, posZ));
+            tr->LookAt(_vec3(x, posY, posZ + 1.f));    // 필요하면 정면 보정
+        }
+    }
     return S_OK;
 }
 
@@ -150,8 +177,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
         return E_FAIL;
 
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_HPUI", SCENE_STAGE, pLayerTag)))
-    //    return E_FAIL;
+    
 
     return S_OK;
 }
@@ -176,5 +202,5 @@ void CStage::Free()
 {
     Engine::CScene::Free();
 
-    CPlayer_StateInfo::Destroy_Instance();
+    CGlobal_Info::Destroy_Instance();
 }

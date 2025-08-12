@@ -22,6 +22,7 @@ public:
 protected:
 	HRESULT	Set_Component();
 
+
 protected: 
 	virtual _bool Picking(_vec3* PickingPoint) override;
 	virtual void PickingTrue() override;

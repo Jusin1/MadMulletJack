@@ -15,6 +15,14 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
+	void SetColor(const D3DXCOLOR& color);
+	void SetAlpha(float a);
+
+private:
+	HRESULT ApplyColorToVB();      
+	D3DXCOLOR m_Color = D3DXCOLOR(0.f, 0.f, 0.f, 0.6f); 
+
+public:
 	virtual CComponent* Clone(void* pArg) override;
 	static  VIBuffer_Color* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free();

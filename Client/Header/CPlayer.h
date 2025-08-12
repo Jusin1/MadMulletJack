@@ -18,13 +18,12 @@ private:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual HRESULT Initialize(void* pArg)override;
+	virtual			HRESULT		Initialize(void* pArg)override;
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	//state func -> private 해도..?
-public:
+private:
 	void ChangeState(PLAYERSTATE  _e);
 	void StateNormalSet();
 
@@ -64,6 +63,14 @@ public:
 	void ATTACK_INSTANT_On(const _float& fTimeDelta);
 	void ATTACK_INSTANT_End();
 
+	void ZOOMING_Begin();
+	void ZOOMING_On(const _float& fTimeDelta);
+	void ZOOMING_End();
+
+	void ZOOM_Begin();
+	void ZOOM_On(const _float& fTimeDelta);
+	void ZOOM_End();
+
 	void RELOAD_Begin();
 	void RELOAD_On(const _float& fTimeDelta);
 	void RELOAD_End();
@@ -91,9 +98,10 @@ public:
 	void KeyInput(const _float& fTimeDelta);
 	void Set_State_Idle();
 
-	bool Is_Anim_Finished(); // frame 다 돌면 state -> idle
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
 	void CountHp(const _float& fTimeDelta);
+
+	void UIAniFinish(const _tchar* pTag); // ui의 animation이 끝나면 state = IDLE;
 
 	// getter setter func
 public:
@@ -102,25 +110,26 @@ public:
 	_vec3 Get_Right();
 	void Set_GroundY(float _fY) { m_fGround_Height = _fY; }
 
-	PlayerStateInfo Get_State() { return m_tPlayerInfo; }
+	PlayerStateInfo Get_State()const { return m_tPlayerInfo; }
 	void Set_State(PlayerStateInfo _tInfo) { m_tPlayerInfo = _tInfo; }
-	PlayerStateInfo Get_PrevState() { return m_tPrePlayerInfo; }
+	PlayerStateInfo Get_PrevState()const { return m_tPrePlayerInfo; }
 	void Set_PrevState(PlayerStateInfo _tInfo) { m_tPrePlayerInfo = _tInfo; }
-	MOVEKEY Get_MoveKey() { return m_eMove; }
+	MOVEKEY Get_MoveKey() const { return m_eMove; }
 	void Set_MoveKey(MOVEKEY _e) { m_eMove = _e; }
 
-	_float Get_GroundHeight() { return m_fGround_Height; }
+	_float Get_GroundHeight()const { return m_fGround_Height; }
 	void Set_GroundHeight(_float _fGroundHeight) {m_fGround_Height = _fGroundHeight;}
+	_float Get_MaxHp() const { return m_fMaxHp; }
+	void Set_MaxHp(_float _fMaxHp) { m_fMaxHp = _fMaxHp; }
 
-
-	_bool	Get_HpbarOn() { return m_bHpBarOn; }
-	void	Set_HpbarOn(_bool _bHpbarOn) { m_bHpBarOn = _bHpbarOn; }
-	_bool	Get_KeyInput() { return m_bKeyInput; }
-	void	Set_KeyInput(_bool _bKeyInput) { m_bKeyInput = _bKeyInput; }
-	_bool	Get_IsInvincible() { return m_bIsInvincible; }
+	_bool	Get_IsKeyInput()const { return m_bIsKeyInput; }
+	void	Set_IsKeyInput(_bool _bKeyInput) { m_bIsKeyInput = _bKeyInput; }
+	_bool	Get_IsInvincible() const { return m_bIsInvincible; }
 	void	Set_IsInvincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; }
-	_bool Get_Attack() { return m_bAttack; }
-	void Set_Attack(_bool _bAttack) { m_bAttack = _bAttack; }
+	_bool	Get_IsAttack() const { return m_bIsAttack; }
+	void	Set_IsAttack(_bool _bAttack) { m_bIsAttack = _bAttack; }
+	_bool	Get_IsCountHp() const { return m_bIsCountHp; }
+	void	Set_IsCountHp(_bool _bCountHp) { m_bIsCountHp = _bCountHp; }
 
 private:
 	HRESULT			Set_Component();
@@ -129,11 +138,12 @@ private:
 private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* componentTag);
+	HRESULT Set_PlayerUI();
 
 private:
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
 	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
-	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐
+	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐 -> 지금은 필요없긴 한디 우선 남겨두겠습니다
 	map<const _tchar*, CTexture*> m_mapTexture;
 
 private:
@@ -141,19 +151,15 @@ private:
 	PlayerStateInfo m_tPrePlayerInfo;
 	MOVEKEY m_eMove;
 
-	WEAPON m_eWeapon;
-	WEAPON m_ePrevWeapon;
-	WEAPON m_eWeapon2;
-	WEAPON m_ePrevWeapon2;
-
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
 
-	_bool m_bHpBarOn;
-	_bool m_bKeyInput;
+	_bool m_bIsKeyInput;
 	_bool m_bIsInvincible;
-	_bool m_bAttack;
+	_bool m_bIsAttack;
+	_bool m_bIsCountHp;
 
+	_float m_fMaxHp;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;

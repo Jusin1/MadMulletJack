@@ -22,7 +22,6 @@ HRESULT CBackGround::Ready_GameObject()
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
 
-
     return S_OK;
 }
 
@@ -30,6 +29,8 @@ HRESULT CBackGround::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
+
+    m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
     if (FAILED(Set_Component()))
         return E_FAIL;
@@ -56,11 +57,22 @@ void CBackGround::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CBackGround::Render_GameObject()
 {
+    __super::Render_GameObject();
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    m_pTransformCom->Apply_WorldMatrix();
+
     m_pTextureCom->Set_Texture();
+
+    // 알파 테스트 설정 추가
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0);
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
     m_pBufferCom->Render_Buffer();
 
+    // 원상복귀
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CPickingManager.h"
 #include "CTransform.h"
+#include "CObjectManager.h"
+#include "CCamera.h"
 
 IMPLEMENT_SINGLETON(CPickingManager)
 
@@ -50,49 +52,42 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 // 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
-	if(m_bMouseInUI)
-		return false;
+    if (m_bMouseInUI) return false;
+    if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001)) return false;
 
-	// 마우스 왼쪽 버튼이 눌리지 않으면 픽킹 하지 않음
-	if (!(GetAsyncKeyState(VK_LBUTTON) & 0x8000))
-		return false;
+    vector<CGameObject*> vecPicked;
+    vector<_vec3> vecPos;
 
-	vector<CGameObject*> vecPicked;
-	vector<_vec3> vecPos;
-	_vec3 vPos;
+    for (auto it = m_PickingList.begin(); it != m_PickingList.end(); )
+    {
+        CGameObject* obj = *it;
+        if (!obj || obj->Get_Dead() || !obj->Is_Active()) { it = m_PickingList.erase(it); continue; }
 
-	// 모든 오브젝트 중 레이와 충돌한 것 수집
-	for (auto& pGameObject : m_PickingList)
-	{
-		if (pGameObject->Picking(&vPos))
-		{
-			vecPicked.push_back(pGameObject);
-			vecPos.push_back(vPos);
-		}
-	}
+        _vec3 hitW;
+        if (obj->Picking(&hitW)) {
+            vecPicked.push_back(obj);
+            vecPos.push_back(hitW);
+        }
+        ++it;
+    }
+    if (vecPicked.empty()) return false;
+    const _matrix& view = CCamera::GetView();
 
-	// 하나라도 충돌한 게 있다면
-	if (!vecPicked.empty())
-	{
-		_vec3 vecNearPos;
-		int NearNum = 0;
-		// 가장 가까운 오브젝트 찾기 (z값 기준)
-		for (_uint i = 0; i < vecPos.size(); ++i)
-		{
-			if (vecPos[i].z <= vecNearPos.z || i == 0)
-			{
-				vecNearPos = vecPos[i];
-				NearNum = i;
-			}
-		}
+    int best = -1;
+    float bestZ = FLT_MAX;
+    for (int i = 0; i < (int)vecPos.size(); ++i)
+    {
+        _vec3 vEye;
+        D3DXVec3TransformCoord(&vEye, &vecPos[i], &view);
+        if (vEye.z > 0.f && vEye.z < bestZ) { bestZ = vEye.z; best = i; }
+    }
+    if (best < 0) return false;
 
-		m_vPickingPos = vecNearPos;
-		vecPicked[NearNum]->PickingTrue(); // 해당 오브젝트에 알림
-
-		return true;
-	}
-
-	return false;
+    m_vPickingPos = vecPos[best];
+    m_pPickingObject = vecPicked[best];
+    m_pPickingObject->PickingTrue();
+    m_pPickingObject->HitAt(m_vPickingPos);
+    return true;
 }
 
 // 현재 픽킹된 오브젝트 해제

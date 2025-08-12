@@ -30,33 +30,28 @@ HRESULT CPlayer_Foot::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHand"))))
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerFoot"))))
         return E_FAIL;
-
-    m_fSizeX = 200.f;
-    m_fSizeY = 200.f;
-
-    m_fX = WINCX * 0.5f;
-    m_fY = WINCY * 0.5f + 300.f;
-
-
-    m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
-    Change_Texture(TEXT("Com_Texture_Hand_Idle"));
+    Set_Texture();
+
     return S_OK;
 }
 
 _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
+  
     if (m_pTextureCom->Is_AnimFinished())
     {
         m_bAniFinish = true;
     }
+
+    Move_UI(fTimeDelta);
+
     return NO_EVENT;
 }
 
@@ -64,12 +59,11 @@ void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
 
-    if (m_tInfo != CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo())
+    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
-        m_tInfo = CPlayer_StateInfo::Get_Instance()->Get_PlayerInfo();
+        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
-
 }
 
 void CPlayer_Foot::Render_GameObject()
@@ -98,39 +92,64 @@ void CPlayer_Foot::Render_GameObject()
 HRESULT CPlayer_Foot::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
+
+    // Kick
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 9;
+    texInfo.m_iEndTex = 2;
     texInfo.m_fSpeed = 1.f;
     texInfo.m_bLoop = true;
-    // IDLE
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandIdle", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Foots_Kick", SCENE_STAGE, L"Prototype_Component_Texture_UIFootKick", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Idle"), m_pTextureCom });
+    m_mapTextures.insert({ TEXT("Com_Texture_Foots_Kick"), m_pTextureCom });
 
-    // SHOT
+    // Slide
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 6;
-    texInfo.m_fSpeed = 10.f;
-    texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Hand_Shot", SCENE_STAGE, L"Prototype_Component_Texture_UIHandShot", (CComponent**)&m_pTextureCom, &texInfo)))
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_Foots_Slide", SCENE_STAGE, L"Prototype_Component_Texture_UIFootSlide", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Hand_Shot"), m_pTextureCom });
+    m_mapTextures.insert({ TEXT("Com_Texture_Foots_Slide"), m_pTextureCom });
 
     return S_OK;
 }
 
 HRESULT CPlayer_Foot::Set_Texture()
 {
-    if (m_tInfo.ePlayerState == KICK) {
-        Change_Texture(TEXT("Com_Texture_Hand_Shot"));
-    }
+    CTransform::TRANSFORMINFO TransformInfo;    // 새롭게 transinfo를 저장해줌
+    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 
-    else if (m_tInfo.ePlayerState == SLIED) {
-        Change_Texture(TEXT("Com_Texture_Hand_Idle"));
-    }
+    switch (m_tInfo.ePlayerState)
+    {
+    case KICK:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Kick"))))
+            return E_FAIL;
 
-    else {
-        m_bActive = false;
+        Set_UISizeAndPos(240.f, 400.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
+
+        m_bRenderOn = true;
+    }
+        break;
+
+    case SLIED:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Slide"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(700.f, 480.f, WINCX * 0.5f, WINCY * 0.5f + 180);
+
+        Set_New_TransInfo(80.f, 0.f);
+
+        m_fRange = 10.f;
+        m_eMove = MV_UpDown;
+
+        m_bRenderOn = true;
+    }
+        break;
+
+    default:
+        m_bRenderOn = false;
     }
 
     return S_OK;

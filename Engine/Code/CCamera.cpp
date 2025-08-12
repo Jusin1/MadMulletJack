@@ -2,7 +2,8 @@
 
 // 컴포넌트 키값 초기화
 const _tchar* CCamera::m_pTransformTag = L"Com_Transform";
-
+_matrix CCamera::m_matView;
+_matrix CCamera::m_matProj;
 
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_camInfo{} 
@@ -68,6 +69,9 @@ HRESULT CCamera::Apply_ViewPorjection()
 
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
+
+	m_matView = matView;
+	m_matProj = matProj;
 
 	return S_OK;
 }

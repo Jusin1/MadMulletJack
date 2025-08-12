@@ -36,7 +36,7 @@ void CLayer::Update_Layer(const _float &fTimeDelta)
 			if (iEvent == DEAD)
 			{
 				Safe_Release(*it);
-				it = m_objList.erase(it);
+				it = m_objList.erase(it); 
 				continue;
 			}
 		}
