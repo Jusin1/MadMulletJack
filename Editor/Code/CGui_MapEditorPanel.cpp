@@ -268,11 +268,11 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		case MapEditorObjectCategory::WALL:
 		{
 			// TODO : type에 따른 생성
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, L"EditLogic_Layer");
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, L"Wall_Layer");
 		} break;
 		case MapEditorObjectCategory::TILE:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile Layer");
 		} break;
 		case MapEditorObjectCategory::ENV_OBJ:
 		{
