@@ -138,6 +138,7 @@ private:
 private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* componentTag);
+	HRESULT Set_PlayerUI();
 
 private:
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌

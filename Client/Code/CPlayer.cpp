@@ -7,13 +7,14 @@
 #include "CObjectManager.h"
 #include "CUIBase.h"
 #include "CDInputMgr.h"
-#include "CPlayer_StateInfo.h"
+#include "CGlobal_Info.h"
 #include "CPlayer_HandL.h"
 #include "CPlayer_Arm.h"
 #include "CPlayer_Foot.h"
+#include "CPistol_Gun.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_NON ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END), m_fMaxHp(10.f),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false)
 {
@@ -44,50 +45,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pPlayerUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
-
-	if (m_pPlayerUI == nullptr)
-		return E_FAIL;
-
-	// habdR UI 생성
-	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STAGE, L"UI_Layer"));
-	if (pHandRUI)
-	{
-		pHandRUI->Initialize(nullptr); // 필요 시 인자 전달
-		pHandRUI->Set_ObjTag(L"HandRUI");
-		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
-	}
-
-	// handL UI 생성
-	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE, L"UI_Layer"));
-	if (pHandLUI)
-	{
-		pHandLUI->Initialize(nullptr); // 필요 시 인자 전달
-		pHandLUI->Set_ObjTag(L"HandLUI");
-		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
-	}
-
-	// foot UI 생성
-	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE, L"UI_Layer"));
-	if (pFootUI)
-	{
-		pFootUI->Initialize(nullptr); // 필요 시 인자 전달
-		pFootUI->Set_ObjTag(L"FootUI");
-		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
-	}
-
-	// arm UI 생성
-	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STAGE, L"UI_Layer"));
-	if (pArmUI)
-	{
-		pArmUI->Initialize(nullptr); // 필요 시 인자 전달
-		pArmUI->Set_ObjTag(L"ArmUI");
-		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
-	}
-
 	if (FAILED(Set_Component()))
 		return E_FAIL;
+
+	if (FAILED(Set_PlayerUI()))
+		return E_FAIL;
+
 
 	m_vPosition = { 10.f, 1.f, 10.f };
 	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
@@ -210,7 +173,8 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 	}
 
 	// 변경된 player info 전달
-	CPlayer_StateInfo::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
+	CGlobal_Info::Get_Instance()->Set_STATE(STATE_ON);
 }
 
 void CPlayer::StateEnd(PLAYERSTATE _e)
@@ -421,7 +385,8 @@ void CPlayer::ATTACK_Begin()
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
-
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Idle();
 }
 
 void CPlayer::ATTACK_End()
@@ -475,7 +440,8 @@ void CPlayer::RELOAD_Begin()
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Idle();
 }
 
 void CPlayer::RELOAD_End()
@@ -542,7 +508,8 @@ void CPlayer::OPENING_Begin()
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
 {
-	UIAniFinish(TEXT("ArmUI"));
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Idle();
 }
 
 void CPlayer::OPENING_End()
@@ -557,13 +524,7 @@ void CPlayer::PLAYERDEAD_Begin()
 
 void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
 {
-	/*CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(L"HandUI");
-		if (pFound)
-		{
-			if (dynamic_cast<CPlayer_HandR*>(pFound)->Get_AniFinish())
-				Set_State_Idle();
-		}*/
-	
+
 }
 
 void CPlayer::PLAYERDEAD_End()
@@ -629,6 +590,14 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)) // 우클릭
 	{
 		m_tPlayerInfo.ePlayerState = DASH_ATTACK;
+	}
+
+	if (m_tPlayerInfo.eWeapon != WP_NON)
+	{
+		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+		{
+			m_tPlayerInfo.ePlayerState = RELOAD;
+		}
 	}
 }
 
@@ -740,6 +709,50 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 		return E_FAIL;
 
 	m_pTextureCom->Set_Zero_Frame();
+	return S_OK;
+}
+
+HRESULT CPlayer::Set_PlayerUI()
+{
+	m_pPlayerUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
+
+	if (m_pPlayerUI == nullptr)
+		return E_FAIL;
+
+	// habdR UI 생성
+	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STAGE, L"UI_Layer"));
+	if (pHandRUI)
+	{
+		pHandRUI->Initialize(nullptr); // 필요 시 인자 전달
+		pHandRUI->Set_ObjTag(L"HandRUI");
+		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
+	}
+	// handL UI 생성
+	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE, L"UI_Layer"));
+	if (pHandLUI)
+	{
+		pHandLUI->Initialize(nullptr); // 필요 시 인자 전달
+		pHandLUI->Set_ObjTag(L"HandLUI");
+		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
+	}
+	// foot UI 생성
+	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE, L"UI_Layer"));
+	if (pFootUI)
+	{
+		pFootUI->Initialize(nullptr); // 필요 시 인자 전달
+		pFootUI->Set_ObjTag(L"FootUI");
+		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
+	}
+	// arm UI 생성
+	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STAGE, L"UI_Layer"));
+	if (pArmUI)
+	{
+		pArmUI->Initialize(nullptr); // 필요 시 인자 전달
+		pArmUI->Set_ObjTag(L"ArmUI");
+		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
+	}
+
 	return S_OK;
 }
 
