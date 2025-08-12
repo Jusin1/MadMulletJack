@@ -98,16 +98,34 @@ HRESULT CEditorScene::Ready_Camera_Layer(const _tchar *pLayerTag)
 
 HRESULT CEditorScene::Ready_EditLogic_Layer(const _tchar *pLayerTag)
 {
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, pLayerTag)))
+    // TODO : Parsing Here
+    // CFileManager::GetInstance()->GetSceneData(SceneNumber, FolderName);
+    // parsing test
+    MAPOBJECTDATA tTestData;
+    tTestData.transform.Pos[0] = 0.f;
+    tTestData.transform.Pos[1] = 2.f;
+    tTestData.transform.Pos[2] = 0.f;
+    tTestData.panelBuffer.eType = PanelType::FLOOR;
+    tTestData.panelBuffer.dwCountX = 5;
+    tTestData.panelBuffer.dwCountY = 0;
+    tTestData.panelBuffer.dwCountZ = 5;
+    tTestData.panelBuffer.dwInterval = 1;
+    tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
         return E_FAIL;
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_SamplePanel", SCENE_EDITOR, pLayerTag)))
-        return E_FAIL;
+    tTestData.transform.Pos[0] = 3.f;
+    tTestData.transform.Pos[1] = 0.f;
+    tTestData.transform.Pos[2] = 0.f;
+    tTestData.panelBuffer.eType = PanelType::WALL_VER;
+    tTestData.panelBuffer.dwCountX = 0;
+    tTestData.panelBuffer.dwCountY = 9;
+    tTestData.panelBuffer.dwCountZ = 9;
+    tTestData.panelBuffer.dwInterval = 1;
+    tTestData.texture.OriginComponentName = L"Proto_GridDefault";
 
-    
-    CGameObject *pObj = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 1);
-    CGameObject *pObj2 = CObjectManager::GetInstance()->Find_Object(SCENE_EDITOR, pLayerTag, 0);
-    static_cast<CGridPanel *>(pObj2)->Change_Texture(SCENE_STATIC,L"Proto_GridTrigger");
-    static_cast<CGridPanel *>(pObj)->Change_Buffer(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest");
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
+        return E_FAIL;
     return S_OK;
 }

@@ -91,6 +91,9 @@
     <Filter Include="06. GUI\Panel\Console">
       <UniqueIdentifier>{2209d2c9-0ca8-47fe-b2d7-6def234e1c3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\CTile">
+      <UniqueIdentifier>{6adfc358-a3fb-4fe6-8c45-cd18a26aa52f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="..\Header\CGui_Console.h">
       <Filter>06. GUI\Panel\Console</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTile.h">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -316,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Console.cpp">
       <Filter>06. GUI\Panel\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile.cpp">
+      <Filter>04. GameObject\CTile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

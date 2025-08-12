@@ -139,12 +139,14 @@ void CGridPanel::ExportData(void *pData)
 	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pData))
 	{
 		p->ObjType = OBJ_END;
-		p->panelBuffer.dwCountX = GetBuffer()->Get_Data()->dwCountX;
-		p->panelBuffer.dwCountY = GetBuffer()->Get_Data()->dwCountY;
-		p->panelBuffer.dwCountZ = GetBuffer()->Get_Data()->dwCountZ;
-		p->panelBuffer.dwInterval = GetBuffer()->Get_Data()->dwInterval;
-		p->panelBuffer.eType = GetBuffer()->Get_Data()->eType;
+		
+		// buffer
+		::memcpy(&(p->panelBuffer), GetBuffer()->Get_Data(), sizeof(PANELDATA));
+
+		// texture
 		p->texture.OriginComponentName = GetTexture()->GetOriginCompName();
+
+		// transform
 		_vec3 cpy = GetTransform()->Get_Info(INFO_RIGHT);
 		::memcpy(&p->transform.Right, &cpy, sizeof(_vec3));
 		cpy = GetTransform()->Get_Info(INFO_UP);
@@ -200,21 +202,39 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 {
 	if (pArg)
 	{
-		MAPOBJECTDATA tdata;
-		::memcpy(&tdata, pArg, sizeof(MAPOBJECTDATA));
+		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+		{
+			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
+
+			// VIBuffer
+			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
+				return E_FAIL;
+
+			// Texture
+			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
+				return E_FAIL;
+
+			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+		}
+		else
+		{
+			MSG_BOX("CGridPanel::Set_Component, Something Wrong");
+			return E_FAIL;
+		}
 	}
+	else
+	{
+		// VIBuffer Default
+		if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
+			return E_FAIL;
 
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
-		return E_FAIL;
-
-	// Texture
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
-		return E_FAIL;
-
-	CTransform::TRANSFORMINFO TransformInfo;
-	::ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
+		// Texture Default
+		if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

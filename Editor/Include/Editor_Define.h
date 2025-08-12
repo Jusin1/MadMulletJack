@@ -51,7 +51,7 @@ enum class MapEditorWallType : unsigned int
 	INCLINE,
 	FLOOR,
 	CEILING,
-	NONE,
+	NONE
 };
 constexpr size_t g_MapEditorWallTypeCount{ static_cast<size_t>(MapEditorWallType::NONE) };
 
