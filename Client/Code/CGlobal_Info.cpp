@@ -13,8 +13,7 @@ CGlobal_Info::~CGlobal_Info()
 
 void CGlobal_Info::Initialize()
 {
-	m_tPlayerInfo.ePlayerState	= IDLE;
-	m_tPlayerInfo.eWeapon		= WP_NON;
-	m_tPlayerInfo.eWeapon2		= WP_KICK;
-
+	m_tPlayerInfo.ePlayerState = IDLE;
+	m_tPlayerInfo.eWeapon = WP_NON;
+	m_tPlayerInfo.eWeapon2 = WP_KICK;
 }
