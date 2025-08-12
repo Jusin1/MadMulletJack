@@ -144,7 +144,7 @@ HRESULT CEditorScene::Ready_Wall_Layer(const _tchar *pLayerTag)
     tTestData.panelBuffer.dwCountY = 0;
     tTestData.panelBuffer.dwCountZ = 5;
     tTestData.panelBuffer.dwInterval = 1;
-    tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
+    tTestData.texture.OriginComponentName = L"Proto_Floor_5";
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
         return E_FAIL;
@@ -157,7 +157,7 @@ HRESULT CEditorScene::Ready_Wall_Layer(const _tchar *pLayerTag)
     tTestData.panelBuffer.dwCountY = 9;
     tTestData.panelBuffer.dwCountZ = 9;
     tTestData.panelBuffer.dwInterval = 1;
-    tTestData.texture.OriginComponentName = L"Proto_GridDefault";
+    tTestData.texture.OriginComponentName = L"Proto_Acid_Wall_2";
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
         return E_FAIL;

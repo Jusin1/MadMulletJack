@@ -46,6 +46,7 @@ public:
 	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
 	void RotationDegree(const _vec3& axis, float degrees);
+	void SetDegreeForEditor(const _vec3 &axis, float degrees);
 
 
 public:

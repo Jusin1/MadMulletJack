@@ -238,6 +238,25 @@ void CTransform::RotationDegree(const _vec3& axis, float degrees)
 	Set_Info(INFO_LOOK, look * fZ);
 }
 
+void CTransform::SetDegreeForEditor(const _vec3 &axis, float degrees)
+{
+	if (degrees == 0.f) return;
+
+	_matrix rad;
+	D3DXMatrixRotationAxis(&rad, &axis, D3DXToRadian(degrees));
+
+	_vec3 right;
+	_vec3 up;
+	_vec3 look;
+
+	::memcpy(&right, &rad.m[0][0], sizeof(_vec3));
+	::memcpy(&up, &rad.m[1][0], sizeof(_vec3));
+	::memcpy(&look, &rad.m[2][0], sizeof(_vec3));
+
+	Set_Info(INFO_RIGHT, right);
+	Set_Info(INFO_UP, up);
+	Set_Info(INFO_LOOK, look);
+}
 
 
 void CTransform::Move_YUp(_float fTimeDelta)
