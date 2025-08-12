@@ -40,16 +40,16 @@ HRESULT CVIBuffer_Rect::Ready_Buffer()
     m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
     // 오른쪽 위
-    pVertex[0].vPosition = { -1.f, 1.f, 0.f };
+    pVertex[0].vPosition = { -0.5f, 0.5f, 0.f };
     pVertex[0].vTexUV = { 0.f, 0.f};
 
-    pVertex[1].vPosition = { 1.f, 1.f, 0.f };
+    pVertex[1].vPosition = { 0.5f, 0.5f, 0.f };
     pVertex[1].vTexUV = { 1.f, 0.f };
 
-    pVertex[2].vPosition = { 1.f, -1.f, 0.f };
+    pVertex[2].vPosition = { 0.5f, -0.5f, 0.f };
     pVertex[2].vTexUV = { 1.f, 1.f };
 
-    pVertex[3].vPosition = { -1.f, -1.f, 0.f };
+    pVertex[3].vPosition = { -0.5f, -0.5f, 0.f };
     pVertex[3].vTexUV = { 0.f, 1.f };
 
     // 로컬 정점 위치 저장

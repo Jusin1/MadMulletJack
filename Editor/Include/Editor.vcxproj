@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CDummyTile.h" />
     <ClInclude Include="..\Header\CEditorApplication.h" />
     <ClInclude Include="..\Header\CEditorCamera.h" />
     <ClInclude Include="..\Header\CEditorLoadingScene.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\Header\CGuiManager.h" />
     <ClInclude Include="..\Header\CGui_Button.h" />
     <ClInclude Include="..\Header\CGui_ButtonList.h" />
+    <ClInclude Include="..\Header\CGui_Checkbox.h" />
     <ClInclude Include="..\Header\CGui_Console.h" />
     <ClInclude Include="..\Header\CGui_Dropbox.h" />
     <ClInclude Include="..\Header\CGui_InputFloat.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CDummyTile.cpp" />
     <ClCompile Include="..\Code\CEditorApplication.cpp" />
     <ClCompile Include="..\Code\CEditorCamera.cpp" />
     <ClCompile Include="..\Code\CEditorLoadingScene.cpp" />
@@ -204,6 +207,7 @@
     <ClCompile Include="..\Code\CGuiManager.cpp" />
     <ClCompile Include="..\Code\CGui_Button.cpp" />
     <ClCompile Include="..\Code\CGui_ButtonList.cpp" />
+    <ClCompile Include="..\Code\CGui_Checkbox.cpp" />
     <ClCompile Include="..\Code\CGui_Console.cpp" />
     <ClCompile Include="..\Code\CGui_Dropbox.cpp" />
     <ClCompile Include="..\Code\CGui_InputFloat.cpp" />

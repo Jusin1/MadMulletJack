@@ -3,6 +3,8 @@
 #include "CGui_Thumbnail.h"
 #include "Engine_Define.h"
 #include "Editor_Define.h"
+#include "CGameObject.h"
+#include "CObjectManager.h"
 #include "CGui_Log.h"
 #include "CComponentMgr.h"
 #include "CTexture.h"
@@ -13,7 +15,7 @@
 IMPLEMENT_SINGLETON(CGuiManager)
 
 CGuiManager::CGuiManager()
-	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(MapEditorObjectCategory::WALL), m_iObjectType(0)
+	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(MapEditorObjectCategory::WALL), m_iObjectType(0), m_bCreateMode(FALSE)
 {
 }
 
@@ -153,4 +155,70 @@ void CGuiManager::Render()
     ShowEditorDockspace();
     ShowInspector();
     ShowConsole();
+}
+
+void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
+{
+    if (_b)
+    {
+        switch (_e)
+        {
+        case MapEditorObjectCategory::WALL:
+        {
+            MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
+        } break;
+        case MapEditorObjectCategory::TILE:
+        {
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", SCENE_EDITOR, L"Dummy_Layer")))
+            {
+                MSG_BOX("CGuiManager::SetCreateMode, DummyTile Creat Failed");
+            }
+            EDITOR_CONSOLE("TILE");
+        } break;
+        case MapEditorObjectCategory::ENV_OBJ:
+        {
+            EDITOR_CONSOLE("ENV_OBJ");
+        } break;
+        case MapEditorObjectCategory::MONSTER:
+        {
+            EDITOR_CONSOLE("MONSTER");
+        } break;
+        case MapEditorObjectCategory::LIGHT:
+        {
+            EDITOR_CONSOLE("LIGHT");
+        } break;
+        }
+    }
+    else
+    {
+        switch (_e)
+        {
+        case MapEditorObjectCategory::WALL:
+        {
+            MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
+        } break;
+        case MapEditorObjectCategory::TILE:
+        {
+            auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_EDITOR, L"Dummy_Layer");
+            if (list && list->size() > 0)
+            {
+                (*list->begin())->Set_Dead(TRUE);
+            }
+            EDITOR_CONSOLE("TILE");
+        } break;
+        case MapEditorObjectCategory::ENV_OBJ:
+        {
+            EDITOR_CONSOLE("ENV_OBJ");
+        } break;
+        case MapEditorObjectCategory::MONSTER:
+        {
+            EDITOR_CONSOLE("MONSTER");
+        } break;
+        case MapEditorObjectCategory::LIGHT:
+        {
+            EDITOR_CONSOLE("LIGHT");
+        } break;
+        }
+    }
+    m_bCreateMode = _b;
 }

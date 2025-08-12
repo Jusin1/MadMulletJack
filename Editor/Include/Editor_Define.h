@@ -21,6 +21,7 @@ enum class MapEditorGuiType : unsigned int
 	ENVOBJ_TYPE_DROPBOX,
 	MONSTER_TYPE_DROPBOX,
 	LIGHT_TYPE_DROPBOX,
+	CREATEMODE_CHECKBOX,
 	CREATE_BUTTONS,
 	PANEL_SIZE_BUTTONS,
 	POSITION,
@@ -93,3 +94,4 @@ constexpr size_t g_EffectEditorGuiTypeCount{ static_cast<size_t>(EffectEditorGui
 // TILE
 // Horizon
 // Vrtical (À¯¸®)
+inline int FastRound(float x) { return static_cast<int>(x + (x >= 0 ? 0.5f : -0.5f)); }

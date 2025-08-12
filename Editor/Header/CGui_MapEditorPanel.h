@@ -35,6 +35,7 @@ private:
 	CGuiBase *TileThumbnail_Create();
 	CGuiBase *EnvThumbnail_Create();
 	CGuiBase *MonsterThumbnail_Create();
+	CGuiBase *CreateModeCheckBox_Create();
 
 private:
 	MapEditorObjectCategory m_eCategory;

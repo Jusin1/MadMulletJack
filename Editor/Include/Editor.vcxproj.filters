@@ -94,6 +94,9 @@
     <Filter Include="04. GameObject\CTile">
       <UniqueIdentifier>{6adfc358-a3fb-4fe6-8c45-cd18a26aa52f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. GUI\Element\Checkbox">
+      <UniqueIdentifier>{947123a3-9207-487f-b1b9-2f9b4d0f934e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -219,6 +222,12 @@
     <ClInclude Include="..\Header\CTile.h">
       <Filter>04. GameObject\CTile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDummyTile.h">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGui_Checkbox.h">
+      <Filter>06. GUI\Element\Checkbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -325,6 +334,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>04. GameObject\CTile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDummyTile.cpp">
+      <Filter>04. GameObject\CTile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_Checkbox.cpp">
+      <Filter>06. GUI\Element\Checkbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

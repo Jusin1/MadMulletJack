@@ -61,7 +61,11 @@ public:
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> *GetPanelList() { return &m_pPanels; }
 	CGui_Panel *GetConsole() { return m_pPanels[CONSOLE]; }
 	CGui_Panel *GetInspector() { return m_pPanels[INSPECTOR]; }
+
+	_bool IsCreateMode() { return m_bCreateMode; }
+	void SetCreateMode(_bool _b, MapEditorObjectCategory _e);
 private:
+	_bool m_bCreateMode;
 	LPDIRECT3DDEVICE9 m_pGraphicDevice;
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;

@@ -4,6 +4,7 @@
 #include "CGameObject.h"
 #include "CGui_ButtonList.h"
 #include "CGui_Transform.h"
+#include "CGui_Checkbox.h"
 #include "CGui_Thumbnail.h"
 #include "CVIBuffer_GridPanel.h"
 #include "CObjectManager.h"
@@ -49,6 +50,7 @@ void CGui_MapEditorPanel::Render()
 
 		if (DropboxElement)
 		{
+			static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)])->OnFalse();
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetCategory(DropboxElement->GetConfirmedState());
 			m_eCategory = CGuiManager::GetInstance()->GetCategory();
@@ -91,6 +93,7 @@ HRESULT CGui_MapEditorPanel::Ready_Panel()
 	m_pElements[static_cast<_uint>(MapEditorGuiType::ENVOBJ_TYPE_DROPBOX)] = EnvObjtypeDropbox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_TYPE_DROPBOX)] = MonstertypeDropbox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::LIGHT_TYPE_DROPBOX)] = LighttypeDropbox_Create();
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)] = CreateModeCheckBox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)] = CreateButton_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::PANEL_SIZE_BUTTONS)] = GridPanelSizeButtons_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)] = PositionInputfield_Create();
@@ -137,6 +140,7 @@ void CGui_MapEditorPanel::TileRender()
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)]->Render(m_iObjectType);
@@ -156,7 +160,7 @@ void CGui_MapEditorPanel::EnvObjRender()
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
-
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)]->Render(m_iObjectType);
 }
 
@@ -174,7 +178,7 @@ void CGui_MapEditorPanel::MonsterRender()
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
-
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)]->Render(m_iObjectType);
 }
 
@@ -394,4 +398,18 @@ CGuiBase *CGui_MapEditorPanel::MonsterThumbnail_Create()
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MapEditorMonsterTypeCount);
 
 	return pThumbnail;
+}
+
+CGuiBase *CGui_MapEditorPanel::CreateModeCheckBox_Create()
+{
+	CGui_Checkbox *pCheckbox = CGui_Checkbox::Create("CreateMode",
+		// TrueEvent
+		[this]()->void {
+			CGuiManager::GetInstance()->SetCreateMode(TRUE, m_eCategory);
+		},
+		// FalseEvent
+		[this]()->void {
+			CGuiManager::GetInstance()->SetCreateMode(FALSE, m_eCategory);
+		});
+	return pCheckbox;
 }

@@ -137,14 +137,14 @@ HRESULT CTile::Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void
 {
 	if (!m_pTexture)
 	{
-		MSG_BOX("Not good situation at CGridPanel::Change_Texture");
+		MSG_BOX("Not good situation at CTile::Change_Texture");
 		return E_FAIL;
 	}
 
 	auto	iter = find_if(m_mapComponent.begin(), m_mapComponent.end(), CTag_Finder(L"Com_Texture"));
 	if (iter == m_mapComponent.end())
 	{
-		MSG_BOX("Com_Texture is not matching with components container");
+		MSG_BOX("CTile::Com_Texture is not matching with components container");
 		return E_FAIL;
 	}
 	Safe_Release(iter->second);
@@ -157,14 +157,14 @@ HRESULT CTile::Change_Buffer(_uint iSceneIdx, const _tchar *pPrototypeTag, void 
 {
 	if (!m_pBuffer)
 	{
-		MSG_BOX("Not good situation at CGridPanel::Change_ChangeBuffer");
+		MSG_BOX("Not good situation at CTile::Change_ChangeBuffer");
 		return E_FAIL;
 	}
 
 	auto	iter = find_if(m_mapComponent.begin(), m_mapComponent.end(), CTag_Finder(L"Com_Buffer"));
 	if (iter == m_mapComponent.end())
 	{
-		MSG_BOX("Com_Buffer is not matching with components container");
+		MSG_BOX("CTile::Com_Buffer is not matching with components container");
 		return E_FAIL;
 	}
 	Safe_Release(iter->second);
@@ -177,21 +177,39 @@ HRESULT CTile::Set_Component(void *pArg)
 {
 	if (pArg)
 	{
-		MAPOBJECTDATA tdata;
-		::memcpy(&tdata, pArg, sizeof(MAPOBJECTDATA));
+		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+		{
+			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
+
+			// VIBuffer
+			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", (CComponent **)&m_pBuffer)))
+				return E_FAIL;
+
+			// Texture
+			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
+				return E_FAIL;
+
+			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+		}
+		else
+		{
+			MSG_BOX("CGridPanel::Set_Component, Something Wrong");
+			return E_FAIL;
+		}
 	}
+	else
+	{
+		// VIBuffer Default
+		if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", (CComponent **)&m_pBuffer)))
+			return E_FAIL;
 
-	// VIBuffer
-	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", (CComponent **)&m_pBuffer)))
-		return E_FAIL;
-
-	// Texture
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
-		return E_FAIL;
-
-	CTransform::TRANSFORMINFO TransformInfo;
-	::ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-	TransformInfo.vStartPos = _vec3(0.f, 0.f, 0.f);
+		// Texture Default
+		if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

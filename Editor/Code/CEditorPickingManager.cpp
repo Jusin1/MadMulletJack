@@ -90,3 +90,51 @@ _bool CEditorPickingManager::Picking()
 	CGuiManager::GetInstance()->SetTarget(nullptr);
 	return FALSE;
 }
+
+_bool CEditorPickingManager::Picking_ForDummy()
+{
+	POINT p; GetCursorPos(&p);
+	RECT rc; GetClientRect(g_hWnd, &rc);
+	ScreenToClient(g_hWnd, &p);
+	if (!PtInRect(&rc, p))
+		return FALSE;
+
+	vector<CGameObject *> vecPicked;
+	vector<_vec3> vecPos;
+	_vec3 vPos;
+
+	for (auto &pGameObject : m_PickingList)
+	{
+		if (pGameObject->Picking(&vPos))
+		{
+			vecPicked.push_back(pGameObject);
+			vecPos.push_back(vPos);
+		}
+	}
+
+	if (!vecPicked.empty())
+	{
+		_vec3 vecNearPos;
+		CGameObject *pPickedGo{nullptr};
+		int NearNum = 0;
+
+		for (_uint i = 0; i < vecPos.size(); ++i)
+		{
+			if (vecPos[i].z <= vecNearPos.z || i == 0)
+			{
+				vecNearPos = vecPos[i];
+				pPickedGo = vecPicked[i];
+				NearNum = i;
+			}
+		}
+
+		m_pPickedOBjectForDummy = pPickedGo;
+		m_vDummyPickingPos = vecNearPos;
+	}
+	else
+	{
+		m_pPickedOBjectForDummy = nullptr;
+		m_vDummyPickingPos = {0.f, 0.f, 0.f};
+	}
+	return FALSE;
+}

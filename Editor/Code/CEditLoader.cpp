@@ -3,6 +3,8 @@
 #include "CComponentMgr.h"
 #include "CEditorCamera.h"
 #include "CVIBuffer_GridPanel.h"
+#include "CDummyTile.h"
+#include "CTile.h"
 #include "CGridPanel.h"
 #include <process.h>
 
@@ -93,9 +95,19 @@ HRESULT CEditLoader::Loading_Editor()
 		CEditorCamera::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
-	// SamplePanel
+	// DefaultPanel
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultPanel",
 		CGridPanel::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
+	// DefaultTile
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultTile",
+		CTile::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
+	// DummyTile
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DummyTile",
+		CDummyTile::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
@@ -103,12 +115,10 @@ HRESULT CEditLoader::Loading_Editor()
 	// Buffer_PanelDefault
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice))))
 		return E_FAIL;
-
-	// Buffer_PanelTest
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_Component_Buffer_PanelTest", CVIBuffer_GridPanel::Create(m_pGraphicDevice))))
-		return E_FAIL;
 	
-	// Buffer_Panel
+	// Buffer_TileDefault
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", CVIBuffer_Rect::Create(m_pGraphicDevice))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
