@@ -8,7 +8,7 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
-#include "CPlayer_StateInfo.h"
+#include "CGlobal_Info.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -176,5 +176,5 @@ void CStage::Free()
 {
     Engine::CScene::Free();
 
-    CPlayer_StateInfo::Destroy_Instance();
+    CGlobal_Info::Destroy_Instance();
 }
