@@ -17,9 +17,6 @@ public:
 
 public:
     HRESULT Change_Texture(const _tchar* pTextureTag);
-
-private:
-    virtual HRESULT Set_Texture() override;
     HRESULT Texture_Clone();
 
 private:

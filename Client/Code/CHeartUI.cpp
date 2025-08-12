@@ -30,12 +30,6 @@ HRESULT CHeartUI::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
     
-    //m_fSizeX = 50.f;
-    //m_fSizeY = 50.f;
-
-    //m_fX = WINCX * 0.5f - 300.f;
-    //m_fY = WINCY * 0.5f + 250.f;
-
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
@@ -46,7 +40,7 @@ HRESULT CHeartUI::Initialize(void* pArg)
 _int CHeartUI::Update_GameObject(const _float& fTimeDelta)
 {
     m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
+    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
 
     __super::Update_GameObject(fTimeDelta);
     return NO_EVENT;

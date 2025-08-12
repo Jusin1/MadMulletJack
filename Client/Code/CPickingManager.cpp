@@ -49,6 +49,7 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 	}
 }
 
+// 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
     if (m_bMouseInUI) return false;
@@ -65,11 +66,12 @@ _bool CPickingManager::Picking()
         _vec3 hit;
         if (obj->Picking(&hit)) {
             vecPicked.push_back(obj);
-            vecPos.push_back(hit);  
+            vecPos.push_back(hit);   
         }
         ++it;
     }
     if (vecPicked.empty()) return false;
+
 
     int best = -1;
     float bestZ = FLT_MAX;

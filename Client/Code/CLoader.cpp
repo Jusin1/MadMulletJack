@@ -21,6 +21,7 @@
 
 // UI - 게임진입 UI
 #include "CHeartUI.h"
+#include "CLisaUI.h"
 
 
 // 몬스터
@@ -191,6 +192,10 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART LINE.png", 1))))
 		return E_FAIL;
 
+	// LISA UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
+		return E_FAIL;
 #pragma endregion 게임 진입 UI
 
 	// 객체 생성
@@ -246,8 +251,15 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 #pragma region 게임 진입 UI들 생성
+
+	// Heart UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HeartUI",
 		CHeartUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Lisa UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_LisaUI",
+		CLisaUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 
