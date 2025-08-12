@@ -93,6 +93,13 @@ CUIBase* CUIBase::Find_Child_ByTag(const _tchar* pTag) // 자식 찾기(태그로)
     return nullptr;
 }
 
+void CUIBase::Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY)
+{
+    _vPos.x += _offsetX;
+    _vPos.y += _offesetY;
+    m_pTransformCom->Set_Info(INFO_POS, _vPos);
+}
+
 CUIBase* CUIBase::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CUIBase* pInstance = new CUIBase(pGraphicDev);

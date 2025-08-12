@@ -84,6 +84,14 @@ void CUI::Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _f
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX - WINCX * 0.5f, -m_fY + WINCY * 0.5f, 0.f));
 }
 
+void CUI::Set_UISize(_float _fSizeX, _float _fSizeY)
+{
+	m_fSizeX = _fSizeX;
+	m_fSizeY = _fSizeY;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+}
+
 void CUI::Move_UI(const _float& fTimeDelta)
 {
 	switch (m_eMove) {

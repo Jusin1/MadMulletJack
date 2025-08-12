@@ -1,6 +1,6 @@
 #pragma once
 #include "CUIBase.h"
-#include "CPlayer_StateInfo.h"
+#include "CGlobal_Info.h"
 class CUI : public CUIBase
 {
 protected:
@@ -38,6 +38,7 @@ protected:
 	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
 
 	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY);
+	void		Set_UISize(_float _fSizeX, _float _fSizeY);
 	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
 	
 public:
