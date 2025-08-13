@@ -20,17 +20,15 @@ namespace {
     {
         switch (p)
         {
-        case CMonster_Suit::HIT_HEAD:  return D3DCOLOR_ARGB(255, 255, 80, 80);   
-        case CMonster_Suit::HIT_BALLS: return D3DCOLOR_ARGB(255, 255, 220, 80); 
-        case CMonster_Suit::HIT_LEG:   return D3DCOLOR_ARGB(255, 80, 150, 255);  
-        case CMonster_Suit::HIT_BODY:  return D3DCOLOR_ARGB(255, 120, 255, 120); 
+        case CMonster_Suit::HIT_HEAD:  return D3DCOLOR_ARGB(255, 255, 80, 80);
+        case CMonster_Suit::HIT_BALLS: return D3DCOLOR_ARGB(255, 255, 220, 80);
+        case CMonster_Suit::HIT_LEG:   return D3DCOLOR_ARGB(255, 80, 150, 255);
+        case CMonster_Suit::HIT_BODY:  return D3DCOLOR_ARGB(255, 120, 255, 120);
         default:                       return D3DCOLOR_ARGB(255, 200, 200, 200);
         }
     }
 }
 #endif
-
-
 
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -101,13 +99,13 @@ void CMonster_Suit::Render_GameObject()
 {
     __super::Render_GameObject();
 
-#ifdef _DEBUG  // 충돌체 랜더링 일부로 본체 구는 안했음 (원래 존재)
+#ifdef _DEBUG
     if (g_ColiderRender)
-        DebugRender_HitSpheres(); 
+        DebugRender_HitSpheres();
 #endif
 }
 
-void CMonster_Suit::Set_Collider() // 콜라이더 설정
+void CMonster_Suit::Set_Collider()
 {
     if (m_pColiderCom)
         m_pColiderCom->Update_ColliderSphere();
@@ -121,13 +119,12 @@ void CMonster_Suit::Set_Collider() // 콜라이더 설정
     }
 }
 
-_bool CMonster_Suit::Picking(_vec3* PickingPoint) // 픽킹 구충돌로 수정 -> 본체구는 픽킹처리안함 본체구는 밀어내기 용도로만
+_bool CMonster_Suit::Picking(_vec3* PickingPoint)
 {
     CPicking* pk = CPicking::GetInstance();
-    _vec3 rayOrigin = pk->GetRayOrigin();
-    _vec3 rayDir = pk->GetRayDir();
-
-    D3DXVec3Normalize(&rayDir, &rayDir);
+    _vec3 rayO = pk->GetRayOrigin();
+    _vec3 rayD = pk->GetRayDir();
+    D3DXVec3Normalize(&rayD, &rayD);
 
     const _matrix& W = *m_pTransformCom->Get_World();
     _vec3 axX(W._11, W._12, W._13), axY(W._21, W._22, W._23), axZ(W._31, W._32, W._33);
@@ -136,39 +133,48 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint) // 픽킹 구충돌로 수정 
     struct HitRec { HIT_PART part; float t; _vec3 hit; int priority; };
     HitRec best{ HIT_UNKNOWN, FLT_MAX, _vec3(), -999 };
 
-    for (const auto& pSphere : m_hitSpheres)
+    for (const auto& ps : m_hitSpheres)
     {
-        _vec3 cW;
-        D3DXVec3TransformCoord(&cW, &pSphere.localCenter, &W);
-        float rW = pSphere.radius * sMax;
+        _vec3 cW; D3DXVec3TransformCoord(&cW, &ps.localCenter, &W);
+        float rW = ps.radius * sMax;
+        float sx = (ps.xScale > 1e-6f) ? ps.xScale : 1.0f;
+        _matrix S; D3DXMatrixScaling(&S, 1.0f / sx, 1.0f, 1.0f);
+
+        _vec3 o2, d2, c2;
+        D3DXVec3TransformCoord(&o2, &rayO, &S);
+        D3DXVec3TransformNormal(&d2, &rayD, &S); D3DXVec3Normalize(&d2, &d2);
+        D3DXVec3TransformCoord(&c2, &cW, &S);
 
         float t;
-        if (CPicking::IntersectRaySphere(rayOrigin, rayDir, cW, rW, &t))
+        if (CPicking::IntersectRaySphere(o2, d2, c2, rW, &t) && t >= 0.f)
         {
-            if (t < 0.f) continue;
+            bool better = false;
+            if (ps.priority > best.priority) {
+                better = true;
+            }
+            else if (ps.priority == best.priority && t < best.t) {
+                better = true;
+            }
 
-            bool better = (t < best.t);
-            const float EPS = 0.015f;
-            if (!better && fabsf(t - best.t) <= EPS)
-                better = (pSphere.priority > best.priority);
-
-            if (better) best = { pSphere.part, t, rayOrigin + rayDir * t, pSphere.priority };
+            if (better) {
+                _vec3 hit2 = o2 + d2 * t;
+                _matrix invS; D3DXMatrixInverse(&invS, nullptr, &S);
+                _vec3 hitW;  D3DXVec3TransformCoord(&hitW, &hit2, &invS);
+                best = { ps.part, t, hitW, ps.priority };
+            }
         }
     }
-    if (best.part == HIT_UNKNOWN) return false;
 
+    if (best.part == HIT_UNKNOWN) return false;
     if (PickingPoint) *PickingPoint = best.hit;
-    m_cachedHitPart = best.part; 
+    m_cachedHitPart = best.part;
     return true;
 }
 
 void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
 {
     HIT_PART part = m_cachedHitPart;
-
-    if (part == HIT_UNKNOWN)
-        part = HIT_BODY;
-
+    if (part == HIT_UNKNOWN) part = HIT_BODY;
     m_cachedHitPart = HIT_UNKNOWN;
 
     const wchar_t* anim = L"Com_Texture_Hit_Body";
@@ -186,8 +192,7 @@ void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
     ApplyDamage(part, dmg);
 }
 
-
-void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg) // 부위별 데미지 계산
+void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 {
     float prevHp = m_fHp;
     m_fHp -= dmg;
@@ -213,18 +218,17 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg) // 부위별 데미지 �
     }
 }
 
-
-HRESULT CMonster_Suit::Texture_Clone() // 애니메이션 설정
+HRESULT CMonster_Suit::Texture_Clone()
 {
     CTexture::TEXINFO info{};
 
     struct AnimDef { const wchar_t* tag; const wchar_t* proto; int start; int end; float speed; bool loop; };
     AnimDef anims[] = {
-        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12,  13.f,  true },
-        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13, 13.f,  true },
-        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9, 13.f,  true },
-        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 13.f,  true },
-        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22, 17.f,  true },
+        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12, 13.f,  true },
+        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13, 13.f, true },
+        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9, 13.f, true },
+        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 13.f, true },
+        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22, 17.f, true },
         { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 13.f, true },
         { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 13.f, true },
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 13.f, true },
@@ -248,14 +252,14 @@ HRESULT CMonster_Suit::Texture_Clone() // 애니메이션 설정
     return S_OK;
 }
 
-void CMonster_Suit::SetState(MON_STATE next) // 상태 설정
+void CMonster_Suit::SetState(MON_STATE next)
 {
     m_ePrevState = m_eMonState;
     m_eMonState = next;
     OnEnterState(next);
 }
 
-void CMonster_Suit::OnEnterState(MON_STATE s) // 상태 애니메이션 처리
+void CMonster_Suit::OnEnterState(MON_STATE s)
 {
     const wchar_t* tag = L"Com_Texture_Idle";
 
@@ -294,7 +298,7 @@ void CMonster_Suit::OnEnterState(MON_STATE s) // 상태 애니메이션 처리
     }
 }
 
-void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt) // 상태 업데이트
+void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 {
     if (!m_pTextureCom) return;
     GetPlayerTransform();
@@ -344,7 +348,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt) // 상태 업�
 
     case JUMP:
     {
-        const _matrix& W = *m_pTransformCom->Get_World(); 
+        const _matrix& W = *m_pTransformCom->Get_World();
         _vec3 right(W._11, W._12, W._13);
         right.y = 0.f;
         D3DXVec3Normalize(&right, &right);
@@ -387,21 +391,23 @@ float CMonster_Suit::DistanceToPlayer() const
     return D3DXVec3Length(&diff);
 }
 
-void CMonster_Suit::SetupHitSpheres() // 상세 조정 필요
+void CMonster_Suit::SetupHitSpheres()
 {
     m_hitSpheres.clear();
-    const int PRI_BODY = 0;
-    const int PRI_LEG = 1;
-    const int PRI_BALLS = 2;
+
+    const int PRI_LEG = 0;
+    const int PRI_BODY = 1;
+    const int PRI_BALLS = 2; 
     const int PRI_HEAD = 3;
 
-    m_hitSpheres.push_back({ HIT_HEAD,  _vec3(0.00f,  0.4f, 0.06f), 0.1f, PRI_HEAD });
-    m_hitSpheres.push_back({ HIT_BODY,  _vec3(0.00f,  0.10f,  0.00f), 0.30f, PRI_BODY });
-    m_hitSpheres.push_back({ HIT_BALLS, _vec3(0.00f, -0.12f, 0.03f), 0.16f, PRI_BALLS });
-    m_hitSpheres.push_back({ HIT_LEG,   _vec3(-0.18f, -0.55f, -0.02f), 0.22f, PRI_LEG });
+    //                         part                pos                radius   우선순위   x크기
+    m_hitSpheres.push_back({ HIT_HEAD,  _vec3(0.00f,  0.38f,  0.0f), 0.10f, PRI_HEAD,  0.50f });
+    m_hitSpheres.push_back({ HIT_BODY,  _vec3(0.00f,  0.08f,  0.00f), 0.28f, PRI_BODY,  0.50f });
+    m_hitSpheres.push_back({ HIT_BALLS, _vec3(0.00f, -0.07f,  0.0f), 0.06f, PRI_BALLS, 0.2f });
+    m_hitSpheres.push_back({ HIT_LEG,   _vec3(0.0f, -0.2f, 0.0f), 0.22f, PRI_LEG,   0.90f });
 }
 
-void CMonster_Suit::TrySpawnDeathUI() // Effect UI 띄우기 -> UIManager로 옮길거임
+void CMonster_Suit::TrySpawnDeathUI()
 {
     if (!m_pendingDeathUI) return;
     m_pendingDeathUI = false;
@@ -478,7 +484,6 @@ bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) cons
 void CMonster_Suit::DebugRender_HitSpheres() const
 {
     if (!m_pGraphicDev || m_hitSpheres.empty()) return;
-
     EnsureDebugSphereMesh(m_pGraphicDev);
     if (!g_pDebugSphereMesh) return;
 
@@ -509,14 +514,15 @@ void CMonster_Suit::DebugRender_HitSpheres() const
         _vec3 cW; D3DXVec3TransformCoord(&cW, &ps.localCenter, &W);
         float rW = max(0.0001f, ps.radius * sMax);
 
+        float sx = (ps.xScale > 1e-6f) ? ps.xScale : 1.0f;
+
         _matrix S, T, M;
-        D3DXMatrixScaling(&S, rW, rW, rW);
+        D3DXMatrixScaling(&S, rW * sx, rW, rW); // X만 축소/확대
         D3DXMatrixTranslation(&T, cW.x, cW.y, cW.z);
         M = S * T;
 
         m_pGraphicDev->SetTransform(D3DTS_WORLD, &M);
         m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, PartColor(ps.part));
-
         g_pDebugSphereMesh->DrawSubset(0);
     }
 

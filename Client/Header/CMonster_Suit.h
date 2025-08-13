@@ -8,9 +8,10 @@ public:
 
     struct PartSphere {
         HIT_PART part;
-        _vec3    localCenter; 
-        float    radius;      
-        int      priority;    
+        _vec3    localCenter;
+        float    radius;
+        int      priority;
+        float    xScale;    // 가로(X)만 스케일 (1.0=기본, 0.8=20% 축소)
     };
 
 private:
@@ -34,12 +35,9 @@ protected:
     void            Set_Collider();
 
 public:
-    static  CMonster_Suit* Create(LPDIRECT3DDEVICE9 pGrahpicDev);
+    static  CMonster_Suit* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;
-    virtual void         Free() override;
-
-    void SetDebugShowPartSpheres(bool b) { m_bDebugShowPartSpheres = b; }
-
+    virtual void           Free() override;
 private:
     void        SetState(MON_STATE next);
     void        OnEnterState(MON_STATE s);
@@ -52,12 +50,12 @@ private:
     float       DistanceToPlayer() const;
 
     void        TrySpawnDeathUI();
-
-
     void        SetupHitSpheres();
+    void SetDebugShowPartSpheres(bool b) { m_bDebugShowPartSpheres = b; }
+
 
 #ifdef _DEBUG
-    void        DebugRender_HitSpheres() const; 
+    void        DebugRender_HitSpheres() const;
 #endif
 
 private:
