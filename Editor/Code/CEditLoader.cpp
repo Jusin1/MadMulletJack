@@ -3,6 +3,9 @@
 #include "CComponentMgr.h"
 #include "CEditorCamera.h"
 #include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_Cube_Color.h"
+#include "CDummyPlacementObject.h"
+#include "CPlacementObject.h"
 #include "CDummyTile.h"
 #include "CTile.h"
 #include "CGridPanel.h"
@@ -110,6 +113,16 @@ HRESULT CEditLoader::Loading_Editor()
 		CDummyTile::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
+	// Dummy PlacementObject
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DummyPlacementObject",
+		CDummyPlacementObject::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
+	// Default PlacementObject
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultPlacementObject",
+		CPlacementObject::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	// Buffer_PanelDefault
@@ -118,6 +131,9 @@ HRESULT CEditLoader::Loading_Editor()
 	
 	// Buffer_TileDefault
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", CVIBuffer_Rect::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", CVIBuffer_Cube_Color::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));

@@ -272,7 +272,7 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		} break;
 		case MapEditorObjectCategory::TILE:
 		{
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile Layer");
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile_Layer");
 		} break;
 		case MapEditorObjectCategory::ENV_OBJ:
 		{
@@ -280,7 +280,7 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		} break;
 		case MapEditorObjectCategory::MONSTER:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Monster_Layer");
 		} break;
 		case MapEditorObjectCategory::LIGHT:
 		{

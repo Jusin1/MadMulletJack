@@ -1,6 +1,8 @@
 #include "CVIBuffer_Rect.h"
 #include "CRenderer.h"
 #include "CEditorPickingManager.h"
+#include "Engine_Define.h"
+#include "CDInputMgr.h"
 #include "Editor_Define.h"
 #include "CGridPanel.h"
 #include "CPicking.h"
@@ -154,7 +156,7 @@ void CDummyTile::PosUpdate()
 
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 
-				if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000))
+				if (IS_LBUTTON_DOWN)
 				{
 					MAPOBJECTDATA tTestData;
 					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
@@ -165,7 +167,7 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
 					tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile Layer", &tTestData)))
+					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile_Layer", &tTestData)))
 					{
 						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 					}

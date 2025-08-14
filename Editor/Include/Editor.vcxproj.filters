@@ -55,9 +55,6 @@
     <Filter Include="04. GameObject">
       <UniqueIdentifier>{fc014be5-b044-437a-ad7c-17609aefac59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. GameObject\GridPanel">
-      <UniqueIdentifier>{0e0420a1-c6ec-467a-9cfc-e3937b692287}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. GUI\Element\Thumbnail">
       <UniqueIdentifier>{9dc81b83-b9a7-41bb-976b-ddcf5b085085}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,12 @@
     </Filter>
     <Filter Include="06. GUI\Element\Checkbox">
       <UniqueIdentifier>{947123a3-9207-487f-b1b9-2f9b4d0f934e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\GridPanel">
+      <UniqueIdentifier>{0e0420a1-c6ec-467a-9cfc-e3937b692287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\Placement">
+      <UniqueIdentifier>{c6e75988-f9b5-4401-9de3-a9ca8b755638}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +231,12 @@
     <ClInclude Include="..\Header\CGui_Checkbox.h">
       <Filter>06. GUI\Element\Checkbox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlacementObject.h">
+      <Filter>04. GameObject\Placement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDummyPlacementObject.h">
+      <Filter>04. GameObject\Placement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -340,6 +349,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_Checkbox.cpp">
       <Filter>06. GUI\Element\Checkbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlacementObject.cpp">
+      <Filter>04. GameObject\Placement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDummyPlacementObject.cpp">
+      <Filter>04. GameObject\Placement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -207,6 +207,9 @@
     <ClCompile Include="..\Code\CFileManager.cpp">
       <Filter>00. Manager\11. FileManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_Cube_Color.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\02. Cube</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="json.hpp">
       <Filter>99. Header\JsonFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_Cube_Color.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\02. Cube</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CDummyPlacementObject.h" />
     <ClInclude Include="..\Header\CDummyTile.h" />
     <ClInclude Include="..\Header\CEditorApplication.h" />
     <ClInclude Include="..\Header\CEditorCamera.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="..\Header\CGui_Thumbnail.h" />
     <ClInclude Include="..\Header\CGui_Transform.h" />
     <ClInclude Include="..\Header\CEditorPickingManager.h" />
+    <ClInclude Include="..\Header\CPlacementObject.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="Editor_Define.h" />
     <ClInclude Include="GraphEditor.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CDummyPlacementObject.cpp" />
     <ClCompile Include="..\Code\CDummyTile.cpp" />
     <ClCompile Include="..\Code\CEditorApplication.cpp" />
     <ClCompile Include="..\Code\CEditorCamera.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp" />
     <ClCompile Include="..\Code\CGui_Transform.cpp" />
     <ClCompile Include="..\Code\CEditorPickingManager.cpp" />
+    <ClCompile Include="..\Code\CPlacementObject.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="GraphEditor.cpp" />
     <ClCompile Include="ImCurveEdit.cpp" />

@@ -181,6 +181,10 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
         } break;
         case MapEditorObjectCategory::MONSTER:
         {
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
+            {
+                MSG_BOX("CGuiManager::SetCreateMode, DummyTile Creat Failed");
+            }
             EDITOR_CONSOLE("MONSTER");
         } break;
         case MapEditorObjectCategory::LIGHT:
@@ -191,33 +195,10 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
     }
     else
     {
-        switch (_e)
+        auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_EDITOR, L"Dummy_Layer");
+        if (list && list->size() > 0)
         {
-        case MapEditorObjectCategory::WALL:
-        {
-            MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
-        } break;
-        case MapEditorObjectCategory::TILE:
-        {
-            auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_EDITOR, L"Dummy_Layer");
-            if (list && list->size() > 0)
-            {
-                (*list->begin())->Set_Dead(TRUE);
-            }
-            EDITOR_CONSOLE("TILE");
-        } break;
-        case MapEditorObjectCategory::ENV_OBJ:
-        {
-            EDITOR_CONSOLE("ENV_OBJ");
-        } break;
-        case MapEditorObjectCategory::MONSTER:
-        {
-            EDITOR_CONSOLE("MONSTER");
-        } break;
-        case MapEditorObjectCategory::LIGHT:
-        {
-            EDITOR_CONSOLE("LIGHT");
-        } break;
+            (*list->begin())->Set_Dead(TRUE);
         }
     }
     m_bCreateMode = _b;

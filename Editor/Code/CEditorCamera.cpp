@@ -1,4 +1,6 @@
 #include "CEditorCamera.h"
+#include "Engine_Define.h"
+#include "CDInputMgr.h"
 #include "CDInputMgr.h"
 
 CEditorCamera::CEditorCamera(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -90,33 +92,33 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 		m_pTransformCom->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
 	}*/
 
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)
+	if(KEY_BUTTON_HOLD(DIK_Q))
 		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_E))
 		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
 
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_R))
 		m_pTransformCom->Rotation(m_pTransformCom->Get_Info(INFO_RIGHT), -fTimeDelta);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_F))
 		m_pTransformCom->Rotation(m_pTransformCom->Get_Info(INFO_RIGHT), fTimeDelta);
 
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_W))
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_S))
 		m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_A))
 		m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_D))
 		m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 
 
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_SPACE))
 	{
 		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 		vPos.y += fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;
 		m_pTransformCom->Set_Info(INFO_POS, vPos);
 	}
-	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LCONTROL) & 0x80)
+	if (KEY_BUTTON_HOLD(DIK_LCONTROL))
 	{
 		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 		vPos.y -= fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;

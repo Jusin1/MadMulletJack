@@ -20,6 +20,16 @@ namespace Engine
 
 	enum OBJID { OBJ_PLAYER, OBJ_MONSTER, OBJ_MAP, OBJ_FLOOR, OBJ_INCLINE, OBJ_CEILING, OBJ_END };
 
+	enum class ObjectCategory
+	{
+		WALL,
+		TILE,
+		ENV_OBJ,
+		MONSTER,
+		LIGHT,
+		NONE
+	};
+
 	enum class PanelType : unsigned int
 	{
 		WALL_HOR = 0,

@@ -133,6 +133,15 @@
     <Filter Include="02. GameObject\06. UI\GameEnterUI\HeartUI">
       <UniqueIdentifier>{10f4f2a4-b01b-46bc-888c-b2ee4a1543df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. MapObject">
+      <UniqueIdentifier>{7785fcb5-3556-4de2-a110-9980c573bad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. MapObject\01. GridPanel">
+      <UniqueIdentifier>{9c0f04b6-6e46-469c-b40c-2f89187b99ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. Dev">
+      <UniqueIdentifier>{d96275df-e2a9-4cad-9edd-ee527ca80cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -246,6 +255,12 @@
     <ClInclude Include="..\Header\CHeartUI.h">
       <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGridPanel.h">
+      <Filter>02. GameObject\07. MapObject\01. GridPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDev.h">
+      <Filter>01. Scene\03. Dev</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -349,6 +364,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHeartUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGridPanel.cpp">
+      <Filter>02. GameObject\07. MapObject\01. GridPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDev.cpp">
+      <Filter>01. Scene\03. Dev</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

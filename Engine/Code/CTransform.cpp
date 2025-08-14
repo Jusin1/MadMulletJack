@@ -1,13 +1,14 @@
 #include "CTransform.h"
 
-CTransform::CTransform() 
+CTransform::CTransform()
+	: m_fAngle(0.f)
 { 
 	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
 }
 
 CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CComponent(pGraphicDev)
+	: CComponent(pGraphicDev), m_fAngle(0.f)
 {
 	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
@@ -15,7 +16,7 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CTransform::CTransform(const CTransform& rhs)
 	: CComponent(rhs), m_matWorld(rhs.m_matWorld), m_TransformInfo(rhs.m_TransformInfo)
-	,m_fDir(rhs.m_fDir)
+	,m_fDir(rhs.m_fDir), m_fAngle(rhs.m_fAngle)
 {
 }
 
@@ -240,7 +241,7 @@ void CTransform::RotationDegree(const _vec3& axis, float degrees)
 
 void CTransform::SetDegreeForEditor(const _vec3 &axis, float degrees)
 {
-	if (degrees == 0.f) return;
+	if (degrees == 0.f || std::abs(m_fAngle - degrees) < 0.001f) return;
 
 	_matrix rad;
 	D3DXMatrixRotationAxis(&rad, &axis, D3DXToRadian(degrees));
@@ -249,13 +250,21 @@ void CTransform::SetDegreeForEditor(const _vec3 &axis, float degrees)
 	_vec3 up;
 	_vec3 look;
 
+	_vec3 scale = Get_Scale();
+	float fX = scale.x;
+	float fY = scale.y;
+	float fZ = scale.z;
+
+	if (fX <= 0.f || fY <= 0.f || fZ <= 0.f) return;
+
 	::memcpy(&right, &rad.m[0][0], sizeof(_vec3));
 	::memcpy(&up, &rad.m[1][0], sizeof(_vec3));
 	::memcpy(&look, &rad.m[2][0], sizeof(_vec3));
 
-	Set_Info(INFO_RIGHT, right);
-	Set_Info(INFO_UP, up);
-	Set_Info(INFO_LOOK, look);
+	Set_Info(INFO_RIGHT, right * fX);
+	Set_Info(INFO_UP, up * fY);
+	Set_Info(INFO_LOOK, look * fZ);
+	degrees = m_fAngle;
 }
 
 

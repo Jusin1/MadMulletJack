@@ -154,8 +154,10 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
+    <ClInclude Include="..\Header\CDev.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
+    <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CLisaUI.h" />
     <ClInclude Include="..\Header\CHeartUI.h" />
     <ClInclude Include="..\Header\Client_Global.h" />
@@ -193,8 +195,10 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
+    <ClCompile Include="..\Code\CDev.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
+    <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CLisaUI.cpp" />
     <ClCompile Include="..\Code\CHeartUI.cpp" />
     <ClCompile Include="..\Code\Clinet_Global.cpp" />

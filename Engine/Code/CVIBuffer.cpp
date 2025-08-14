@@ -41,7 +41,7 @@ HRESULT CVIBuffer::Initialize(void* pArg)
 void CVIBuffer::Render_Buffer()
 {
 	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, m_dwVtxSize);
-
+	
 	m_pGraphicDev->SetFVF(m_dwFVF);
 
 	m_pGraphicDev->SetIndices(m_pIB);

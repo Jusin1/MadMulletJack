@@ -72,6 +72,12 @@ HRESULT	CCharacter::Set_Component()
 	return S_OK;
 }
 
+// TODO - 여러개의 terrain 해결
+// 추후에 여러개의 GridPanel이 들어왔을 때 연산량이 많아지는 문제가 발생한다.
+// 이를 방지하기 위해 MapLayer를 파싱할때 z값을 기준으로 Goal을 만들고, z정렬을 실시하여 저장한다.
+// z값에 기반하여 순차적으로 데이터를 불러와 인스턴싱을 하고, 순회를 할 때 선형적인 타임어택 게임에 아이디어를 가져온다.
+// 지나온 terrain은 다시는 밟을 일이 없으니 currentindex를 가지고 다음 terrain을 밟을 시 currentindex를 갱신시켜 연산량을 줄여나간다.
+// 이렇게 하면 땅을 밟고 있는 상황에선 항상 하나의 Terrain만 검사하게 될것이다.
 void CCharacter::Set_OnTerrain()
 {
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
