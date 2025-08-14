@@ -21,6 +21,23 @@
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 
+#define KEY_BUTTON_HOLD(key) CDInputMgr::GetInstance()->GetButton(key)
+#define KEY_BUTTON_DOWN(key) CDInputMgr::GetInstance()->GetButtonDown(key)
+#define KEY_BUTTON_UP(key) CDInputMgr::GetInstance()->GetButtonUp(key)
+
+#define IS_LBUTTON_HOLD CDInputMgr::GetInstance()->GetMouseButton(0)
+#define IS_RBUTTON_HOLD CDInputMgr::GetInstance()->GetMouseButton(1)
+#define IS_MBUTTON_HOLD CDInputMgr::GetInstance()->GetMouseButton(2)
+
+#define IS_LBUTTON_DOWN CDInputMgr::GetInstance()->GetMouseButtonDown(0)
+#define IS_RBUTTON_DOWN CDInputMgr::GetInstance()->GetMouseButtonDown(1)
+#define IS_MBUTTON_DOWN CDInputMgr::GetInstance()->GetMouseButtonDown(2)
+
+#define IS_LBUTTON_UP CDInputMgr::GetInstance()->GetMouseButtonUp(0)
+#define IS_RBUTTON_UP CDInputMgr::GetInstance()->GetMouseButtonUp(1)
+#define IS_MBUTTON_UP CDInputMgr::GetInstance()->GetMouseButtonUp(2)
+
+
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
 
