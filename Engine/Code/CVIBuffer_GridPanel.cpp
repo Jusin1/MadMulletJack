@@ -239,34 +239,6 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlaneForEditor(_vec3 *pOut)
                     m_pVerticesData[iLeftBottom],
                     pOut))
             {
-                switch (m_tData.eType)
-                {
-                case PanelType::WALL_HOR:
-                {
-                    (*pOut).x = m_pVerticesData[iLeftBottom].x +0.5f;
-                    (*pOut).y = m_pVerticesData[iLeftBottom].y +0.5f;
-                    (*pOut).z = 0.f;
-                } break;
-                case PanelType::WALL_VER:
-                {
-                    (*pOut).x = 0.f;
-                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
-                    (*pOut).y = m_pVerticesData[iLeftBottom].y + 0.5f;
-                } break;
-                case PanelType::INCLINE:
-                case PanelType::FLOOR:
-                {
-                    (*pOut).x = m_pVerticesData[iLeftBottom].x + 0.5f;
-                    (*pOut).y = 0.f;
-                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
-                } break;
-                case PanelType::CEILING:
-                {
-                    (*pOut).x = m_pVerticesData[iLeftBottom].x + 0.5f;
-                    (*pOut).y = 0.f;
-                    (*pOut).z = m_pVerticesData[iLeftBottom].z + 0.5f;
-                } break;
-                }
                 Safe_Release(pPickingSystem);
                 return TRUE;
             }

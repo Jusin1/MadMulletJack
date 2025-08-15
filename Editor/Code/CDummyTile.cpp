@@ -28,7 +28,6 @@ CDummyTile::~CDummyTile()
 void CDummyTile::Free()
 {
 	CGameObject::Free();
-	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 }
 
 CDummyTile *CDummyTile::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -82,7 +81,6 @@ _int CDummyTile::Update_GameObject(const _float &fTimeDelta)
 	if (m_bDead)
 		return DEAD;
 
-	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	PosUpdate();
@@ -98,7 +96,6 @@ void CDummyTile::LateUpdate_GameObject(const _float &fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
-	CEditorPickingManager::GetInstance()->Add_PickingGroup(this);
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -131,12 +128,16 @@ void CDummyTile::PosUpdate()
 				{
 					case PanelType::WALL_HOR:
 					{
+						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.y = (int)pickPos.y + 0.5f;
 						pickPos.z -= 0.001f;
 					} break;
 					case PanelType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += 0.001f;
+						pickPos.y = (int)pickPos.y + 0.5f;
+						pickPos.z = (int)pickPos.z + 0.5f;
 					} break;
 					case PanelType::INCLINE:
 					{
@@ -145,12 +146,16 @@ void CDummyTile::PosUpdate()
 					case PanelType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.x = (int)pickPos.x + 0.5f;
 						pickPos.y += 0.001f;
+						pickPos.z = (int)pickPos.z + 0.5f;
 					} break;
 					case PanelType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.x = (int)pickPos.x + 0.5f;
 						pickPos.y -= 0.001f;
+						pickPos.z = (int)pickPos.z + 0.5f;
 					} break;
 				}
 
