@@ -64,8 +64,12 @@ public:
 
 	_bool IsCreateMode() { return m_bCreateMode; }
 	void SetCreateMode(_bool _b, MapEditorObjectCategory _e);
+
+	_bool IsSnap() { return m_bSnap; }
+	void SetSnap(_bool _b) { m_bSnap = _b; }
 private:
 	_bool m_bCreateMode;
+	_bool m_bSnap;
 	LPDIRECT3DDEVICE9 m_pGraphicDevice;
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;

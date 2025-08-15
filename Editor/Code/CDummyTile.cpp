@@ -4,6 +4,7 @@
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "Editor_Define.h"
+#include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CPicking.h"
 #include "CVIBuffer_GridPanel.h"
@@ -124,8 +125,10 @@ void CDummyTile::PosUpdate()
 				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
 
-				switch (pBuffer->Get_Data()->eType)
+				if (CGuiManager::GetInstance()->IsSnap())
 				{
+					switch (pBuffer->Get_Data()->eType)
+					{
 					case PanelType::WALL_HOR:
 					{
 						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
@@ -157,7 +160,38 @@ void CDummyTile::PosUpdate()
 						pickPos.y -= 0.001f;
 						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
 					} break;
+					}
 				}
+				else
+				{
+					switch (pBuffer->Get_Data()->eType)
+					{
+					case PanelType::WALL_HOR:
+					{
+						pickPos.z -= 0.001f;
+					} break;
+					case PanelType::WALL_VER:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
+						pickPos.x += 0.001f;
+					} break;
+					case PanelType::INCLINE:
+					{
+
+					} break;
+					case PanelType::FLOOR:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.y += 0.001f;
+					} break;
+					case PanelType::CEILING:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.y -= 0.001f;
+					} break;
+					}
+				}
+				
 
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 

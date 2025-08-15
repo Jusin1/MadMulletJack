@@ -50,11 +50,12 @@ void CGui_MapEditorPanel::Render()
 
 		if (DropboxElement)
 		{
-			static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)])->OnFalse();
+			AllCheckBox_SetFalse();
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetCategory(DropboxElement->GetConfirmedState());
 			m_eCategory = CGuiManager::GetInstance()->GetCategory();
 			m_iObjectType = 0;
+			CGuiManager::GetInstance()->GetInstance()->SetObjectType(0);
 		}
 	}
 
@@ -94,6 +95,7 @@ HRESULT CGui_MapEditorPanel::Ready_Panel()
 	m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_TYPE_DROPBOX)] = MonstertypeDropbox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::LIGHT_TYPE_DROPBOX)] = LighttypeDropbox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)] = CreateModeCheckBox_Create();
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)] = SnapModeCheckBox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)] = CreateButton_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::PANEL_SIZE_BUTTONS)] = GridPanelSizeButtons_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)] = PositionInputfield_Create();
@@ -135,12 +137,15 @@ void CGui_MapEditorPanel::TileRender()
 
 		if (DropboxElement)
 		{
+			AllCheckBox_SetFalse();
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)]->Render(m_iObjectType);
@@ -155,12 +160,15 @@ void CGui_MapEditorPanel::EnvObjRender()
 
 		if (DropboxElement)
 		{
+			AllCheckBox_SetFalse();
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)]->Render(m_iObjectType);
 }
 
@@ -173,12 +181,15 @@ void CGui_MapEditorPanel::MonsterRender()
 
 		if (DropboxElement)
 		{
+			AllCheckBox_SetFalse();
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
 		}
 	}
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)]->Render(m_iObjectType);
 }
 
@@ -191,6 +202,8 @@ void CGui_MapEditorPanel::LightRender()
 
 		if (DropboxElement)
 		{
+			AllCheckBox_SetFalse();
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
@@ -457,4 +470,24 @@ CGuiBase *CGui_MapEditorPanel::CreateModeCheckBox_Create()
 			CGuiManager::GetInstance()->SetCreateMode(FALSE, m_eCategory);
 		});
 	return pCheckbox;
+}
+
+CGuiBase *CGui_MapEditorPanel::SnapModeCheckBox_Create()
+{
+	CGui_Checkbox *pCheckbox = CGui_Checkbox::Create("SnapMode",
+		// TrueEvent
+		[this]()->void {
+			CGuiManager::GetInstance()->SetSnap(TRUE);
+		},
+		// FalseEvent
+			[this]()->void {
+			CGuiManager::GetInstance()->SetSnap(FALSE);
+		});
+	return pCheckbox;
+}
+
+void CGui_MapEditorPanel::AllCheckBox_SetFalse()
+{
+	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)])->OnFalse();
+	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)])->OnFalse();
 }

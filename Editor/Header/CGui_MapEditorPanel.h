@@ -36,7 +36,9 @@ private:
 	CGuiBase *EnvThumbnail_Create();
 	CGuiBase *MonsterThumbnail_Create();
 	CGuiBase *CreateModeCheckBox_Create();
+	CGuiBase *SnapModeCheckBox_Create();
 
+	void AllCheckBox_SetFalse();
 private:
 	MapEditorObjectCategory m_eCategory;
 	_uint m_iObjectType;

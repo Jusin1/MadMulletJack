@@ -177,13 +177,17 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
         } break;
         case MapEditorObjectCategory::ENV_OBJ:
         {
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
+            {
+                MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
+            }
             EDITOR_CONSOLE("ENV_OBJ");
         } break;
         case MapEditorObjectCategory::MONSTER:
         {
             if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
             {
-                MSG_BOX("CGuiManager::SetCreateMode, DummyTile Creat Failed");
+                MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
             }
             EDITOR_CONSOLE("MONSTER");
         } break;

@@ -1,6 +1,7 @@
 #include "CVIBuffer_Cube_Color.h"
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
+#include "CGuiManager.h"
 #include "CRenderer.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
@@ -135,10 +136,80 @@ void CDummyPlacementObject::ExportData(void *pData)
 {
 }
 
+void CDummyPlacementObject::MakeObject(PlacementObjectData *pData)
+{
+	switch (pData->eCategory)
+	{
+		case MapEditorObjectCategory::WALL:
+		{
+			MSG_BOX("CDummyPlacementObject::MakeColor, wrong type");
+		} return;
+		case MapEditorObjectCategory::TILE:
+		{
+			MSG_BOX("CDummyPlacementObject::MakeColor, wrong type");
+		} return;
+		case MapEditorObjectCategory::ENV_OBJ:
+		{
+			MakeEnvObject(static_cast<MapEditorEnvObjectType>(pData->iType), pData);
+		} break;
+		case MapEditorObjectCategory::MONSTER:
+		{
+			MakeMonsterObject(static_cast<MapEditorMonsterType>(pData->iType), pData);
+		} break;
+		case MapEditorObjectCategory::LIGHT:
+		{
+			MSG_BOX("CDummyPlacementObject::MakeColor, todo");
+		}
+		break;
+	}
+}
+
+void CDummyPlacementObject::MakeMonsterObject(MapEditorMonsterType _e, PlacementObjectData *pData)
+{
+	switch (_e)
+	{
+	case MapEditorMonsterType::SUIT:
+	{
+		pData->dwColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	} break;
+	default:
+		MSG_BOX("CDummyPlacementObject::MonsterColor, wrong type");
+		break;
+	}
+
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Monster_Layer", pData)))
+	{
+		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+	}
+}
+
+void CDummyPlacementObject::MakeEnvObject(MapEditorEnvObjectType _e, PlacementObjectData *pData)
+{
+	switch (_e)
+	{
+	case MapEditorEnvObjectType::BOTTLE:
+	{
+		pData->dwColor = D3DXCOLOR(0.65f, 0.33f, 0.0f, 1.0f);
+	} break;
+	case MapEditorEnvObjectType::VENDINGMACHINE:
+	{
+		pData->dwColor = D3DXCOLOR(0.0f, 1.f, 0.0f, 1.0f);
+	} break;
+	default:
+		MSG_BOX("CDummyPlacementObject::EnvColor, wrong type");
+		break;
+	}
+
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Env_Layer", pData)))
+	{
+		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+	}
+}
+
 HRESULT CDummyPlacementObject::Set_Component(void *pArg)
 {
 	// VIBuffer Default
-	D3DXCOLOR srcColor{ 1.f, 1.f, 1.f, 0.7f };
+	D3DXCOLOR srcColor = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.7f);
 	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", (CComponent **)&m_pBuffer, &srcColor)))
 		return E_FAIL;
 
@@ -157,47 +228,80 @@ void CDummyPlacementObject::PosUpdate()
 			{
 				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
+				
+				if (CGuiManager::GetInstance()->IsSnap())
+				{
+					switch (pBuffer->Get_Data()->eType)
+					{
+					case PanelType::WALL_HOR:
+					{
+						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.y = (int)pickPos.y + 0.5f;
+						pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
+					} break;
+					case PanelType::WALL_VER:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
+						pickPos.x += (pTransform->Get_Scale().x + 0.001f);
+						pickPos.y = (int)pickPos.y + 0.5f;
+						pickPos.z = (int)pickPos.z + 0.5f;
+					} break;
+					case PanelType::INCLINE:
+					{
 
-				switch (pBuffer->Get_Data()->eType)
-				{
-				case PanelType::WALL_HOR:
-				{
-					pickPos.x = (int)pickPos.x + 0.5f;
-					pickPos.y = (int)pickPos.y + 0.5f;
-					pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
-				} break;
-				case PanelType::WALL_VER:
-				{
-					pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
-					pickPos.x += (pTransform->Get_Scale().x + 0.001f);
-					pickPos.y = (int)pickPos.y + 0.5f;
-					pickPos.z = (int)pickPos.z + 0.5f;
-				} break;
-				case PanelType::INCLINE:
-				{
-
-				} break;
-				case PanelType::FLOOR:
-				{
-					pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
-					pickPos.x = (int)pickPos.x + 0.5f;
-					pickPos.y += (pTransform->Get_Scale().y + 0.001f);
-					pickPos.z = (int)pickPos.z + 0.5f;
-				} break;
-				case PanelType::CEILING:
-				{
-					pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
-					pickPos.x = (int)pickPos.x + 0.5f;
-					pickPos.y -= (pTransform->Get_Scale().y + 0.001f);
-					pickPos.z = (int)pickPos.z + 0.5f;
-				} break;
+					} break;
+					case PanelType::FLOOR:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.y += (pTransform->Get_Scale().y + 0.001f);
+						pickPos.z = (int)pickPos.z + 0.5f;
+					} break;
+					case PanelType::CEILING:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.y -= (pTransform->Get_Scale().y + 0.001f);
+						pickPos.z = (int)pickPos.z + 0.5f;
+					} break;
+					}
 				}
+				else
+				{
+					switch (pBuffer->Get_Data()->eType)
+					{
+					case PanelType::WALL_HOR:
+					{
+						pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
+					} break;
+					case PanelType::WALL_VER:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
+						pickPos.x += (pTransform->Get_Scale().x + 0.001f);
+					} break;
+					case PanelType::INCLINE:
+					{
+
+					} break;
+					case PanelType::FLOOR:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.y += (pTransform->Get_Scale().y + 0.001f);
+					} break;
+					case PanelType::CEILING:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.y -= (pTransform->Get_Scale().y + 0.001f);
+					} break;
+					}
+				}
+				
 
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 
 				if (IS_LBUTTON_DOWN)
 				{
-					MAPOBJECTDATA tTestData;
+					PlacementObjectData tTestData;
 					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
 					_vec3 up = pTransform->Get_Info(INFO::INFO_UP);
 					_vec3 look = pTransform->Get_Info(INFO::INFO_LOOK);
@@ -205,12 +309,9 @@ void CDummyPlacementObject::PosUpdate()
 					::memcpy(&tTestData.transform.Up, &up, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
-					// TODO : type에 따른 색깔...??
-					// TODO : type에 따른 Layer...??
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Monster_Layer", &tTestData)))
-					{
-						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
-					}
+					tTestData.eCategory = CGuiManager::GetInstance()->GetCategory();
+					tTestData.iType = CGuiManager::GetInstance()->GetObjectType();
+					MakeObject(&tTestData);
 				}
 			}
 		}
