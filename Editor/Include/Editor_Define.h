@@ -52,27 +52,34 @@ enum class MapEditorWallType : unsigned int
 	INCLINE,
 	FLOOR,
 	CEILING,
+	SIDE_DASH,
 	NONE
 };
 constexpr size_t g_MapEditorWallTypeCount{ static_cast<size_t>(MapEditorWallType::NONE) };
 
 enum class MapEditorTileType : unsigned int
 {
-	tmp,
+	NORMAL,
+	GLASS,
+	ACID,
+	ELECTRIC,
+	VENT,
 	NONE
 };
 constexpr size_t g_MapEditorTileTypeCount{ static_cast<size_t>(MapEditorTileType::NONE) };
 
 enum class MapEditorEnvObjectType : unsigned int
 {
-	tmp,
+	DISPLAY,
+	BOTTLE,		// °¥»ö
+	VENDINGMACHINE,
 	NONE
 };
 constexpr size_t g_MapEditorEnvObjectTypeCount{ static_cast<size_t>(MapEditorEnvObjectType::NONE) };
 
 enum class MapEditorMonsterType : unsigned int
 {
-	tmp,
+	SUIT,
 	NONE
 };
 constexpr size_t g_MapEditorMonsterTypeCount{ static_cast<size_t>(MapEditorMonsterType::NONE) };

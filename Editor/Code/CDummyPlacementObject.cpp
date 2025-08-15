@@ -102,6 +102,9 @@ void CDummyPlacementObject::Render_GameObject()
 {
 	if (m_bDead)
 		return;
+
+	m_pGraphicDev->SetTexture(0, nullptr);
+
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTransformCom->Apply_WorldMatrix();

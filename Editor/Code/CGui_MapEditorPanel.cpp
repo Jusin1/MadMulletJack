@@ -218,6 +218,7 @@ CGuiBase *CGui_MapEditorPanel::WalltypeDropbox_Create()
 	Names[2] = "Incline";
 	Names[3] = "Floor";
 	Names[4] = "Ceiling";
+	Names[5] = "SideDash";
 
 	return CGui_Dropbox<MapEditorWallType>::Create("WallType", MapEditorWallType::WALL_HOR, Names);
 }
@@ -225,25 +226,31 @@ CGuiBase *CGui_MapEditorPanel::WalltypeDropbox_Create()
 CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
 {
 	vector<string> Names{ g_MapEditorTileTypeCount };
-	Names[0] = "NONE";
+	Names[0] = "Normal";
+	Names[1] = "Glass";
+	Names[2] = "Acid";
+	Names[3] = "Electric";
+	Names[4] = "Vent";
 
-	return CGui_Dropbox<MapEditorTileType>::Create("TileType", MapEditorTileType::tmp, Names);
+	return CGui_Dropbox<MapEditorTileType>::Create("TileType", MapEditorTileType::NORMAL, Names);
 }
 
 CGuiBase *CGui_MapEditorPanel::EnvObjtypeDropbox_Create()
 {
 	vector<string> Names{ g_MapEditorEnvObjectTypeCount };
-	Names[0] = "NONE";
+	Names[0] = "Display";
+	Names[1] = "Bottle";
+	Names[2] = "VendingMachine";
 
-	return CGui_Dropbox<MapEditorEnvObjectType>::Create("EnvType", MapEditorEnvObjectType::tmp, Names);
+	return CGui_Dropbox<MapEditorEnvObjectType>::Create("EnvType", MapEditorEnvObjectType::DISPLAY, Names);
 }
 
 CGuiBase *CGui_MapEditorPanel::MonstertypeDropbox_Create()
 {
 	vector<string> Names{ g_MapEditorMonsterTypeCount };
-	Names[0] = "NONE";
+	Names[0] = "Suit";
 
-	return CGui_Dropbox<MapEditorMonsterType>::Create("MonsterType", MapEditorMonsterType::tmp, Names);
+	return CGui_Dropbox<MapEditorMonsterType>::Create("MonsterType", MapEditorMonsterType::SUIT, Names);
 }
 
 CGuiBase *CGui_MapEditorPanel::LighttypeDropbox_Create()
@@ -304,8 +311,8 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 
 CGuiBase *CGui_MapEditorPanel::GridPanelSizeButtons_Create()
 {
-	vector<string> _labels{ 4 };
-	vector<std::function<void()>> _funcs{ 4 };
+	vector<string> _labels{ 6 };
+	vector<std::function<void()>> _funcs{ 6 };
 
 	_labels[0] = "++Row";
 	_funcs[0] =
@@ -343,6 +350,24 @@ CGuiBase *CGui_MapEditorPanel::GridPanelSizeButtons_Create()
 		}
 	};
 
+	_labels[4] = "++Interval";
+	_funcs[4] =
+		[]()->void {
+		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+		{
+			static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_Interval();
+		}
+	};
+
+	_labels[5] = "--Interval";
+	_funcs[5] =
+		[]()->void {
+		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+		{
+			static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_Interval();
+		}
+	};
+
 	return CGui_ButtonList::Create("Grid Size", _labels, _funcs);
 }
 
@@ -377,11 +402,29 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MapEditorTileTypeCount);
 
-	AddThumbnail("Floor_3", L"Proto_Floor_3", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_4", L"Proto_Floor_4", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_5", L"Proto_Floor_5", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_6", L"Proto_Floor_6", pThumbnail, MapEditorTileType::tmp);
-	AddThumbnail("Floor_7", L"Proto_Floor_7", pThumbnail, MapEditorTileType::tmp);
+	// Floor
+	AddThumbnail("Floor_1", L"Proto_Floor_1", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_2", L"Proto_Floor_2", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_3", L"Proto_Floor_3", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_4", L"Proto_Floor_4", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_5", L"Proto_Floor_5", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_6", L"Proto_Floor_6", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Floor_7", L"Proto_Floor_7", pThumbnail, MapEditorTileType::NORMAL);
+
+	// RUG
+	AddThumbnail("Rug_1", L"Proto_Rug_1", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Rug_2", L"Proto_Rug_2", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Rug_3", L"Proto_Rug_3", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Rug_4", L"Proto_Rug_4", pThumbnail, MapEditorTileType::NORMAL);
+
+	// ACID
+	AddThumbnail("Acid_Floor_1", L"Proto_Acid_Floor_1", pThumbnail, MapEditorTileType::ACID);
+	AddThumbnail("Acid_Floor_2", L"Proto_Acid_Floor_2", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Acid_Wall_1", L"Proto_Acid_Wall_1", pThumbnail, MapEditorTileType::NORMAL);
+	AddThumbnail("Acid_Wall_2", L"Proto_Acid_Wall_2", pThumbnail, MapEditorTileType::NORMAL);
+
+	// Electric
+	AddThumbnail("Electirc_Wall", L"Proto_Electric_Wall", pThumbnail, MapEditorTileType::ELECTRIC);
 
 	return pThumbnail;
 }
@@ -389,6 +432,8 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 CGuiBase *CGui_MapEditorPanel::EnvThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MapEditorEnvObjectTypeCount);
+
+	AddThumbnail("Acid_Display", L"Proto_Acid_Env", pThumbnail, MapEditorEnvObjectType::DISPLAY);
 
 	return pThumbnail;
 }
