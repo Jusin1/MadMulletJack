@@ -18,10 +18,14 @@
 #include "CPlayer_HandL.h"
 #include "CEffectUI.h"
 
-
-// UI - 게임진입 UI
+#pragma region 게임 진입 UI들
 #include "CHeartUI.h"
 #include "CLisaUI.h"
+#include "CPanelUI.h"
+#include "CBlackGackGround.h"
+#include "CChatUI.h"
+#include "CBannerUI.h"
+#pragma endregion 게임 진입 UI들
 
 
 #include "CPlayer_Foot.h"
@@ -321,6 +325,18 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 #pragma endregion 일반UI
 
+#pragma region 패널 UI
+
+	// GridUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_FileGridUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/CYBER BACKGROUND.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_FrameUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/Frame.png", 1))))
+		return E_FAIL;
+#pragma endregion 패널 UI
+
 #pragma region 게임 진입 UI
 	// HEART
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HeartUI",
@@ -331,10 +347,26 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART LINE.png", 1))))
 		return E_FAIL;
 
+	// HEAT BEAT 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_BEAT",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART BEAT.png", 1))))
+		return E_FAIL;
+
 	// LISA UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
 		return E_FAIL;
+
+	// CHAT UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ChatUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Chat/CHAT%03d.png", 7))))
+		return E_FAIL;
+
+	// Arrow UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ArrowUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/ARROW.png", 1))))
+		return E_FAIL;
+
 #pragma endregion 게임 진입 UI
 
 	// 객체 생성
@@ -375,6 +407,7 @@ HRESULT CLoader::Loading_ForStage()
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
 		CPlayer_HandR::Create(m_pGraphicDev))))
 		return E_FAIL;
+
 	// HandL UI 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
 		CPlayer_HandL::Create(m_pGraphicDev))))
@@ -386,16 +419,37 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 #pragma region 게임 진입 UI들 생성
+	// BacgkGround
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BlackBackground",
+		CBlackGackGround::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	// Heart UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HeartUI",
 		CHeartUI::Create(m_pGraphicDev))))
 		return E_FAIL;
-
+	
 	// Lisa UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_LisaUI",
 		CLisaUI::Create(m_pGraphicDev))))
 		return E_FAIL;
+	// Panel
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PanelUI",
+		CPanelUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Chat UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_ChatUI",
+		CChatUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Bannel UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BannerUI",
+		CBannerUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+
+#pragma endregion 게임 진입 UI들 생성
 	// Foot UI 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
 		CPlayer_Foot::Create(m_pGraphicDev))))
@@ -411,7 +465,6 @@ HRESULT CLoader::Loading_ForStage()
 		CPistol_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-#pragma endregion 게임 진입 UI들 생성
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex

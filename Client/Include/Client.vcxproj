@@ -152,8 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBannerUI.h" />
+    <ClInclude Include="..\Header\CBlackGackGround.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
+    <ClInclude Include="..\Header\CChatUI.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
     <ClInclude Include="..\Header\CLisaUI.h" />
@@ -167,6 +170,7 @@
     <ClInclude Include="..\Header\CMainWeapon.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CPanelUI.h" />
     <ClInclude Include="..\Header\CPickingManager.h" />
     <ClInclude Include="..\Header\CPistol_Gun.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
@@ -191,8 +195,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBannerUI.cpp" />
+    <ClCompile Include="..\Code\CBlackGackGround.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
+    <ClCompile Include="..\Code\CChatUI.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
     <ClCompile Include="..\Code\CLisaUI.cpp" />
@@ -205,6 +212,7 @@
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CPanelUI.cpp" />
     <ClCompile Include="..\Code\CPickingManager.cpp" />
     <ClCompile Include="..\Code\CPistol_Gun.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />

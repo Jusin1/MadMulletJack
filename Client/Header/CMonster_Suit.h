@@ -11,7 +11,7 @@ public:
         _vec3    localCenter;
         float    radius;
         int      priority;
-        float    xScale;    // 가로(X)만 스케일 (1.0=기본, 0.8=20% 축소)
+        float    xScale; 
     };
 
 private:

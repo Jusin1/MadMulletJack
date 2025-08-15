@@ -22,7 +22,7 @@ public:
         float seconds,
         float centerX = WINCX * 0.5f,
         float centerY = WINCY * 0.33f,
-        float /*angleDeg*/ = 0.f,
+        float = 0.f,
         float bgAlpha = 0.85f,
         const wchar_t* fontTag = L"DefaultFont",
         D3DXCOLOR fontColor = D3DXCOLOR(1, 1, 1, 1));

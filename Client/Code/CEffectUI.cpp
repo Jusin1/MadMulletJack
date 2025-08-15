@@ -171,7 +171,7 @@ void CEffectUI::RenderBox(float cx, float cy, float w, float h, float alpha, flo
 
     _matrix S, R, T, W;
     D3DXMatrixScaling(&S, w * 0.5f, h * 0.5f, 1.f);
-    D3DXMatrixRotationZ(&R, D3DXToRadian(angleDeg)); // 배경은 화면 각도를 그대로 사용
+    D3DXMatrixRotationZ(&R, D3DXToRadian(angleDeg)); 
     D3DXMatrixTranslation(&T, wx, wy, 0.f);
 
     W = S * R * T;
@@ -192,7 +192,7 @@ void CEffectUI::RenderBox(float cx, float cy, float w, float h, float alpha, flo
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
-void CEffectUI::RenderIcon(float cx, float cy, float aMul, float /*scale*/)
+void CEffectUI::RenderIcon(float cx, float cy, float aMul, float)
 {
     if (!m_pVIBufferCom || !m_pTextureCom) { m_hasIcon = false; return; }
     m_hasIcon = true;
@@ -242,7 +242,7 @@ void CEffectUI::RenderText(float leftX, float centerY, float aMul)
 
     if (m_mode == BANNER_FIXED)
     {
-        float s = m_progress;                       // 0..1
+        float s = m_progress;                 
         float tri = (s <= 0.5f) ? (s * 2.f) : (2.f - s * 2.f);
         tri = max(0.f, min(1.f, tri));
         const float fontScale = m_scaleEnd + (m_scaleStart - m_scaleEnd) * tri;

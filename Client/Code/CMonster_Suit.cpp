@@ -517,7 +517,7 @@ void CMonster_Suit::DebugRender_HitSpheres() const
         float sx = (ps.xScale > 1e-6f) ? ps.xScale : 1.0f;
 
         _matrix S, T, M;
-        D3DXMatrixScaling(&S, rW * sx, rW, rW); // X만 축소/확대
+        D3DXMatrixScaling(&S, rW * sx, rW, rW); 
         D3DXMatrixTranslation(&T, cW.x, cW.y, cW.z);
         M = S * T;
 

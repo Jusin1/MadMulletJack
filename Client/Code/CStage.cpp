@@ -70,6 +70,7 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
     }
 
     CPickingManager::GetInstance()->Picking();
+    CUIManager::GetInstance()->Update(fTimeDelta);
     return iExit;
 }
 
