@@ -16,14 +16,11 @@ public:
 
 public:
     virtual _bool Picking(class CTransform *pTransform, _vec3 *pOut = nullptr) override;
-
 public:
 	virtual CComponent *Clone(void *pArg) override;
 	static CVIBuffer_Cube_Color *Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free();
 
-private:
-	HRESULT ApplyColorToVB();
 private:
 	D3DXCOLOR m_dwColor;
 	_vec3 m_vVerticesLocal[8]; // 로컬 공간의 정점 위치 저장용

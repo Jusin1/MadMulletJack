@@ -12,10 +12,6 @@ CVIBuffer_Cube_Color::CVIBuffer_Cube_Color(LPDIRECT3DDEVICE9 pGraphicDev)
 CVIBuffer_Cube_Color::CVIBuffer_Cube_Color(const CVIBuffer_Cube_Color &rhs)
     : CVIBuffer(rhs), m_dwColor(rhs.m_dwColor)
 {
-    for (int i = 0; i < 8; ++i)
-    {
-        ::memcpy(&m_vVerticesLocal[i], &rhs.m_vVerticesLocal[i], sizeof(_vec3));
-    }
 }
 
 CVIBuffer_Cube_Color::~CVIBuffer_Cube_Color()
@@ -27,7 +23,7 @@ HRESULT CVIBuffer_Cube_Color::Ready_Buffer()
     m_dwVtxSize = sizeof(VTXCUBECOLOR);
     m_dwVtxCnt = 8;
     m_dwTriCnt = 12;
-    m_dwFVF = FVF_CUBE;
+    m_dwFVF = FVF_COL;
 
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
@@ -55,6 +51,7 @@ HRESULT CVIBuffer_Cube_Color::Ready_Buffer()
     for (int i = 0; i < 8; ++i)
     {
         ::memcpy(&m_vVerticesLocal[i], &pVertex[i].vPosition, sizeof(_vec3));
+        pVertex[i].dwColor = m_dwColor;
     }
 
     m_pVB->Unlock();
@@ -122,7 +119,7 @@ HRESULT CVIBuffer_Cube_Color::Ready_Buffer()
 
     m_pIB->Unlock();
 
-    return ApplyColorToVB();
+    return S_OK;
 }
 
 HRESULT CVIBuffer_Cube_Color::Initialize(void *pArg)
@@ -130,8 +127,14 @@ HRESULT CVIBuffer_Cube_Color::Initialize(void *pArg)
     if (pArg) {
         D3DXCOLOR *pCol = reinterpret_cast<D3DXCOLOR *>(pArg);
         m_dwColor = *pCol;
-        return ApplyColorToVB();
     }
+
+    if (FAILED(CVIBuffer::Initialize(pArg)))
+        return E_FAIL;
+
+    if (FAILED(Ready_Buffer()))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -207,27 +210,4 @@ CComponent *CVIBuffer_Cube_Color::Clone(void *pArg)
 void CVIBuffer_Cube_Color::Free()
 {
     CVIBuffer::Free();
-}
-
-HRESULT CVIBuffer_Cube_Color::ApplyColorToVB()
-{
-    if (!m_pVB) return E_FAIL;
-
-    VTXCOL *pVertex = nullptr;
-    
-    if (FAILED(m_pVB->Lock(0, 0, (void **)&pVertex, 0)))
-        return E_FAIL;
-
-    DWORD dw = m_dwColor; // D3DXCOLOR → DWORD 변환자 오버로드 존재
-    pVertex[0].dwColor = dw;
-    pVertex[1].dwColor = dw;
-    pVertex[2].dwColor = dw;
-    pVertex[3].dwColor = dw;
-    pVertex[4].dwColor = dw;
-    pVertex[5].dwColor = dw;
-    pVertex[6].dwColor = dw;
-    pVertex[7].dwColor = dw;
-
-    m_pVB->Unlock();
-    return S_OK;
 }

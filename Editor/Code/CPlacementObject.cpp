@@ -3,13 +3,14 @@
 #include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CEditorPickingManager.h"
+#include "CDummyPlacementObject.h"
 #include "CVIBuffer_GridPanel.h"
 #include "Editor_Define.h"
 #include "CObjectManager.h"
 #include "CPlacementObject.h"
 
 CPlacementObject::CPlacementObject(LPDIRECT3DDEVICE9 pGraphicDevice)
-	: CGameObject(pGraphicDevice), m_pBuffer(nullptr)
+	: CGameObject(pGraphicDevice), m_pBuffer(nullptr), m_eCategory(MapEditorObjectCategory::NONE), m_iType(0)
 {
 }
 
@@ -139,18 +140,20 @@ HRESULT CPlacementObject::Set_Component(void *pArg)
 {
 	if (pArg)
 	{
-		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+		if (PlacementObjectData *p = reinterpret_cast<PlacementObjectData *>(pArg))
 		{
-			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
-
-			// VIBuffer
-			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", (CComponent **)&m_pBuffer)))
-				return E_FAIL;
+			::memcpy(p, pArg, sizeof(PlacementObjectData));
 
 			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
 			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
 			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
 			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			SetCategory(p->eCategory);
+			SetType(p->iType);
+			
+			// VIBuffer
+			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", (CComponent **)&m_pBuffer, &p->dwColor)))
+				return E_FAIL;
 		}
 		else
 		{

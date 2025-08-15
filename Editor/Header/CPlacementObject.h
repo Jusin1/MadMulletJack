@@ -26,11 +26,19 @@ public:
 	virtual _bool Picking(_vec3 *PickingPoint) override;
 	virtual void PickingTrue() override;
 	virtual void ExportData(void *pData) override;
+
+	MapEditorObjectCategory GetCategory() const { return m_eCategory; }
+	_uint GetType() const { return m_iType; }
+
+	void SetCategory(MapEditorObjectCategory _e) { m_eCategory = _e; }
+	void SetType(_uint _i) { m_iType = _i; }
 private:
 	HRESULT			Set_Component(void *pArg);
 public:
 	Engine::CVIBuffer_Cube_Color *GetBuffer() { return m_pBuffer; }
 private:
 	Engine::CVIBuffer_Cube_Color *m_pBuffer;
+	MapEditorObjectCategory m_eCategory;
+	_uint m_iType;
 };
 
