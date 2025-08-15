@@ -114,14 +114,10 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 
 	if (KEY_BUTTON_HOLD(DIK_SPACE))
 	{
-		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-		vPos.y += fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;
-		m_pTransformCom->Set_Info(INFO_POS, vPos);
+		m_pTransformCom->Move_YUp(fTimeDelta);
 	}
 	if (KEY_BUTTON_HOLD(DIK_LCONTROL))
 	{
-		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-		vPos.y -= fTimeDelta * m_pTransformCom->GetTransformInfo().fSpeed;
-		m_pTransformCom->Set_Info(INFO_POS, vPos);
+		m_pTransformCom->Move_YDown(fTimeDelta);
 	}
 }
