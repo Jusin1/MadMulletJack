@@ -83,6 +83,7 @@ _int CDummyPlacementObject::Update_GameObject(const _float &fTimeDelta)
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	PosUpdate();
+	
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return NO_EVENT;

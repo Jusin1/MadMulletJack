@@ -83,6 +83,7 @@ _int CDummyTile::Update_GameObject(const _float &fTimeDelta)
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	KeyUpdate();
 	PosUpdate();
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -93,7 +94,6 @@ void CDummyTile::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
 		return;
-
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -128,16 +128,16 @@ void CDummyTile::PosUpdate()
 				{
 					case PanelType::WALL_HOR:
 					{
-						pickPos.x = (int)pickPos.x + 0.5f;
-						pickPos.y = (int)pickPos.y + 0.5f;
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
+						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
 						pickPos.z -= 0.001f;
 					} break;
 					case PanelType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += 0.001f;
-						pickPos.y = (int)pickPos.y + 0.5f;
-						pickPos.z = (int)pickPos.z + 0.5f;
+						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().x;
 					} break;
 					case PanelType::INCLINE:
 					{
@@ -146,16 +146,16 @@ void CDummyTile::PosUpdate()
 					case PanelType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
-						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
 						pickPos.y += 0.001f;
-						pickPos.z = (int)pickPos.z + 0.5f;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
 					} break;
 					case PanelType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
-						pickPos.x = (int)pickPos.x + 0.5f;
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
 						pickPos.y -= 0.001f;
-						pickPos.z = (int)pickPos.z + 0.5f;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
 					} break;
 				}
 
@@ -179,6 +179,29 @@ void CDummyTile::PosUpdate()
 				}					
 			}
 		}
+	}
+}
+
+void CDummyTile::KeyUpdate()
+{
+	if (KEY_BUTTON_DOWN(DIK_UP))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		src.x += 1;
+		src.y += 1;
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
+	}
+	else if (KEY_BUTTON_DOWN(DIK_DOWN))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		src.x -= 1;
+		src.y -= 1;
+		if (src.x <= 0 && src.y <= 0)
+		{
+			src.x = 1;
+			src.y = 1;
+		}
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
 	}
 }
 
