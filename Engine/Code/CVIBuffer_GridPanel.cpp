@@ -300,8 +300,8 @@ HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
             }
 
             pVertex[dwIndex].vTexUV = {
-                                        (_float)j / (iColMax - 1) * (iColMax - 1),
-                                        (_float)i / (iRowMax - 1) * (iRowMax - 1) };
+                              (_float)j,
+                              (_float)(iRowMax - 1 - i) };
 
             m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }
@@ -393,6 +393,13 @@ void CVIBuffer_GridPanel::Increase_ColBuffer()
     Update_BufferInfo();
 }
 
+void CVIBuffer_GridPanel::Increase_Interval()
+{
+    ++m_tData.dwInterval;
+
+    Update_BufferInfo();
+}
+
 void CVIBuffer_GridPanel::Decrease_RowBuffer()
 {
     switch (m_tData.eType)
@@ -440,6 +447,15 @@ void CVIBuffer_GridPanel::Decrease_ColBuffer()
         MSG_BOX("PanelData.eType is None");
     } break;
     }
+
+    Update_BufferInfo();
+}
+
+void CVIBuffer_GridPanel::Decrease_Interval()
+{
+    --m_tData.dwInterval;
+    if (m_tData.dwInterval <= 0)
+        m_tData.dwInterval = 1;
 
     Update_BufferInfo();
 }
@@ -534,8 +550,8 @@ void CVIBuffer_GridPanel::Update_Buffer(_ulong iRowMax, _ulong iColMax)
             }
 
             pVertex[dwIndex].vTexUV = {
-                                        (_float)j / (iColMax - 1) * (iColMax - 1),
-                                        (_float)i / (iRowMax - 1) * (iRowMax - 1) };
+                              (_float)j,
+                              (_float)(iRowMax - 1 - i) };
 
             m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }

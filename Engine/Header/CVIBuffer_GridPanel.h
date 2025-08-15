@@ -23,8 +23,10 @@ public:
 
 	void Increase_RowBuffer();
 	void Increase_ColBuffer();
+	void Increase_Interval();
 	void Decrease_RowBuffer();
 	void Decrease_ColBuffer();
+	void Decrease_Interval();
 private:
 	HRESULT	Ready_Buffer(void *pArg);
 	HRESULT Ready_HorizonWallBuffer();
