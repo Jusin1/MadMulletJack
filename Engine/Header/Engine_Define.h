@@ -21,6 +21,19 @@
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 
+const D3DXCOLOR g_Color_White{ 1.0f, 1.0f, 1.0f, 1.0f };
+const D3DXCOLOR g_Color_Black{ 0.0f, 0.0f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Red{ 1.0f, 0.0f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Green{ 0.0f, 1.0f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Blue{ 0.0f, 0.0f, 1.0f, 1.0f };
+const D3DXCOLOR g_Color_Yellow{ 1.0f, 1.0f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Orange{ 1.0f, 0.5f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Purple{ 0.5f, 0.0f, 0.5f, 1.0f };
+const D3DXCOLOR g_Color_Cyan{ 0.0f, 1.0f, 1.0f, 1.0f };
+const D3DXCOLOR g_Color_Magenta{ 1.0f, 0.0f, 1.0f, 1.0f };
+const D3DXCOLOR g_Color_Brown{ 0.65f, 0.33f, 0.0f, 1.0f };
+const D3DXCOLOR g_Color_Gray{ 0.5f, 0.5f, 0.5f, 1.0f };
+
 #define KEY_BUTTON_HOLD(key) CDInputMgr::GetInstance()->GetButton(key)
 #define KEY_BUTTON_DOWN(key) CDInputMgr::GetInstance()->GetButtonDown(key)
 #define KEY_BUTTON_UP(key) CDInputMgr::GetInstance()->GetButtonUp(key)
