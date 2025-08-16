@@ -2,7 +2,7 @@
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
 #include "CEditorCamera.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "CVIBuffer_Cube_Color.h"
 #include "CDummyPlacementObject.h"
 #include "CPlacementObject.h"
@@ -126,7 +126,7 @@ HRESULT CEditLoader::Loading_Editor()
 	lstrcpy(m_szLoading, TEXT("¸ðµ¨ ·Îµù Áß."));
 
 	// Buffer_PanelDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel_Editor::Create(m_pGraphicDevice))))
 		return E_FAIL;
 	
 	// Buffer_TileDefault

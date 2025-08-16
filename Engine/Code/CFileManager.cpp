@@ -6,23 +6,22 @@
 #include "CObjectManager.h"
 #include "CFileManager.h"
 
-NLOHMANN_JSON_SERIALIZE_ENUM(PanelType, {
-    {PanelType::WALL_HOR, "WALL_HOR"},
-    {PanelType::WALL_VER, "WALL_VER"},
-    {PanelType::INCLINE, "INCLINE"},
-    {PanelType::FLOOR, "FLOOR"},
-    {PanelType::CEILING, "CEILING"},
-    {PanelType::NONE, "NONE"}
+NLOHMANN_JSON_SERIALIZE_ENUM(WallType, {
+    {WallType::WALL_HOR, "WALL_HOR"},
+    {WallType::WALL_VER, "WALL_VER"},
+    {WallType::INCLINE, "INCLINE"},
+    {WallType::FLOOR, "FLOOR"},
+    {WallType::CEILING, "CEILING"},
+    {WallType::NONE, "NONE"}
     })
 
-NLOHMANN_JSON_SERIALIZE_ENUM(OBJID, {
-    {OBJID::OBJ_PLAYER, "PLAYER"},
-    {OBJID::OBJ_MONSTER, "MONSTER"},
-    {OBJID::OBJ_MAP, "MAP"},
-    {OBJID::OBJ_FLOOR, "FLOOR"},
-    {OBJID::OBJ_INCLINE, "INCLINE"},
-    {OBJID::OBJ_CEILING, "CEILING"},
-    {OBJID::OBJ_END, "NONE"}
+NLOHMANN_JSON_SERIALIZE_ENUM(ObjectCategory, {
+    {ObjectCategory::WALL, "WALL"},
+    {ObjectCategory::TILE, "TILE"},
+    {ObjectCategory::ENV_OBJ, "ENV_OBJ"},
+    {ObjectCategory::MONSTER, "MONSTER"},
+    {ObjectCategory::LIGHT, "LIGHT"},
+    {ObjectCategory::NONE, "NONE"}
     })
 
 IMPLEMENT_SINGLETON(CFileManager)
@@ -85,6 +84,7 @@ void CFileManager::LoadObjectList(const std::wstring &filePath, _uint iSceneID, 
     ifs >> jArray;
 
     // TODO : Parsing Data Save, Scene별, 폴더별(ObjectCategory)로 저장할것
+    // 단순 Data로 파싱해두고 Scene Load할때 각 Scene에 맞는 Data를 통해 Instancing 할것
     for (const auto &jObj : jArray)
     {
         MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
@@ -133,7 +133,7 @@ void to_json(json &_j, const PANELDATA &_tData)
 {
     _j = json
     {
-        {"PanelType", _tData.eType},
+        {"Type", _tData.eType},
         {"Count_X", _tData.dwCountX},
         {"Count_Y", _tData.dwCountY},
         {"Count_Z", _tData.dwCountZ},
@@ -143,7 +143,7 @@ void to_json(json &_j, const PANELDATA &_tData)
 
 void from_json(const json &_j, PANELDATA &_tData)
 {
-    _j.at("PanelType").get_to(_tData.eType);
+    _j.at("Type").get_to(_tData.eType);
     _j.at("Count_X").get_to(_tData.dwCountX);
     _j.at("Count_Y").get_to(_tData.dwCountY);
     _j.at("Count_Z").get_to(_tData.dwCountZ);
@@ -154,7 +154,9 @@ void to_json(json &_j, const MAPOBJECTDATA &_tData)
 {
     _j = json
     {
-        {"ObjectType", _tData.ObjType},
+        {"ObjectCategory", _tData.eCategory},
+        {"ObjectType", _tData.iType},
+        {"Color", _tData.dwColor},
         {"TransformData", _tData.transform},
         {"TextureData", _tData.texture},
         {"PanelData", _tData.panelBuffer}
@@ -163,7 +165,9 @@ void to_json(json &_j, const MAPOBJECTDATA &_tData)
 
 void from_json(const json &_j, MAPOBJECTDATA &_tData)
 {
-    _j.at("ObjectType").get_to(_tData.ObjType);
+    _j.at("ObjectCategory").get_to(_tData.eCategory);
+    _j.at("ObjectType").get_to(_tData.iType);
+    _j.at("Color").get_to(_tData.dwColor);
     _j.at("TransformData").get_to(_tData.transform);
     _j.at("TextureData").get_to(_tData.texture);
     _j.at("PanelData").get_to(_tData.panelBuffer);

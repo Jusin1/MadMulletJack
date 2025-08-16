@@ -6,7 +6,7 @@
 CVIBuffer_Cube_Color::CVIBuffer_Cube_Color(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev)
 {
-    m_dwColor = { 0.f, 0.f, 0.f, 1.f };
+    m_dwColor = D3DXCOLOR{ 0.f, 0.f, 0.f, 1.f };
 }
 
 CVIBuffer_Cube_Color::CVIBuffer_Cube_Color(const CVIBuffer_Cube_Color &rhs)
@@ -125,7 +125,7 @@ HRESULT CVIBuffer_Cube_Color::Ready_Buffer()
 HRESULT CVIBuffer_Cube_Color::Initialize(void *pArg)
 {
     if (pArg) {
-        D3DXCOLOR *pCol = reinterpret_cast<D3DXCOLOR *>(pArg);
+        D3DCOLOR *pCol = reinterpret_cast<D3DCOLOR *>(pArg);
         m_dwColor = *pCol;
     }
 

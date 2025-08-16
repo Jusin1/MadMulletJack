@@ -1,11 +1,12 @@
 #include "CGridPanel.h"
 #include "CTexture.h"
+#include "Engine_Define.h"
 #include "CComponentMgr.h"
 #include "Editor_Define.h"
 #include "CGuiManager.h"
 #include "CEditorPickingManager.h"
 #include "CTransform.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "CRenderer.h"
 
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
@@ -138,7 +139,7 @@ void CGridPanel::ExportData(void *pData)
 {
 	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pData))
 	{
-		p->ObjType = OBJ_END;
+		p->eCategory = ObjectCategory::WALL;
 		
 		// buffer
 		::memcpy(&(p->panelBuffer), GetBuffer()->Get_Data(), sizeof(PANELDATA));
@@ -211,8 +212,16 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				return E_FAIL;
 
 			// Texture
-			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
-				return E_FAIL;
+			if (p->texture.OriginComponentName.empty())
+			{
+				if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
+					return E_FAIL;
+			}
 
 			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
 			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);

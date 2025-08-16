@@ -1,16 +1,17 @@
 #include "CVIBuffer_Cube_Color.h"
 #include "CRenderer.h"
 #include "CGuiManager.h"
+#include "Engine_Define.h"
 #include "CGridPanel.h"
 #include "CEditorPickingManager.h"
 #include "CDummyPlacementObject.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "Editor_Define.h"
 #include "CObjectManager.h"
 #include "CPlacementObject.h"
 
 CPlacementObject::CPlacementObject(LPDIRECT3DDEVICE9 pGraphicDevice)
-	: CGameObject(pGraphicDevice), m_pBuffer(nullptr), m_eCategory(MapEditorObjectCategory::NONE), m_iType(0)
+	: CGameObject(pGraphicDevice), m_pBuffer(nullptr), m_eCategory(ObjectCategory::NONE), m_iType(0)
 {
 }
 
@@ -140,9 +141,9 @@ HRESULT CPlacementObject::Set_Component(void *pArg)
 {
 	if (pArg)
 	{
-		if (PlacementObjectData *p = reinterpret_cast<PlacementObjectData *>(pArg))
+		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 		{
-			::memcpy(p, pArg, sizeof(PlacementObjectData));
+			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
 
 			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
 			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);

@@ -12,7 +12,7 @@
 #include "GraphEditor.h"
 #include "CGui_Button.h"
 #include "CRenderer.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "CManagement.h"
 #include "CEditorLoadingScene.h"
 #include "CEditorPickingManager.h"

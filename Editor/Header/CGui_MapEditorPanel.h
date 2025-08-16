@@ -39,8 +39,10 @@ private:
 	CGuiBase *SnapModeCheckBox_Create();
 
 	void AllCheckBox_SetFalse();
+public:
+	const _tchar *GetSelectedThumbnailTexture();
 private:
-	MapEditorObjectCategory m_eCategory;
+	ObjectCategory m_eCategory;
 	_uint m_iObjectType;
 };
 

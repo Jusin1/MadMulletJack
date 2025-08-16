@@ -1,4 +1,5 @@
 #include "CVIBuffer_Cube_Color.h"
+#include "Engine_Enum.h"
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "CGuiManager.h"
@@ -6,7 +7,7 @@
 #include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CEditorPickingManager.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "Editor_Define.h"
 #include "CObjectManager.h"
 #include "CDummyPlacementObject.h"
@@ -136,27 +137,27 @@ void CDummyPlacementObject::ExportData(void *pData)
 {
 }
 
-void CDummyPlacementObject::MakeObject(PlacementObjectData *pData)
+void CDummyPlacementObject::MakeObject(MAPOBJECTDATA *pData)
 {
 	switch (pData->eCategory)
 	{
-		case MapEditorObjectCategory::WALL:
+		case ObjectCategory::WALL:
 		{
 			MSG_BOX("CDummyPlacementObject::MakeColor, wrong type");
 		} return;
-		case MapEditorObjectCategory::TILE:
+		case ObjectCategory::TILE:
 		{
 			MSG_BOX("CDummyPlacementObject::MakeColor, wrong type");
 		} return;
-		case MapEditorObjectCategory::ENV_OBJ:
+		case ObjectCategory::ENV_OBJ:
 		{
-			MakeEnvObject(static_cast<MapEditorEnvObjectType>(pData->iType), pData);
+			MakeEnvObject(static_cast<EnvType>(pData->iType), pData);
 		} break;
-		case MapEditorObjectCategory::MONSTER:
+		case ObjectCategory::MONSTER:
 		{
-			MakeMonsterObject(static_cast<MapEditorMonsterType>(pData->iType), pData);
+			MakeMonsterObject(static_cast<MonsterType>(pData->iType), pData);
 		} break;
-		case MapEditorObjectCategory::LIGHT:
+		case ObjectCategory::LIGHT:
 		{
 			MSG_BOX("CDummyPlacementObject::MakeColor, todo");
 		}
@@ -164,13 +165,13 @@ void CDummyPlacementObject::MakeObject(PlacementObjectData *pData)
 	}
 }
 
-void CDummyPlacementObject::MakeMonsterObject(MapEditorMonsterType _e, PlacementObjectData *pData)
+void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pData)
 {
 	switch (_e)
 	{
-	case MapEditorMonsterType::SUIT:
+	case MonsterType::SUIT:
 	{
-		pData->dwColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pData->dwColor = g_Color_White;
 	} break;
 	default:
 		MSG_BOX("CDummyPlacementObject::MonsterColor, wrong type");
@@ -183,17 +184,25 @@ void CDummyPlacementObject::MakeMonsterObject(MapEditorMonsterType _e, Placement
 	}
 }
 
-void CDummyPlacementObject::MakeEnvObject(MapEditorEnvObjectType _e, PlacementObjectData *pData)
+void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 {
 	switch (_e)
 	{
-	case MapEditorEnvObjectType::BOTTLE:
+	case EnvType::BOTTLE:
 	{
-		pData->dwColor = D3DXCOLOR(0.65f, 0.33f, 0.0f, 1.0f);
+		pData->dwColor = g_Color_Brown;
 	} break;
-	case MapEditorEnvObjectType::VENDINGMACHINE:
+	case EnvType::VENDINGMACHINE:
 	{
-		pData->dwColor = D3DXCOLOR(0.0f, 1.f, 0.0f, 1.0f);
+		pData->dwColor = g_Color_Green;
+	} break;
+	case EnvType::SPAWNPOINT:
+	{
+		pData->dwColor = g_Color_Red;
+	} break;
+	case EnvType::ENDPOINT:
+	{
+		pData->dwColor = g_Color_Cyan;
 	} break;
 	default:
 		MSG_BOX("CDummyPlacementObject::EnvColor, wrong type");
@@ -224,7 +233,7 @@ void CDummyPlacementObject::PosUpdate()
 	{
 		if (CGridPanel *pGridPanel = dynamic_cast<CGridPanel *>(pGo))
 		{
-			if (CVIBuffer_GridPanel *pBuffer = static_cast<CVIBuffer_GridPanel *>(pGridPanel->GetBuffer()))
+			if (CVIBuffer_GridPanel_Editor *pBuffer = static_cast<CVIBuffer_GridPanel_Editor *>(pGridPanel->GetBuffer()))
 			{
 				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
@@ -233,31 +242,31 @@ void CDummyPlacementObject::PosUpdate()
 				{
 					switch (pBuffer->Get_Data()->eType)
 					{
-					case PanelType::WALL_HOR:
+					case WallType::WALL_HOR:
 					{
 						pickPos.x = (int)pickPos.x + 0.5f;
 						pickPos.y = (int)pickPos.y + 0.5f;
 						pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
 					} break;
-					case PanelType::WALL_VER:
+					case WallType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += (pTransform->Get_Scale().x + 0.001f);
 						pickPos.y = (int)pickPos.y + 0.5f;
 						pickPos.z = (int)pickPos.z + 0.5f;
 					} break;
-					case PanelType::INCLINE:
+					case WallType::INCLINE:
 					{
 
 					} break;
-					case PanelType::FLOOR:
+					case WallType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
 						pickPos.x = (int)pickPos.x + 0.5f;
 						pickPos.y += (pTransform->Get_Scale().y + 0.001f);
 						pickPos.z = (int)pickPos.z + 0.5f;
 					} break;
-					case PanelType::CEILING:
+					case WallType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
 						pickPos.x = (int)pickPos.x + 0.5f;
@@ -270,25 +279,25 @@ void CDummyPlacementObject::PosUpdate()
 				{
 					switch (pBuffer->Get_Data()->eType)
 					{
-					case PanelType::WALL_HOR:
+					case WallType::WALL_HOR:
 					{
 						pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
 					} break;
-					case PanelType::WALL_VER:
+					case WallType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += (pTransform->Get_Scale().x + 0.001f);
 					} break;
-					case PanelType::INCLINE:
+					case WallType::INCLINE:
 					{
 
 					} break;
-					case PanelType::FLOOR:
+					case WallType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
 						pickPos.y += (pTransform->Get_Scale().y + 0.001f);
 					} break;
-					case PanelType::CEILING:
+					case WallType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
 						pickPos.y -= (pTransform->Get_Scale().y + 0.001f);
@@ -301,7 +310,7 @@ void CDummyPlacementObject::PosUpdate()
 
 				if (IS_LBUTTON_DOWN)
 				{
-					PlacementObjectData tTestData;
+					MAPOBJECTDATA tTestData;
 					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
 					_vec3 up = pTransform->Get_Info(INFO::INFO_UP);
 					_vec3 look = pTransform->Get_Info(INFO::INFO_LOOK);

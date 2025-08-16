@@ -6,14 +6,6 @@ namespace Engine
 	class CVIBuffer_Cube_Color;
 }
 
-typedef struct tagPlacementObjectData
-{
-	MapEditorObjectCategory eCategory = MapEditorObjectCategory::NONE;
-	_uint iType = 0;
-	D3DXCOLOR dwColor;
-	TRANSFORMDATA transform;
-} PlacementObjectData;
-
 class CDummyPlacementObject : public CGameObject
 {
 private:
@@ -35,9 +27,9 @@ public:
 	virtual void PickingTrue() override;
 	virtual void ExportData(void *pData) override;
 
-	void MakeObject(PlacementObjectData *pData);
-	void MakeMonsterObject(MapEditorMonsterType _e, PlacementObjectData *pData);
-	void MakeEnvObject(MapEditorEnvObjectType _e, PlacementObjectData *pData);
+	void MakeObject(MAPOBJECTDATA *pData);
+	void MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pData);
+	void MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData);
 private:
 	HRESULT			Set_Component(void *pArg);
 	void			PosUpdate();

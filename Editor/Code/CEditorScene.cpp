@@ -1,6 +1,7 @@
 #include "CEditorScene.h"
 #include "Editor_Define.h"
 #include "CGridPanel.h"
+#include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "CFileManager.h"
 #include "CGuiManager.h"
@@ -88,10 +89,10 @@ _int CEditorScene::Update_Scene(const _float &fTimeDelta)
 void CEditorScene::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_1))
+    /*if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_1))
     {
         CFileManager::GetInstance()->SaveObjectList(L"test.json", SCENE_EDITOR, L"EditLogic_Layer");
-    }
+    }*/
 }
 
 void CEditorScene::Render_Scene()
@@ -139,7 +140,7 @@ HRESULT CEditorScene::Ready_Wall_Layer(const _tchar *pLayerTag)
     tTestData.transform.Pos[0] = 0.f;
     tTestData.transform.Pos[1] = 2.f;
     tTestData.transform.Pos[2] = 0.f;
-    tTestData.panelBuffer.eType = PanelType::FLOOR;
+    tTestData.panelBuffer.eType = WallType::FLOOR;
     tTestData.panelBuffer.dwCountX = 5;
     tTestData.panelBuffer.dwCountY = 0;
     tTestData.panelBuffer.dwCountZ = 5;
@@ -152,7 +153,7 @@ HRESULT CEditorScene::Ready_Wall_Layer(const _tchar *pLayerTag)
     tTestData.transform.Pos[0] = 3.f;
     tTestData.transform.Pos[1] = 0.f;
     tTestData.transform.Pos[2] = 0.f;
-    tTestData.panelBuffer.eType = PanelType::WALL_VER;
+    tTestData.panelBuffer.eType = WallType::WALL_VER;
     tTestData.panelBuffer.dwCountX = 0;
     tTestData.panelBuffer.dwCountY = 9;
     tTestData.panelBuffer.dwCountZ = 9;

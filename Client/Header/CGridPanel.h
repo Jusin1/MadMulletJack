@@ -35,7 +35,10 @@ private:
 public:
 	CVIBuffer_GridPanel *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
+	void SetType(WallType _e) { m_eType = _e; }
+	WallType GetType() const { return m_eType; }
 private:
+	WallType m_eType;
 	CVIBuffer_GridPanel *m_pBuffer;
 	Engine::CTexture *m_pTexture;
 };

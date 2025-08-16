@@ -7,7 +7,7 @@
 #include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CPicking.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "CObjectManager.h"
 #include "CTexture.h"
 #include "CDummyTile.h"
@@ -120,7 +120,7 @@ void CDummyTile::PosUpdate()
 	{
 		if (CGridPanel *pGridPanel = dynamic_cast<CGridPanel *>(pGo))
 		{
-			if (CVIBuffer_GridPanel *pBuffer = static_cast<CVIBuffer_GridPanel *>(pGridPanel->GetBuffer()))
+			if (CVIBuffer_GridPanel_Editor *pBuffer = static_cast<CVIBuffer_GridPanel_Editor *>(pGridPanel->GetBuffer()))
 			{
 				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
@@ -129,31 +129,31 @@ void CDummyTile::PosUpdate()
 				{
 					switch (pBuffer->Get_Data()->eType)
 					{
-					case PanelType::WALL_HOR:
+					case WallType::WALL_HOR:
 					{
 						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
 						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
 						pickPos.z -= 0.001f;
 					} break;
-					case PanelType::WALL_VER:
+					case WallType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += 0.001f;
 						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
 						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().x;
 					} break;
-					case PanelType::INCLINE:
+					case WallType::INCLINE:
 					{
 
 					} break;
-					case PanelType::FLOOR:
+					case WallType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
 						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
 						pickPos.y += 0.001f;
 						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
 					} break;
-					case PanelType::CEILING:
+					case WallType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
 						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
@@ -166,25 +166,25 @@ void CDummyTile::PosUpdate()
 				{
 					switch (pBuffer->Get_Data()->eType)
 					{
-					case PanelType::WALL_HOR:
+					case WallType::WALL_HOR:
 					{
 						pickPos.z -= 0.001f;
 					} break;
-					case PanelType::WALL_VER:
+					case WallType::WALL_VER:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
 						pickPos.x += 0.001f;
 					} break;
-					case PanelType::INCLINE:
+					case WallType::INCLINE:
 					{
 
 					} break;
-					case PanelType::FLOOR:
+					case WallType::FLOOR:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
 						pickPos.y += 0.001f;
 					} break;
-					case PanelType::CEILING:
+					case WallType::CEILING:
 					{
 						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
 						pickPos.y -= 0.001f;
@@ -205,7 +205,7 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Up, &up, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
-					tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
+					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
 					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile_Layer", &tTestData)))
 					{
 						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");

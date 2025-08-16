@@ -9,12 +9,12 @@
 
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: Engine::CGameObject(pGraphicDevice), m_pBuffer(nullptr)
-	, m_pTexture(nullptr)
+	, m_pTexture(nullptr), m_eType(WallType::NONE)
 {
 }
 
 CGridPanel::CGridPanel(const CGridPanel &rhs)
-	: Engine::CGameObject(rhs)
+	: Engine::CGameObject(rhs), m_pBuffer(nullptr), m_pTexture(nullptr), m_eType(WallType::NONE)
 {
 }
 
@@ -56,7 +56,7 @@ CGameObject *CGridPanel::Clone(void *pArg)
 
 HRESULT CGridPanel::Ready_GameObject()
 {
-	if (FAILED(__super::Ready_GameObject()))
+	if (FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
 
 	m_vPosition = { 0.f, 0.f, 0.f };
@@ -66,7 +66,7 @@ HRESULT CGridPanel::Ready_GameObject()
 
 HRESULT CGridPanel::Initialize(void *pArg)
 {
-	if (FAILED(__super::Initialize(nullptr)))
+	if (FAILED(CGameObject::Initialize(nullptr)))
 		return E_FAIL;
 
 	if (FAILED(Set_Component(pArg)))
@@ -134,16 +134,36 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	{
 		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 		{
-			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
+			// Type
+			SetType(static_cast<WallType>(p->iType));
 
 			// VIBuffer
-			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
-				return E_FAIL;
+			switch (GetType())
+			{
+			case WallType::WALL_HOR:
+			{
+				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Horizon", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
+					return E_FAIL;
+			} break;
+			case WallType::WALL_VER:
+			{
+				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Vertical", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
+					return E_FAIL;
+			} break;
+			case WallType::INCLINE:
+			case WallType::FLOOR:
+			case WallType::CEILING:
+			{
+				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
+					return E_FAIL;
+			} break;
+			}
 
 			// Texture
 			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
 				return E_FAIL;
 
+			// Transform
 			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
 			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
 			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
@@ -158,7 +178,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	else
 	{
 		// VIBuffer Default
-		if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer)))
+		if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal", (CComponent **)&m_pBuffer)))
 			return E_FAIL;
 
 		// Texture Default

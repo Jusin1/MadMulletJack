@@ -15,7 +15,7 @@
 IMPLEMENT_SINGLETON(CGuiManager)
 
 CGuiManager::CGuiManager()
-	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(MapEditorObjectCategory::WALL), m_iObjectType(0), m_bCreateMode(FALSE)
+	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(ObjectCategory::WALL), m_iObjectType(0), m_bCreateMode(FALSE)
 {
 }
 
@@ -157,17 +157,17 @@ void CGuiManager::Render()
     ShowConsole();
 }
 
-void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
+void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
 {
     if (_b)
     {
         switch (_e)
         {
-        case MapEditorObjectCategory::WALL:
+        case ObjectCategory::WALL:
         {
             MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
         } break;
-        case MapEditorObjectCategory::TILE:
+        case ObjectCategory::TILE:
         {
             if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", SCENE_EDITOR, L"Dummy_Layer")))
             {
@@ -175,7 +175,7 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
             }
             EDITOR_CONSOLE("TILE");
         } break;
-        case MapEditorObjectCategory::ENV_OBJ:
+        case ObjectCategory::ENV_OBJ:
         {
             if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
             {
@@ -183,7 +183,7 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
             }
             EDITOR_CONSOLE("ENV_OBJ");
         } break;
-        case MapEditorObjectCategory::MONSTER:
+        case ObjectCategory::MONSTER:
         {
             if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
             {
@@ -191,7 +191,7 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
             }
             EDITOR_CONSOLE("MONSTER");
         } break;
-        case MapEditorObjectCategory::LIGHT:
+        case ObjectCategory::LIGHT:
         {
             EDITOR_CONSOLE("LIGHT");
         } break;
@@ -206,4 +206,9 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
         }
     }
     m_bCreateMode = _b;
+}
+
+const _tchar *CGuiManager::GetSelectedThumnailTexture()
+{
+    return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::INSPECTOR])->GetSelectedThumbnailTexture();
 }

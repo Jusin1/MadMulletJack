@@ -6,7 +6,7 @@ namespace Engine
 	class CRenderer;
 	class CTexture;
 	class CTransform;
-	class CVIBuffer_GridPanel;
+	class CVIBuffer_GridPanel_Editor;
 }
 
 class CGridPanel : public CGameObject
@@ -36,9 +36,9 @@ public:
 private:
 	HRESULT			Set_Component(void *pArg);
 public:
-	CVIBuffer_GridPanel *GetBuffer() { return m_pBuffer; }
+	CVIBuffer_GridPanel_Editor *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
 private:
-	CVIBuffer_GridPanel *m_pBuffer;
+	CVIBuffer_GridPanel_Editor *m_pBuffer;
 	Engine::CTexture	*m_pTexture;
 };

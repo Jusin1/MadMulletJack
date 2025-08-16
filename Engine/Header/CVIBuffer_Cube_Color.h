@@ -22,7 +22,7 @@ public:
 	virtual void		Free();
 
 private:
-	D3DXCOLOR m_dwColor;
+	D3DCOLOR m_dwColor;
 	_vec3 m_vVerticesLocal[8]; // 로컬 공간의 정점 위치 저장용
 };
 
