@@ -1,49 +1,55 @@
 #include "CPicking.h"
+#include "Engine_Define.h"
 #include "CTransform.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 
 #define MAXMAX_HOR 65
 #define MAXMAX_VER 65
 
-CVIBuffer_GridPanel::CVIBuffer_GridPanel()
+CVIBuffer_GridPanel_Editor::CVIBuffer_GridPanel_Editor()
     : m_pVerticesData(nullptr)
 {
 }
 
-CVIBuffer_GridPanel::CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev)
+CVIBuffer_GridPanel_Editor::CVIBuffer_GridPanel_Editor(LPDIRECT3DDEVICE9 pGraphicDev)
     : CVIBuffer(pGraphicDev), m_pVerticesData(nullptr)
 {
 }
 
-CVIBuffer_GridPanel::CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs)
+CVIBuffer_GridPanel_Editor::CVIBuffer_GridPanel_Editor(const CVIBuffer_GridPanel_Editor &rhs)
     : CVIBuffer(rhs), m_tData(rhs.m_tData)
 {
 }
 
-CVIBuffer_GridPanel::~CVIBuffer_GridPanel()
+CVIBuffer_GridPanel_Editor::~CVIBuffer_GridPanel_Editor()
 {
     
 }
 
-HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
+HRESULT CVIBuffer_GridPanel_Editor::Ready_Buffer(void *pArg)
 {
     if (!pArg)
     {
-        //MSG_BOX("CVIBuffer_GridPanel::Ready_Buffer, PanelBufferData is nullptr");
+        //MSG_BOX("CVIBuffer_GridPanel_Editor::Ready_Buffer, PanelBufferData is nullptr");
         //return S_OK;
     }
     else
-        Set_Data(pArg);
+    {
+        if (PANELDATA *pData = reinterpret_cast<PANELDATA *>(pArg))
+        {
+            Set_Data(pData);
+        }
+    }
 
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
         return Ready_HorizonWallBuffer();
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
         return Ready_VerticalWallBuffer();
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
         return Ready_PlaneBuffer();
     default:
     {
@@ -54,7 +60,7 @@ HRESULT CVIBuffer_GridPanel::Ready_Buffer(void *pArg)
     return S_OK;
 }
 
-HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
+HRESULT CVIBuffer_GridPanel_Editor::Ready_HorizonWallBuffer()
 {
     m_dwVtxSize = sizeof(VTXTEX);
     m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountY;
@@ -67,7 +73,7 @@ HRESULT CVIBuffer_GridPanel::Ready_HorizonWallBuffer()
     return Set_Buffer(m_tData.dwCountY, m_tData.dwCountX);
 }
 
-HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
+HRESULT CVIBuffer_GridPanel_Editor::Ready_VerticalWallBuffer()
 {
     m_dwVtxSize = sizeof(VTXTEX);
     m_dwVtxCnt = m_tData.dwCountZ * m_tData.dwCountY;
@@ -80,7 +86,7 @@ HRESULT CVIBuffer_GridPanel::Ready_VerticalWallBuffer()
     return Set_Buffer(m_tData.dwCountY, m_tData.dwCountZ);
 }
 
-HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
+HRESULT CVIBuffer_GridPanel_Editor::Ready_PlaneBuffer()
 {
     m_dwVtxSize = sizeof(VTXTEX);
     m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountZ;
@@ -93,7 +99,7 @@ HRESULT CVIBuffer_GridPanel::Ready_PlaneBuffer()
     return Set_Buffer(m_tData.dwCountZ, m_tData.dwCountX);
 }
 
-HRESULT CVIBuffer_GridPanel::Create_VertexBuffer()
+HRESULT CVIBuffer_GridPanel_Editor::Create_VertexBuffer()
 {
     return m_pGraphicDev->CreateVertexBuffer(MAXMAX_HOR * MAXMAX_VER * m_dwVtxSize,
         D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
@@ -103,7 +109,7 @@ HRESULT CVIBuffer_GridPanel::Create_VertexBuffer()
         NULL);
 }
 
-HRESULT CVIBuffer_GridPanel::Create_IndexBuffer()
+HRESULT CVIBuffer_GridPanel_Editor::Create_IndexBuffer()
 {
     return m_pGraphicDev->CreateIndexBuffer((MAXMAX_HOR-1) * (MAXMAX_VER-1) * 2 * m_dwIdxSize,
         D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
@@ -113,7 +119,7 @@ HRESULT CVIBuffer_GridPanel::Create_IndexBuffer()
         NULL);
 }
 
-_bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
+_bool CVIBuffer_GridPanel_Editor::IntersectRayWithPlane(_vec3 *pOut)
 {
     CPicking *pPickingSystem = CPicking::GetInstance();
     pPickingSystem->Add_Ref();
@@ -122,26 +128,26 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     _int iRowMax{ 0 };
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
     {
         iColMax = m_tData.dwCountX;
         iRowMax = m_tData.dwCountY;
     } break;
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
     {
         iColMax = m_tData.dwCountZ;
         iRowMax = m_tData.dwCountY;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         iColMax = m_tData.dwCountX;
         iRowMax = m_tData.dwCountZ;
     } break;
     default:
     {
-        MSG_BOX("CVIBuffer_GridPanel::IntersectRayWithPlane, type is wrong");
+        MSG_BOX("CVIBuffer_GridPanel_Editor::IntersectRayWithPlane, type is wrong");
         return FALSE;
     }
     }
@@ -181,7 +187,7 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlane(_vec3 *pOut)
     return FALSE;
 }
 
-_bool CVIBuffer_GridPanel::IntersectRayWithPlaneForEditor(_vec3 *pOut)
+_bool CVIBuffer_GridPanel_Editor::IntersectRayWithPlaneForEditor(_vec3 *pOut)
 {
     CPicking *pPickingSystem = CPicking::GetInstance();
     pPickingSystem->Add_Ref();
@@ -190,26 +196,26 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlaneForEditor(_vec3 *pOut)
     _int iRowMax{ 0 };
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
     {
         iColMax = m_tData.dwCountX;
         iRowMax = m_tData.dwCountY;
     } break;
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
     {
         iColMax = m_tData.dwCountZ;
         iRowMax = m_tData.dwCountY;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         iColMax = m_tData.dwCountX;
         iRowMax = m_tData.dwCountZ;
     } break;
     default:
     {
-        MSG_BOX("CVIBuffer_GridPanel::IntersectRayWithPlane, type is wrong");
+        MSG_BOX("CVIBuffer_GridPanel_Editor::IntersectRayWithPlane, type is wrong");
         return FALSE;
     }
     }
@@ -249,7 +255,7 @@ _bool CVIBuffer_GridPanel::IntersectRayWithPlaneForEditor(_vec3 *pOut)
     return FALSE;
 }
 
-HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
+HRESULT CVIBuffer_GridPanel_Editor::Set_Buffer(_ulong iRowMax, _ulong iColMax)
 {
     if (FAILED(Create_VertexBuffer()))
         return E_FAIL;
@@ -270,23 +276,23 @@ HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
 
             switch (m_tData.eType)
             {
-            case PanelType::WALL_HOR:
+            case WallType::WALL_HOR:
             {
                 pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
                                            (_float)i * m_tData.dwInterval,
                                            0
                 };
             } break;
-            case PanelType::WALL_VER:
+            case WallType::WALL_VER:
             {
                 pVertex[dwIndex].vPosition = { 0,
                                            (_float)i *m_tData.dwInterval,
                                            (_float)j *m_tData.dwInterval
                 };
             } break;
-            case PanelType::INCLINE:
-            case PanelType::FLOOR:
-            case PanelType::CEILING:
+            case WallType::INCLINE:
+            case WallType::FLOOR:
+            case WallType::CEILING:
             {
                 pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
                                            0,
@@ -342,18 +348,18 @@ HRESULT CVIBuffer_GridPanel::Set_Buffer(_ulong iRowMax, _ulong iColMax)
     return S_OK;
 }
 
-void CVIBuffer_GridPanel::Increase_RowBuffer()
+void CVIBuffer_GridPanel_Editor::Increase_RowBuffer()
 {
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
-    case PanelType::WALL_VER:
+    case WallType::WALL_HOR:
+    case WallType::WALL_VER:
     {
         m_tData.dwCountY += 1;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         m_tData.dwCountZ += 1;
     } break;
@@ -366,21 +372,21 @@ void CVIBuffer_GridPanel::Increase_RowBuffer()
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Increase_ColBuffer()
+void CVIBuffer_GridPanel_Editor::Increase_ColBuffer()
 {
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
     {
         m_tData.dwCountX += 1;
     } break;
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
     {
         m_tData.dwCountZ += 1;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         m_tData.dwCountX += 1;
     } break;
@@ -393,25 +399,25 @@ void CVIBuffer_GridPanel::Increase_ColBuffer()
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Increase_Interval()
+void CVIBuffer_GridPanel_Editor::Increase_Interval()
 {
     ++m_tData.dwInterval;
 
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Decrease_RowBuffer()
+void CVIBuffer_GridPanel_Editor::Decrease_RowBuffer()
 {
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
-    case PanelType::WALL_VER:
+    case WallType::WALL_HOR:
+    case WallType::WALL_VER:
     {
         m_tData.dwCountY -= 1;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         m_tData.dwCountZ -= 1;
     } break;
@@ -424,21 +430,21 @@ void CVIBuffer_GridPanel::Decrease_RowBuffer()
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Decrease_ColBuffer()
+void CVIBuffer_GridPanel_Editor::Decrease_ColBuffer()
 {
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
     {
         m_tData.dwCountX -= 1;
     } break;
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
     {
         m_tData.dwCountZ -= 1;
     } break;
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         m_tData.dwCountX -= 1;
     } break;
@@ -451,7 +457,7 @@ void CVIBuffer_GridPanel::Decrease_ColBuffer()
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Decrease_Interval()
+void CVIBuffer_GridPanel_Editor::Decrease_Interval()
 {
     --m_tData.dwInterval;
     if (m_tData.dwInterval <= 0)
@@ -460,23 +466,23 @@ void CVIBuffer_GridPanel::Decrease_Interval()
     Update_BufferInfo();
 }
 
-void CVIBuffer_GridPanel::Update_BufferInfo()
+void CVIBuffer_GridPanel_Editor::Update_BufferInfo()
 {
     switch (m_tData.eType)
     {
-    case PanelType::WALL_HOR:
+    case WallType::WALL_HOR:
     {
         Update_BufferInfo_Horizon();
         return Update_Buffer(m_tData.dwCountY, m_tData.dwCountX);
     }        
-    case PanelType::WALL_VER:
+    case WallType::WALL_VER:
     {
         Update_BufferInfo_Vertical();
         return Update_Buffer(m_tData.dwCountY, m_tData.dwCountZ);
     }
-    case PanelType::INCLINE:
-    case PanelType::FLOOR:
-    case PanelType::CEILING:
+    case WallType::INCLINE:
+    case WallType::FLOOR:
+    case WallType::CEILING:
     {
         Update_BufferInfo_Plane();
         return Update_Buffer(m_tData.dwCountZ, m_tData.dwCountX);
@@ -488,25 +494,25 @@ void CVIBuffer_GridPanel::Update_BufferInfo()
     }
 }
 
-void CVIBuffer_GridPanel::Update_BufferInfo_Horizon()
+void CVIBuffer_GridPanel_Editor::Update_BufferInfo_Horizon()
 {
     m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountY;
     m_dwTriCnt = (m_tData.dwCountX - 1) * (m_tData.dwCountY - 1) * 2;
 }
 
-void CVIBuffer_GridPanel::Update_BufferInfo_Vertical()
+void CVIBuffer_GridPanel_Editor::Update_BufferInfo_Vertical()
 {
     m_dwVtxCnt = m_tData.dwCountZ * m_tData.dwCountY;
     m_dwTriCnt = (m_tData.dwCountZ - 1) * (m_tData.dwCountY - 1) * 2;
 }
 
-void CVIBuffer_GridPanel::Update_BufferInfo_Plane()
+void CVIBuffer_GridPanel_Editor::Update_BufferInfo_Plane()
 {
     m_dwVtxCnt = m_tData.dwCountX * m_tData.dwCountZ;
     m_dwTriCnt = (m_tData.dwCountX - 1) * (m_tData.dwCountZ - 1) * 2;
 }
 
-void CVIBuffer_GridPanel::Update_Buffer(_ulong iRowMax, _ulong iColMax)
+void CVIBuffer_GridPanel_Editor::Update_Buffer(_ulong iRowMax, _ulong iColMax)
 {
     VTXTEX *pVertex = NULL;
     m_pVB->Lock(0, 0, (void **)&pVertex, D3DLOCK_DISCARD);
@@ -520,23 +526,23 @@ void CVIBuffer_GridPanel::Update_Buffer(_ulong iRowMax, _ulong iColMax)
 
             switch (m_tData.eType)
             {
-            case PanelType::WALL_HOR:
+            case WallType::WALL_HOR:
             {
                 pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
                                            (_float)i * m_tData.dwInterval,
                                            0
                 };
             } break;
-            case PanelType::WALL_VER:
+            case WallType::WALL_VER:
             {
                 pVertex[dwIndex].vPosition = { 0,
                                            (_float)i * m_tData.dwInterval,
                                            (_float)j * m_tData.dwInterval
                 };
             } break;
-            case PanelType::INCLINE:
-            case PanelType::FLOOR:
-            case PanelType::CEILING:
+            case WallType::INCLINE:
+            case WallType::FLOOR:
+            case WallType::CEILING:
             {
                 pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
                                            0,
@@ -586,9 +592,9 @@ void CVIBuffer_GridPanel::Update_Buffer(_ulong iRowMax, _ulong iColMax)
     m_pIB->Unlock();
 }
 
-CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
+CComponent *CVIBuffer_GridPanel_Editor::Clone(void *pArg)
 {
-    CVIBuffer_GridPanel *pInstance = new CVIBuffer_GridPanel(*this);
+    CVIBuffer_GridPanel_Editor *pInstance = new CVIBuffer_GridPanel_Editor(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
@@ -599,9 +605,9 @@ CComponent *CVIBuffer_GridPanel::Clone(void *pArg)
     return pInstance;
 }
 
-CVIBuffer_GridPanel *CVIBuffer_GridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg)
+CVIBuffer_GridPanel_Editor *CVIBuffer_GridPanel_Editor::Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg)
 {
-    CVIBuffer_GridPanel *pGridPanel = new CVIBuffer_GridPanel(pGraphicDev);
+    CVIBuffer_GridPanel_Editor *pGridPanel = new CVIBuffer_GridPanel_Editor(pGraphicDev);
     if (FAILED(pGridPanel->Ready_Buffer(pArg)))
     {
         Safe_Release(pGridPanel);
@@ -612,7 +618,7 @@ CVIBuffer_GridPanel *CVIBuffer_GridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
     return pGridPanel;
 }
 
-_bool CVIBuffer_GridPanel::Picking(CTransform *pTransform, _vec3 *pOut)
+_bool CVIBuffer_GridPanel_Editor::Picking(CTransform *pTransform, _vec3 *pOut)
 {
     CPicking *pPickingSystem = CPicking::GetInstance();
     pPickingSystem->Add_Ref();
@@ -637,13 +643,13 @@ _bool CVIBuffer_GridPanel::Picking(CTransform *pTransform, _vec3 *pOut)
     return FALSE;
 }
 
-HRESULT CVIBuffer_GridPanel::Initialize(void *pArg)
+HRESULT CVIBuffer_GridPanel_Editor::Initialize(void *pArg)
 {
     return Ready_Buffer(pArg);
 }
 
 
-void CVIBuffer_GridPanel::Free()
+void CVIBuffer_GridPanel_Editor::Free()
 {
     CVIBuffer::Free();
     if (m_pVerticesData)
