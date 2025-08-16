@@ -121,6 +121,9 @@
     <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\03. CVIBuffer_GridPanel_Normal">
       <UniqueIdentifier>{6d4d7edc-ccb0-4ccf-9d88-8fe9cd6d7d04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\12. DataManager">
+      <UniqueIdentifier>{4c668bd2-caec-4cdb-b3d4-bbcb1f9bcf50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -234,6 +237,7 @@
     <ClCompile Include="..\Code\CVIBuffer_GridPanelBase.cpp">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CDataManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -368,5 +372,6 @@
     <ClInclude Include="..\Header\CVIBuffer_GridPanelBase.h">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDataManager.h" />
   </ItemGroup>
 </Project>
