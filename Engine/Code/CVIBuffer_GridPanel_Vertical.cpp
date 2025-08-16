@@ -1,20 +1,13 @@
-#include "CPicking.h"
-#include "CTransform.h"
 #include "Engine_Define.h"
 #include "CVIBuffer_GridPanel_Vertical.h"
 
-CVIBuffer_GridPanel_Vertical::CVIBuffer_GridPanel_Vertical()
-    : m_pVerticesData(nullptr)
-{
-}
-
 CVIBuffer_GridPanel_Vertical::CVIBuffer_GridPanel_Vertical(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CVIBuffer(pGraphicDev), m_pVerticesData(nullptr)
+    : CVIBuffer_GridPanelBase(pGraphicDev)
 {
 }
 
 CVIBuffer_GridPanel_Vertical::CVIBuffer_GridPanel_Vertical(const CVIBuffer_GridPanel_Vertical &rhs)
-    : CVIBuffer(rhs), m_tData(rhs.m_tData), m_pVerticesData(nullptr)
+    : CVIBuffer_GridPanelBase(rhs)
 {
 }
 
@@ -24,11 +17,7 @@ CVIBuffer_GridPanel_Vertical::~CVIBuffer_GridPanel_Vertical()
 
 void CVIBuffer_GridPanel_Vertical::Free()
 {
-    CVIBuffer::Free();
-    if (m_pVerticesData)
-        delete[] m_pVerticesData;
-
-    m_pVerticesData = nullptr;
+    CVIBuffer_GridPanelBase::Free();
 }
 
 HRESULT CVIBuffer_GridPanel_Vertical::Initialize(void *pArg)
@@ -66,78 +55,18 @@ CComponent *CVIBuffer_GridPanel_Vertical::Clone(void *pArg)
 
 _bool CVIBuffer_GridPanel_Vertical::Picking(CTransform *pTransform, _vec3 *pOut)
 {
-    CPicking *pPickingSystem = CPicking::GetInstance();
-    pPickingSystem->Add_Ref();
-
-    const _matrix *pMatWorld = pTransform->Get_World();
-    _matrix matInvWorld;
-    D3DXMatrixInverse(&matInvWorld, nullptr, pMatWorld);
-
-    pPickingSystem->TransformRayToLocalSpace(matInvWorld);
-
-    if (IntersectRay(pOut))
-    {
-        ::D3DXVec3TransformCoord(pOut, pOut, pMatWorld);
-        Safe_Release(pPickingSystem);
-        return TRUE;
-    }
-
-    Safe_Release(pPickingSystem);
-    return FALSE;
+    return __super::Picking(pTransform, pOut);
 }
 
 _bool CVIBuffer_GridPanel_Vertical::IntersectRay(_vec3 *pOut)
 {
-    CPicking *pPickingSystem = CPicking::GetInstance();
-    pPickingSystem->Add_Ref();
-
-    _int iColMax{ m_tData.dwCountZ };
-    _int iRowMax{ m_tData.dwCountY };
-
-    _ulong  dwIndex{ 0 };
-    _int iLeftTop{ 0 };
-    _int iRightTop{ 0 };
-    _int iRightBottom{ 0 };
-    _int iLeftBottom{ 0 };
-
-    for (_int iRow = 0; iRow < iRowMax - 1; ++iRow)
-    {
-        for (_int iCol = 0; iCol < iColMax - 1; ++iCol)
-        {
-            dwIndex = iRow * iColMax + iCol;
-            iLeftTop = dwIndex + iColMax;
-            iRightTop = dwIndex + iColMax + 1;
-            iRightBottom = dwIndex + 1;
-            iLeftBottom = dwIndex;
-            if (pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
-                m_pVerticesData[iRightTop],
-                m_pVerticesData[iRightBottom],
-                pOut)
-                ||
-                pPickingSystem->IntersectRayWithTriangleInLocal(m_pVerticesData[iLeftTop],
-                    m_pVerticesData[iRightBottom],
-                    m_pVerticesData[iLeftBottom],
-                    pOut))
-            {
-                Safe_Release(pPickingSystem);
-                return TRUE;
-            }
-        }
-    }
-
-    Safe_Release(pPickingSystem);
-    return FALSE;
+    return __super::IntersectRay(pOut);
 }
 
 HRESULT CVIBuffer_GridPanel_Vertical::Ready_Buffer(void *pArg)
 {
-    if (pArg)
-    {
-        if (PANELDATA *pData = reinterpret_cast<PANELDATA *>(pArg))
-        {
-            m_tData = *pData;
-        }
-    }
+    if (FAILED(__super::Ready_Buffer(pArg)))
+        return E_FAIL;
 
     if (FAILED(Set_Buffer()))
     {
@@ -150,6 +79,9 @@ HRESULT CVIBuffer_GridPanel_Vertical::Ready_Buffer(void *pArg)
 
 HRESULT CVIBuffer_GridPanel_Vertical::Set_Buffer()
 {
+    if (FAILED(__super::Set_Buffer()))
+        return E_FAIL;
+
     m_dwVtxSize = sizeof(VTXTEX);
     m_dwVtxCnt = m_tData.dwCountZ * m_tData.dwCountY;
     m_dwTriCnt = (m_tData.dwCountZ - 1) * (m_tData.dwCountY - 1) * 2;
@@ -158,31 +90,31 @@ HRESULT CVIBuffer_GridPanel_Vertical::Set_Buffer()
     m_dwIdxSize = sizeof(INDEX32);
     m_IdxFmt = D3DFMT_INDEX32;
 
-    _ulong iColMax{ m_tData.dwCountZ };
-    _ulong iRowMax{ m_tData.dwCountY };
+    m_iColMax = m_tData.dwCountZ;
+    m_iRowMax = m_tData.dwCountY;
 
     if (FAILED(CVIBuffer::Ready_Vertex_Buffer()))
         return E_FAIL;
 
     VTXTEX *pVertex = NULL;
 
-    m_pVerticesData = new _vec3[iRowMax * iColMax];
+    m_pVerticesData = new _vec3[m_iRowMax * m_iColMax];
 
     m_pVB->Lock(0, 0, (void **)&pVertex, 0);
 
     _ulong  dwIndex(0);
 
-    for (_ulong i = 0; i < iRowMax; ++i)
+    for (_ulong i = 0; i < m_iRowMax; ++i)
     {
-        for (_ulong j = 0; j < iColMax; ++j)
+        for (_ulong j = 0; j < m_iColMax; ++j)
         {
-            dwIndex = i * iColMax + j;
+            dwIndex = i * m_iColMax + j;
 
             pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
                                        0,
                                        (_float)i * m_tData.dwInterval };
 
-            pVertex[dwIndex].vTexUV = { (_float)j, (_float)(iRowMax - 1 - i) };
+            pVertex[dwIndex].vTexUV = { (_float)j, (_float)(m_iRowMax - 1 - i) };
 
             m_pVerticesData[dwIndex] = pVertex[dwIndex].vPosition;
         }
@@ -199,18 +131,18 @@ HRESULT CVIBuffer_GridPanel_Vertical::Set_Buffer()
 
     m_pIB->Lock(0, 0, (void **)&pIndex, 0);
 
-    for (_ulong i = 0; i < iRowMax - 1; ++i)
+    for (_ulong i = 0; i < m_iRowMax - 1; ++i)
     {
-        for (_ulong j = 0; j < iColMax - 1; ++j)
+        for (_ulong j = 0; j < m_iColMax - 1; ++j)
         {
-            dwIndex = i * iColMax + j;
+            dwIndex = i * m_iColMax + j;
 
-            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
-            pIndex[dwTriCnt]._1 = dwIndex + iColMax + 1;
+            pIndex[dwTriCnt]._0 = dwIndex + m_iColMax;
+            pIndex[dwTriCnt]._1 = dwIndex + m_iColMax + 1;
             pIndex[dwTriCnt]._2 = dwIndex + 1;
             dwTriCnt++;
 
-            pIndex[dwTriCnt]._0 = dwIndex + iColMax;
+            pIndex[dwTriCnt]._0 = dwIndex + m_iColMax;
             pIndex[dwTriCnt]._1 = dwIndex + 1;
             pIndex[dwTriCnt]._2 = dwIndex;
             dwTriCnt++;

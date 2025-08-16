@@ -1,12 +1,11 @@
 #pragma once
-#include "CVIBuffer.h"
+#include "CVIBuffer_GridPanelBase.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CVIBuffer_GridPanel_Vertical : public CVIBuffer
+class ENGINE_DLL CVIBuffer_GridPanel_Vertical : public CVIBuffer_GridPanelBase
 {
 private:
-	explicit CVIBuffer_GridPanel_Vertical();
 	explicit CVIBuffer_GridPanel_Vertical(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CVIBuffer_GridPanel_Vertical(const CVIBuffer_GridPanel_Vertical &rhs);
 	virtual ~CVIBuffer_GridPanel_Vertical();
@@ -21,9 +20,6 @@ private:
 	HRESULT	Ready_Buffer(void *pArg);
 	HRESULT Set_Buffer();
 	_bool IntersectRay(_vec3 *pOut);
-private:
-	PANELDATA m_tData;
-	_vec3 *m_pVerticesData;
 };
 
 END
