@@ -92,7 +92,7 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
 
     // TODO - 회전되는 Animation Texture나 Object 추가 해야함
 
-    // TODO - Monster와 충돌시 Event
+    // TODO - Monster와 충돌시 Trigger Component
 
     return S_OK;
 }

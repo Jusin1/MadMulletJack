@@ -90,5 +90,7 @@ HRESULT CTile_Electric::Set_Component(void *pArg)
     if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Electric", (CComponent **)&m_pTexture), pData))
         return E_FAIL;
 
+    // TODO - Monster와 충돌시 Trigger Component
+
     return S_OK;
 }
