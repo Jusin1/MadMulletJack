@@ -39,6 +39,7 @@ private:
 	CGuiBase *SnapModeCheckBox_Create();
 
 	void AllCheckBox_SetFalse();
+	void AllThumbnailTexture_SetClear();
 public:
 	const _tchar *GetSelectedThumbnailTexture();
 private:

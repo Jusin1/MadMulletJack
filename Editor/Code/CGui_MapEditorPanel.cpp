@@ -51,11 +51,14 @@ void CGui_MapEditorPanel::Render()
 		if (DropboxElement)
 		{
 			AllCheckBox_SetFalse();
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetCategory(DropboxElement->GetConfirmedState());
 			m_eCategory = CGuiManager::GetInstance()->GetCategory();
 			m_iObjectType = 0;
-			CGuiManager::GetInstance()->GetInstance()->SetObjectType(0);
+			CGuiManager::GetInstance()->SetObjectType(0);
 		}
 	}
 
@@ -117,6 +120,9 @@ void CGui_MapEditorPanel::WallRender()
 
 		if (DropboxElement)
 		{
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
+
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
 			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
@@ -138,6 +144,9 @@ void CGui_MapEditorPanel::TileRender()
 		if (DropboxElement)
 		{
 			AllCheckBox_SetFalse();
+			AllCheckBox_SetFalse();
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
@@ -161,6 +170,8 @@ void CGui_MapEditorPanel::EnvObjRender()
 		if (DropboxElement)
 		{
 			AllCheckBox_SetFalse();
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
@@ -182,6 +193,8 @@ void CGui_MapEditorPanel::MonsterRender()
 		if (DropboxElement)
 		{
 			AllCheckBox_SetFalse();
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
@@ -203,6 +216,8 @@ void CGui_MapEditorPanel::LightRender()
 		if (DropboxElement)
 		{
 			AllCheckBox_SetFalse();
+			AllThumbnailTexture_SetClear();
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
@@ -295,7 +310,8 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 			defaultData.iType = m_iObjectType;
 			defaultData.panelBuffer.eType = static_cast<WallType>(m_iObjectType);
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, L"Wall_Layer", &defaultData);
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_DEV, L"Wall_Layer", &defaultData);
+			CGuiManager::GetInstance()->SetTarget(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Wall_Layer")->back());
 		} break;
 		case ObjectCategory::TILE:
 		{
@@ -303,7 +319,7 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 			defaultData.eCategory = ObjectCategory::TILE;
 			defaultData.iType = m_iObjectType;
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile_Layer", &defaultData);
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_DEV, L"Tile_Layer", &defaultData);
 		} break;
 		case ObjectCategory::ENV_OBJ:
 		{
@@ -311,7 +327,7 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		} break;
 		case ObjectCategory::MONSTER:
 		{
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Monster_Layer");
+			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_DEV, L"Monster_Layer");
 		} break;
 		case ObjectCategory::LIGHT:
 		{
@@ -475,10 +491,12 @@ CGuiBase *CGui_MapEditorPanel::CreateModeCheckBox_Create()
 		// TrueEvent
 		[this]()->void {
 			CGuiManager::GetInstance()->SetCreateMode(TRUE, m_eCategory);
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 		},
 		// FalseEvent
 		[this]()->void {
 			CGuiManager::GetInstance()->SetCreateMode(FALSE, m_eCategory);
+			CGuiManager::GetInstance()->SetTarget(nullptr);
 		});
 	return pCheckbox;
 }
@@ -501,6 +519,14 @@ void CGui_MapEditorPanel::AllCheckBox_SetFalse()
 {
 	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)])->OnFalse();
 	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)])->OnFalse();
+}
+
+void CGui_MapEditorPanel::AllThumbnailTexture_SetClear()
+{
+	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)])->Set_Clear();
+	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)])->Set_Clear();
+	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)])->Set_Clear();
+	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)])->Set_Clear();
 }
 
 const _tchar *CGui_MapEditorPanel::GetSelectedThumbnailTexture()
