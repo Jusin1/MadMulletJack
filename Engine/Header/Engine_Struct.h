@@ -65,9 +65,9 @@ namespace Engine
 
 	typedef struct tagGridPanelData
 	{
-		PanelType eType = PanelType::FLOOR;
+		WallType eType = WallType::WALL_HOR;
 		unsigned long dwCountX = 2;
-		unsigned long dwCountY = 0;
+		unsigned long dwCountY = 2;
 		unsigned long dwCountZ = 2;
 		unsigned long dwInterval = 1;
 	} PANELDATA;
@@ -87,12 +87,13 @@ namespace Engine
 
 	typedef struct tagMapObjectData
 	{
-		OBJID ObjType;
-		TRANSFORMDATA transform;
+		ObjectCategory eCategory = ObjectCategory::NONE;
+		_uint iType = 0;
+		D3DCOLOR dwColor;
 		TEXTUREDATA texture;
+		TRANSFORMDATA transform;
 		PANELDATA panelBuffer;
 	} MAPOBJECTDATA;
 }
-
 
 #endif // Engine_Struct_h__

@@ -20,24 +20,72 @@ namespace Engine
 
 	enum OBJID { OBJ_PLAYER, OBJ_MONSTER, OBJ_MAP, OBJ_FLOOR, OBJ_INCLINE, OBJ_CEILING, OBJ_END };
 
-	enum class ObjectCategory
+
+
+	enum class ObjectCategory : unsigned int
 	{
-		WALL,
+		WALL = 0,
 		TILE,
 		ENV_OBJ,
 		MONSTER,
 		LIGHT,
 		NONE
 	};
+	constexpr size_t g_ObjectCategoryCount{ static_cast<size_t>(ObjectCategory::NONE) };
 
-	enum class PanelType : unsigned int
+	enum class WallType : unsigned int
 	{
 		WALL_HOR = 0,
 		WALL_VER,
 		INCLINE,
 		FLOOR,
 		CEILING,
+		SIDE_DASH,
 		NONE
 	};
+	constexpr size_t g_WallTypeCount{ static_cast<size_t>(WallType::NONE) };
+
+	enum class TileType : unsigned int
+	{
+		DECO,
+		GLASS,
+		ACID,
+		ELECTRIC,
+		VENT,
+		NONE
+	};
+	constexpr size_t g_TileTypeCount{ static_cast<size_t>(TileType::NONE) };
+
+	enum class EnvType : unsigned int
+	{
+		DISPLAY,
+		BOTTLE,		// °¥»ö
+		VENDINGMACHINE,
+		SPAWNPOINT,
+		ENDPOINT,
+		NONE
+	};
+	constexpr size_t g_EnvTypeCount{ static_cast<size_t>(EnvType::NONE) };
+
+	enum class MonsterType : unsigned int
+	{
+		SUIT,
+		NONE
+	};
+	constexpr size_t g_MonsterTypeCount{ static_cast<size_t>(MonsterType::NONE) };
+
+	enum class LightType : unsigned int
+	{
+		tmp,
+		NONE
+	};
+	constexpr size_t g_LightTypeCount{ static_cast<size_t>(LightType::NONE) };
+
+	enum class EffectEditorGuiType : unsigned int
+	{
+		tmp,
+		NONE
+	};
+	constexpr size_t g_EffectEditorGuiTypeCount{ static_cast<size_t>(EffectEditorGuiType::NONE) };
 }
 #endif // Engine_Enum_h__

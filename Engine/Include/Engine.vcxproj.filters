@@ -109,6 +109,18 @@
     <Filter Include="99. Header\JsonFile">
       <UniqueIdentifier>{e092322c-83d3-4536-bab8-ea317b885380}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\ForEditor">
+      <UniqueIdentifier>{685554ee-7a58-44ea-933f-398777593593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\01. CVIBuffer_GridPanel_Horizon">
+      <UniqueIdentifier>{62f42479-48d4-436f-9ec5-d59ae9b2abab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\02. CVIBuffer_GridPanel_Vertical">
+      <UniqueIdentifier>{225e9171-0797-4ae7-bf63-8e1fa1e95d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\03. CVIBuffer_GridPanel_Normal">
+      <UniqueIdentifier>{6d4d7edc-ccb0-4ccf-9d88-8fe9cd6d7d04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -198,9 +210,6 @@
     <ClCompile Include="..\Code\CPicking.cpp">
       <Filter>00. Manager\10. Picking</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CVIBuffer_GridPanel.cpp">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\VIBuffer_Color.cpp">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect\Color</Filter>
     </ClCompile>
@@ -209,6 +218,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CVIBuffer_Cube_Color.cpp">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\02. Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel_Editor.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\ForEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel_Horizon.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\01. CVIBuffer_GridPanel_Horizon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel_Vertical.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\02. CVIBuffer_GridPanel_Vertical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanel_Normal.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\03. CVIBuffer_GridPanel_Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer_GridPanelBase.cpp">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,9 +341,6 @@
     <ClInclude Include="..\Header\CPicking.h">
       <Filter>00. Manager\10. Picking</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CVIBuffer_GridPanel.h">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\VIBuffer_Color.h">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect\Color</Filter>
     </ClInclude>
@@ -331,6 +352,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CVIBuffer_Cube_Color.h">
       <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\02. Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel_Editor.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\ForEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel_Horizon.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\01. CVIBuffer_GridPanel_Horizon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel_Vertical.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\02. CVIBuffer_GridPanel_Vertical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanel_Normal.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel\03. CVIBuffer_GridPanel_Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_GridPanelBase.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\04. GridPanel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

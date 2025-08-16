@@ -180,6 +180,12 @@
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
+    <ClInclude Include="..\Header\CTileBase.h" />
+    <ClInclude Include="..\Header\CTile_Acid.h" />
+    <ClInclude Include="..\Header\CTile_Deco.h" />
+    <ClInclude Include="..\Header\CTile_Electric.h" />
+    <ClInclude Include="..\Header\CTile_Glass.h" />
+    <ClInclude Include="..\Header\CTile_Vent.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
@@ -220,6 +226,12 @@
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
+    <ClCompile Include="..\Code\CTileBase.cpp" />
+    <ClCompile Include="..\Code\CTile_Acid.cpp" />
+    <ClCompile Include="..\Code\CTile_Deco.cpp" />
+    <ClCompile Include="..\Code\CTile_Electric.cpp" />
+    <ClCompile Include="..\Code\CTile_Glass.cpp" />
+    <ClCompile Include="..\Code\CTile_Vent.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
