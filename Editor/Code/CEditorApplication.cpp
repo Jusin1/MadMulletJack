@@ -109,10 +109,10 @@ HRESULT CEditorApplication::Ready_EditorApplication()
 
 void CEditorApplication::Run_EditorApplication()
 {
-	RenderImGuiRender();
-
 	Update_EditorApplication();
 	LateUpdate_EditorApplication();
+
+	RenderImGuiRender();
 
 	Render_EditorApplication();
 }
@@ -213,7 +213,7 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 
 HRESULT CEditorApplication::Ready_Scene()
 {
-	CEditorLoadingScene *pEditorLoadingScene = CEditorLoadingScene::Create(m_pGraphicDevice, SCENE::SCENE_EDITOR);
+	CEditorLoadingScene *pEditorLoadingScene = CEditorLoadingScene::Create(m_pGraphicDevice, SCENE::SCENE_DEV);
 	if (!pEditorLoadingScene)
 		return E_FAIL;
 

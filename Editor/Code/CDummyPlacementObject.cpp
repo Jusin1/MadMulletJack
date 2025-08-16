@@ -178,7 +178,7 @@ void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pDa
 		break;
 	}
 
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Monster_Layer", pData)))
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_DEV, L"Monster_Layer", pData)))
 	{
 		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}
@@ -209,7 +209,7 @@ void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 		break;
 	}
 
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_EDITOR, L"Env_Layer", pData)))
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_DEV, L"Env_Layer", pData)))
 	{
 		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}

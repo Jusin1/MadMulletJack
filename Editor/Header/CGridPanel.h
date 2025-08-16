@@ -36,9 +36,12 @@ public:
 private:
 	HRESULT			Set_Component(void *pArg);
 public:
+	_uint GetType() { return m_iType; }
+	void SetType(_uint _i) { m_iType = _i; }
 	CVIBuffer_GridPanel_Editor *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
 private:
+	_uint m_iType;
 	CVIBuffer_GridPanel_Editor *m_pBuffer;
 	Engine::CTexture	*m_pTexture;
 };

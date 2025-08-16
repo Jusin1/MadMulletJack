@@ -169,7 +169,7 @@ void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
         } break;
         case ObjectCategory::TILE:
         {
-            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", SCENE_EDITOR, L"Dummy_Layer")))
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", SCENE_DEV, L"Dummy_Layer")))
             {
                 MSG_BOX("CGuiManager::SetCreateMode, DummyTile Creat Failed");
             }
@@ -177,7 +177,7 @@ void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
         } break;
         case ObjectCategory::ENV_OBJ:
         {
-            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_DEV, L"Dummy_Layer")))
             {
                 MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
             }
@@ -185,7 +185,7 @@ void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
         } break;
         case ObjectCategory::MONSTER:
         {
-            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_EDITOR, L"Dummy_Layer")))
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", SCENE_DEV, L"Dummy_Layer")))
             {
                 MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
             }
@@ -199,7 +199,7 @@ void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
     }
     else
     {
-        auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_EDITOR, L"Dummy_Layer");
+        auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Dummy_Layer");
         if (list && list->size() > 0)
         {
             (*list->begin())->Set_Dead(TRUE);

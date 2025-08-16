@@ -206,7 +206,7 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
 					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile_Layer", &tTestData)))
+					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_DEV, L"Tile_Layer", &tTestData)))
 					{
 						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 					}

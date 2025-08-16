@@ -38,7 +38,7 @@ _int CEditorLoadingScene::Update_Scene(const _float &fTimeDelta)
 
 		switch (m_eNextScene)
 		{
-		case SCENE_EDITOR:
+		case SCENE_DEV:
 		{
 			pNewScene = CEditorScene::Create(m_pGraphicDev);
 		} break;

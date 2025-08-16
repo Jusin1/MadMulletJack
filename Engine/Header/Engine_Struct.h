@@ -89,7 +89,7 @@ namespace Engine
 	{
 		ObjectCategory eCategory = ObjectCategory::NONE;
 		_uint iType = 0;
-		D3DCOLOR dwColor;
+		unsigned long dwColor;
 		TEXTUREDATA texture;
 		TRANSFORMDATA transform;
 		PANELDATA panelBuffer;

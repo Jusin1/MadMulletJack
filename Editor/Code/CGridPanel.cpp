@@ -139,8 +139,10 @@ void CGridPanel::ExportData(void *pData)
 {
 	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pData))
 	{
+		// type
 		p->eCategory = ObjectCategory::WALL;
-		
+		p->iType = GetType();
+
 		// buffer
 		::memcpy(&(p->panelBuffer), GetBuffer()->Get_Data(), sizeof(PANELDATA));
 
@@ -148,14 +150,14 @@ void CGridPanel::ExportData(void *pData)
 		p->texture.OriginComponentName = GetTexture()->GetOriginCompName();
 
 		// transform
-		_vec3 cpy = GetTransform()->Get_Info(INFO_RIGHT);
-		::memcpy(&p->transform.Right, &cpy, sizeof(_vec3));
-		cpy = GetTransform()->Get_Info(INFO_UP);
-		::memcpy(&p->transform.Up, &cpy, sizeof(_vec3));
-		cpy = GetTransform()->Get_Info(INFO_LOOK);
-		::memcpy(&p->transform.Look, &cpy, sizeof(_vec3));
-		cpy = GetTransform()->Get_Info(INFO_POS);
-		::memcpy(&p->transform.Pos, &cpy, sizeof(_vec3));
+		::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_World()).m[0][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_World()).m[1][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_World()).m[2][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_World()).m[3][0]), sizeof(_vec3));
+	}
+	else
+	{
+		MSG_BOX("CGridPanel::ExportData, pData is ¸À°¨");
 	}
 }
 
@@ -205,7 +207,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	{
 		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 		{
-			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
+			SetType(p->iType);
 
 			// VIBuffer
 			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", (CComponent **)&m_pBuffer, &(p->panelBuffer))))

@@ -100,6 +100,30 @@
     <Filter Include="04. GameObject\Placement">
       <UniqueIdentifier>{c6e75988-f9b5-4401-9de3-a9ca8b755638}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage">
+      <UniqueIdentifier>{87b6a1cc-90b0-4e0b-9204-8bca97859bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Dev">
+      <UniqueIdentifier>{247f4864-1ef9-4c18-a9e5-cc1c6138f728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Snipe">
+      <UniqueIdentifier>{6ef1ae7d-45b9-493a-9a86-c7d2f6ec0a56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Prefab">
+      <UniqueIdentifier>{7bf9d746-2b62-4099-99ad-b639b7bda7d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Effect">
+      <UniqueIdentifier>{04583b31-4047-4a34-b00b-44ed93b54130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Rooftop">
+      <UniqueIdentifier>{2bf8b255-5c54-4444-a725-3e966c442334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Road">
+      <UniqueIdentifier>{86dde849-8198-4efc-83c4-52000a0d137b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Tutorial">
+      <UniqueIdentifier>{aac83e20-f943-4e0c-b18f-daa6a95ca0d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -161,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEditorApplication.h">
       <Filter>00. EditorApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CEditorScene.h">
-      <Filter>01. Scene</Filter>
     </ClInclude>
     <ClInclude Include="Editor_Define.h">
       <Filter>99. Headers</Filter>
@@ -237,6 +258,15 @@
     <ClInclude Include="..\Header\CDummyPlacementObject.h">
       <Filter>04. GameObject\Placement</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEditorScene.h">
+      <Filter>01. Scene\Dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene_Stage_1.h">
+      <Filter>01. Scene\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene_Tutorial.h">
+      <Filter>01. Scene\Tutorial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -283,9 +313,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEditorApplication.cpp">
       <Filter>00. EditorApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CEditorScene.cpp">
-      <Filter>01. Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditorCamera.cpp">
       <Filter>02. Camera</Filter>
@@ -355,6 +382,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDummyPlacementObject.cpp">
       <Filter>04. GameObject\Placement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEditorScene.cpp">
+      <Filter>01. Scene\Dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Stage_1.cpp">
+      <Filter>01. Scene\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Tutorial.cpp">
+      <Filter>01. Scene\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ CTile *CTile::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pNew->Ready_GameObject()))
 	{
 		Safe_Release(pNew);
-		MSG_BOX("Tile Create Failed");
+		MSG_BOX("CTile::Create, Failed");
 		return nullptr;
 	}
 
@@ -45,7 +45,7 @@ CGameObject *CTile::Clone(void *pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Tile Clone Failed");
+		MSG_BOX("CTile::Clone, Failed");
 		Safe_Release(pInstance);
 	}
 
@@ -131,6 +131,25 @@ void CTile::PickingTrue()
 
 void CTile::ExportData(void *pData)
 {
+	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pData))
+	{
+		// type
+		p->eCategory = ObjectCategory::TILE;
+		p->iType = GetType();
+
+		// texture
+		p->texture.OriginComponentName = m_pTexture->GetOriginCompName();
+
+		// transform
+		::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_World()).m[0][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_World()).m[1][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_World()).m[2][0]), sizeof(_vec3));
+		::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_World()).m[3][0]), sizeof(_vec3));
+	}
+	else
+	{
+		MSG_BOX("CTile::ExportData, pData is ¸À°¨");
+	}
 }
 
 HRESULT CTile::Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg)
@@ -179,7 +198,7 @@ HRESULT CTile::Set_Component(void *pArg)
 	{
 		if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 		{
-			::memcpy(p, pArg, sizeof(MAPOBJECTDATA));
+			SetType(p->iType);
 
 			// VIBuffer
 			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", (CComponent **)&m_pBuffer)))

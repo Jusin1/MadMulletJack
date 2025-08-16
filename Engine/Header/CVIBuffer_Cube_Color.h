@@ -21,6 +21,7 @@ public:
 	static CVIBuffer_Cube_Color *Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free();
 
+	D3DCOLOR GetColor() const { return m_dwColor; }
 private:
 	D3DCOLOR m_dwColor;
 	_vec3 m_vVerticesLocal[8]; // 로컬 공간의 정점 위치 저장용

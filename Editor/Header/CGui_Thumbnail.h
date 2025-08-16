@@ -22,6 +22,7 @@ public:
 
 	void Add_Thumbnail(_uint _iType, const string &_name, const _tchar *_comp_name, IDirect3DBaseTexture9 *_pTexture);
 	void Change_Texture(_uint _iType);
+	void Set_Clear() { m_iSelectedIndex = 0; }
 	const _tchar *GetSelectedCompName(_uint iType)
 	{
 		return m_vecThumbnails[iType][m_iSelectedIndex].comp_name;

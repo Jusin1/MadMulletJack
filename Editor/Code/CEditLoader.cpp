@@ -30,7 +30,7 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 
 	switch (pLoader->Get_NextSceneID())
 	{
-	case SCENE_EDITOR:
+	case SCENE_DEV:
 	{
 		pLoader->Loading_Editor();
 	} break;

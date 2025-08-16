@@ -52,6 +52,16 @@ void CManagement::LateUpdate_Scene(const _float& fTimeDelta)
     m_pCurrentScene->LateUpdate_Scene(fTimeDelta);
 }
 
+void CManagement::SaveData()
+{
+	m_pCurrentScene->SaveData();
+}
+
+void CManagement::LoadData()
+{
+	m_pCurrentScene->LoadData();
+}
+
 void CManagement::Free()
 {
     Safe_Release(m_pCurrentScene);

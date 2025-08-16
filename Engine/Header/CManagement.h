@@ -26,6 +26,10 @@ public:
 	_uint Get_LastSceneIdx() { return m_iLastSceneIndex; }
 	void Set_LastScene(_uint iIdx) { m_iLastSceneIndex = iIdx; }
 
+	void LoadData();
+
+	// 에디터 전용
+	void SaveData();
 private:
 	CScene*					m_pCurrentScene;// 현재 씬
 	_uint					m_iPrevSceneIndex; // 이전 씬엔덱스

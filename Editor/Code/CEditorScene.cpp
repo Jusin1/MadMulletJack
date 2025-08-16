@@ -1,14 +1,11 @@
-#include "CEditorScene.h"
-#include "Editor_Define.h"
-#include "CGridPanel.h"
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "CFileManager.h"
 #include "CGuiManager.h"
-#include "CTexture.h"
 #include "CEditorPickingManager.h"
 #include "CObjectManager.h"
 #include "CEditorCamera.h"
+#include "CEditorScene.h"
 
 CEditorScene::CEditorScene(LPDIRECT3DDEVICE9 pGraphicDevice)
     : CScene(pGraphicDevice)
@@ -89,14 +86,44 @@ _int CEditorScene::Update_Scene(const _float &fTimeDelta)
 void CEditorScene::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    /*if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_1))
+    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F1))
     {
-        CFileManager::GetInstance()->SaveObjectList(L"test.json", SCENE_EDITOR, L"EditLogic_Layer");
-    }*/
+        SaveData();
+    }
+    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F2))
+    {
+        LoadData();
+    }
 }
 
 void CEditorScene::Render_Scene()
 {
+}
+
+HRESULT CEditorScene::SaveData()
+{
+    if (FAILED(__super::SaveData()))
+        return E_FAIL;
+
+    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Wall_Layer");
+    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Tile_Layer");
+    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Env_Layer");
+    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Monster_Layer");
+
+    return S_OK;
+}
+
+HRESULT CEditorScene::LoadData()
+{
+    if (FAILED(__super::LoadData()))
+        return E_FAIL;
+
+    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Wall_Layer");
+    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Tile_Layer");
+    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Env_Layer");
+    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Monster_Layer");
+
+    return S_OK;
 }
 
 HRESULT CEditorScene::Ready_Camera_Layer(const _tchar *pLayerTag)
@@ -115,7 +142,7 @@ HRESULT CEditorScene::Ready_Camera_Layer(const _tchar *pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_Camera_Edit", SCENE_EDITOR, pLayerTag, &CamInfo)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_Camera_Edit", SCENE_DEV, pLayerTag, &CamInfo)))
         return E_FAIL;
 
     return S_OK;
@@ -136,53 +163,12 @@ HRESULT CEditorScene::Ready_Wall_Layer(const _tchar *pLayerTag)
     // TODO : Parsing Here
     // CFileManager::GetInstance()->GetSceneData(SceneNumber, FolderName);
     // parsing test
-    MAPOBJECTDATA tTestData;
-    tTestData.transform.Pos[0] = 0.f;
-    tTestData.transform.Pos[1] = 2.f;
-    tTestData.transform.Pos[2] = 0.f;
-    tTestData.panelBuffer.eType = WallType::FLOOR;
-    tTestData.panelBuffer.dwCountX = 5;
-    tTestData.panelBuffer.dwCountY = 0;
-    tTestData.panelBuffer.dwCountZ = 5;
-    tTestData.panelBuffer.dwInterval = 1;
-    tTestData.texture.OriginComponentName = L"Proto_Floor_5";
-
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
-        return E_FAIL;
-
-    tTestData.transform.Pos[0] = 3.f;
-    tTestData.transform.Pos[1] = 0.f;
-    tTestData.transform.Pos[2] = 0.f;
-    tTestData.panelBuffer.eType = WallType::WALL_VER;
-    tTestData.panelBuffer.dwCountX = 0;
-    tTestData.panelBuffer.dwCountY = 9;
-    tTestData.panelBuffer.dwCountZ = 9;
-    tTestData.panelBuffer.dwInterval = 1;
-    tTestData.texture.OriginComponentName = L"Proto_Acid_Wall_2";
-
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_EDITOR, pLayerTag, &tTestData)))
-        return E_FAIL;
 
     return S_OK;
 }
 
 HRESULT CEditorScene::Ready_Tile_Layer(const _tchar *pLayerTag)
 {
-    MAPOBJECTDATA tTestData;
-    tTestData.transform.Pos[0] = 2.f;
-    tTestData.transform.Pos[1] = 2.f;
-    tTestData.transform.Pos[2] = 2.f;
-    tTestData.texture.OriginComponentName = L"Proto_Acid_Wall_2";
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, pLayerTag, &tTestData)))
-        return E_FAIL;
-
-    tTestData.transform.Pos[0] = 4.f;
-    tTestData.transform.Pos[1] = 1.f;
-    tTestData.transform.Pos[2] = 5.f;
-    tTestData.texture.OriginComponentName = L"Proto_Acid_Wall_1";
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, pLayerTag, &tTestData)))
-        return E_FAIL;
-
     return S_OK;
 }
 
