@@ -142,23 +142,26 @@
     <Filter Include="01. Scene\03. Dev">
       <UniqueIdentifier>{d96275df-e2a9-4cad-9edd-ee527ca80cde}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile">
       <UniqueIdentifier>{36459407-25a9-40ac-9a29-1d63f15d3022}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile\Deco">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Deco">
       <UniqueIdentifier>{a0f07827-036a-4b40-9ba9-e09775eb46cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile\Glass">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Glass">
       <UniqueIdentifier>{34865486-825f-4ad8-93af-4e91f9475b9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile\Electric">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Electric">
       <UniqueIdentifier>{1cbba337-3a42-4719-ac07-748cc9379ea3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile\Acid">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Acid">
       <UniqueIdentifier>{5dcf906b-a39d-4405-b9a7-3742d2ed14db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MapObject\02. CTile\Vent">
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Vent">
       <UniqueIdentifier>{06b2ccec-24a5-4da0-b6e6-7fcdeb4df5e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. MapObject\03. Dummy">
+      <UniqueIdentifier>{1d8da7c3-9a31-4066-99ce-32a13b74e062}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -280,22 +283,22 @@
       <Filter>01. Scene\03. Dev</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTileBase.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTile_Acid.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Acid</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Acid</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTile_Deco.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Deco</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Deco</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTile_Electric.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Electric</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Electric</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTile_Glass.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Glass</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Glass</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTile_Vent.h">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Vent</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Vent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -408,22 +411,22 @@
       <Filter>01. Scene\03. Dev</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTileBase.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile_Acid.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Acid</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Acid</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile_Deco.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Deco</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Deco</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile_Glass.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Glass</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Glass</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile_Electric.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Electric</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Electric</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile_Vent.cpp">
-      <Filter>02. GameObject\07. MapObject\02. CTile\Vent</Filter>
+      <Filter>02. GameObject\07. MapObject\02. Tile\Vent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

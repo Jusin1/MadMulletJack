@@ -96,7 +96,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 17;
     texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = true;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Idle", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Idle"), m_pTextureCom });
 
@@ -105,7 +105,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 7;
     texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Doping", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLDoping", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Doping", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLDoping", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Doping"), m_pTextureCom });
 
@@ -114,7 +114,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 12;
     texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Op_Rif", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLOpRif", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Op_Rif", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLOpRif", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Op_Rif"), m_pTextureCom });
 
@@ -123,7 +123,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_At2_Knife"), m_pTextureCom });
 
@@ -132,7 +132,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 0.8f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Re_Pistol"), m_pTextureCom });
 
@@ -141,7 +141,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     texInfo.m_iEndTex = 2;
     texInfo.m_fSpeed = 0.5f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Shotgun", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLReShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Shotgun", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLReShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Re_Shotgun"), m_pTextureCom });
 

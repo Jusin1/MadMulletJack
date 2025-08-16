@@ -102,7 +102,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 10.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandR_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRIdle", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Idle", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRIdle", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Idle"), m_pTextureCom });
 
@@ -111,7 +111,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     texInfo.m_iEndTex = 1;
     texInfo.m_fSpeed = 1.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandR_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_At2_Knife", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_At2_Knife"), m_pTextureCom });
 
@@ -120,7 +120,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = true;
-    if (FAILED(Add_Components(L"Com_Texture_HandR_Dead", SCENE_STAGE, L"Prototype_Component_Texture_UIHandRDead", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Dead", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRDead", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Dead"), m_pTextureCom });
 
@@ -129,7 +129,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     texInfo.m_iEndTex = 1;
     texInfo.m_fSpeed = 1.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Pistol", SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpPistol", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Pistol", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandROpPistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Pistol"), m_pTextureCom });
 
@@ -138,7 +138,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     texInfo.m_iEndTex = 4;
     texInfo.m_fSpeed = 1.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Shotgun", SCENE_STAGE, L"Prototype_Component_Texture_UIHandROpShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Shotgun", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandROpShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Shotgun"), m_pTextureCom });
 
@@ -286,10 +286,10 @@ HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
 HRESULT CPlayer_HandR::Set_WeaponUI()
 {
     m_pWeaponUI = dynamic_cast<CUIBase*>(
-        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
+        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, L"UI_Layer"));
     if (m_pWeaponUI == nullptr)
         return E_FAIL;
-    CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", SCENE_STAGE, L"UI_Layer"));
+    CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", SCENE_STAGE_1, L"UI_Layer"));
     if (pPistolUI)
     {
         pPistolUI->Initialize(nullptr); // 필요 시 인자 전달

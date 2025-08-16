@@ -239,7 +239,7 @@ HRESULT CMonster_Suit::Texture_Clone() // 애니메이션 설정
         info.m_fSpeed = a.speed;
         info.m_bLoop = a.loop;
 
-        if (FAILED(Add_Components(a.tag, SCENE_STAGE, a.proto, (CComponent**)&m_pTextureCom, &info)))
+        if (FAILED(Add_Components(a.tag, SCENE_STAGE_1, a.proto, (CComponent**)&m_pTextureCom, &info)))
             return E_FAIL;
 
         m_mapTexture.insert({ a.tag, m_pTextureCom });
@@ -373,7 +373,7 @@ CTransform* CMonster_Suit::GetPlayerTransform()
     if (!m_pPlayerTr)
     {
         m_pPlayerTr = dynamic_cast<CTransform*>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, L"Player_Layer", L"Com_Transform", 0));
+            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, L"Player_Layer", L"Com_Transform", 0));
     }
     return m_pPlayerTr;
 }
@@ -416,7 +416,7 @@ void CMonster_Suit::TrySpawnDeathUI() // Effect UI 띄우기 -> UIManager로 옮
 
     if (auto ui = dynamic_cast<CEffectUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE, L"UI_Layer")))
+            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE_1, L"UI_Layer")))
     {
         ui->SetImageSize(36.f, 36.f);
         ui->SetBoxSize(230.f, 50.f);
@@ -431,7 +431,7 @@ void CMonster_Suit::TrySpawnDeathUI() // Effect UI 띄우기 -> UIManager로 옮
 
     if (auto banner = dynamic_cast<CEffectUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE, L"UI_Layer")))
+            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STAGE_1, L"UI_Layer")))
     {
         banner->SetBannerExtraWidth(80.f);
         banner->ShowBanner(

@@ -44,7 +44,7 @@ _int CLoading_Scene::Update_Scene(const _float& fTimeDelta)
 			case SCENE_LOGO:
 				pNewScene = CLogo::Create(m_pGraphicDev);
 				break;
-			case SCENE_STAGE:
+			case SCENE_STAGE_1:
 				pNewScene = CStage::Create(m_pGraphicDev);
 				break;
 			}

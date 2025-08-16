@@ -85,7 +85,7 @@ HRESULT CHeartUI::Texture_Clone()
     texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = true;
 
-    if (FAILED(Add_Components(L"Com_Texture_Heart", SCENE_STAGE, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Heart", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Heart"), m_pTextureCom });
     return S_OK;

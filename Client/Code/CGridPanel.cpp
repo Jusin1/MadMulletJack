@@ -4,7 +4,7 @@
 #include "Clinet_Define.h"
 #include "CComponentMgr.h"
 #include "CTransform.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanelBase.h"
 #include "CRenderer.h"
 
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
@@ -34,7 +34,7 @@ CGridPanel *CGridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(gridPanel->Ready_GameObject()))
 	{
 		Safe_Release(gridPanel);
-		MSG_BOX("GridPanel Create Failed");
+		MSG_BOX("CGridPanel::Create, Failed");
 		return nullptr;
 	}
 
@@ -47,7 +47,7 @@ CGameObject *CGridPanel::Clone(void *pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("GridPanel Clone Failed");
+		MSG_BOX("CGridPanel::Clone, Failed");
 		Safe_Release(pInstance);
 	}
 
@@ -104,7 +104,6 @@ void CGridPanel::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pTransformCom->Apply_WorldMatrix();
 	m_pTexture->Set_Texture();
 	m_pBuffer->Render_Buffer();
 
@@ -168,6 +167,8 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
 			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
 			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+
+			m_pTransformCom->Apply_WorldMatrix();
 		}
 		else
 		{
@@ -177,13 +178,8 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 	}
 	else
 	{
-		// VIBuffer Default
-		if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal", (CComponent **)&m_pBuffer)))
-			return E_FAIL;
-
-		// Texture Default
-		if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_GridDefault", (CComponent **)&m_pTexture)))
-			return E_FAIL;
+		MSG_BOX("CGridPanel::Set_Component, No data");
+		return E_FAIL;
 	}
 
 	return S_OK;

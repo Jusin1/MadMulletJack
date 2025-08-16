@@ -143,7 +143,7 @@ HRESULT CDev::Ready_Camera_Layer(const _tchar *pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE, pLayerTag, &CamInfo)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE_1, pLayerTag, &CamInfo)))
         return E_FAIL;
 
 
@@ -153,7 +153,7 @@ HRESULT CDev::Ready_Camera_Layer(const _tchar *pLayerTag)
 HRESULT CDev::Ready_Player_Layer(const _tchar *pLayerTag)
 {
     // Player
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE_1, pLayerTag)))
         return E_FAIL;
     return S_OK;
 }
@@ -166,7 +166,7 @@ HRESULT CDev::Ready_Monster_Layer(const _tchar *pLayerTag)
     const float posZ = 0.f;
 
     for (int i = 0; i < 5; ++i) {
-        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE, pLayerTag))) {
+        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE_1, pLayerTag))) {
             MSG_BOX("Monster spawn failed");
             // 실패해도 계속 가려면 continue
             return E_FAIL;
@@ -176,7 +176,7 @@ HRESULT CDev::Ready_Monster_Layer(const _tchar *pLayerTag)
 
     for (int i = 0; i < 5; ++i) {
         auto tr = dynamic_cast<CTransform *>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE, pLayerTag, L"Com_Transform", i));
+            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, pLayerTag, L"Com_Transform", i));
         if (tr) {
             const float x = baseX + gap * i;           // 좌→우로 늘어놓기
             tr->Set_Info(INFO_POS, _vec3(x, posY, posZ));
@@ -193,7 +193,7 @@ HRESULT CDev::Ready_GameLogic_Layer(const _tchar *pLayerTag)
 
 HRESULT CDev::Ready_UI_Layer(const _tchar *pLayerTag)
 {
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, pLayerTag)))
         return E_FAIL;
 
 

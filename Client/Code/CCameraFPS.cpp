@@ -47,7 +47,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
     // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_STAGE, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(SCENE_STAGE_1, L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return -1;
 
@@ -102,7 +102,7 @@ void CCameraFPS::Mouse_Move()
     // 플레이어에게 y축 회전 넘겨줌
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_STAGE, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(SCENE_STAGE_1, L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return;
 
@@ -151,7 +151,7 @@ HRESULT CCameraFPS::Set_PlayerPos()
     // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_STAGE, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(SCENE_STAGE_1, L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return E_FAIL;
 

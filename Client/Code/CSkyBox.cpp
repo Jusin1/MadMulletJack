@@ -81,7 +81,7 @@ void CSkyBox::Render_GameObject()
 
 HRESULT CSkyBox::Set_Component()
 {
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE, L"Prototype_Component_Texture_SkyBox", (CComponent**)&m_pTextureCom)))
+	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE_1, L"Prototype_Component_Texture_SkyBox", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_CubeBuffer", (CComponent**)&m_pBufferCom)))
