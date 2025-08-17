@@ -8,7 +8,7 @@ namespace Engine
 
 class CHpBarUI : public CUI
 {
-public:
+protected:
     explicit CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CHpBarUI(const CHpBarUI& rhs);
     virtual ~CHpBarUI();
@@ -21,23 +21,18 @@ public:
 	virtual			void		Render_GameObject() override;
 
 public:
-	void HitCount_Up() { m_iHitCount++; } // hitcount 조절 함수
-	void HitCount_Down() { m_iHitCount--; }
-	void HitCount_Reset() { m_iHitCount = 0; }
+	void HitCount_Up() { m_iHitCount++; m_bHitChange = true; } // hitcount 조절 함수
+	void HitCount_Down() { m_iHitCount--; m_bHitChange = true;}
+	void HitCount_Reset() { m_iHitCount = 0; m_bHitChange = true;}
 
-private:
+protected:
 	virtual HRESULT			Set_Component();
 	virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
 	HRESULT Change_Texture(const _tchar* pTextureTag);
 	HRESULT Texture_Clone();
 	
 public:
-	static  CHpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual void Free() override;
-
-public:
-	void	Set_Hp(_float _fMaxHp, _float _fCurHp);
+	void	Set_Hp(_float _fMaxHp, _float _fCurHp); // player에서 hp 전해줌
 
 	//getter setter func
 public:
@@ -49,15 +44,21 @@ public:
 	void Set_HitCount(_int _iHitCount) { m_iHitCount = _iHitCount; }
 	_int Get_HitCount()const { return m_iHitCount; }
 	
-private:
+protected:
 	SCENE m_eScene;
 
     _float		m_fHpPercent; // 체력 비율
 	_int		m_iHitCount;
+	_bool m_bHitChange;
 
 	VIBuffer_Color *m_pColBufferCom;
 	
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
+
+public:
+	static  CHpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
+	virtual void Free() override;
 };
 

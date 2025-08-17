@@ -6,13 +6,13 @@
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CUI(pGraphicDev), m_fHpPercent(1.f), m_eScene(SCENE_END)
-	, m_pColBufferCom(nullptr)
+	, m_pColBufferCom(nullptr), m_bHitChange(false)
 {
 }
 
 CHpBarUI::CHpBarUI(const CHpBarUI& rhs)
 	:CUI(rhs), m_fHpPercent(rhs.m_fHpPercent), m_eScene(rhs.m_eScene)
-	, m_pColBufferCom(rhs.m_pColBufferCom)
+	, m_pColBufferCom(rhs.m_pColBufferCom) , m_bHitChange(rhs.m_bHitChange)
 {
 
 }
@@ -26,6 +26,7 @@ HRESULT	CHpBarUI::Ready_GameObject()
 {
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -37,14 +38,14 @@ HRESULT		CHpBarUI::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Set_Component()))
-		return E_FAIL;
+	//timer 할래말래
 
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
-	// 위치 표시(핸드폰 UI에 고정하는 것으로 변경 예정)
-	Set_UISizeAndPos(50.0f, 70.0f, WINCX * 0.5f - 200.f, WINCY * 0.5f);
+	m_bActive = false;
+	m_bRenderOn = false;
+	m_bReanderFront = true; // 손 보다 위에 그리기 위해
 
 	return S_OK;
 }
@@ -53,7 +54,7 @@ _int		CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	// 체력 비율에 따라 조절
 	__super::Update_GameObject(fTimeDelta);
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY * fTimeDelta, 1.f);
+	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY * fTimeDelta, 1.f);
 
 	return NO_EVENT;
 }
@@ -71,12 +72,11 @@ void		CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 // 컬러로 렌더
 void		CHpBarUI::Render_GameObject()
 {
-	m_pColBufferCom->Render_Buffer(); //hp 색깔 buffet render
+	//m_pColBufferCom->Render_Buffer(); //hp 색깔 buffet render
 
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
 	m_pTextureCom->MoveFrame();
@@ -96,13 +96,22 @@ void		CHpBarUI::Render_GameObject()
 
 HRESULT CHpBarUI::Set_Texture()
 {
+	// 만약 이 전에 돌려놨다면
+	if (m_fRotSum != 0)
+	{
+		// 다시 원상복귀
+		Set_Origin_Rot();
+	}
+
+	m_bRenderOn = true;
+
 	switch (m_eScene) {
 	case SCENE_STAGE:
 	{
 		if(FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneN"))))
 			return E_FAIL;
 
-		m_bRenderOn = true;
+		Set_UISizeAndPos(420.f, 900.f,WINCX * 0.5f - 450.f, WINCY * 0.5f + 400.f); // 왼쪽은 고정
 	}
 		break;
 
@@ -110,15 +119,11 @@ HRESULT CHpBarUI::Set_Texture()
 	{
 		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneB"))))
 			return E_FAIL;
-
-		m_bRenderOn = true;
 	}
 	break;
 
 	default:
 		m_bRenderOn = false;
-	break;
-
 	}
 }
 
@@ -139,7 +144,7 @@ HRESULT CHpBarUI::Texture_Clone()
 	// PhoneN
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 1.f;
+	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneN", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneN", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -148,7 +153,7 @@ HRESULT CHpBarUI::Texture_Clone()
 	// PhoneB
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 1.f;
+	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneB", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneB", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -157,7 +162,7 @@ HRESULT CHpBarUI::Texture_Clone()
 	// PhoneF
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 1.f;
+	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneF", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneF", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -195,17 +200,12 @@ CGameObject* CHpBarUI::Clone(void* pArg)
 	return pInstance;
 }
 
-void CHpBarUI::Free()
-{
-	Engine::CGameObject::Free();
-}
-
 HRESULT CHpBarUI::Set_Component()
 {
 	if (FAILED(__super::Set_Component()))
 		return E_FAIL;
-	if (FAILED(Add_Components(L"Com_Color", SCENE_STAGE, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
-		return E_FAIL;
+	//if (FAILED(Add_Components(L"Com_Color", SCENE_STAGE, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -220,4 +220,9 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 	// percent 에 따라 색깔 (R:1-percent, G : percent , B =0)
 
 	// curhp에 따라 출력 글씨 셋팅
+}
+
+void CHpBarUI::Free()
+{
+	__super::Free();
 }

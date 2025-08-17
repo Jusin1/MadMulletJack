@@ -133,6 +133,12 @@
     <Filter Include="02. GameObject\06. UI\GameEnterUI\HeartUI">
       <UniqueIdentifier>{10f4f2a4-b01b-46bc-888c-b2ee4a1543df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\01. SubWap">
+      <UniqueIdentifier>{6fbebdf1-8593-4473-a47b-efe283fcb4ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\01. SubWap\00. Knife">
+      <UniqueIdentifier>{a614cf80-bc51-4c23-8147-173476cfa0e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -228,9 +234,6 @@
     <ClInclude Include="..\Header\CMainWeapon.h">
       <Filter>02. GameObject\06. UI\Weapon\00. MainWap</Filter>
     </ClInclude>
-    <ClInclude Include="CGun.h">
-      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CPistol_Gun.h">
       <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\00.Pistol_Gun</Filter>
     </ClInclude>
@@ -245,6 +248,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CHeartUI.h">
       <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGun.h">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSubWeapon.h">
+      <Filter>02. GameObject\06. UI\Weapon\01. SubWap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKnife_SubW.h">
+      <Filter>02. GameObject\06. UI\Weapon\01. SubWap\00. Knife</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMan_HpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI\00.Man</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,9 +347,6 @@
     <ClCompile Include="..\Code\CMainWeapon.cpp">
       <Filter>02. GameObject\06. UI\Weapon\00. MainWap</Filter>
     </ClCompile>
-    <ClCompile Include="CGun.cpp">
-      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CPistol_Gun.cpp">
       <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\00.Pistol_Gun</Filter>
     </ClCompile>
@@ -349,6 +364,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHeartUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGun.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSubWeapon.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\01. SubWap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKnife_SubW.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\01. SubWap\00. Knife</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMan_HpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI\00.Man</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

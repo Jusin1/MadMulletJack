@@ -156,6 +156,11 @@
     <ClInclude Include="..\Header\CCharacter.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
+    <ClInclude Include="..\Header\CGun.h" />
+    <ClInclude Include="..\Header\CHpBarUI.h" />
+    <ClInclude Include="..\Header\CKnife_SubW.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CLisaUI.h" />
     <ClInclude Include="..\Header\CHeartUI.h" />
     <ClInclude Include="..\Header\Client_Global.h" />
@@ -165,6 +170,7 @@
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMainWeapon.h" />
+    <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPickingManager.h" />
@@ -177,11 +183,11 @@
     <ClInclude Include="..\Header\CGlobal_Info.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
+    <ClInclude Include="..\Header\CSubWeapon.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
-    <ClInclude Include="CGun.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -195,6 +201,11 @@
     <ClCompile Include="..\Code\CCharacter.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
+    <ClCompile Include="..\Code\CGun.cpp" />
+    <ClCompile Include="..\Code\CHpBarUI.cpp" />
+    <ClCompile Include="..\Code\CKnife_SubW.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CLisaUI.cpp" />
     <ClCompile Include="..\Code\CHeartUI.cpp" />
     <ClCompile Include="..\Code\Clinet_Global.cpp" />
@@ -203,6 +214,7 @@
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
+    <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPickingManager.cpp" />
@@ -215,11 +227,11 @@
     <ClCompile Include="..\Code\CGlobal_Info.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
+    <ClCompile Include="..\Code\CSubWeapon.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
-    <ClCompile Include="CGun.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Header\Client_Global.cpp" />
     <ClCompile Include="Client.cpp" />
