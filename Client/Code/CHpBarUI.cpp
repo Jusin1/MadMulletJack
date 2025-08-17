@@ -45,7 +45,6 @@ HRESULT		CHpBarUI::Initialize(void* pArg)
 
 	m_bActive = false;
 	m_bRenderOn = false;
-	m_bReanderFront = true; // 손 보다 위에 그리기 위해
 
 	return S_OK;
 }
