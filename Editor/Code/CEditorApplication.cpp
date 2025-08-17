@@ -429,6 +429,8 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Floor_Elevator", L"../../Client/Bin/Resource/MapObject/Elevator/ELEVATOR FLOOR.png");
 	AddTextureForThumbnail(L"Proto_Wall_Elevator", L"../../Client/Bin/Resource/MapObject/Elevator/ELEVATOR COLUMS.png");
 	AddTextureForThumbnail(L"Proto_Ceiling_Elevator", L"../../Client/Bin/Resource/MapObject/Elevator/ELEVATOR ROOF.png");
+	AddTextureForThumbnail(L"Proto_Platform_1", L"../../Client/Bin/Resource/MapObject/Platform/PLATFORM 1.png");
+	AddTextureForThumbnail(L"Proto_Platform_2", L"../../Client/Bin/Resource/MapObject/Platform/PLATFORM 2.png");
 
 	// tile
 	AddTextureForThumbnail(L"Proto_Acid_Env", L"../../Client/Bin/Resource/MapObject/Acid/acid dash.png");
@@ -455,4 +457,13 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Kimono_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/KIMONO.png");
 	AddTextureForThumbnail(L"Proto_SaveHer_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/SAVEHER.png");
 	AddTextureForThumbnail(L"Proto_Shoes_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/SHOES.png");	
+
+	// signs
+	AddTextureForThumbnail(L"Proto_Signs_1", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 1.png");
+	AddTextureForThumbnail(L"Proto_Signs_2", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 3.png");
+	AddTextureForThumbnail(L"Proto_Signs_3", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 4.png");
+	AddTextureForThumbnail(L"Proto_Signs_4", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 5.png");
+	AddTextureForThumbnail(L"Proto_Signs_5", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 6.png");
+	AddTextureForThumbnail(L"Proto_Signs_6", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 7.png");
+	AddTextureForThumbnail(L"Proto_Signs_7", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 8.png");
 }

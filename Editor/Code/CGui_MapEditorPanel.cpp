@@ -116,7 +116,7 @@ void CGui_MapEditorPanel::WallRender()
 void CGui_MapEditorPanel::TileRender()
 {
 	TiletypeDropbox_Render();
-
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
@@ -129,7 +129,7 @@ void CGui_MapEditorPanel::TileRender()
 void CGui_MapEditorPanel::EnvObjRender()
 {
 	EnvObjtypeDropbox_Render();
-
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
@@ -142,7 +142,7 @@ void CGui_MapEditorPanel::EnvObjRender()
 void CGui_MapEditorPanel::MonsterRender()
 {
 	MonstertypeDropbox_Render();
-	
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
 	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
@@ -634,6 +634,17 @@ CGuiBase *CGui_MapEditorPanel::EnvThumbnail_Create()
 	AddThumbnail("Kimono", L"Proto_Kimono_Outdoor", pThumbnail, EnvType::DISPLAY);
 	AddThumbnail("SaveHer", L"Proto_SaveHer_Outdoor", pThumbnail, EnvType::DISPLAY);
 	AddThumbnail("Shoes", L"Proto_Shoes_Outdoor", pThumbnail, EnvType::DISPLAY);
+
+	////==================
+	//// Signs
+	////==================
+	//AddThumbnail("Signs_1", L"Proto_Signs_1", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_2", L"Proto_Signs_2", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_3", L"Proto_Signs_3", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_4", L"Proto_Signs_4", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_5", L"Proto_Signs_5", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_6", L"Proto_Signs_6", pThumbnail, EnvType::SIGNS);
+	//AddThumbnail("Signs_7", L"Proto_Signs_7", pThumbnail, EnvType::SIGNS);
 
 	return pThumbnail;
 }

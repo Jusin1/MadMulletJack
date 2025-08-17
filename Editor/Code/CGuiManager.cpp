@@ -3,7 +3,9 @@
 #include "CGui_Thumbnail.h"
 #include "Engine_Define.h"
 #include "Editor_Define.h"
+#include "CDInputMgr.h"
 #include "CGameObject.h"
+#include "CTransform.h"
 #include "CObjectManager.h"
 #include "CManagement.h"
 #include "CGui_Log.h"
@@ -153,6 +155,42 @@ void CGuiManager::AddLog(const char *fmt, ...)
 
 void CGuiManager::Render()
 {
+    // ,
+    // z 축 -15도
+    if (KEY_BUTTON_DOWN(DIK_COMMA) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, -15.f);
+    }
+    // .
+    // z 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_PERIOD) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, 15.f);
+    }
+    // ;
+    // y 축 -15도
+    else if (KEY_BUTTON_DOWN(DIK_SEMICOLON) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, -15.f);
+    }
+    // '
+    // y 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_APOSTROPHE) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, 15.f);
+    }
+    // [
+    // x 축 -15도
+    else if (KEY_BUTTON_DOWN(DIK_LBRACKET) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, -15.f);
+    }
+    // ]
+    // x 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_RBRACKET) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, 15.f);
+    }
     ShowEditorDockspace();
     ShowInspector();
     ShowConsole();
