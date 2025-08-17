@@ -11,7 +11,7 @@
 #include "CPlayer_HandL.h"
 #include "CPlayer_Arm.h"
 #include "CPlayer_Foot.h"
-//#include "CMan_HpBarUI.h"
+#include "CMan_HpBarUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
@@ -789,7 +789,7 @@ HRESULT CPlayer::Set_PlayerUI()
 	if (pHandLUI)
 	{
 		pHandLUI->Set_ObjTag(L"HandLUI");
-		m_pPlayerUI->Add_ChildFront(pHandLUI); // 루트 UI에 등록
+		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
 	}
 	// foot UI 생성
 	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE, L"UI_Layer"));
