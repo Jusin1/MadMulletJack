@@ -14,19 +14,26 @@
 #include "CCameraFPS.h"
 
 // UI
+// Player UI
 #include "CPlayer_HandR.h"
 #include "CPlayer_HandL.h"
+#include "CPlayer_Foot.h"
+#include "CPlayer_Arm.h"
+
+// Weapon UI
+#include "CPistol_Gun.h"
+#include "CKnife_SubW.h"
+
+// Hpbar UI
+#include "CHpbarUI.h"
+
+// Effect UI
 #include "CEffectUI.h"
 
 
 // UI - 게임진입 UI
 #include "CHeartUI.h"
 #include "CLisaUI.h"
-
-
-#include "CPlayer_Foot.h"
-#include "CPlayer_Arm.h"
-#include "CPistol_Gun.h"
  
 // 몬스터
 #include "CMonster_Suit.h"
@@ -173,7 +180,7 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 	// Pistol - Op
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Op",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/opening/PISTOL_OPENING%03d.png", 18))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/opening/PISTOL_OPENING%03d.png", 8))))
 		return E_FAIL;
 	// Pistol - Attack
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Attack",
@@ -204,6 +211,22 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/attack/PISTOL_ZOOM_ATTACK%03d.png", 3))))
 		return E_FAIL;
 
+	// Knife
+	// Knife - idle
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\idle\CLEAVER_IDLE002.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/idle/CLEAVER_IDLE%03d.png", 3))))
+		return E_FAIL;
+	// Knife - item
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\item\CLEAVER_ITEM.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Item",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/item/CLEAVER_ITEM.png", 1))))
+		return E_FAIL;
+	// Knife - attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Att",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
+		return E_FAIL;
+
 
 #pragma endregion Weapon texture
 
@@ -223,7 +246,7 @@ HRESULT CLoader::Loading_ForStage()
 	// foot
 	// foot - kick
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIFootKick",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot%03d.png", 2))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot000.png", 1))))
 		return E_FAIL;
 	// foot - slide
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIFootSlide",
@@ -232,9 +255,9 @@ HRESULT CLoader::Loading_ForStage()
 	
 	//	HandL
 	//	HandL - Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle",
+	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/idle/IDLE%03d.png", 17))))
-		return E_FAIL;
+		return E_FAIL;*/
 	//	HandL - Doping
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHandLDoping",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/doping/DRINK%03d.png", 7))))
@@ -282,17 +305,16 @@ HRESULT CLoader::Loading_ForStage()
 
 	// HpBar
 	// HpB - PhoneN
-	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneN",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneN%03d.png", 4))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_N%03d.png", 4))))
 		return E_FAIL;
 	// HpB - PhoneB
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneB",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneB%03d.png", 4))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_B%03d.png", 4))))
 		return E_FAIL;
 	// HpB - PhoneF
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarPhoneF",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneF%03d.png", 4))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_F%03d.png", 4))))
 		return E_FAIL;
 	// HpB - ManN
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarManN",
@@ -411,7 +433,21 @@ HRESULT CLoader::Loading_ForStage()
 		CPistol_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	// SubWeapon UI
+	// Knife
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SubWKnifeUI",
+		CKnife_SubW::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 #pragma endregion 게임 진입 UI들 생성
+
+#pragma region HpBar UI
+	// Hpbar UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI",
+		CHpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+#pragma endregion HpBar UI
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// TerrianTex
