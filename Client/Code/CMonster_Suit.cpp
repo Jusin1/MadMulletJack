@@ -5,6 +5,7 @@
 #include "CObjectManager.h"
 #include "CEffectUI.h"
 #include "CPicking.h"
+#include "CGlobal_Info.h"
 
 #ifdef _DEBUG
 namespace {
@@ -118,6 +119,12 @@ void CMonster_Suit::Set_Collider() // 콜라이더 설정
     {
         _vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
         (void)vPosition;
+
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == DASH_ATTACK)
+        {
+            // 임시방편 -> 살짝 뒤로 보내기
+            m_pTransformCom->Move_PosDown(0.1);
+        }
     }
 }
 

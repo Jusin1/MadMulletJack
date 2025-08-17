@@ -39,13 +39,15 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 
 	m_bActive = false;
 	m_bRenderOn = false;
+	m_bIsInfinite = false;
 
 	// 파워 / 정확도 / 속도
 	m_iPower = 3;
 	m_iPrecision = 10;
 	m_iSpeed = 5;
 	// 최대 불렛
-	m_iMaxBullet = 9;
+	m_iMaxBullet = 3; //origin : 9 / debug 3
+	m_iBullet = m_iMaxBullet;
 
 	return S_OK;
 }
@@ -105,7 +107,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 
 	// Opening
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 18;
+	texInfo.m_iEndTex = 8;
 	texInfo.m_fSpeed = 8.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
@@ -180,8 +182,11 @@ HRESULT CPistol_Gun::Texture_Clone()
 
 HRESULT CPistol_Gun::Set_Texture() {
 
+	m_bRenderOn = true;
+
 	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
 
+	// scene car 에서 쓰는 texture가 아예 달라서 scene 별로 나누어서 결정
 	if (eScene == SCENE_CAR)
 	{
 		switch (m_tInfo.ePlayerState)
@@ -202,22 +207,26 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case OPENING:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
-			Set_UISizeAndPos(60.f, 180.f, WINCX * 0.5f + 450.f, WINCY * 0.5f);
-			m_bRenderOn = true;
+			Set_UISizeAndPos(264.f, 600.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 250.f);
+			
 			break;
 
 		case ATTACK:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
 				return E_FAIL;
-			Set_UISizeAndPos(220.f, 400.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 200.f);
-			m_bRenderOn = true;
+			Set_UISizeAndPos(245.f, 500.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 200.f);
+
+			m_iBullet--;
+
 			break;
 
 		case RELOAD:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Re"))))
 				return E_FAIL;
-			Set_UISizeAndPos(280.f, 500.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
-			m_bRenderOn = true;
+			Set_UISizeAndPos(360.f, 660.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
+
+			Reload_Bullet();
+
 			break;
 
 		case PLAYERDEAD:
@@ -227,8 +236,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 		default:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
 				return E_FAIL;
-			Set_UISize(100.f, 200.f);
-			m_bRenderOn = true;
+			Set_UISize(165.f, 500.f);
 			break;
 		}
 	}

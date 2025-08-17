@@ -3,15 +3,15 @@
 #include "CRenderer.h"
 #include "CColiderManager.h"
 #include "CTimerMgr.h"
-#include "CPlayer_HandR.h"
 #include "CObjectManager.h"
 #include "CUIBase.h"
 #include "CDInputMgr.h"
 #include "CGlobal_Info.h"
+#include "CPlayer_HandR.h"
 #include "CPlayer_HandL.h"
 #include "CPlayer_Arm.h"
 #include "CPlayer_Foot.h"
-#include "CPistol_Gun.h"
+//#include "CMan_HpBarUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
@@ -98,8 +98,8 @@ void CPlayer::Render_GameObject()
 
 	m_pTransformCom->Apply_WorldMatrix();
 
-	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
-	m_pTextureCom->MoveFrame();
+	//m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
+	//m_pTextureCom->MoveFrame();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -122,6 +122,22 @@ void CPlayer::Render_GameObject()
 		m_pColiderSphere->Render_ColliderSphere(); // 충돌체 디버그 렌더
 	}
 #endif
+}
+
+void CPlayer::Add_Hp(_float _fAddHp)
+{
+	// 체력을 더함
+	m_fHp += _fAddHp;
+
+	// maxHp 보다 넘어가면 값 보정
+	if (m_fHp >= m_fMaxHp)
+		m_fHp = m_fMaxHp;
+
+	// 만약 체력이 0이 되면 state <- PLAYERDEAD
+	if (m_fHp <= 0)
+	{
+		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
+	}
 }
 
 void CPlayer::ChangeState(PLAYERSTATE _e)
@@ -262,6 +278,9 @@ void CPlayer::StateNormalSet()
 	m_bJumping		= false;
 	m_bIsCountHp = true;
 
+	m_fAddTime = 0.f;
+	m_fStateTime = 0.f;
+
 	m_eMove = MOVE_NORMAL;
 
 	m_pTransformCom->GetTransformInfo().fSpeed = 5.f;
@@ -304,24 +323,20 @@ void CPlayer::JUMP_End()
 void CPlayer::DASH_ATTACK_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 10.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
 }
 
 void CPlayer::DASH_ATTACK_On(const _float& fTimeDelta)
 {
+	// 만약 일정 속도 이하가 되면 -> state: IDLE
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+		Set_State_Idle();
+
+	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
-	//만약 몬스터와 충돌 했을때
-	// if(weapon2 ==  WP_KICK) m_eState = KICK;
-	// else m_eState = ATTACK_INSTANT;
-
-	// 만약 문과 충돌 했을때
-	// m_eState = KICK;
-
-	// 만약 
-
-	// 가속하다가 느려짐
-
+	// speed 깎음 (like 마찰력)
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
 }
 
 void CPlayer::DASH_ATTACK_End()
@@ -333,16 +348,25 @@ void CPlayer::DASH_ATTACK_End()
 void CPlayer::DASH_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 10.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
 }
 
 void CPlayer::DASH_On(const _float& fTimeDelta)
 {
+	// 만약 일정 속도 이하가 되면 -> state: IDLE
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+		Set_State_Idle();
+
+	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
+	// speed 깎음 (like 마찰력)
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
 }
 
 void CPlayer::DASH_End()
 {
+
 }
 
 // slide
@@ -350,12 +374,15 @@ void CPlayer::SLIED_Begin()
 {
 	m_eMove = MOVE_LR;
 	m_bIsAttack = true;
-	m_pTransformCom->GetTransformInfo().fSpeed = 10.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
 }
 
 void CPlayer::SLIED_On(const _float& fTimeDelta)
 {
-
+	// 앞으로 움직여라
+	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+	// 속도를 늘리면서
+	m_pTransformCom->GetTransformInfo().fSpeed += fTimeDelta * 8.f;
 }
 
 void CPlayer::SLIED_End()
@@ -365,12 +392,13 @@ void CPlayer::SLIED_End()
 // kick
 void CPlayer::KICK_Begin()
 {
-	// 얘는 다 생각해봐야함
-
+	m_fStateTime = 0.25f;
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
 {
+	if (StateTime_IsEnd(fTimeDelta, 1.f))
+		Set_State_Idle();
 }
 
 void CPlayer::KICK_End()
@@ -397,11 +425,16 @@ void CPlayer::ATTACK_End()
 void CPlayer::ATTACK_INSTANT_Begin()
 {
 	m_eMove = MOVE_NON;
+	m_fStateTime = 0.5f;
 }
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 {
+	/*if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Idle();*/
 
+	if (StateTime_IsEnd(fTimeDelta, 1.f))
+		Set_State_Idle();
 }
 
 void CPlayer::ATTACK_INSTANT_End()
@@ -436,11 +469,12 @@ void CPlayer::ZOOM_End()
 void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
+	m_fStateTime = 1.f;
 }
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+	if (StateTime_IsEnd(fTimeDelta, 1.5f))
 		Set_State_Idle();
 }
 
@@ -464,6 +498,8 @@ void CPlayer::HIT_On(const _float& fTimeDelta)
 
 void CPlayer::HIT_End()
 {
+	CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(m_pPlayerUI->Find_Child_ByTag(TEXT("HpBarUI")));
+	pHpBar->HitCount_Up();
 }
 
 // doping
@@ -471,17 +507,19 @@ void CPlayer::DOPING_Begin()
 {
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
-	m_fHp += 5.f;
+	Add_Hp(5.f);
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
 {
-
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Idle();
 }
 
 void CPlayer::DOPING_End()
 {
-	
+	CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(m_pPlayerUI->Find_Child_ByTag(TEXT("HpBarUI")));
+	pHpBar->HitCount_Down();
 }
 
 // wall
@@ -493,6 +531,8 @@ void CPlayer::WALL_Begin()
 
 void CPlayer::WALL_On(const _float& fTimeDelta)
 {
+	// state가 끝나면
+	// jump로 변신
 }
 
 void CPlayer::WALL_End()
@@ -529,6 +569,7 @@ void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
 
 void CPlayer::PLAYERDEAD_End()
 {
+	// m_bDead = true; // 객체 dead 설정
 }
 
 void CPlayer::KeyInput(const _float& fTimeDelta)
@@ -575,28 +616,27 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			m_tPlayerInfo.ePlayerState = DASH;
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80) // 좌클릭
-		{
-			m_tPlayerInfo.ePlayerState = ATTACK;
-		}
-
 		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
 		{
 			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
-	}
-
-	if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80)) // 우클릭
-	{
-		m_tPlayerInfo.ePlayerState = DASH_ATTACK;
-	}
-
-	if (m_tPlayerInfo.eWeapon != WP_NON)
-	{
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+		if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)) // 좌클릭
 		{
-			m_tPlayerInfo.ePlayerState = RELOAD;
+			m_tPlayerInfo.ePlayerState = ATTACK;
+		}
+
+		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80) // 우클릭
+		{
+			m_tPlayerInfo.ePlayerState = DASH_ATTACK;
+		}
+
+		if (m_tPlayerInfo.eWeapon != WP_NON)
+		{
+			if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+			{
+				m_tPlayerInfo.ePlayerState = RELOAD;
+			}
 		}
 	}
 }
@@ -608,37 +648,28 @@ void CPlayer::Set_State_Idle()
 
 void CPlayer::CountHp(const _float& fTimeDelta)
 {
-	// 0이면 죽음
-	if (m_fHp <= 0)
-	{
-		OutputDebugString(L"플레이어가 죽었습니다.\n");
-		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
-	}
-
-
-	m_fHp -= 1.f * fTimeDelta;
+	Add_Hp(-1.f * fTimeDelta);
 
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
 
-void CPlayer::UIAniFinish(const _tchar* pTag)
+_bool CPlayer::StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime)
 {
-	CUIBase* pFound = m_pPlayerUI->Find_Child_ByTag(pTag);
-	if (pFound && pFound -> Get_AniFinish())
-	{
-		Set_State_Idle();
-	}
-}
+	// 누적 시간 더해줌 (초 단위)
+	m_fAddTime += fTimeDelta * fAddTime;
 
+	// 누적시간이 스테이트시간 보다 크거나 같으면 return true
+	return (m_fAddTime >= m_fStateTime);
+}
 
 HRESULT CPlayer::Set_Component()
 {
 	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
 
-	// Texture
-	if (Texture_Clone())
-		return E_FAIL;
+	//// Texture
+	//if (Texture_Clone())
+	//	return E_FAIL;
 
 	//CColider_Cube::COLLRECTDESC CollCubeDesc;
 	//ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
@@ -684,6 +715,31 @@ void CPlayer::Set_Collider(void)
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+
+		// Dash_attack 중일때 몬스터와 충돌하면 
+		if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
+		{
+			// wap2에 따라 state 변경
+			switch (m_tPlayerInfo.eWeapon2)
+			{
+			case WP_KICK:
+				m_tPlayerInfo.ePlayerState = KICK;
+				//m_pTransformCom->Move_PosDown(0.5);
+				break;
+
+			case WP_KNIFE:
+			case WP_BOOK:
+				m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
+				break;
+			}
+		}
+
+		// Dash attack이 아니면 hit
+		/*else
+		{
+			m_tPlayerInfo.ePlayerState = HIT;
+		}*/
+			
 	}
 }
 
@@ -724,7 +780,7 @@ HRESULT CPlayer::Set_PlayerUI()
 	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STAGE, L"UI_Layer"));
 	if (pHandRUI)
 	{
-		pHandRUI->Initialize(nullptr); // 필요 시 인자 전달
+		// pHandRUI -> Initailize()
 		pHandRUI->Set_ObjTag(L"HandRUI");
 		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
 	}
@@ -732,15 +788,13 @@ HRESULT CPlayer::Set_PlayerUI()
 	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE, L"UI_Layer"));
 	if (pHandLUI)
 	{
-		pHandLUI->Initialize(nullptr); // 필요 시 인자 전달
 		pHandLUI->Set_ObjTag(L"HandLUI");
-		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
+		m_pPlayerUI->Add_ChildFront(pHandLUI); // 루트 UI에 등록
 	}
 	// foot UI 생성
 	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE, L"UI_Layer"));
 	if (pFootUI)
 	{
-		pFootUI->Initialize(nullptr); // 필요 시 인자 전달
 		pFootUI->Set_ObjTag(L"FootUI");
 		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
 	}
@@ -748,10 +802,17 @@ HRESULT CPlayer::Set_PlayerUI()
 	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STAGE, L"UI_Layer"));
 	if (pArmUI)
 	{
-		pArmUI->Initialize(nullptr); // 필요 시 인자 전달
 		pArmUI->Set_ObjTag(L"ArmUI");
 		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
 	}
+
+	// HpBar UI 생성
+	//CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STAGE, L"UI_Layer"));
+	//if (pHpBar)
+	//{
+	//	pHpBar->Set_ObjTag(L"HpBarUI");
+	//	m_pPlayerUI->Add_Child(pHpBar); // 루트 UI에 등록
+	//}
 
 	return S_OK;
 }
@@ -799,7 +860,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 
 void CPlayer::Free()
 {
-	Engine::CGameObject::Free();
+	__super::Free();
 }
 
 //debug

@@ -23,6 +23,10 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+public:
+	void Add_Hp(_float _fAddHp); // 체력의 증감을 다룸 -> maxHp 보정 + state:PLAYERDEAD 처리
+
+	// state func
 private:
 	void ChangeState(PLAYERSTATE  _e);
 	void StateNormalSet();
@@ -101,7 +105,7 @@ private:
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
 	void CountHp(const _float& fTimeDelta);
 
-	void UIAniFinish(const _tchar* pTag); // ui의 animation이 끝나면 state = IDLE;
+	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime);
 
 	// getter setter func
 public:
@@ -154,12 +158,14 @@ private:
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
 
-	_bool m_bIsKeyInput;
-	_bool m_bIsInvincible;
-	_bool m_bIsAttack;
-	_bool m_bIsCountHp;
+	_bool m_bIsKeyInput; // 상태 변화를 위한 키 값 받을래 말래
+	_bool m_bIsInvincible; // 무적 상태일래 말래
+	_bool m_bIsAttack; // 공격 할래 말래
+	_bool m_bIsCountHp; // hp 깎을래 말래
 
-	_float m_fMaxHp;
+	_float m_fMaxHp; // 최대 hp
+	_float m_fAddTime; // state 누적 시간
+	_float m_fStateTime; // state 지속할 시간
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;
