@@ -228,6 +228,17 @@ bool CTexture::GetFrameSize(UINT index, UINT& w, UINT& h) const
     return true;
 }
 
+void CTexture::SetAnimInfo(int iStart, int iEnd, float fSpeed, _bool bLoop)
+{
+    m_TextureInfo.m_iStart = iStart;
+    m_TextureInfo.m_iCurrentTex = iStart;
+    m_TextureInfo.m_iEndTex = iEnd;
+    m_TextureInfo.m_fSpeed = fSpeed;
+    m_TextureInfo.m_bLoop = bLoop;
+    m_fTimeAcc = 0.0f;      // 프레임 전환 타이머 리셋
+    m_bStopAnim = false;    // 재생 가능 상태로 초기화
+}
+
 
 CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eType, const _tchar* pPath, const _uint& iCnt)
 {

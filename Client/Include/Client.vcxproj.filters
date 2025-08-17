@@ -145,6 +145,15 @@
     <Filter Include="02. GameObject\06. UI\GameEnterUI\03. BannelUI">
       <UniqueIdentifier>{33157cdf-ad1d-4f91-a4c0-7781fe420e2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\ImageUI">
+      <UniqueIdentifier>{4aecd51c-d299-47e8-84b5-8b61859a7bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\TextUI">
+      <UniqueIdentifier>{24eb17b6-b29d-4ff3-baaf-775f305da402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\05. TalkUI">
+      <UniqueIdentifier>{08f7d2e1-a373-47d6-9b71-7cfb5aa25f42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -270,6 +279,15 @@
     <ClInclude Include="..\Header\CBannerUI.h">
       <Filter>02. GameObject\06. UI\GameEnterUI\03. BannelUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CImageUI.h">
+      <Filter>02. GameObject\06. UI\ImageUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTextUI.h">
+      <Filter>02. GameObject\06. UI\TextUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTalkUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\05. TalkUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -365,9 +383,6 @@
     <ClCompile Include="..\Code\CEffectUI.cpp">
       <Filter>02. GameObject\06. UI\EffectUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CUIManager.cpp">
-      <Filter>03. Manager\00. UIManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CHeartUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\01. HeartUI</Filter>
     </ClCompile>
@@ -385,6 +400,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBannerUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\03. BannelUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImageUI.cpp">
+      <Filter>02. GameObject\06. UI\ImageUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTextUI.cpp">
+      <Filter>02. GameObject\06. UI\TextUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUIManager.cpp">
+      <Filter>03. Manager\00. UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTalkUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\05. TalkUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -159,6 +159,7 @@
     <ClInclude Include="..\Header\CChatUI.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
+    <ClInclude Include="..\Header\CImageUI.h" />
     <ClInclude Include="..\Header\CLisaUI.h" />
     <ClInclude Include="..\Header\CHeartUI.h" />
     <ClInclude Include="..\Header\Client_Global.h" />
@@ -181,7 +182,9 @@
     <ClInclude Include="..\Header\CGlobal_Info.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
+    <ClInclude Include="..\Header\CTalkUI.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
+    <ClInclude Include="..\Header\CTextUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
@@ -202,6 +205,7 @@
     <ClCompile Include="..\Code\CChatUI.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
+    <ClCompile Include="..\Code\CImageUI.cpp" />
     <ClCompile Include="..\Code\CLisaUI.cpp" />
     <ClCompile Include="..\Code\CHeartUI.cpp" />
     <ClCompile Include="..\Code\Clinet_Global.cpp" />
@@ -223,7 +227,9 @@
     <ClCompile Include="..\Code\CGlobal_Info.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
+    <ClCompile Include="..\Code\CTalkUI.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
+    <ClCompile Include="..\Code\CTextUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />

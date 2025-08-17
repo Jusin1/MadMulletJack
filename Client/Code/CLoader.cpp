@@ -25,6 +25,9 @@
 #include "CBlackGackGround.h"
 #include "CChatUI.h"
 #include "CBannerUI.h"
+#include "CImageUI.h"
+#include "CTextUI.h"
+#include "CTalkUI.h"
 #pragma endregion 게임 진입 UI들
 
 
@@ -352,10 +355,31 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART BEAT.png", 1))))
 		return E_FAIL;
 
+#pragma region LisaUI
 	// LISA UI
+	// IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
 		return E_FAIL;
+	// BYE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaByeUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/wink/Lisa_Wink_%03d.png", 10))))
+		return E_FAIL;
+
+	// LisaHead - IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaHair_Default",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default_Hair/HAIR%03d.png", 3))))
+		return E_FAIL;
+
+	// LisaHead - Bye
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaHair_Bye",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Wink_Hair/MASCOT_HAIR_WINK%03d.png", 3))))
+		return E_FAIL;
+	// Lisa - TalkUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Talk",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/BALLON.png", 1))))
+		return E_FAIL;
+#pragma endregion LisaUI
 
 	// CHAT UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ChatUI",
@@ -366,6 +390,27 @@ HRESULT CLoader::Loading_ForStage()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ArrowUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/ARROW.png", 1))))
 		return E_FAIL;
+
+	// LOGO
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LogoUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PEACE LOGO 2.png", 1))))
+		return E_FAIL;
+
+	// TITLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SmallTitleUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SMALLTITLE.png", 1))))
+		return E_FAIL;
+
+	// TextUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SmallTextUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/MsgText.png", 1))))
+		return E_FAIL;
+
+	// LiveIcon
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LiveIconUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/LIVE ICON.png", 1))))
+		return E_FAIL;
+
 
 #pragma endregion 게임 진입 UI
 
@@ -400,6 +445,16 @@ HRESULT CLoader::Loading_ForStage()
 	// UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIRoot",
 		CUIBase::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ImageUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
+		CImageUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// TextUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
+		CTextUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// Player UI
@@ -446,6 +501,11 @@ HRESULT CLoader::Loading_ForStage()
 	// Bannel UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BannerUI",
 		CBannerUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// TALK UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TalkUI",
+		CTalkUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 

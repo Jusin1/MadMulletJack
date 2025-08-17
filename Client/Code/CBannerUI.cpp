@@ -351,7 +351,6 @@ void CBannerUI::SetStripeTileWidthPx(float px)
 
 HRESULT CBannerUI::Texture_Clone()
 {
-	// »≠ªÏ«•
 	{
 		CTexture::TEXINFO info{};
 		info.m_iStart = 0; info.m_iEndTex = 0;

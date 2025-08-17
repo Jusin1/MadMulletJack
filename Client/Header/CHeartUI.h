@@ -20,7 +20,7 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
-public: // 배치 전용 함수
+public: 
 	void SetHeartSizePx(_float px);
 	void SetHeartManual(_float xLeft, _float xRight, _float y);
 
