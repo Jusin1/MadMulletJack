@@ -2,12 +2,12 @@
 #include "CGun.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CMainWeapon(pGraphicDev)
+	:CMainWeapon(pGraphicDev), m_bIsInfinite(false), m_bIsZoom(false)
 {
 }
 
 CGun::CGun(const CGun& rhs)
-	:CMainWeapon(rhs)
+	:CMainWeapon(rhs), m_bIsInfinite(rhs.m_bIsInfinite), m_bIsZoom(rhs.m_bIsZoom)
 {
 }
 
