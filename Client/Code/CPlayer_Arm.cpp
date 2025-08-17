@@ -47,7 +47,7 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
 _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
-    if ( m_pTextureCom->Is_AnimFinished()  )
+    if (m_pTextureCom->Is_AnimFinished())
     {
 
         if (m_CurrentAnimTag == TEXT("Com_Texture_Arm_Op1"))
@@ -60,7 +60,6 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
             CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
             m_bRenderOn = false;
         }
-            
     }
     return NO_EVENT;
 }

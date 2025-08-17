@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CPlayer_HandL.h"
 #include "CTimerMgr.h"
+#include "CObjectManager.h"
 
 CPlayer_HandL::CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
@@ -41,11 +42,6 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
 _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
-
-    if (m_pTextureCom->Is_AnimFinished())
-    {
-        m_bAniFinish = true;
-    }
 
     Move_UI(fTimeDelta);
 
@@ -91,15 +87,6 @@ HRESULT CPlayer_HandL::Texture_Clone()
 {
     CTexture::TEXINFO texInfo = {};
 
-    // IDLE 
-    texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 17;
-    texInfo.m_fSpeed = 2.f;
-    texInfo.m_bLoop = true;
-    if (FAILED(Add_Components(L"Com_Texture_HandL_Idle", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-        return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_HandL_Idle"), m_pTextureCom });
-
     // Doping
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 7;
@@ -121,7 +108,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // Attack_Instance - knife
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.5f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STAGE, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -150,12 +137,10 @@ HRESULT CPlayer_HandL::Texture_Clone()
 
 HRESULT CPlayer_HandL::Set_Texture()
 {
-    // 만약 이 전에 돌려놨다면
-    if (m_fRotSum != 0)
-    {
-        // 다시 원상복귀
-        Set_Origin_Rot();
-    }
+    // 만약 회전이 됐으면 다시 되돌려라
+    Set_Origin_Rot();
+
+    m_bRenderOn = true;
     
     // player state -> weapon 순으로 나누어서 texture 출력
     switch (m_tInfo.ePlayerState) {
@@ -170,8 +155,6 @@ HRESULT CPlayer_HandL::Set_Texture()
             Set_New_TransInfo(10.f, -10.f);
 
             m_eMove = MV_ROTATIONZ;
-
-            m_bRenderOn = true;
         }
 
         else {
@@ -186,15 +169,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(300.f, 600.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
+            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
 
             Set_New_TransInfo(350.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
             m_eMove = MV_RIGHT;
-
-            m_bRenderOn = true;
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -208,8 +189,6 @@ HRESULT CPlayer_HandL::Set_Texture()
             m_fRotSum += D3DXToRadian (-40.f) * 1;
 
             m_eMove = MV_RIGHT;
-
-            m_bRenderOn = true;
         }
 
         else {
@@ -224,15 +203,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(200.f, 600.f, 100.f, WINCY * 0.5f - 80.f); //idle pos
+            Set_UISizeAndPos(600.f, 480.f, 100.f, WINCY * 0.5f + 200); //idle pos
 
-            Set_New_TransInfo(140.f, -40.f);
-            m_pTransformCom->Rotation({ 0.f, 0.f,-1.f }, 1); // rotation texture
-            m_fRotSum += D3DXToRadian (-40.f) * 1;
+            Set_New_TransInfo(500.f, -20.f);
+            m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
+            m_fRotSum += D3DXToRadian (-20.f) * 1;
 
             m_eMove = MV_RIGHT;
-
-            m_bRenderOn = true;
         }
 
         else {
@@ -252,23 +229,11 @@ HRESULT CPlayer_HandL::Set_Texture()
         Set_New_TransInfo(140.f, 0.f);
 
         m_eMove = MV_NON;
-        m_bRenderOn = true;
     }
     break;
 
     default:
-    {
-        if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Idle"))))
-            return E_FAIL;
-
-        Set_UISizeAndPos(300.f, 800.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 380.f); //idle pos
-
-        Set_New_TransInfo(140.f, 0.f);
-
-        m_eMove = MV_NON;
-        m_bRenderOn = true;
-    }
-        break;
+        m_bRenderOn = false;
     }
 
     return S_OK;

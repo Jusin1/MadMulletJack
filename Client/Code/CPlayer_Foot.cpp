@@ -45,11 +45,6 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 {
     __super::Update_GameObject(fTimeDelta);
   
-    if (m_pTextureCom->Is_AnimFinished())
-    {
-        m_bAniFinish = true;
-    }
-
     Move_UI(fTimeDelta);
 
     return NO_EVENT;
@@ -95,9 +90,9 @@ HRESULT CPlayer_Foot::Texture_Clone()
 
     // Kick
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 2;
-    texInfo.m_fSpeed = 1.f;
-    texInfo.m_bLoop = true;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 0.f;
+    texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Foots_Kick", SCENE_STAGE, L"Prototype_Component_Texture_UIFootKick", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Foots_Kick"), m_pTextureCom });
@@ -116,8 +111,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
 
 HRESULT CPlayer_Foot::Set_Texture()
 {
-    CTransform::TRANSFORMINFO TransformInfo;    // 새롭게 transinfo를 저장해줌
-    ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
+    m_bRenderOn = true;
 
     switch (m_tInfo.ePlayerState)
     {
@@ -128,7 +122,10 @@ HRESULT CPlayer_Foot::Set_Texture()
 
         Set_UISizeAndPos(240.f, 400.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
 
-        m_bRenderOn = true;
+        Set_New_TransInfo(150.f, 0.f);
+
+        m_fRange = 15.f;
+        m_eMove = MV_UpDown;
     }
         break;
 
@@ -143,8 +140,6 @@ HRESULT CPlayer_Foot::Set_Texture()
 
         m_fRange = 10.f;
         m_eMove = MV_UpDown;
-
-        m_bRenderOn = true;
     }
         break;
 
