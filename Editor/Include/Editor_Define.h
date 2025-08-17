@@ -17,10 +17,12 @@ enum class MapEditorGuiType : unsigned int
 	ENVOBJ_TYPE_DROPBOX,
 	MONSTER_TYPE_DROPBOX,
 	LIGHT_TYPE_DROPBOX,
+	SCENE_TYPE_DROPBOX,
 	CREATEMODE_CHECKBOX,
 	SNAPMODE_CHECKBOX,
 	CREATE_BUTTONS,
 	PANEL_SIZE_BUTTONS,
+	SAVE_DATA_BUTTON,
 	POSITION,
 	ROTATION,
 	WALL_THUMBNAIL,
@@ -30,6 +32,20 @@ enum class MapEditorGuiType : unsigned int
 	NONE
 };
 constexpr size_t g_MapEditorGuiTypeCount{ static_cast<size_t>(MapEditorGuiType::NONE) };
+
+enum class MapEditorSceneType : unsigned int
+{
+	DEV,
+	TUTORIAL,
+	STAGE_1,
+	STAGE_2,
+	STAGE_3,
+	SNIPE,
+	ROOFTOP,
+	ROAD,
+	NONE
+};
+constexpr size_t g_MapEditorSceneTypeCount{ static_cast<size_t>(MapEditorSceneType::NONE) };
 
 // TILE
 // Horizon

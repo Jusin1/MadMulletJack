@@ -86,14 +86,6 @@ _int CEditorScene::Update_Scene(const _float &fTimeDelta)
 void CEditorScene::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F1))
-    {
-        SaveData();
-    }
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_F2))
-    {
-        LoadData();
-    }
 }
 
 void CEditorScene::Render_Scene()
@@ -105,23 +97,10 @@ HRESULT CEditorScene::SaveData()
     if (FAILED(__super::SaveData()))
         return E_FAIL;
 
-    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Wall_Layer");
-    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Tile_Layer");
-    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Env_Layer");
-    CFileManager::GetInstance()->SaveObjectList(SCENE_DEV, L"Monster_Layer");
-
-    return S_OK;
-}
-
-HRESULT CEditorScene::LoadData()
-{
-    if (FAILED(__super::LoadData()))
-        return E_FAIL;
-
-    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Wall_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Tile_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Env_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_DEV, L"Monster_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Wall_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Tile_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Env_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Monster_Layer");
 
     return S_OK;
 }

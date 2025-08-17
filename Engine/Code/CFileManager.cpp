@@ -4,6 +4,7 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include "CDataManager.h"
 #include "CObjectManager.h"
 #include "CFileManager.h"
 
@@ -80,7 +81,7 @@ inline std::wstring UTF8ToWString(const std::string &str)
     return out;
 }
 
-HRESULT CFileManager::SaveObjectList(_uint iSceneID, const _tchar *szLayerTag)
+HRESULT CFileManager::SaveDataFile(_uint iSceneID, const _tchar *szLayerTag)
 {
     std::vector<MAPOBJECTDATA> objectDatas = CObjectManager::GetInstance()->ExportObjectData(iSceneID, szLayerTag);
 
@@ -123,7 +124,7 @@ HRESULT CFileManager::SaveObjectList(_uint iSceneID, const _tchar *szLayerTag)
     return S_OK;
 }
 
-HRESULT CFileManager::LoadObjectList(_uint iSceneID, const _tchar *szLayerTag)
+HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
 {
     filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / szLayerTag / L"data.json";
     if (dir.parent_path().empty())
@@ -145,21 +146,7 @@ HRESULT CFileManager::LoadObjectList(_uint iSceneID, const _tchar *szLayerTag)
     for (const auto &jObj : jArray)
     {
         MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
-        switch (objData.eCategory)
-        {
-        case ObjectCategory::WALL:
-            CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iSceneID, szLayerTag, &objData);
-            break;
-        case ObjectCategory::TILE:
-            CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iSceneID, szLayerTag, &objData);
-            break;
-        case ObjectCategory::ENV_OBJ:
-            CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iSceneID, szLayerTag, &objData);
-            break;
-        case ObjectCategory::MONSTER:
-            CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iSceneID, szLayerTag, &objData);
-            break;
-        }
+        CDataManager::GetInstance()->AddData(szLayerTag, objData);
     }
 
     ifs.close();

@@ -97,23 +97,10 @@ HRESULT CScene_Stage_1::SaveData()
     if (FAILED(__super::SaveData()))
         return E_FAIL;
 
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Wall_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Tile_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Env_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Monster_Layer");
-
-    return S_OK;
-}
-
-HRESULT CScene_Stage_1::LoadData()
-{
-    if (FAILED(__super::LoadData()))
-        return E_FAIL;
-
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Wall_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Tile_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Env_Layer");
-    CFileManager::GetInstance()->LoadObjectList(SCENE_STAGE_1, L"Monster_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Wall_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Tile_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Env_Layer");
+    CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Monster_Layer");
 
     return S_OK;
 }

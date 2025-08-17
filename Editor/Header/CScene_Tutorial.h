@@ -17,7 +17,6 @@ public:
 	virtual			void		Render_Scene();
 
 	virtual HRESULT SaveData() override;
-	virtual HRESULT LoadData() override;
 private:
 	HRESULT			Ready_Camera_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_Dummy_Layer(const _tchar *pLayerTag);

@@ -57,11 +57,6 @@ void CManagement::SaveData()
 	m_pCurrentScene->SaveData();
 }
 
-void CManagement::LoadData()
-{
-	m_pCurrentScene->LoadData();
-}
-
 void CManagement::Free()
 {
     Safe_Release(m_pCurrentScene);

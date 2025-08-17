@@ -23,8 +23,8 @@ public:
 	static inline std::string WStringToUTF8(const std::wstring &wstr);
 	static inline std::wstring UTF8ToWString(const std::string &str);
 
-	HRESULT SaveObjectList(_uint iSceneID, const _tchar *szLayerTag);
-	HRESULT LoadObjectList(_uint iSceneID, const _tchar *szLayerTag);
+	HRESULT SaveDataFile(_uint iSceneID, const _tchar *szLayerTag);
+	HRESULT LoadDataFile(_uint iSceneID, const _tchar *szLayerTag);
 private:
 	wstring SceneIdToWstring(_uint iSceneID);
 };

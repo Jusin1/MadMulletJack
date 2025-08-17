@@ -26,8 +26,6 @@ public:
 	_uint Get_LastSceneIdx() { return m_iLastSceneIndex; }
 	void Set_LastScene(_uint iIdx) { m_iLastSceneIndex = iIdx; }
 
-	void LoadData();
-
 	// 에디터 전용
 	void SaveData();
 private:

@@ -4,6 +4,7 @@
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "Editor_Define.h"
+#include "CManagement.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CPicking.h"
@@ -206,7 +207,8 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
 					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_DEV, L"Tile_Layer", &tTestData)))
+					_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Tile_Layer", &tTestData)))
 					{
 						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 					}

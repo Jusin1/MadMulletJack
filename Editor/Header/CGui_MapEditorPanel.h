@@ -27,8 +27,10 @@ private:
 	CGuiBase *EnvObjtypeDropbox_Create();
 	CGuiBase *MonstertypeDropbox_Create();
 	CGuiBase *LighttypeDropbox_Create();
+	CGuiBase *SceneDropbox_Create();
 	CGuiBase *CreateButton_Create();
 	CGuiBase *GridPanelSizeButtons_Create();
+	CGuiBase *SaveDataButton_Create();
 	CGuiBase *PositionInputfield_Create();
 	CGuiBase *RotationInputfield_Create();
 	CGuiBase *WallThumbnail_Create();
@@ -38,6 +40,14 @@ private:
 	CGuiBase *CreateModeCheckBox_Create();
 	CGuiBase *SnapModeCheckBox_Create();
 
+	void CategoryDropbox_Render();
+	void WalltypeDropbox_Render();
+	void TiletypeDropbox_Render();
+	void EnvObjtypeDropbox_Render();
+	void MonstertypeDropbox_Render();
+	void LighttypeDropbox_Render();
+	void SceneDropbox_Render();
+
 	void AllCheckBox_SetFalse();
 	void AllThumbnailTexture_SetClear();
 public:
@@ -45,5 +55,6 @@ public:
 private:
 	ObjectCategory m_eCategory;
 	_uint m_iObjectType;
+	_uint m_iSceneType;
 };
 

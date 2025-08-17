@@ -3,6 +3,8 @@
 #include "Engine_Define.h"
 #include "CDInputMgr.h"
 #include "CGuiManager.h"
+#include "CManagement.h"
+#include "CMapFactory.h"
 #include "CRenderer.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
@@ -178,7 +180,8 @@ void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pDa
 		break;
 	}
 
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_DEV, L"Monster_Layer", pData)))
+	_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData)))
 	{
 		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}
@@ -209,7 +212,8 @@ void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 		break;
 	}
 
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", SCENE_DEV, L"Env_Layer", pData)))
+	_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Env_Layer", pData)))
 	{
 		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}
