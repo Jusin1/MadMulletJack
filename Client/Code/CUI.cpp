@@ -53,10 +53,20 @@ void CUI::Render_GameObject()
 	_matrix ViewMatrix;
 	D3DXMatrixIdentity(&ViewMatrix);
 
+	// 1. UI 렌더링 시작 전 Z-buffer 끄기
+	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
 	m_pVIBufferCom->Render_Buffer();
+
+	// 2. UI 렌더링 끝난 후 Z-buffer 원래 상태로 되돌리기
+	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+	
 }
 
 
@@ -101,7 +111,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 		break;
 
 	case MV_LEFT:
-		m_pTransformCom->Move_Left(fTimeDelta);
+		m_pTransformCom->Move_PosLeft(fTimeDelta);
 		break;
 
 	case MV_RL: // range 만큼 좌우로 움직임
@@ -118,7 +128,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 
 	case MV_ROTATIONZ: // z축 기준으로 회전
 		m_pTransformCom->Rotation({0.f,0.f,1.f}, fTimeDelta);
-		m_fRotSum += m_pTransformCom->GetTransformInfo().fSpeed * fTimeDelta;
+		m_fRotSum += m_pTransformCom->GetTransformInfo().fRotationSpeed * fTimeDelta;
 		break;
 
 	case MV_UpDown:

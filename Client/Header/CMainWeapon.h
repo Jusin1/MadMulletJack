@@ -14,6 +14,10 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+protected:
+	void Reload_Bullet() { m_iBullet = m_iMaxBullet; }
+
+	// getter setter func
 public:
 	_bool Get_IsEmpty() const { return m_bIsEmpty; }
 	void Set_IsEmpty(_bool _bIsEmpty) { m_bIsEmpty = _bIsEmpty; }
@@ -43,6 +47,4 @@ protected:
 
 protected:
 	virtual void Free() override;
-
 };
-

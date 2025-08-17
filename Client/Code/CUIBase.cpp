@@ -1,14 +1,13 @@
 #include "pch.h"
 #include "CUIBase.h"
 CUIBase::CUIBase(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev) ,m_bAniFinish(false), m_fRotSum(0.f)
+    : CGameObject(pGraphicDev) , m_fRotSum(0.f)
 {
 }
 
 CUIBase::CUIBase(const CUIBase& rhs)
-    : CGameObject(rhs), m_bAniFinish(rhs.m_bAniFinish), m_fRotSum(rhs.m_fRotSum)
+    : CGameObject(rhs), m_fRotSum(rhs.m_fRotSum)
 {
-
 }
 
 CUIBase::~CUIBase() 
@@ -34,7 +33,9 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
         NO_EVENT;
 
     if (nullptr != m_pRendererCom)
+    {
         m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
+    }
 
     for (auto& pChild : m_vecChildren)
     {
@@ -76,6 +77,10 @@ HRESULT CUIBase::Set_Component()
 
 void CUIBase::Set_Origin_Rot()
 {
+    // rotSum이 0이면 rotation을 하지 않음
+    if (m_fRotSum == 0)
+        return;
+
     // ui는 z축 기준 회전 하므로
     // -1.f로 반대로 돌려주기
     // 안에서 자기 속도 곱하게 되므로 rotsum / rotspeed 값으로 들어간다

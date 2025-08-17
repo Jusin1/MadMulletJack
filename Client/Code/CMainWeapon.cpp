@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "CMainWeapon.h"
+#include "CManagement.h"
+#include "CObjectManager.h"
+#include "CPlayer.h"
 
 CMainWeapon::CMainWeapon(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CWeapon(pGraphicDev), m_bIsEmpty(false), m_iBullet(0), m_iMaxBullet(0),
@@ -43,7 +46,21 @@ _int CMainWeapon::Update_GameObject(const _float& fTimeDelta)
 
 	// 만약 탄창이 비웠다면 attack = false
 	if (m_bIsEmpty)
+	{
 		m_bIsAttack = false;
+
+		// 플레이어의 m_bIsAttack = false; 해주기
+
+		// 현재 씬을 가져옴
+		_uint eCurScene = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+		// 그 씬에 있는 플레이어를 가져옴
+		CGameObject* pPlayer = CObjectManager::GetInstance()->Find_Object(eCurScene,L"Player_Layer", 0);
+
+		// 플레이어 함수 사용
+		dynamic_cast<CPlayer*>(pPlayer)->Set_IsAttack(false);
+	}
+		
 
 	return NO_EVENT;
 }
@@ -57,6 +74,10 @@ void CMainWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_bIsEmpty = true;
 		// reload effect 추가
+	}
+	else
+	{
+		m_bIsEmpty = false;
 	}
 		
 	if (Is_PlayerState_Change()) //player가 state를 바꿨을 때

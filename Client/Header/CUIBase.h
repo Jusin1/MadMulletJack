@@ -28,8 +28,8 @@ public:
     void Set_ObjTag(const _tchar* pTag) { m_pObjTag = pTag; } // 태그 세팅
     const _tchar* Get_ObjTag() const { return m_pObjTag; } // 태그 가져오기
 
-    _bool Get_AniFinish() { return m_bAniFinish; }
-    void Set_AniFinish(_bool _bAniFinish) { m_bAniFinish = _bAniFinish; }
+    void Set_RotSum(_float _fRotSum) { m_fRotSum = _fRotSum; }
+    _float Get_RotSum() const { return m_fRotSum; }
 
 protected:
     virtual HRESULT			Set_Component();
@@ -37,11 +37,10 @@ protected:
     void Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed); // 현재 위치 + new speed, new rotSpeed 지정
 
 protected:
-    vector<CUIBase*> m_vecChildren; // 자식들
+    list<CUIBase*> m_vecChildren; // 자식들
 
 protected:
     const _tchar* m_pObjTag;
-    _bool	m_bAniFinish; // animation 끝났는지 다른 클래스에게 전해주기 위해
     _float m_fRotSum; // texture 바뀌고 돌린만큼 다시 돌리기 위해
 
 public:

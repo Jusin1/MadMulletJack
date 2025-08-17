@@ -2,12 +2,12 @@
 #include "CWeapon.h"
 
 CWeapon::CWeapon(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUI(pGraphicDev), m_bIsAttack(false)
+	: CUI(pGraphicDev), m_bIsAttack(false) , m_eWapState(WAPSTATE_END)
 {
 }
 
 CWeapon::CWeapon(const CWeapon& rhs)
-	: CUI(rhs), m_bIsAttack(rhs.m_bIsAttack)
+	: CUI(rhs), m_bIsAttack(rhs.m_bIsAttack), m_eWapState(rhs.m_eWapState)
 {
 }
 
