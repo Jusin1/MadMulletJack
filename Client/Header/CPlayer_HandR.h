@@ -23,6 +23,7 @@ private:
     HRESULT Set_WeaponUI();
 
     void Update_Weapon_Pistol();
+    void Update_Weapon2_Knife();
 
 private:
     map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
