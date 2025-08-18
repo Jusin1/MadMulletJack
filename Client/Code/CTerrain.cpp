@@ -77,13 +77,13 @@ void CTerrain::Render_GameObject()
 
 HRESULT CTerrain::Set_Component(void* pArg)
 {
-	// Texture
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE_1, L"Prototype_Component_Texture_Terrian", (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	// VIBUFFER
-	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_TerrianBuffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;
+//	// Texture
+//	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE_1, L"Prototype_Component_Texture_Terrian", (CComponent**)&m_pTextureCom)))
+//		return E_FAIL;
+//
+//	// VIBUFFER
+//	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_TerrianBuffer", (CComponent**)&m_pBufferCom)))
+//		return E_FAIL;
 
 
 	return S_OK;

@@ -380,7 +380,7 @@ HRESULT CEffectUI::PreloadTexture(const _tchar* mapTag, const _tchar* protoTag)
         if (!lstrcmp(kv.first, mapTag)) return S_OK;
 
     CTexture* tex = nullptr;
-    if (FAILED(Add_Components(mapTag, SCENE_STAGE_1, protoTag, (CComponent**)&tex)))
+    if (FAILED(Add_Components(mapTag, SCENE_STATIC, protoTag, (CComponent**)&tex)))
         return E_FAIL;
 
     m_mapTextures.insert({ mapTag, tex });

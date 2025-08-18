@@ -81,6 +81,7 @@ HRESULT CPhone_HpBarUI::Set_Texture(SCENE _eSCENE)
 
 	switch (_eSCENE)
 	{
+	case SCENE_DEV:
 	case SCENE_STAGE_1:	
 		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneN"))))
 			return E_FAIL;
@@ -112,7 +113,7 @@ HRESULT CPhone_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 4;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneN", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneN", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneN", SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneN", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneN"), m_pTextureCom });
 
@@ -121,7 +122,7 @@ HRESULT CPhone_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 4;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneB", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneB", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneB", SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneB", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneB"), m_pTextureCom });
 
@@ -130,7 +131,7 @@ HRESULT CPhone_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 4;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneF", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneF", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneF", SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneF", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneF"), m_pTextureCom });
 

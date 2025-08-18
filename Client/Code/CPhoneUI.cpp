@@ -46,7 +46,7 @@ HRESULT CPhoneUI::Texture_Clone()
         texInfo.m_bLoop = true;
 
         CTexture* pTex = nullptr;
-        if (FAILED(Add_Components(L"Com_Texture_Phone_Default", SCENE_STAGE_1,
+        if (FAILED(Add_Components(L"Com_Texture_Phone_Default", SCENE_STATIC,
             L"Prototype_Component_Texture_PhoneUI",
             (CComponent**)&pTex, &texInfo)))
             return E_FAIL;

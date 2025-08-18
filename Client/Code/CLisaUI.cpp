@@ -48,7 +48,7 @@ HRESULT CLisaUI::Texture_Clone()
         texInfo.m_bLoop = true;
 
         CTexture* pTex = nullptr;
-        if (FAILED(Add_Components(L"Com_Texture_Lisa_Default", SCENE_STAGE_1,
+        if (FAILED(Add_Components(L"Com_Texture_Lisa_Default", SCENE_STATIC,
             L"Prototype_Component_Texture_LisaUI",
             (CComponent**)&pTex, &texInfo)))
             return E_FAIL;
@@ -65,7 +65,7 @@ HRESULT CLisaUI::Texture_Clone()
         texInfo.m_bLoop = true;
 
         CTexture* pTex = nullptr;
-        if (FAILED(Add_Components(L"Com_Texture_Lisa_Bye", SCENE_STAGE_1,
+        if (FAILED(Add_Components(L"Com_Texture_Lisa_Bye", SCENE_STATIC,
             L"Prototype_Component_Texture_LisaByeUI",
             (CComponent**)&pTex, &texInfo)))
             return E_FAIL;
@@ -92,7 +92,7 @@ HRESULT CLisaUI::Create_HairPart()
 {
     m_pHair = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"));
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
 
     if (!m_pHair) return E_FAIL;
 

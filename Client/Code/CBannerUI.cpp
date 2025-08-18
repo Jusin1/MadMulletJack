@@ -356,7 +356,7 @@ HRESULT CBannerUI::Texture_Clone()
 	{
 		CTexture::TEXINFO info{};
 		info.m_iStart = 0; info.m_iEndTex = 0;
-		if (FAILED(Add_Components(L"Com_Texture_ArrowSmall", SCENE_STAGE_1,
+		if (FAILED(Add_Components(L"Com_Texture_ArrowSmall", SCENE_STATIC,
 			L"Prototype_Component_Texture_ArrowUI", (CComponent**)&m_pTexArrow, &info)))
 			return E_FAIL;
 	}

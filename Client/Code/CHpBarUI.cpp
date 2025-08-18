@@ -124,14 +124,14 @@ HRESULT CHpBarUI::Set_Component()
 
 HRESULT CHpBarUI::Set_HpBarUI()
 {
-	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", SCENE_STAGE_1, L"UI_Layer"));
+	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", SCENE_STATIC, L"UI_Layer"));
 	if (pPhoneUI)
 	{
 		pPhoneUI->Set_ObjTag(L"PhoneUI");
 		Add_Child(pPhoneUI); // 루트 UI에 등록
 	}
 
-	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", SCENE_STAGE_1, L"UI_Layer"));
+	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", SCENE_STATIC, L"UI_Layer"));
 	if (pManUI)
 	{
 		pManUI->Set_ObjTag(L"ManUI");

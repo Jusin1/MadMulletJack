@@ -83,7 +83,7 @@ void CCharacter::Set_OnTerrain()
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 
 	Engine::CVIBuffer_Terrian* pTerrainBufferCom =dynamic_cast<Engine::CVIBuffer_Terrian*>
-		(CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, L"Environment_Layer", L"Com_VIBuffer", 0));
+		(CObjectManager::GetInstance()->Get_Component(SCENE_STATIC, L"Environment_Layer", L"Com_VIBuffer", 0));
 	_float fHeight = m_pCalculatorCom->
 		Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ, VTXITV);
 	

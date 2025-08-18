@@ -18,9 +18,17 @@ public:
 	const _tchar* Get_String() const { return m_szLoading; }
 public:
 	HRESULT			Ready_Loading(SCENE eNextScene); // 로딩 준비
+	HRESULT			Loading_UI();
 	HRESULT			Loading_Logo(); // 로고 씬 로딩
-	HRESULT			Loading_ForStage(); // 스테이지 씬 로딩
-	HRESULT			Loading_MapObjectTexture();
+	HRESULT			Loading_Dev();	// Dev 씬 로딩
+	HRESULT			Loading_Tutorial();	// Dev 씬 로딩
+	HRESULT			Loading_Stage_1();	// Stage_1 로딩
+	HRESULT			Loading_Stage_2();	// Stage_2 로딩
+	HRESULT			Loading_Stage_3();	// Stage_3 로딩
+	HRESULT			Loading_Snipe();	// Snipe 씬 로딩
+	HRESULT			Loading_Rooftop();	// 옥상 보스 씬 로딩
+	HRESULT			Loading_Road();	// 자동차 보스 씬 로딩
+	HRESULT			Loading_MapObjectTexture_Src();
 private:
 	SCENE					m_eNextScene = SCENE_END;
 	_bool					m_isFinished = false;

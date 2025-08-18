@@ -107,7 +107,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Arm_Op1", SCENE_STAGE_1, L"Prototype_Component_Texture_UIArmOp1", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Arm_Op1", SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Arm_Op1"), m_pTextureCom });
 
@@ -116,7 +116,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STAGE_1, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Arm_Op2"), m_pTextureCom });
 

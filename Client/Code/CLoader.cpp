@@ -77,7 +77,39 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	switch (pLoader->Get_NextSceneID())
 	{
 	case SCENE_LOGO:  pLoader->Loading_Logo();  break;
-	case SCENE_DEV: pLoader->Loading_ForStage(); break;
+	case SCENE_DEV:
+	{
+		pLoader->Loading_UI();
+		pLoader->Loading_Dev();
+	}break;
+	case SCENE_TUTORIAL:
+	{
+
+	} break;
+	case SCENE_STAGE_1:
+	{
+
+	} break;
+	case SCENE_STAGE_2:
+	{
+
+	} break;
+	case SCENE_STAGE_3:
+	{
+
+	} break;
+	case SCENE_SNIPE:
+	{
+
+	} break;
+	case SCENE_BOSS:
+	{
+
+	} break;
+	case SCENE_CAR:
+	{
+
+	} break;
 	}
 	return 0;
 }
@@ -99,6 +131,8 @@ HRESULT CLoader::Ready_Loading(SCENE eNextScene)
 
 	return S_OK;
 }
+
+
 
 HRESULT CLoader::Loading_Logo()
 {
@@ -124,472 +158,67 @@ HRESULT CLoader::Loading_Logo()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_ForStage()
+HRESULT CLoader::Loading_Dev()
 {
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 
-#pragma region 맵오브젝트 테스트
-	if(FAILED(Loading_MapObjectTexture()))
+#pragma region 맵오브젝트 임시
+	if (FAILED(Loading_MapObjectTexture_Src()))
 		return E_FAIL;
 #pragma endregion
 
-#pragma region 플레이어 테스트
-	// Player
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_PlayerTest",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/aim%03d.png", 9))))
-		return E_FAIL;
-#pragma endregion 플레이어 테스트
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
 
 #pragma region 슈트 몬스터
 	// Monster
 	// IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_Idle",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/sm_idle%03d.png", 12))))
 		return E_FAIL;
 
 	// CHASE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_Chase",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Chase",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/chasing/SM_CHASING%03d.png", 12))))
 		return E_FAIL;
 
 	// AIM
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_Aim",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Aim",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/Aim/aim%03d.png", 9))))
 		return E_FAIL;
 
 	// SHOT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_Shot",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Shot",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/Shot/shoot%02d.png", 8))))
 		return E_FAIL;
 
 	// Jump
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_Jump",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Jump",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/jump/jumping/sm_jump%03d.png", 22))))
 		return E_FAIL;
 
 	// HEAD_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/head/normal/flyb_death%02d.png", 21))))
 		return E_FAIL;
 
 	// BODY_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/hit/SM_HIT%03d.png", 8))))
 		return E_FAIL;
-	
+
 	// BALL_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/ball/SM_HIT_BALL%03d.png", 23))))
 		return E_FAIL;
 
 	// DEATH
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/fb_death%02d.png", 21))))
 		return E_FAIL;
 
 #pragma endregion 슈트 몬스터
 
-#pragma region Weapon texture
-	// Pistol
-	// Pistol - Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/idle/PISTOL_IDLE%03d.png", 3))))
-		return E_FAIL;
-	// Pistol - Op
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Op",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/opening/PISTOL_OPENING%03d.png", 8))))
-		return E_FAIL;
-	// Pistol - Attack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Attack",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/attack/PISTOL_SHOT%03d.png", 6))))
-		return E_FAIL;
-	// Pistol - Reload
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Re",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/reload/PISTOL_RELOAD%03d.png", 13))))
-		return E_FAIL;
-	// PistolC - Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/idle/PISTOL2_IDLE%03d.png", 3))))
-		return E_FAIL;
-	//PistolC - Attack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Attack",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/attack/PISTOL2_ATTACK%03d.png", 5))))
-		return E_FAIL;
-	// PistolC - Zooming
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Zooming",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zooming/pistol_zooming%03d.png", 3))))
-		return E_FAIL;
-	// PistolC - Zoom_Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/idle/PISTOL_ZOOM_IDLE%03d.png", 4))))
-		return E_FAIL;
-	// PistolC - Zoom_Attack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/attack/PISTOL_ZOOM_ATTACK%03d.png", 3))))
-		return E_FAIL;
-
-	// Knife
-	// Knife - idle
-	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\idle\CLEAVER_IDLE002.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/idle/CLEAVER_IDLE%03d.png", 3))))
-		return E_FAIL;
-	// Knife - item
-	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\item\CLEAVER_ITEM.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Item",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/item/CLEAVER_ITEM.png", 1))))
-		return E_FAIL;
-	// Knife - attack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Att",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
-		return E_FAIL;
-
-
-#pragma endregion Weapon texture
-
-#pragma region UI Texture
-	// Player UI
-
-	// Arm
-	// openig1 - weapon : non
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIArmOp1",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/glove/OPENING_GLOVE%03d.png", 3))))
-		return E_FAIL;
-	// openig2 - weapon : non
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIArmOp2",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/melee/OPENING_MELEE%03d.png", 3))))
-		return E_FAIL;
-
-	// foot
-	// foot - kick
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIFootKick",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot000.png", 1))))
-		return E_FAIL;
-	// foot - slide
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIFootSlide",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/slide/slide000.png", 1))))
-		return E_FAIL;
-	
-	//	HandL
-	//	HandL - Idle
-	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/idle/IDLE%03d.png", 17))))
-		return E_FAIL;*/
-	//	HandL - Doping
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLDoping",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/doping/DRINK%03d.png", 7))))
-		return E_FAIL;
-	//	HandL - opening : rifle
-	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\player\left\opening\rifle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLOpRif",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/opening/rifle/Lhand_opeing_rifle%03d.png", 12))))
-		return E_FAIL;
-	// HandL - attack_instance - knife
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLAt2Knife",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/attack2/punch%03d.png", 3))))
-		return E_FAIL;
-	// HandL - reload - pistol
-	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\player\left\reload\pistol\END
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLRePistol",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/pistol/END/PistolR_L%03d.png", 3))))
-		return E_FAIL;
-	// HandL - reload - shotgun
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandLReShotgun",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/shotgun/ShotR_Left%03d.png", 2))))
-		return E_FAIL;
-
-	// HandR
-	// // HandR - Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/idle/HandR_Idle%03d.png", 3))))
-		return E_FAIL;
-	// HandR - attack_instance - knife
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRAt2Knife",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/attack2/knife/A2_knife000.png", 1))))
-		return E_FAIL;
-	// HandR - Dead
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandRDead",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/dead/DEATH%03d.png", 3))))
-		return E_FAIL;
-	// handr - op - pistol
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandROpPistol",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/pistol/Pistol_OpR000.png", 1))))
-		return E_FAIL;
-	// handr - op - shotgun
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHandROpShotgun",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/shotGun/ShotG_OpR%03d.png", 4))))
-		return E_FAIL;
-
-	// HpBar
-	// HpB - PhoneN
-	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneN",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_N%03d.png", 4))))
-		return E_FAIL;
-	// HpB - PhoneB
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneB",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_B%03d.png", 4))))
-		return E_FAIL;
-	// HpB - PhoneF
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneF",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_F%03d.png", 4))))
-		return E_FAIL;
-	// HpB - ManN
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManN",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/normal/Jack_Nomal_%03d.png", 16))))
-		return E_FAIL;
-	// HpB - ManH
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManH",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/hit/Jack_Good_%03d.png", 16))))
-		return E_FAIL;
-	// HpB - ManD
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManD",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/dead/Jack_Hurt_%03d.png", 16))))
-		return E_FAIL;
-	// HpB - Crack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarCrack",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/crack/Phone_Crack000.png", 1))))
-		return E_FAIL;
-
-
-#pragma endregion UI
-
-
-#pragma region 일반 UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_HealEffect",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/LIKES.png", 1))))
-		return E_FAIL;
-#pragma endregion 일반UI
-
-#pragma region 패널 UI
-
-	// GridUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_FileGridUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/CYBER BACKGROUND.png", 1))))
-		return E_FAIL;
-
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_FrameUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/Frame.png", 1))))
-		return E_FAIL;
-#pragma endregion 패널 UI
-
-#pragma region 게임 진입 UI
-	// HEART
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART%03d.png", 5))))
-		return E_FAIL;
-	// HEART LINE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_LINE",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART LINE.png", 1))))
-		return E_FAIL;
-
-	// HEAT BEAT 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_BEAT",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART BEAT.png", 1))))
-		return E_FAIL;
-
-#pragma region LisaUI
-	// LISA UI
-	// IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
-		return E_FAIL;
-	// BYE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaByeUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/wink/Lisa_Wink_%03d.png", 10))))
-		return E_FAIL;
-
-	// LisaHead - IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaHair_Default",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default_Hair/HAIR%03d.png", 3))))
-		return E_FAIL;
-
-	// LisaHead - Bye
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaHair_Bye",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Wink_Hair/MASCOT_HAIR_WINK%03d.png", 3))))
-		return E_FAIL;
-	// Lisa - TalkUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Talk",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/BALLON.png", 1))))
-		return E_FAIL;
-#pragma endregion LisaUI
-
-	// CHAT UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_ChatUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Chat/CHAT%03d.png", 7))))
-		return E_FAIL;
-
-	// Arrow UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_ArrowUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/ARROW.png", 1))))
-		return E_FAIL;
-
-	// LOGO
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LogoUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PEACE LOGO 2.png", 1))))
-		return E_FAIL;
-
-	// TITLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SmallTitleUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SMALLTITLE.png", 1))))
-		return E_FAIL;
-
-	// TextUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SmallTextUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/MsgText.png", 1))))
-		return E_FAIL;
-
-	// LiveIcon
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LiveIconUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/LIVE ICON.png", 1))))
-		return E_FAIL;
-
-	// PhoneUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_PhoneUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/PHONEIDLE_%03d.png", 4))))
-		return E_FAIL;
-
-	// Phone Left_Hand UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Phone_LeftHandUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Right_HAND INTERMISSION %03d.png", 2))))
-		return E_FAIL;
-
-#pragma endregion 게임 진입 UI
-
-	// 객체 생성
-	lstrcpy(m_szLoading, L"객체 생성 중.");
-	// Camera_FPS
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
-		CCameraFPS::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Player
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Player",
-		CPlayer::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	//// Monster
-	// Monster_Suit 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Suit",
-		CMonster_Suit::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIRoot",
-		CUIBase::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// ImageUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
-		CImageUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// TextUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
-		CTextUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Player UI
-	// HandR UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
-		CPlayer_HandR::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// HandL UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
-		CPlayer_HandL::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// 몬스터 피격 이펙트
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
-		CEffectUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-#pragma region 게임 진입 UI들 생성
-	// BacgkGround
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BlackBackground",
-		CBlackGackGround::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Heart UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HeartUI",
-		CHeartUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	
-	// Lisa UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_LisaUI",
-		CLisaUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// Panel
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PanelUI",
-		CPanelUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Chat UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_ChatUI",
-		CChatUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Bannel UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BannerUI",
-		CBannerUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// TALK UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TalkUI",
-		CTalkUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Phone UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PhoneUI",
-		CPhoneUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-
-
-#pragma endregion 게임 진입 UI들 생성
-	// Foot UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
-		CPlayer_Foot::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// Arm UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerArmUI",
-		CPlayer_Arm::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Weapon UI
-	// Pistol
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunPistolUI",
-		CPistol_Gun::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// SubWeapon UI
-	// Knife
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SubWKnifeUI",
-		CKnife_SubW::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-#pragma endregion 게임 진입 UI들 생성
-
-#pragma region HpBar UI
-	// Hpbar UI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI",
-		CHpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// HpBar - Man
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Man",
-		CMan_HpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// HpBar - Phone
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
-		CPhone_HpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// HpBar - ColorRect
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_ColRect",
-		CColRect_HpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-#pragma endregion HpBar UI
 
 #pragma region MapObject
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DefaultPanel",
@@ -624,13 +253,55 @@ HRESULT CLoader::Loading_ForStage()
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	// CubeTex
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDev))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
+
 	m_isFinished = true;
-	
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Tutorial()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage_1()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage_2()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage_3()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Snipe()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Rooftop()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Road()
+{
+	m_isFinished = true;
 	return S_OK;
 }
 
@@ -655,7 +326,7 @@ void CLoader::Free()
 
 // 0818 - 강병준
 // TODO - 추후 사용하는 텍스쳐만 로드하도록 분할 예정
-HRESULT CLoader::Loading_MapObjectTexture()
+HRESULT CLoader::Loading_MapObjectTexture_Src()
 {
 	CComponentMgr *pCompMgr = CComponentMgr::GetInstance();
 #define AddTexture(CompName, Path) if(FAILED(pCompMgr->Add_Prototype(SCENE_STATIC, CompName,	\
@@ -785,4 +456,407 @@ HRESULT CLoader::Loading_MapObjectTexture()
 	AddTexture(L"Proto_Signs_7", L"../Bin/Resource/MapObject/Signs/SIGNS 8.png");
 }
 
+HRESULT CLoader::Loading_UI()
+{
+	// 객체 생성
+	lstrcpy(m_szLoading, L"UI 생성 중.");
 
+#pragma region Weapon texture
+	// Pistol
+	// Pistol - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/idle/PISTOL_IDLE%03d.png", 3))))
+		return E_FAIL;
+	// Pistol - Op
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Op",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/opening/PISTOL_OPENING%03d.png", 8))))
+		return E_FAIL;
+	// Pistol - Attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Attack",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/attack/PISTOL_SHOT%03d.png", 6))))
+		return E_FAIL;
+	// Pistol - Reload
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/reload/PISTOL_RELOAD%03d.png", 13))))
+		return E_FAIL;
+	// PistolC - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/idle/PISTOL2_IDLE%03d.png", 3))))
+		return E_FAIL;
+	//PistolC - Attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Attack",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/attack/PISTOL2_ATTACK%03d.png", 5))))
+		return E_FAIL;
+	// PistolC - Zooming
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Zooming",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zooming/pistol_zooming%03d.png", 3))))
+		return E_FAIL;
+	// PistolC - Zoom_Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/idle/PISTOL_ZOOM_IDLE%03d.png", 4))))
+		return E_FAIL;
+	// PistolC - Zoom_Attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/attack/PISTOL_ZOOM_ATTACK%03d.png", 3))))
+		return E_FAIL;
+
+	// Knife
+	// Knife - idle
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\idle\CLEAVER_IDLE002.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/idle/CLEAVER_IDLE%03d.png", 3))))
+		return E_FAIL;
+	// Knife - item
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\item\CLEAVER_ITEM.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Item",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/item/CLEAVER_ITEM.png", 1))))
+		return E_FAIL;
+	// Knife - attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Att",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
+		return E_FAIL;
+
+
+#pragma endregion Weapon texture
+
+#pragma region UI Texture
+	// Player UI
+
+	// Arm
+	// openig1 - weapon : non
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/glove/OPENING_GLOVE%03d.png", 3))))
+		return E_FAIL;
+	// openig2 - weapon : non
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/arm/melee/OPENING_MELEE%03d.png", 3))))
+		return E_FAIL;
+
+	// foot
+	// foot - kick
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIFootKick",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot000.png", 1))))
+		return E_FAIL;
+	// foot - slide
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIFootSlide",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/slide/slide000.png", 1))))
+		return E_FAIL;
+
+	//	HandL
+	//	HandL - Idle
+	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/idle/IDLE%03d.png", 17))))
+		return E_FAIL;*/
+		//	HandL - Doping
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLDoping",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/doping/DRINK%03d.png", 7))))
+		return E_FAIL;
+	//	HandL - opening : rifle
+	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\player\left\opening\rifle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLOpRif",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/opening/rifle/Lhand_opeing_rifle%03d.png", 12))))
+		return E_FAIL;
+	// HandL - attack_instance - knife
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLAt2Knife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/attack2/punch%03d.png", 3))))
+		return E_FAIL;
+	// HandL - reload - pistol
+	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\player\left\reload\pistol\END
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/pistol/END/PistolR_L%03d.png", 3))))
+		return E_FAIL;
+	// HandL - reload - shotgun
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandLReShotgun",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/shotgun/ShotR_Left%03d.png", 2))))
+		return E_FAIL;
+
+	// HandR
+	// // HandR - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRIdle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/idle/HandR_Idle%03d.png", 3))))
+		return E_FAIL;
+	// HandR - attack_instance - knife
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRAt2Knife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/attack2/knife/A2_knife000.png", 1))))
+		return E_FAIL;
+	// HandR - Dead
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRDead",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/dead/DEATH%03d.png", 3))))
+		return E_FAIL;
+	// handr - op - pistol
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpPistol",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/pistol/Pistol_OpR000.png", 1))))
+		return E_FAIL;
+	// handr - op - shotgun
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpShotgun",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/shotGun/ShotG_OpR%03d.png", 4))))
+		return E_FAIL;
+
+	// HpBar
+	// HpB - PhoneN
+	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneN",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_N%03d.png", 4))))
+		return E_FAIL;
+	// HpB - PhoneB
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneB",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_B%03d.png", 4))))
+		return E_FAIL;
+	// HpB - PhoneF
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneF",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Phone/PhoneWArm_F%03d.png", 4))))
+		return E_FAIL;
+	// HpB - ManN
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarManN",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/normal/Jack_Nomal_%03d.png", 16))))
+		return E_FAIL;
+	// HpB - ManH
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarManH",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/hit/Jack_Good_%03d.png", 16))))
+		return E_FAIL;
+	// HpB - ManD
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarManD",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/Man/dead/Jack_Hurt_%03d.png", 16))))
+		return E_FAIL;
+	// HpB - Crack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarCrack",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/crack/Phone_Crack000.png", 1))))
+		return E_FAIL;
+
+
+#pragma endregion UI
+
+#pragma region 일반 UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_HealEffect",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/LIKES.png", 1))))
+		return E_FAIL;
+#pragma endregion 일반UI
+
+#pragma region 패널 UI
+
+	// GridUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_FileGridUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/CYBER BACKGROUND.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_FrameUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/Frame.png", 1))))
+		return E_FAIL;
+#pragma endregion 패널 UI
+
+#pragma region 게임 진입 UI
+	// HEART
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_HeartUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART%03d.png", 5))))
+		return E_FAIL;
+	// HEART LINE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_HeartUI_LINE",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART LINE.png", 1))))
+		return E_FAIL;
+
+	// HEAT BEAT 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_HeartUI_BEAT",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART BEAT.png", 1))))
+		return E_FAIL;
+
+#pragma region LisaUI
+	// LISA UI
+	// IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
+		return E_FAIL;
+	// BYE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaByeUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/wink/Lisa_Wink_%03d.png", 10))))
+		return E_FAIL;
+
+	// LisaHead - IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaHair_Default",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default_Hair/HAIR%03d.png", 3))))
+		return E_FAIL;
+
+	// LisaHead - Bye
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaHair_Bye",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Wink_Hair/MASCOT_HAIR_WINK%03d.png", 3))))
+		return E_FAIL;
+	// Lisa - TalkUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Talk",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/BALLON.png", 1))))
+		return E_FAIL;
+#pragma endregion LisaUI
+
+	// CHAT UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_ChatUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Chat/CHAT%03d.png", 7))))
+		return E_FAIL;
+
+	// Arrow UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_ArrowUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/ARROW.png", 1))))
+		return E_FAIL;
+
+	// LOGO
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LogoUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PEACE LOGO 2.png", 1))))
+		return E_FAIL;
+
+	// TITLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SmallTitleUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SMALLTITLE.png", 1))))
+		return E_FAIL;
+
+	// TextUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SmallTextUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/MsgText.png", 1))))
+		return E_FAIL;
+
+	// LiveIcon
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LiveIconUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/LIVE ICON.png", 1))))
+		return E_FAIL;
+
+	// PhoneUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/PHONEIDLE_%03d.png", 4))))
+		return E_FAIL;
+
+	// Phone Left_Hand UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_LeftHandUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Right_HAND INTERMISSION %03d.png", 2))))
+		return E_FAIL;
+
+#pragma endregion 게임 진입 UI
+
+	// Camera_FPS
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
+		CCameraFPS::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Player
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Player",
+		CPlayer::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	//// Monster
+	// Monster_Suit 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Suit",
+		CMonster_Suit::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIRoot",
+		CUIBase::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ImageUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
+		CImageUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// TextUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
+		CTextUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Player UI
+	// HandR UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
+		CPlayer_HandR::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// HandL UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
+		CPlayer_HandL::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// 몬스터 피격 이펙트
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
+		CEffectUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+#pragma region 게임 진입 UI들 생성
+	// BacgkGround
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BlackBackground",
+		CBlackGackGround::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Heart UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HeartUI",
+		CHeartUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Lisa UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_LisaUI",
+		CLisaUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Panel
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PanelUI",
+		CPanelUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Chat UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_ChatUI",
+		CChatUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Bannel UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BannerUI",
+		CBannerUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// TALK UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TalkUI",
+		CTalkUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Phone UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PhoneUI",
+		CPhoneUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+
+
+#pragma endregion 게임 진입 UI들 생성
+	// Foot UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
+		CPlayer_Foot::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Arm UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerArmUI",
+		CPlayer_Arm::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Weapon UI
+	// Pistol
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunPistolUI",
+		CPistol_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// SubWeapon UI
+	// Knife
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SubWKnifeUI",
+		CKnife_SubW::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+#pragma endregion 게임 진입 UI들 생성
+
+#pragma region HpBar UI
+	// Hpbar UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI",
+		CHpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - Man
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Man",
+		CMan_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - Phone
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
+		CPhone_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - ColorRect
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_ColRect",
+		CColRect_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+#pragma endregion HpBar UI
+}

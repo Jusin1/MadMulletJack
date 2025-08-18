@@ -198,7 +198,7 @@
     </Filter>
     <Filter Include="02. GameObject\07. MapObject\03. Dummy\EndPoint">
       <UniqueIdentifier>{30992e90-c74a-420f-ab9a-2ce95693f2a9}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02. GameObject\06. UI\GameEnterUI\06. PhoneUI">
       <UniqueIdentifier>{8ac5a1ea-5a0f-4602-a24f-6c7100a49cea}</UniqueIdentifier>
     </Filter>
@@ -383,7 +383,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEndPoint.h">
       <Filter>02. GameObject\07. MapObject\03. Dummy\EndPoint</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\CPhoneUI.h">
       <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
     </ClInclude>
@@ -515,9 +515,6 @@
     <ClCompile Include="..\Code\CTalkUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\05. TalkUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CHpBarUI.cpp">
-      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CGun.cpp">
       <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun</Filter>
     </ClCompile>
@@ -559,7 +556,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEndPoint.cpp">
       <Filter>02. GameObject\07. MapObject\03. Dummy\EndPoint</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CPhoneUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
     </ClCompile>
@@ -568,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CColRect_HpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

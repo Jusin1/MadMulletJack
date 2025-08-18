@@ -209,19 +209,19 @@ void CHeartUI::SetBeatYOffset(_float py) { m_beatY = py; m_beatYOverride = true;
 HRESULT CHeartUI::Texture_Clone()
 {
 	CTexture::TEXINFO iL{ 0, 5, 3.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_L", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTexHeartL, &iL)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_L", SCENE_STATIC, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTexHeartL, &iL)))
 		return E_FAIL;
 
 	CTexture::TEXINFO iR{ 0, 5, 6.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_R", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_B", (CComponent**)&m_pTexHeartR, &iR)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_R", SCENE_STATIC, L"Prototype_Component_Texture_HeartUI_B", (CComponent**)&m_pTexHeartR, &iR)))
 		m_pTexHeartR = nullptr;
 
 	CTexture::TEXINFO iLine{ 0, 0, 0.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_LINE", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_LINE", (CComponent**)&m_pTexLine, &iLine)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_LINE", SCENE_STATIC, L"Prototype_Component_Texture_HeartUI_LINE", (CComponent**)&m_pTexLine, &iLine)))
 		m_pTexLine = nullptr;
 
 	CTexture::TEXINFO iPulse{ 0, 0, 0.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_PULSE", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_BEAT", (CComponent**)&m_pTexPulse, &iPulse)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_PULSE", SCENE_STATIC, L"Prototype_Component_Texture_HeartUI_BEAT", (CComponent**)&m_pTexPulse, &iPulse)))
 		m_pTexPulse = nullptr;
 
 	return S_OK;

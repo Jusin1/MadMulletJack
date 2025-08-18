@@ -93,7 +93,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     texInfo.m_iEndTex = 1;
     texInfo.m_fSpeed = 0.f;
     texInfo.m_bLoop = false;
-    if (FAILED(Add_Components(L"Com_Texture_Foots_Kick", SCENE_STAGE_1, L"Prototype_Component_Texture_UIFootKick", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Foots_Kick", SCENE_STATIC, L"Prototype_Component_Texture_UIFootKick", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Foots_Kick"), m_pTextureCom });
 
@@ -102,7 +102,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     texInfo.m_iEndTex = 1;
     texInfo.m_fSpeed = 1.f;
     texInfo.m_bLoop = true;
-    if (FAILED(Add_Components(L"Com_Texture_Foots_Slide", SCENE_STAGE_1, L"Prototype_Component_Texture_UIFootSlide", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Foots_Slide", SCENE_STATIC, L"Prototype_Component_Texture_UIFootSlide", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Foots_Slide"), m_pTextureCom });
 

@@ -58,7 +58,7 @@ HRESULT CTalkUI::Initialize(void* pArg)
 
 	m_pFrame = dynamic_cast<CImageUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"));
+			L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
 
 	if (!m_pFrame)
 		return E_FAIL;

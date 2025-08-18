@@ -77,16 +77,6 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
-    // 테스트용
-    if (GetAsyncKeyState('P'))
-    {
-        CUIManager::GetInstance()->CreateClearUI();
-    }
-    if (GetAsyncKeyState('F'))
-    {
-        CUIManager::GetInstance()->DestroyEnterUI();
-    }
 }
 
 void CStage::Render_Scene()
@@ -96,16 +86,6 @@ void CStage::Render_Scene()
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    // Terrian
-    _vec3 terriainPos = { 0.f, 0.f, 0.f };
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Terrian", SCENE_STAGE_1, pLayerTag, &terriainPos)))
-        return E_FAIL;
-
-    // SkyBox
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_SkyBox", SCENE_STAGE_1, pLayerTag)))
-        return E_FAIL;
-    
-
     return S_OK;
 }
 
@@ -126,49 +106,19 @@ HRESULT CStage::Ready_Camera_Layer(const _tchar* pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_Dynamic", SCENE_STAGE_1, pLayerTag, &CamInfo)))
-    //    return E_FAIL;
-
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE_1, pLayerTag, &CamInfo)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STATIC, pLayerTag, &CamInfo)))
         return E_FAIL;
-
-    
+        
     return S_OK;
 }
 
 HRESULT CStage::Ready_Player_Layer(const _tchar* pLayerTag)
 {
-    // Player
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE_1, pLayerTag)))
-        return E_FAIL;
     return S_OK;
 }
 
 HRESULT CStage::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
-    const float baseX = -8.f;   
-    const float gap = 4.f;    
-    const float posY = 1.f;
-    const float posZ = 0.f;
-
-    for (int i = 0; i < 5; ++i) {
-        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE_1, pLayerTag))) {
-            MSG_BOX("Monster spawn failed");
-            // 실패해도 계속 가려면 continue
-            return E_FAIL;
-
-        }
-    }
-
-    for (int i = 0; i < 5; ++i) {
-        auto tr = dynamic_cast<CTransform*>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, pLayerTag, L"Com_Transform", i));
-        if (tr) {
-            const float x = baseX + gap * i;           // 좌→우로 늘어놓기
-            tr->Set_Info(INFO_POS, _vec3(x, posY, posZ));
-            tr->LookAt(_vec3(x, posY, posZ + 1.f));    // 필요하면 정면 보정
-        }
-    }
     return S_OK;
 }
 
@@ -179,10 +129,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STATIC, pLayerTag)))
         return E_FAIL;
-
-    
 
     return S_OK;
 }

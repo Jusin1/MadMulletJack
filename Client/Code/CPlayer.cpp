@@ -764,17 +764,6 @@ void CPlayer::Set_Collider(void)
 
 HRESULT CPlayer::Texture_Clone()
 {
-	CTexture::TEXINFO		TextureInfo;
-	ZeroMemory(&TextureInfo, sizeof(CTexture::TEXINFO));
-
-	// TEST
-	TextureInfo.m_iStart = 0;
-	TextureInfo.m_iEndTex = 5;
-	TextureInfo.m_fSpeed = 2;
-	if (FAILED(Add_Components(L"Com_Texture_Test", SCENE_STAGE_1, L"Prototype_Component_Texture_PlayerTest", (CComponent**)&m_pTextureCom, &TextureInfo)))
-		return E_FAIL;
-	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Test"), m_pTextureCom));
-
 	return S_OK;
 }
 
@@ -790,13 +779,13 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 HRESULT CPlayer::Set_PlayerUI()
 {
 	m_pPlayerUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, L"UI_Layer"));
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
 
 	if (m_pPlayerUI == nullptr)
 		return E_FAIL;
 
 	// habdR UI 积己
-	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STAGE_1, L"UI_Layer"));
+	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STATIC, L"UI_Layer"));
 	if (pHandRUI)
 	{
 		// pHandRUI -> Initailize()
@@ -804,21 +793,21 @@ HRESULT CPlayer::Set_PlayerUI()
 		m_pPlayerUI->Add_Child(pHandRUI); // 风飘 UI俊 殿废
 	}
 	// handL UI 积己
-	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STAGE_1, L"UI_Layer"));
+	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STATIC, L"UI_Layer"));
 	if (pHandLUI)
 	{
 		pHandLUI->Set_ObjTag(L"HandLUI");
 		m_pPlayerUI->Add_Child(pHandLUI); // 风飘 UI俊 殿废
 	}
 	// foot UI 积己
-	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STAGE_1, L"UI_Layer"));
+	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STATIC, L"UI_Layer"));
 	if (pFootUI)
 	{
 		pFootUI->Set_ObjTag(L"FootUI");
 		m_pPlayerUI->Add_Child(pFootUI); // 风飘 UI俊 殿废
 	}
 	// arm UI 积己
-	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STAGE_1, L"UI_Layer"));
+	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STATIC, L"UI_Layer"));
 	if (pArmUI)
 	{
 		pArmUI->Set_ObjTag(L"ArmUI");
@@ -831,7 +820,7 @@ HRESULT CPlayer::Set_PlayerUI()
 HRESULT CPlayer::Set_HpBarUI()
 {
 	m_pHpBarUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STAGE_1, L"UI_Layer"));
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STATIC, L"UI_Layer"));
 
 	if (m_pHpBarUI == nullptr)
 		return E_FAIL;
