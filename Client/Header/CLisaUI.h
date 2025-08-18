@@ -28,9 +28,11 @@ public:
     virtual CGameObject* Clone(void* pArg = nullptr) override;
     virtual void Free() override;
 
+public:
+    void    SetState(AnimState st);
+
 protected: 
-    HRESULT Create_HairPart();             
-    void    SetState(AnimState st);          
+    HRESULT Create_HairPart();                  
     void    ApplyStateToParts(AnimState st);   
 
 protected: 

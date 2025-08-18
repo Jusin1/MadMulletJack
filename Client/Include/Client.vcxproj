@@ -184,6 +184,7 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPanelUI.h" />
+    <ClInclude Include="..\Header\CPhoneUI.h" />
     <ClInclude Include="..\Header\CPickingManager.h" />
     <ClInclude Include="..\Header\CPistol_Gun.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPanelUI.cpp" />
+    <ClCompile Include="..\Code\CPhoneUI.cpp" />
     <ClCompile Include="..\Code\CPickingManager.cpp" />
     <ClCompile Include="..\Code\CPistol_Gun.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />

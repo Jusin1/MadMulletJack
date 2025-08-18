@@ -33,6 +33,7 @@ HRESULT CLisaUI::Initialize(void* pArg)
     // 초기 상태는 무조건 Default
     Change_Texture(L"Com_Texture_Lisa_Default");
     SetState(AnimState::Default);
+    Add_Child(m_pHair);
     return S_OK;
 }
 
@@ -166,16 +167,6 @@ void CLisaUI::SetState(AnimState st)
 
 void CLisaUI::ApplyStateToParts(AnimState st)
 {
-    CTexture::TEXINFO texInfo = {};
-    texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 12;
-    texInfo.m_fSpeed = 3.f;
-    texInfo.m_bLoop = true;
-
-    if (FAILED(Add_Components(L"Com_Texture_Lisa", SCENE_STAGE_1, L"Prototype_Component_Texture_LisaUI", (CComponent**)&m_pTextureCom, &texInfo)))
-        return;
-    m_mapTextures.insert({ TEXT("Com_Texture_Lisa"), m_pTextureCom });
-
     // --- 본체 ---
     if (st == AnimState::Default)
         Change_Texture(L"Com_Texture_Lisa_Default");
@@ -218,5 +209,5 @@ CGameObject* CLisaUI::Clone(void* pArg)
 
 void CLisaUI::Free()
 {
-    __super::Free();
+    CUIBase::Free();
 }

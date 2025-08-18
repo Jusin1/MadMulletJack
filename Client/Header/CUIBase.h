@@ -29,7 +29,7 @@ public:
 
     void Set_RotSum(_float _fRotSum) { m_fRotSum = _fRotSum; }
     _float Get_RotSum() const { return m_fRotSum; }
-
+     
 protected:
     virtual HRESULT			Set_Component();
     void Set_Origin_Rot(); // 전에 local 행렬을 돌렸다면 다시 돌려두기
@@ -41,6 +41,11 @@ protected:
 protected:
     const _tchar* m_pObjTag;
     _float m_fRotSum; // texture 바뀌고 돌린만큼 다시 돌리기 위해
+    CUIBase* m_pParent = nullptr;
+
+public:
+    CUIBase* GetParent() const { return m_pParent; }
+    void Remove_Child(CUIBase* pChild);
 
 public:
     static CUIBase* Create(LPDIRECT3DDEVICE9 pGraphicDev);

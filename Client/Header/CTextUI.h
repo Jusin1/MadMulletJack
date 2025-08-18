@@ -27,7 +27,15 @@ public: // 텍스트 설정 관련
 	void SetAutoSize(bool on);                     // 텍스트 크기 자동 맞춤
 	void FitToText();                              // 텍스트에 맞게 크기 조정
 
-protected: // 텍스트 관련 멤버 변수
+public:
+	void PlayAppear(float duration = 0.6f, float startMul = 0.8f, float overMul = 1.25f); // Text 등장 애니메이션
+public:
+	bool IsAppearFinished() const { return !m_appearPlaying; }
+	float GetAppearProgress01() const { return min(1.f, m_appearT / max(0.0001f, m_appearDur)); }
+private:
+	float CurrentRenderScale() const;
+
+private: // 텍스트 관련 멤버 변수
 	std::wstring m_text;         // 출력할 텍스트
 	std::wstring m_fontTag;      // 폰트 태그
 	D3DXCOLOR    m_color;        // 텍스트 색상
@@ -39,6 +47,14 @@ protected: // 텍스트 관련 멤버 변수
 	float m_letterSpacing;       // 글자 간격(px)
 	bool  m_autoSize;            // 자동 크기 맞춤 여부
 	bool  m_dirtyMeasure;        // 사이즈 재계산 필요 여부
+
+private:
+	// 등장 애니메이션 상태
+	bool  m_appearPlaying = false;
+	float m_appearT = 0.f;        // 경과시간
+	float m_appearDur = 0.6f;     // 총시간
+	float m_appearStart = 0.8f;   // 시작 배율(상대)
+	float m_appearOver = 1.25f;  // 오버슈트 배율(상대)
 
 public: // 생성/복제/해제
 	static CTextUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

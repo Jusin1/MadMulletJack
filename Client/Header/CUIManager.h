@@ -3,7 +3,10 @@
 #include "CBase.h"
 #include "CUI.h"
 
-
+class CLisaUI;
+class CTextUI;
+class CBlackGackGround;
+class CPanelUI;
 // UI 생성 및 관리
 class CUIManager :
     public CBase
@@ -16,6 +19,10 @@ private:
 
 public:
     void CreateClearUI();         // 진입 UI 생성
+    void CreateClearTextUI();
+    void CreateTimeTextUI(const std::wstring& timeStr);
+    void CreatePhoneUI();
+
     void DestroyEnterUI();        // 종료 연출
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; } //UI가 동작 중인지 확인
 
@@ -41,7 +48,6 @@ public:
 
 private:
     void CancelSlidesForSubtree(CUIBase* root); // 특정 UI 트리의 슬라이드 취소
-
     // 슬라이드 애니메이션 데이터 구조체
     struct SlideTask {
         CUI* ui = nullptr;   // 대상 UI
@@ -55,9 +61,23 @@ private:
     };
 
 private:
-
-    CUIBase* m_pEnterUI = nullptr;         // 현재 표시 중인 진입 UI
+    CUIBase* m_pEnterUI = nullptr;         
     CUIBase* m_pMonsterDieEffect = nullptr;// 몬스터 사망 이펙트 UI
+
+
+private:
+    CTextUI* m_pVictoryText = nullptr; // 승리 TextUI
+    CTextUI* m_pFloorTimeText = nullptr; // Floor TextUI
+    bool     m_spawnedTimeUI = false; // TimeUI 스폰여부
+
+    CBlackGackGround* m_pTimeBlack = nullptr; // 배경
+    CPanelUI* m_pTimeFrame = nullptr; // timeFrame
+    CTextUI* m_pTimeText = nullptr; // timeText
+    CLisaUI* m_pLisaUI = nullptr;
+
+    bool   m_timeAutoRemoveArmed = false; // 삭제 타이머 작동 중인지
+    float  m_timeAutoRemoveTimer = 0.f;   // 경과 시간
+
 
     vector<SlideTask> m_slideTasks;        // 현재 진행 중인 슬라이드 작업 목록
     bool m_exitingEnter = false;           // UI 종료 연출 중 여부

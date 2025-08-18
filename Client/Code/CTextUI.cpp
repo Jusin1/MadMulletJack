@@ -2,8 +2,11 @@
 #include "CTextUI.h"
 #include "CFontMgr.h"
 
+// 유틸 함수
 static inline float SXi(float x) { return WINCX * 0.5f + x; }
 static inline float SYi(float y) { return WINCY * 0.5f - y; }
+static inline float Lerp(float a, float b, float t) { return a + (b - a) * t; }
+static inline float EaseOutCubic(float t) { float u = 1.f - t; return 1.f - u * u * u; }
 
 CTextUI::CTextUI(LPDIRECT3DDEVICE9 dev)
 	: CUI(dev)
@@ -39,19 +42,15 @@ HRESULT CTextUI::Initialize(void* pArg) { return __super::Initialize(pArg); }
 
 _int CTextUI::Update_GameObject(const _float& fTimeDelta)
 {
-	if (m_autoSize && m_dirtyMeasure && !m_text.empty())
-	{
-		_vec2 size{};
-		if (Engine::CFontMgr::GetInstance()->Measure_Scaled(
-			m_fontTag.c_str(), m_text.c_str(), &size, m_scale))
-		{
-			m_fSizeX = size.x + (float)(max(0, (int)m_text.size() - 1)) * m_letterSpacing;
-			m_fSizeY = size.y;
+	if (m_appearPlaying) {
+		m_appearT += fTimeDelta;
+		if (m_appearT >= m_appearDur) {
+			m_appearT = m_appearDur;
+			m_appearPlaying = false;
 		}
-		m_dirtyMeasure = false;
 	}
-	__super::Update_GameObject(fTimeDelta);
-	return NO_EVENT;
+
+	return __super::Update_GameObject(fTimeDelta), NO_EVENT;
 }
 
 void CTextUI::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -63,38 +62,55 @@ void CTextUI::Render_GameObject()
 {
 	if (m_text.empty()) return;
 
+	const float currScale = CurrentRenderScale();
 	_vec2 pos{ SXi(m_fX), SYi(m_fY) };
 
-	if (m_centered)
-	{
-		Engine::CFontMgr::GetInstance()->Render_Font_ScaledCenteredRot(
-			m_fontTag.c_str(), m_text.c_str(), &pos,
-			m_color, m_scale, m_angle);
-	}
-	else
-	{
-		float x = pos.x;
+	// 총 폭 계산 (문자 폭 + letterSpacing, 마지막 문자 뒤 spacing 제외)
+	auto measureTotalWidth = [&](float scale) -> float {
+		float total = 0.f;
 		for (wchar_t ch : m_text)
 		{
-			if (ch == L' ')
-			{
-				float spaceWidth = 8.f * m_scale;
-				x += spaceWidth + m_letterSpacing;
+			if (ch == L' ') {
+				total += 8.f * scale + m_letterSpacing;
 				continue;
 			}
-
 			wchar_t buf[2] = { ch, 0 };
-			_vec2 charPos{ x, pos.y };
-
-			Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
-				m_fontTag.c_str(), buf, &charPos, m_color, m_scale);
-
-			_vec2 size{};
+			_vec2 sz{};
 			Engine::CFontMgr::GetInstance()->Measure_Scaled(
-				m_fontTag.c_str(), buf, &size, m_scale);
-
-			x += size.x + m_letterSpacing;
+				m_fontTag.c_str(), buf, &sz, scale);
+			total += sz.x + m_letterSpacing;
 		}
+		if (!m_text.empty()) total -= m_letterSpacing; // 마지막 간격 제거
+		return total;
+		};
+
+	float x = pos.x;
+	if (m_centered) {
+		float total = measureTotalWidth(currScale);
+		x -= total * 0.5f; // 가운데 정렬: 시작 x를 왼쪽으로 절반 이동
+	}
+
+	// 문자 단위 렌더 (간격 적용)
+	for (wchar_t ch : m_text)
+	{
+		if (ch == L' ')
+		{
+			x += 8.f * currScale + m_letterSpacing;
+			continue;
+		}
+
+		wchar_t buf[2] = { ch, 0 };
+		_vec2 charPos{ x, pos.y };
+
+		// per-char 회전 API 없으므로 스케일만 적용
+		Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
+			m_fontTag.c_str(), buf, &charPos, m_color, currScale);
+
+		_vec2 sz{};
+		Engine::CFontMgr::GetInstance()->Measure_Scaled(
+			m_fontTag.c_str(), buf, &sz, currScale);
+
+		x += sz.x + m_letterSpacing;
 	}
 }
 
@@ -120,6 +136,30 @@ void CTextUI::FitToText()
 		m_fSizeY = size.y;
 	}
 	m_dirtyMeasure = false;
+}
+
+void CTextUI::PlayAppear(float duration, float startMul, float overMul)
+{
+	m_appearDur = max(0.05f, duration);
+	m_appearStart = startMul;
+	m_appearOver = overMul;
+	m_appearT = 0.f;
+	m_appearPlaying = true;
+}
+
+float CTextUI::CurrentRenderScale() const
+{
+	if (!m_appearPlaying) return m_scale;
+
+	float t = m_appearT / max(0.0001f, m_appearDur);
+	if (t < 0.5f) {
+		float k = EaseOutCubic(t / 0.5f);
+		return Lerp(m_scale * m_appearStart, m_scale * m_appearOver, k);
+	}
+	else {
+		float k = EaseOutCubic((t - 0.5f) / 0.5f);
+		return Lerp(m_scale * m_appearOver, m_scale, k);
+	}
 }
 
 

@@ -198,6 +198,9 @@
     </Filter>
     <Filter Include="02. GameObject\07. MapObject\03. Dummy\EndPoint">
       <UniqueIdentifier>{30992e90-c74a-420f-ab9a-2ce95693f2a9}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\06. PhoneUI">
+      <UniqueIdentifier>{8ac5a1ea-5a0f-4602-a24f-6c7100a49cea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEndPoint.h">
       <Filter>02. GameObject\07. MapObject\03. Dummy\EndPoint</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Header\CPhoneUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -541,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEndPoint.cpp">
       <Filter>02. GameObject\07. MapObject\03. Dummy\EndPoint</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Code\CPhoneUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

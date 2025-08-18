@@ -2,6 +2,7 @@
 #include "CUI.h"
 
 class CImageUI;
+class CLisaUI;
 class CTalkUI :
     public CUI
 {
@@ -25,6 +26,7 @@ public: // 대화 관리
 	// 텍스트 위치/크기 조정
 	void Set_TextPos(float offsetX, float offsetY) { m_vTextOffset = { offsetX, offsetY }; }
 	void Set_TextScale(float scale) { m_fTextScale = scale; }
+	void Set_OwnerLisa(CLisaUI* pLisa) { m_pLisa = pLisa; }
 
 protected: 
 	vector<wstring> m_vecDialogues;  // 대사 목록
@@ -33,6 +35,7 @@ protected:
 	wstring         m_DisplayText;   // 현재까지 출력된 글자
 
 	CImageUI* m_pFrame;        // 대화창 프레임 UI
+	CLisaUI* m_pLisa;
 
 	float           m_fCharInterval; // 타이핑 효과: 글자 간격 시간
 	float           m_fAccTime;      // 누적 시간

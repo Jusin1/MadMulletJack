@@ -3,6 +3,8 @@
 #include "CImageUI.h"
 #include "CObjectManager.h"
 #include "CFontMgr.h"
+#include "CUIManager.h"
+#include "CLisaUI.h"
 
 CTalkUI::CTalkUI(LPDIRECT3DDEVICE9 dev)
 	: CUI(dev)
@@ -61,12 +63,14 @@ HRESULT CTalkUI::Initialize(void* pArg)
 	if (!m_pFrame)
 		return E_FAIL;
 
-	m_pFrame->Set_UIPosition(60.f, -300.f, 600.f, 100.f);
+	m_pFrame->Set_UIPosition(60.f, -300.f, 640.f, 100.f);
 	if (FAILED(m_pFrame->RegisterTexture(
 		L"TalkFrame", L"Prototype_Component_Texture_Talk")))
 		return E_FAIL;
 	if (FAILED(m_pFrame->ChangeTexture(L"TalkFrame")))
 		return E_FAIL;
+
+	Add_Child(m_pFrame);
 
 	return S_OK;
 }
@@ -104,8 +108,7 @@ void CTalkUI::LateUpdate_GameObject(const _float& dt)
 
 void CTalkUI::Render_GameObject()
 {
-	if (!Is_Active() || m_DisplayText.empty())
-		return;
+	if (!Is_Active() || Get_Dead() || m_DisplayText.empty()) return;
 
 	LPDIRECT3DSTATEBLOCK9 sb = nullptr;
 	if (SUCCEEDED(m_pGraphicDev->CreateStateBlock(D3DSBT_ALL, &sb)))
@@ -146,19 +149,35 @@ void CTalkUI::NextDialogue()
 	m_CurrentText.clear();
 	m_DisplayText.clear();
 
-	if (m_iCurrentIndex + 1 < (int)m_vecDialogues.size())
+	const int size = (int)m_vecDialogues.size();
+	if (size <= 0) {
+		Set_Active(false);
+		CUIManager::GetInstance()->DestroyEnterUI();
+		return;
+	}
+
+	const int last = size - 1;
+
+	if (m_iCurrentIndex < last)
 	{
-		m_iCurrentIndex++;
+		++m_iCurrentIndex;
 		m_CurrentText = m_vecDialogues[m_iCurrentIndex];
+
+		if (m_iCurrentIndex == last) {
+			m_pLisa->SetState(CLisaUI::AnimState::Bye);
+		}
+		else if (m_iCurrentIndex == 2) {
+			CUIManager::GetInstance()->CreatePhoneUI();
+		}
 
 		m_fAccTime = 0.f;
 		m_bTypingDone = false;
+		return;
 	}
-	else
-	{
-		if (m_pFrame) m_pFrame->Set_Active(false);
-		Set_Active(false);
-	}
+
+	if (m_pFrame) m_pFrame->Set_Active(false);
+	Set_Active(false);
+	CUIManager::GetInstance()->DestroyEnterUI();
 }
 
 void CTalkUI::Set_FramePos(float x, float y, float sizeX, float sizeY)
@@ -197,5 +216,5 @@ CGameObject* CTalkUI::Clone(void* pArg)
 
 void CTalkUI::Free()
 {
-	__super::Free();
+	CUIBase::Free();
 }
