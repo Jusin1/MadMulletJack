@@ -1,11 +1,6 @@
 #pragma once
 #include "CUI.h"
 
-namespace Engine
-{
-	class VIBuffer_Color;
-}
-
 class CHpBarUI : public CUI
 {
 protected:
@@ -25,15 +20,16 @@ public:
 	void HitCount_Down() { m_iHitCount--; m_bHitChange = true;}
 	void HitCount_Reset() { m_iHitCount = 0; m_bHitChange = true;}
 
-protected:
-	virtual HRESULT			Set_Component();
-	virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
-	HRESULT Change_Texture(const _tchar* pTextureTag);
-	HRESULT Texture_Clone();
-	
-public:
 	void	Set_Hp(_float _fMaxHp, _float _fCurHp); // player에서 hp 전해줌
 
+protected:
+	virtual HRESULT			Set_Component();
+
+	_bool Is_Scene_Change(); // 플레이어의 상태가 바뀌었는지 + 변화값 받음
+
+private:
+	HRESULT Set_HpBarUI();
+	
 	//getter setter func
 public:
 	SCENE Get_Scene() const { return m_eScene; }
@@ -47,14 +43,9 @@ public:
 protected:
 	SCENE m_eScene;
 
-    _float		m_fHpPercent; // 체력 비율
+    _float		m_fHpPercent; // 체력 비율 (0~1)
 	_int		m_iHitCount;
-	_bool m_bHitChange;
-
-	VIBuffer_Color *m_pColBufferCom;
-	
-	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
-	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
+	_bool		m_bHitChange;
 
 public:
 	static  CHpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -107,7 +107,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 {
 	switch (m_eMove) {
 	case MV_RIGHT:
-		m_pTransformCom->Move_PosRight(fTimeDelta);
+		m_pTransformCom ->Move_PosRight(fTimeDelta);
 		break;
 
 	case MV_LEFT:
@@ -166,6 +166,6 @@ CGameObject* CUI::Clone(void* pArg)
 
 void CUI::Free()
 {
-	Engine::CGameObject::Free();
+	__super::Free();
 }
 

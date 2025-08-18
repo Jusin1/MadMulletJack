@@ -36,7 +36,10 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
         m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
 
     for (auto& pChild : m_vecChildren)
-        if (pChild) pChild->Update_GameObject(fTimeDelta);
+    {
+        if (pChild && pChild->Is_Active())
+            pChild->Update_GameObject(fTimeDelta);
+    }
 
     return NO_EVENT;
 }
@@ -45,7 +48,10 @@ void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
 {
     if (!m_bActive || m_bDead) return;
     for (auto& pChild : m_vecChildren)
-        if (pChild) pChild->LateUpdate_GameObject(fTimeDelta);
+    {
+        if (pChild && pChild->Is_Active())
+            pChild->LateUpdate_GameObject(fTimeDelta);
+    }
 }
 
 void CUIBase::Render_GameObject() // 자식 Render

@@ -26,6 +26,9 @@
 
 // Hpbar UI
 #include "CHpbarUI.h"
+#include "CMan_HpBarUI.h"
+#include "CPhone_HpBarUI.h"
+#include "CColRect_HpBarUI.h"
 
 // Effect UI
 #include "CEffectUI.h"
@@ -43,10 +46,6 @@
 #include "CPhoneUI.h"
 #pragma endregion 게임 진입 UI들
 
-
-#include "CPlayer_Foot.h"
-#include "CPlayer_Arm.h"
-#include "CPistol_Gun.h"
  
 // 몬스터
 #include "CMonster_Suit.h"
@@ -576,6 +575,18 @@ HRESULT CLoader::Loading_ForStage()
 	// Hpbar UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI",
 		CHpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - Man
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Man",
+		CMan_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - Phone
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
+		CPhone_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HpBar - ColorRect
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_ColRect",
+		CColRect_HpBarUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 #pragma endregion HpBar UI

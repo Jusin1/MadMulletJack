@@ -1,11 +1,11 @@
 #pragma once
 #include "CUI.h"
-class CMan_HpBarUI : public CUI
+class CPhone_HpBarUI : public CUI
 {
 private:
-	explicit CMan_HpBarUI(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMan_HpBarUI(const CMan_HpBarUI& rhs);
-	virtual ~CMan_HpBarUI();
+	explicit CPhone_HpBarUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPhone_HpBarUI(const CPhone_HpBarUI& rhs);
+	virtual ~CPhone_HpBarUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -16,16 +16,15 @@ public:
 
 public:
 	virtual HRESULT			Set_Component();
-	HRESULT			Set_Texture(_int _iHitCount);
-	HRESULT			Set_Texture(SCENE _eSCENE);
-	HRESULT			Change_Texture(const _tchar* pTextureTag);
+	 HRESULT			Set_Texture(SCENE _eSCENE) ;
+	 HRESULT			Change_Texture(const _tchar* pTextureTag);
 	HRESULT					Texture_Clone();
 
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;
 
 public:
-	static  CMan_HpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static  CPhone_HpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

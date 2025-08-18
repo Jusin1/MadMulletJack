@@ -1,20 +1,19 @@
 #include "pch.h"
 #include "CHpBarUI.h"
-#include "VIBuffer_Color.h"
-#include "CDInputMgr.h"
+#include "CObjectManager.h"
+#include "CMan_HpBarUI.h"
+#include "CPhone_HpBarUI.h"
 #include "CManagement.h"
+#include "CColRect_HpBarUI.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CUI(pGraphicDev), m_fHpPercent(1.f), m_eScene(SCENE_END)
-	, m_pColBufferCom(nullptr), m_bHitChange(false)
+	:CUI(pGraphicDev), m_iHitCount(0.f), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false)
 {
 }
 
 CHpBarUI::CHpBarUI(const CHpBarUI& rhs)
-	:CUI(rhs), m_fHpPercent(rhs.m_fHpPercent), m_eScene(rhs.m_eScene)
-	, m_pColBufferCom(rhs.m_pColBufferCom) , m_bHitChange(rhs.m_bHitChange)
+	:CUI(rhs), m_iHitCount(rhs.m_iHitCount), m_fHpPercent(rhs.m_fHpPercent), m_eScene(rhs.m_eScene), m_bHitChange(rhs.m_bHitChange)
 {
-
 }
 
 CHpBarUI::~CHpBarUI()
@@ -30,145 +29,61 @@ HRESULT	CHpBarUI::Ready_GameObject()
 	return S_OK;
 }
 
-HRESULT		CHpBarUI::Initialize(void* pArg)
+HRESULT	CHpBarUI::Initialize(void* pArg)
 {
-	//D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
-
 	// 상위 객체들 initial(set compnent 까지 해줌)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	//timer 할래말래
-
-	if (FAILED(Texture_Clone()))
+	if (FAILED(Set_HpBarUI()))
 		return E_FAIL;
 
-	m_bActive = false;
-	m_bRenderOn = false;
+	HitCount_Reset(); // hitcount <- 0 (scene 전환시 0으로 맞추기 위함)
+
+	m_fRange = 10.f;
+	
+	Set_New_TransInfo(5.f, 0.f);
+
+	//timer 할래말래
 
 	return S_OK;
 }
 
-_int		CHpBarUI::Update_GameObject(const _float& fTimeDelta)
+_int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
-	// 체력 비율에 따라 조절
 	__super::Update_GameObject(fTimeDelta);
-	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY * fTimeDelta, 1.f);
+
+	for (auto& pChild : m_vecChildren)
+	{
+		pChild->GetTransform()->Move_YUpDown(fTimeDelta, m_fRange);
+	}
 
 	return NO_EVENT;
 }
 
-void		CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 
-	if (m_eScene != (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx()) // scene 이 바뀌면 
+	CPhone_HpBarUI* pPhone = dynamic_cast<CPhone_HpBarUI*>(this->Find_Child_ByTag(TEXT("PhoneUI")));
+	CMan_HpBarUI* pMan = dynamic_cast<CMan_HpBarUI*>(this->Find_Child_ByTag(TEXT("ManUI")));
+
+	if (Is_Scene_Change()) // scene 이 바뀌면 
 	{
-		m_eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx(); 
-		Set_Texture(); // texture를 바꿔라
+		pPhone->Set_Texture(m_eScene); // texture를 바꿔라
+		pMan->Set_Texture(m_eScene); 
+	}
+
+	if (m_bHitChange) // hitcount가 바뀌면
+	{
+		pMan->Set_Texture(m_iHitCount); // texture를 바꿔라
+		m_bHitChange = false;
 	}
 }
-// 컬러로 렌더
-void		CHpBarUI::Render_GameObject()
+
+void	CHpBarUI::Render_GameObject()
 {
-	//m_pColBufferCom->Render_Buffer(); //hp 색깔 buffet render
-
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
-	m_pTextureCom->MoveFrame();
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x01);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
 	__super::Render_GameObject();
-
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-}
-
-HRESULT CHpBarUI::Set_Texture()
-{
-	// 만약 이 전에 돌려놨다면
-	if (m_fRotSum != 0)
-	{
-		// 다시 원상복귀
-		Set_Origin_Rot();
-	}
-
-	m_bRenderOn = true;
-
-	switch (m_eScene) {
-	case SCENE_STAGE_1:
-	{
-		if(FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneN"))))
-			return E_FAIL;
-
-		Set_UISizeAndPos(420.f, 900.f,WINCX * 0.5f - 450.f, WINCY * 0.5f + 400.f); // 왼쪽은 고정
-	}
-		break;
-
-	case SCENE_BOSS:
-	{
-		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneB"))))
-			return E_FAIL;
-	}
-	break;
-
-	default:
-		m_bRenderOn = false;
-	}
-}
-
-HRESULT CHpBarUI::Change_Texture(const _tchar* pTextureTag)
-{
-	if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	m_pTextureCom->Set_Zero_Frame();
-	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
-	return S_OK;
-}
-
-HRESULT CHpBarUI::Texture_Clone()
-{
-	CTexture::TEXINFO texInfo = {};
-
-	// PhoneN
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 5.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneN", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneN", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneN"), m_pTextureCom });
-
-	// PhoneB
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 5.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneB", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneB", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneB"), m_pTextureCom });
-
-	// PhoneF
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 5.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_PhoneF", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarPhoneF", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_PhoneF"), m_pTextureCom });
-
-
-	return S_OK;
 }
 
 CHpBarUI* CHpBarUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -203,10 +118,45 @@ HRESULT CHpBarUI::Set_Component()
 {
 	if (FAILED(__super::Set_Component()))
 		return E_FAIL;
-	//if (FAILED(Add_Components(L"Com_Color", SCENE_STAGE, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
-	//	return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CHpBarUI::Set_HpBarUI()
+{
+	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", SCENE_STAGE_1, L"UI_Layer"));
+	if (pPhoneUI)
+	{
+		pPhoneUI->Set_ObjTag(L"PhoneUI");
+		Add_Child(pPhoneUI); // 루트 UI에 등록
+	}
+
+	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", SCENE_STAGE_1, L"UI_Layer"));
+	if (pManUI)
+	{
+		pManUI->Set_ObjTag(L"ManUI");
+		Add_Child(pManUI); // 루트 UI에 등록
+	}
+
+	//CColRect_HpBarUI* pColRectUI = dynamic_cast<CColRect_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_ColRect", SCENE_STAGE_1, L"UI_Layer"));
+	//if (pColRectUI)
+	//{
+	//	pColRectUI->Set_ObjTag(L"ColRectUI");
+	//	Add_Child(pColRectUI); // 루트 UI에 등록
+	//}
+
+	return S_OK;
+}
+
+_bool CHpBarUI::Is_Scene_Change()
+{
+	if (m_eScene != (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx())
+	{
+		m_eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
+		return true;
+	}
+	
+	return false;
 }
 
 // 체력 상호작용 받아오기
@@ -217,6 +167,11 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 	m_fHpPercent = _fCurHp / _fMaxHp;
 
 	// percent 에 따라 색깔 (R:1-percent, G : percent , B =0)
+	CColRect_HpBarUI* pColRectUI = dynamic_cast<CColRect_HpBarUI*>(this->Find_Child_ByTag(TEXT("ColRectUI")));
+	if (pColRectUI)
+	{
+		pColRectUI->Set_HpBarColor(m_fHpPercent);
+	}
 
 	// curhp에 따라 출력 글씨 셋팅
 }

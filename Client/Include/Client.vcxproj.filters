@@ -202,6 +202,12 @@
     <Filter Include="02. GameObject\06. UI\GameEnterUI\06. PhoneUI">
       <UniqueIdentifier>{8ac5a1ea-5a0f-4602-a24f-6c7100a49cea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\HpBar_UI\01. Phone">
+      <UniqueIdentifier>{3a965d0a-87a8-4234-bba4-9f912519161c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\HpBar_UI\02. ColorRect">
+      <UniqueIdentifier>{cff72b26-8b9f-45f0-bbfc-d473be7f129a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -381,6 +387,12 @@
     <ClInclude Include="..\Header\CPhoneUI.h">
       <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPhone_HpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI\01. Phone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CColRect_HpBarUI.h">
+      <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -550,6 +562,12 @@
 	</ClCompile>
     <ClCompile Include="..\Code\CPhoneUI.cpp">
       <Filter>02. GameObject\06. UI\GameEnterUI\06. PhoneUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPhone_HpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI\01. Phone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CColRect_HpBarUI.cpp">
+      <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@ public:
     CUIBase* Find_Child_ByTag(const _tchar* pTag); // 자식 찾을 때 태그로 찾음
     const list<CUIBase*>& GetChildren() const { return m_vecChildren; }
     void		Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY); // pos를 기준으로 offset을 줘서 pos를 셋팅
+    void Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed); // 현재 위치 + new speed, new rotSpeed 지정
 
 public:
     void Set_ObjTag(const _tchar* pTag) { m_pObjTag = pTag; } // 태그 세팅
@@ -33,7 +34,7 @@ public:
 protected:
     virtual HRESULT			Set_Component();
     void Set_Origin_Rot(); // 전에 local 행렬을 돌렸다면 다시 돌려두기
-    void Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed); // 현재 위치 + new speed, new rotSpeed 지정
+    
 
 protected:
     list<CUIBase*> m_vecChildren; // 자식들
