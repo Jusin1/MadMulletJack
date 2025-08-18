@@ -29,43 +29,33 @@ HRESULT CUIBase::Initialize(void* pArg)
 
 _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
 {
-    if (!m_bActive)
-        NO_EVENT;
+    if (!m_bActive || m_bDead)
+        return NO_EVENT;                  
 
-    if (nullptr != m_pRendererCom)
-    {
+    if (m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
-    }
 
     for (auto& pChild : m_vecChildren)
-    {
-        if (pChild)
-            pChild->Update_GameObject(fTimeDelta);
-    }
+        if (pChild) pChild->Update_GameObject(fTimeDelta);
 
     return NO_EVENT;
 }
 
 void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
 {
-    if (!m_bActive)
-        return;
-
+    if (!m_bActive || m_bDead) return;
     for (auto& pChild : m_vecChildren)
-    {
-        if (pChild)
-            pChild->LateUpdate_GameObject(fTimeDelta);
-    }
+        if (pChild) pChild->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CUIBase::Render_GameObject() // 자식 Render
 {
-    if (!m_bActive)
-        return;
+    if (!m_bActive || m_bDead) return;
 
-    for (auto& pChild : m_vecChildren)
-    {
-        if (pChild && pChild->Get_RenderOn())
+    for (auto& pChild : m_vecChildren) {
+        if (!pChild) continue;
+        if (!pChild->Is_Active() || pChild->Get_Dead()) continue; 
+        if (pChild->Get_RenderOn())
             pChild->Render_GameObject();
     }
 }
@@ -103,11 +93,10 @@ void CUIBase::Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed)
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가
 {
-    if (pChild)
-    {
-        m_vecChildren.push_back(pChild);
-        pChild->Add_Ref();
-    }
+    if (!pChild) return;
+    m_vecChildren.push_back(pChild);
+    pChild->m_pParent = this;   
+    pChild->Add_Ref();         
 }
 
 CUIBase* CUIBase::Find_Child_ByTag(const _tchar* pTag) // 자식 찾기(태그로)
@@ -125,6 +114,17 @@ void CUIBase::Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY)
     _vPos.x += _offsetX;
     _vPos.y += _offesetY;
     m_pTransformCom->Set_Info(INFO_POS, _vPos);
+}
+
+void CUIBase::Remove_Child(CUIBase* pChild)
+{
+    if (!pChild) return;
+    auto it = std::find(m_vecChildren.begin(), m_vecChildren.end(), pChild);
+    if (it != m_vecChildren.end()) {
+        (*it)->m_pParent = nullptr;
+        Safe_Release(*it);              
+        m_vecChildren.erase(it);
+    }
 }
 
 CUIBase* CUIBase::Create(LPDIRECT3DDEVICE9 pGraphicDev)

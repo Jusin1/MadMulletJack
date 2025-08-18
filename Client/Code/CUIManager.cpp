@@ -11,7 +11,18 @@
 #include "CTextUI.h"
 #include "CTalkUI.h"
 
+// 유틸 - UI 죽이기
+static void DetachAndKill(CUIBase* parent, CUIBase*& node)
+{
+    if (!node) return;
+    if (parent) parent->Remove_Child(node); 
+    node->Set_Active(false);
+    node->Set_Dead(true);
+    node = nullptr;
+}
+
 IMPLEMENT_SINGLETON(CUIManager)
+
 
 CUIManager::CUIManager() {}
 CUIManager::~CUIManager() {}
@@ -84,10 +95,47 @@ void CUIManager::Update(const _float& dt)
             [](const SlideTask& t) { return t.done || t.ui == nullptr; }),
         m_slideTasks.end());
 
+
+    // 둘 다 도착하면 시간 UI 스폰
+    if (!m_spawnedTimeUI && m_pVictoryText && m_pFloorTimeText)
+    {
+        if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished())
+        {
+            CreateTimeTextUI(L"01:12:45"); // 예시
+            m_spawnedTimeUI = true;
+        }
+    }
+
+    if (m_timeAutoRemoveArmed)
+    {
+        m_timeAutoRemoveTimer += dt;
+        if (m_timeAutoRemoveTimer >= 2.0f) 
+        {
+            DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeText));
+            DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeFrame));
+            DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeBlack));
+            DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pVictoryText));
+            DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pFloorTimeText));
+            if (auto* talk = dynamic_cast<CTalkUI*>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_TalkUI", SCENE_STAGE_1, L"UI_Layer"))) {
+                std::vector<std::wstring> dialogues = {
+                    L"안녕하세요", L"잘가세요", L"잘있어요", L"다시만나요"
+                };
+                talk->LoadDialogues(dialogues);
+                talk->Set_TextPos(420.f, -500.f);
+                talk->Set_TextScale(0.5f);
+                talk->Set_Active(true);
+                talk->Set_OwnerLisa(m_pLisaUI);
+            }
+            m_timeAutoRemoveArmed = false;
+            m_timeAutoRemoveTimer = 0.f;
+        }
+    }
+
     if (m_exitingEnter && m_slideTasks.empty()) {
         if (m_pEnterUI) {
             CancelSlidesForSubtree(m_pEnterUI); 
-
             std::vector<CUIBase*> stk{ m_pEnterUI };
             while (!stk.empty()) {
                 CUIBase* n = stk.back(); stk.pop_back();
@@ -156,7 +204,10 @@ void CUIManager::CreateClearUI()
     if (auto* pLisa = dynamic_cast<CLisaUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_LisaUI", SCENE_STAGE_1, L"UI_Layer")))
+    {
+        m_pLisaUI = pLisa;
         attachAndSlide(pLisa, faceX, faceY, faceW, faceH);
+    }
 
     if (auto* pFaceFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
@@ -308,23 +359,11 @@ void CUIManager::CreateClearUI()
         attachAndSlide(txt1, 485.f, 350.f, 17.f, 17.f);
     }
 
-    if (auto* talk = dynamic_cast<CTalkUI*>(
-        CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TalkUI", SCENE_STAGE_1, L"UI_Layer"))) {
-        std::vector<std::wstring> dialogues = {
-            L"대화테스트 1.", L"대화테스트 2", L"대화테스트 3", L"종료"
-        };
-        talk->LoadDialogues(dialogues);
-        talk->Set_TextPos(400.f, -500.f);
-        talk->Set_TextScale(0.5f);
-        talk->Set_Active(true);
-        attachAndSlide(talk, 430.f, -250.f, 600.f, 100.f);
-    }
+    CreateClearTextUI();
 
-
-
-    
 }  // 게임 클리어 UI 생성
+
+
 
 void CUIManager::DestroyEnterUI()
 {
@@ -332,8 +371,8 @@ void CUIManager::DestroyEnterUI()
 
     CancelSlidesForSubtree(m_pEnterUI);
 
-    std::vector<CUI*> uis;
-    std::function<void(CUIBase*)> dfs = [&](CUIBase* n) {
+    vector<CUI*> uis;
+    function<void(CUIBase*)> dfs = [&](CUIBase* n) {
         if (!n) return;
         if (auto asUI = dynamic_cast<CUI*>(n)) uis.push_back(asUI);
         for (auto* ch : n->GetChildren()) dfs(ch);
@@ -355,7 +394,6 @@ void CUIManager::DestroyEnterUI()
             bg->FadeTo(0, 0.0f, DUR * 0.9f);
         }
     }
-
     m_exitingEnter = true;
 }
 
@@ -375,6 +413,97 @@ void CUIManager::CancelSlidesForSubtree(CUIBase* root)
         std::remove_if(m_slideTasks.begin(), m_slideTasks.end(),
             [&](const SlideTask& t) { return t.ui && nodes.count(t.ui) > 0; }),
         m_slideTasks.end());
+}
+
+
+void CUIManager::CreateClearTextUI()
+{
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", SCENE_STAGE_1, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(-130.f, -50.f, 1080.f, 100.f);
+        pBlack->SetAlpha(0);
+        pBlack->FadeTo(190, 0.0f, 0.25f);
+        m_pEnterUI->Add_Child(pBlack);
+        m_pTimeBlack = pBlack; 
+    }
+
+    if (auto* pTimeFrame = dynamic_cast<CPanelUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_PanelUI", SCENE_STAGE_1, L"UI_Layer"))) {
+
+        const float X = -130.f, Y = -50.f, W = 1080.F, H = 100.f;
+
+        pTimeFrame->UseGreenFramePreset(X, Y, W, H, 3.f, true);
+        m_pEnterUI->Add_Child(pTimeFrame);
+        m_pTimeFrame = pTimeFrame;
+    }
+
+    if (auto* txt1 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STAGE_1, L"UI_Layer"))) {
+
+        txt1->SetFontTag(L"UIFont");
+        txt1->SetText(L"VICTORY");
+        txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
+        txt1->SetScale(3.f);
+        txt1->SetCentered(true);
+        txt1->SetLetterSpacing(10.f);
+
+        txt1->PlayAppear(1.f, 1.f, 10.f);
+        txt1->Set_UIPosition(-60.F, 300.f, 0.f, 0.f);
+
+        m_pVictoryText = txt1;
+        m_pEnterUI->Add_Child(txt1);
+    }
+
+    if (auto* txt2 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STAGE_1, L"UI_Layer"))) {
+
+        txt2->SetFontTag(L"UIFont");
+        txt2->SetText(L"FLOOR TIME");
+        txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
+        txt2->SetScale(1.5f);
+        txt2->SetCentered(true);
+        txt2->SetLetterSpacing(10.f);
+
+        txt2->PlayAppear(1.f, 1.f, 10.f);
+        txt2->Set_UIPosition(-60.F, 170.f, 0.f, 0.f);
+
+        m_pFloorTimeText = txt2;
+        m_pEnterUI->Add_Child(txt2);
+    }
+    m_spawnedTimeUI = false;
+    m_timeAutoRemoveArmed = false;
+    m_timeAutoRemoveTimer = 0.f;
+    m_pTimeText = nullptr;
+}
+
+void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
+{
+    if (!m_pEnterUI) return;
+
+    if (auto* timeTxt = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STAGE_1, L"UI_Layer")))
+    {
+        timeTxt->SetFontTag(L"UIFont");
+        timeTxt->SetText(timeStr);
+        timeTxt->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        timeTxt->SetScale(2.0f);
+        timeTxt->SetCentered(true);
+        timeTxt->SetLetterSpacing(6.f);
+        timeTxt->PlayAppear(0.5f, 1.2f, 1.05f);
+        timeTxt->Set_UIPosition(-100.f, 90.f, 0.f, 0.f);
+        m_pEnterUI->Add_Child(timeTxt);
+
+        m_pTimeText = timeTxt;
+        m_timeAutoRemoveArmed = true;
+        m_timeAutoRemoveTimer = 0.f;
+    }
 }
 
 void CUIManager::Free()
