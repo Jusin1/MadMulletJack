@@ -155,39 +155,39 @@ void CGuiManager::AddLog(const char *fmt, ...)
 
 void CGuiManager::Render()
 {
-    // ,
+    // ;
     // z 축 -15도
-    if (KEY_BUTTON_DOWN(DIK_COMMA) && GetTarget())
+    if (KEY_BUTTON_DOWN(DIK_SEMICOLON) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, -15.f);
     }
-    // .
+    // '
     // z 축 15도
-    else if (KEY_BUTTON_DOWN(DIK_PERIOD) && GetTarget())
+    else if (KEY_BUTTON_DOWN(DIK_APOSTROPHE) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, 15.f);
     }
-    // ;
+    // [
     // y 축 -15도
-    else if (KEY_BUTTON_DOWN(DIK_SEMICOLON) && GetTarget())
+    else if (KEY_BUTTON_DOWN(DIK_LBRACKET) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, -15.f);
     }
-    // '
+    // ]
     // y 축 15도
-    else if (KEY_BUTTON_DOWN(DIK_APOSTROPHE) && GetTarget())
+    else if (KEY_BUTTON_DOWN(DIK_RBRACKET) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, 15.f);
     }
-    // [
+    // -
     // x 축 -15도
-    else if (KEY_BUTTON_DOWN(DIK_LBRACKET) && GetTarget())
+    else if (KEY_BUTTON_DOWN(DIK_MINUS) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, -15.f);
     }
-    // ]
+    // =
     // x 축 15도
-    else if (KEY_BUTTON_DOWN(DIK_RBRACKET) && GetTarget())
+    else if (KEY_BUTTON_DOWN(DIK_EQUALS) && GetTarget())
     {
         GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, 15.f);
     }
