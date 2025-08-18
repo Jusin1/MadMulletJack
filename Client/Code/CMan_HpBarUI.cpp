@@ -2,12 +2,12 @@
 #include "CMan_HpBarUI.h"
 
 CMan_HpBarUI::CMan_HpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CHpBarUI(pGraphicDev)
+	:CUI(pGraphicDev)
 {
 }
 
 CMan_HpBarUI::CMan_HpBarUI(const CMan_HpBarUI& rhs)
-	:CHpBarUI(rhs)
+	:CUI(rhs)
 {
 }
 
@@ -29,15 +29,11 @@ HRESULT CMan_HpBarUI::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	//timer 할래말래
-
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
-	HitCount_Reset(); // hitcount <- 0 (scene 전환시 0으로 맞추기 위함)
-
-	Set_UISizeAndPos(420.f, 900.f,WINCX * 0.5f - 450.f, WINCY * 0.5f + 400.f);
-
+	//timer 할래말래
+	
 	return S_OK;
 }
 
@@ -51,14 +47,6 @@ _int CMan_HpBarUI::Update_GameObject(const _float& fTimeDelta)
 void CMan_HpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-
-	// 만약 hitcount가 변화했다면
-	if (m_bHitChange) {
-		// texture를 새로 셋팅하고
-		Set_Texture();
-		// 다시 false로 바꿈
-		m_bHitChange = false;
-	}
 }
 
 void CMan_HpBarUI::Render_GameObject()
@@ -84,50 +72,6 @@ void CMan_HpBarUI::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
-HRESULT CMan_HpBarUI::Set_Texture()
-{
-	// 만약 이 전에 돌려놨다면
-	if (m_fRotSum != 0)
-	{
-		// 다시 원상복귀
-		Set_Origin_Rot();
-	}
-
-	m_bRenderOn = true;
-
-	switch (m_iHitCount) {
-	case 0:
-	case 1:
-		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManN"))))
-			return E_FAIL;
-
-		break;
-
-	case 2:
-	case 3:
-		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManH"))))
-			return E_FAIL;
-
-		break;
-
-	default:
-		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManD"))))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CMan_HpBarUI::Change_Texture(const _tchar* pTextureTag)
-{
-	if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	m_pTextureCom->Set_Zero_Frame();
-	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
-	return S_OK;
-}
-
 HRESULT CMan_HpBarUI::Texture_Clone()
 {
 	CTexture::TEXINFO texInfo = {};
@@ -137,6 +81,7 @@ HRESULT CMan_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 16;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
+	texInfo = { 0,0,16,5.f,true };
 	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManN", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManN", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_ManN"), m_pTextureCom });
@@ -162,12 +107,84 @@ HRESULT CMan_HpBarUI::Texture_Clone()
 	return S_OK;
 }
 
+HRESULT CMan_HpBarUI::Set_Texture(_int _iHitCount)
+{
+	//Set_Origin_Rot();
+
+	m_bRenderOn = true;
+	
+	// ihitcount으로 texture 바꾸고
+	switch (_iHitCount)
+	{
+	case 0:
+	case 1:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManN"))))
+			return E_FAIL;
+		break;
+
+	case 2:
+	case 3:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManH"))))
+			return E_FAIL;
+		break;
+
+	default:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManD"))))
+			return E_FAIL;
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
+{
+	// 만약 회전이 됐으면 다시 되돌려라
+	Set_Origin_Rot();
+
+	m_bRenderOn = true;
+
+	// scene으로 transinfo 맞춤 
+	switch (_eSCENE)
+	{
+	case SCENE_STAGE_1:
+
+		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 430.f, WINCY * 0.5f + 160.f);
+		Set_New_TransInfo(50.f, 7.f);
+		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+		m_fRotSum += D3DXToRadian(15.f) * 1;
+
+		break;
+
+	case SCENE_BOSS:
+		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 435.f, WINCY * 0.5f + 160.f);
+		break;
+
+	case SCENE_END:
+		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 435.f, WINCY * 0.5f + 160.f);
+		break;
+
+	default:
+		m_bRenderOn = false;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMan_HpBarUI::Change_Texture(const _tchar* pTextureTag)
+{
+	if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_Zero_Frame();
+	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
+	return S_OK;
+}
+
 HRESULT CMan_HpBarUI::Set_Component()
 {
 	if (FAILED(__super::Set_Component()))
 		return E_FAIL;
-	//if (FAILED(Add_Components(L"Com_Color", SCENE_STAGE, L"Proto_Color_Buffer", (CComponent**)&m_pColBufferCom)))
-	//	return E_FAIL;
 
 	return S_OK;
 }

@@ -121,7 +121,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +158,7 @@
     <ClInclude Include="..\Header\CBlackGackGround.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
+    <ClInclude Include="..\Header\CColRect_HpBarUI.h" />
     <ClInclude Include="..\Header\CDev.h" />
     <ClInclude Include="..\Header\CChatUI.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CPhone_HpBarUI.h" />
     <ClInclude Include="..\Header\CPanelUI.h" />
     <ClInclude Include="..\Header\CPickingManager.h" />
     <ClInclude Include="..\Header\CPistol_Gun.h" />
@@ -218,6 +220,7 @@
     <ClCompile Include="..\Code\CBlackGackGround.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
+    <ClCompile Include="..\Code\CColRect_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CDev.cpp" />
     <ClCompile Include="..\Code\CChatUI.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
@@ -240,6 +243,7 @@
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CPhone_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CPanelUI.cpp" />
     <ClCompile Include="..\Code\CPickingManager.cpp" />
     <ClCompile Include="..\Code\CPistol_Gun.cpp" />

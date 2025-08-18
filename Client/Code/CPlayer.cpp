@@ -11,7 +11,9 @@
 #include "CPlayer_HandL.h"
 #include "CPlayer_Arm.h"
 #include "CPlayer_Foot.h"
+#include "CHpBarUI.h"
 #include "CMan_HpBarUI.h"
+#include "CPhone_HpBarUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
@@ -51,6 +53,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Set_PlayerUI()))
 		return E_FAIL;
 
+	if (FAILED(Set_HpBarUI()))
+		return E_FAIL;
 
 	m_vPosition = { 10.f, 1.f, 10.f };
 	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
@@ -153,8 +157,8 @@ void CPlayer::ChangeState(PLAYERSTATE _e)
 }
 
 
-//IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
-//ATTACK_INSTANT, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END
+// IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
+// ATTACK_INSTANT, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END
 void CPlayer::StateBegin(PLAYERSTATE _e)
 {
 	switch (_e) {
@@ -284,6 +288,9 @@ void CPlayer::StateNormalSet()
 	m_eMove = MOVE_NORMAL;
 
 	m_pTransformCom->GetTransformInfo().fSpeed = 5.f;
+
+	m_pHpBarUI->Set_Active(true);
+	m_pHpBarUI->Set_RenderOn(true);
 }
 
 // idle
@@ -426,13 +433,13 @@ void CPlayer::ATTACK_INSTANT_Begin()
 {
 	m_eMove = MOVE_NON;
 	m_fStateTime = 0.5f;
+
+	m_pHpBarUI->Set_RenderOn(false);
+	m_pHpBarUI->Set_Active(false);
 }
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 {
-	/*if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Set_State_Idle();*/
-
 	if (StateTime_IsEnd(fTimeDelta, 1.f))
 		Set_State_Idle();
 }
@@ -470,6 +477,9 @@ void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
 	m_fStateTime = 1.f;
+
+	m_pHpBarUI->Set_RenderOn(false);
+	m_pHpBarUI->Set_Active(false);
 }
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
@@ -498,8 +508,7 @@ void CPlayer::HIT_On(const _float& fTimeDelta)
 
 void CPlayer::HIT_End()
 {
-	CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(m_pPlayerUI->Find_Child_ByTag(TEXT("HpBarUI")));
-	pHpBar->HitCount_Up();
+
 }
 
 // doping
@@ -508,6 +517,9 @@ void CPlayer::DOPING_Begin()
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
 	Add_Hp(5.f);
+
+	m_pHpBarUI->Set_RenderOn(false);
+	m_pHpBarUI->Set_Active(false);
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -518,8 +530,7 @@ void CPlayer::DOPING_On(const _float& fTimeDelta)
 
 void CPlayer::DOPING_End()
 {
-	CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(m_pPlayerUI->Find_Child_ByTag(TEXT("HpBarUI")));
-	pHpBar->HitCount_Down();
+
 }
 
 // wall
@@ -544,6 +555,9 @@ void CPlayer::OPENING_Begin()
 {
 	m_eMove = MOVE_NON;
 	m_bIsCountHp = false;
+
+	m_pHpBarUI->Set_RenderOn(false);
+	m_pHpBarUI->Set_Active(false);
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -806,13 +820,16 @@ HRESULT CPlayer::Set_PlayerUI()
 		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
 	}
 
-	// HpBar UI 생성
-	//CMan_HpBarUI* pHpBar = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STAGE, L"UI_Layer"));
-	//if (pHpBar)
-	//{
-	//	pHpBar->Set_ObjTag(L"HpBarUI");
-	//	m_pPlayerUI->Add_Child(pHpBar); // 루트 UI에 등록
-	//}
+	return S_OK;
+}
+
+HRESULT CPlayer::Set_HpBarUI()
+{
+	m_pHpBarUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STAGE_1, L"UI_Layer"));
+
+	if (m_pHpBarUI == nullptr)
+		return E_FAIL;
 
 	return S_OK;
 }

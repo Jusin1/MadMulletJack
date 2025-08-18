@@ -39,7 +39,7 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
 
     for (auto& pChild : m_vecChildren)
     {
-        if (pChild)
+        if (pChild && pChild->Is_Active())
             pChild->Update_GameObject(fTimeDelta);
     }
 
@@ -53,7 +53,7 @@ void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
 
     for (auto& pChild : m_vecChildren)
     {
-        if (pChild)
+        if (pChild && pChild->Is_Active())
             pChild->LateUpdate_GameObject(fTimeDelta);
     }
 }

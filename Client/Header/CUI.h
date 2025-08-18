@@ -34,6 +34,9 @@ public:
 		m_fSizeX = fSizeX;
 		m_fSizeY = fSizeY;
 	}
+
+	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
+
 public:
 	void Get_UIPosition(float& x, float& y) const { x = m_fX; y = m_fY; }
 	void Get_UISize(float& w, float& h) const { w = m_fSizeX; h = m_fSizeY; }
@@ -51,7 +54,6 @@ protected:
 
 	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY); // size부터 pos까지 셋팅
 	void		Set_UISize(_float _fSizeX, _float _fSizeY); // size만 셋팅
-	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
 	
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
