@@ -1,10 +1,14 @@
 #include "CVIBuffer_Rect.h"
 #include "CRenderer.h"
 #include "CEditorPickingManager.h"
+#include "Engine_Define.h"
+#include "CDInputMgr.h"
 #include "Editor_Define.h"
+#include "CManagement.h"
+#include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CPicking.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CVIBuffer_GridPanel_Editor.h"
 #include "CObjectManager.h"
 #include "CTexture.h"
 #include "CDummyTile.h"
@@ -26,7 +30,6 @@ CDummyTile::~CDummyTile()
 void CDummyTile::Free()
 {
 	CGameObject::Free();
-	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 }
 
 CDummyTile *CDummyTile::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -80,9 +83,9 @@ _int CDummyTile::Update_GameObject(const _float &fTimeDelta)
 	if (m_bDead)
 		return DEAD;
 
-	CEditorPickingManager::GetInstance()->Remove_PickingGroup(this);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	KeyUpdate();
 	PosUpdate();
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -93,10 +96,8 @@ void CDummyTile::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
 		return;
-
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
-	CEditorPickingManager::GetInstance()->Add_PickingGroup(this);
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -120,48 +121,123 @@ void CDummyTile::PosUpdate()
 	{
 		if (CGridPanel *pGridPanel = dynamic_cast<CGridPanel *>(pGo))
 		{
-			if (CVIBuffer_GridPanel *pBuffer = static_cast<CVIBuffer_GridPanel *>(pGridPanel->GetBuffer()))
+			if (CVIBuffer_GridPanel_Editor *pBuffer = static_cast<CVIBuffer_GridPanel_Editor *>(pGridPanel->GetBuffer()))
 			{
 				CTransform *pTransform = GetTransform();
 				_vec3 pickPos = CEditorPickingManager::GetInstance()->Get_DummyPickingPos();
+
+				if (CGuiManager::GetInstance()->IsSnap())
+				{
+					switch (pBuffer->Get_Data()->eType)
+					{
+					case WallType::WALL_HOR:
+					{
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
+						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
+						pickPos.z -= 0.001f;
+					} break;
+					case WallType::WALL_VER:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
+						pickPos.x += 0.001f;
+						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().x;
+					} break;
+					case WallType::INCLINE:
+					{
+
+					} break;
+					case WallType::FLOOR:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
+						pickPos.y += 0.001f;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
+					} break;
+					case WallType::CEILING:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
+						pickPos.y -= 0.001f;
+						pickPos.z = (int)pickPos.z + 0.5f * pTransform->Get_Scale().y;
+					} break;
+					}
+				}
+				else
+				{
+					switch (pBuffer->Get_Data()->eType)
+					{
+					case WallType::WALL_HOR:
+					{
+						pickPos.z -= 0.001f;
+					} break;
+					case WallType::WALL_VER:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f,1.f,0.f }, 90.f);
+						pickPos.x += 0.001f;
+					} break;
+					case WallType::INCLINE:
+					{
+
+					} break;
+					case WallType::FLOOR:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, 90.f);
+						pickPos.y += 0.001f;
+					} break;
+					case WallType::CEILING:
+					{
+						pTransform->SetDegreeForEditor(_vec3{ 1.f,0.f,0.f }, -90.f);
+						pickPos.y -= 0.001f;
+					} break;
+					}
+				}
+				
+
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 
-				switch (pBuffer->Get_Data()->eType)
-				{
-					case PanelType::WALL_HOR:
-					{
-						
-					} break;
-					case PanelType::WALL_VER:
-					{
-
-					} break;
-					case PanelType::INCLINE:
-					{
-
-					} break;
-					case PanelType::FLOOR:
-					{
-
-					} break;
-					case PanelType::CEILING:
-					{
-
-					} break;
-				}
-
-				if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000))
+				if (IS_LBUTTON_DOWN)
 				{
 					MAPOBJECTDATA tTestData;
+					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
+					_vec3 up = pTransform->Get_Info(INFO::INFO_UP);
+					_vec3 look = pTransform->Get_Info(INFO::INFO_LOOK);
+					::memcpy(&tTestData.transform.Right, &right, sizeof(_vec3));
+					::memcpy(&tTestData.transform.Up, &up, sizeof(_vec3));
+					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
-					tTestData.texture.OriginComponentName = L"Proto_GridTrigger";
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", SCENE_EDITOR, L"Tile Layer", &tTestData)))
+					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
+					_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Tile_Layer", &tTestData)))
 					{
 						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 					}
 				}					
 			}
 		}
+	}
+}
+
+void CDummyTile::KeyUpdate()
+{
+	if (KEY_BUTTON_DOWN(DIK_UP))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		src.x += 1;
+		src.y += 1;
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
+	}
+	else if (KEY_BUTTON_DOWN(DIK_DOWN))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		src.x -= 1;
+		src.y -= 1;
+		if (src.x <= 0 && src.y <= 0)
+		{
+			src.x = 1;
+			src.y = 1;
+		}
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
 	}
 }
 

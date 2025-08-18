@@ -52,8 +52,8 @@ public:
 	Engine::CGameObject *GetTarget() const { return m_pTarget; }
 	void SetTarget(Engine::CGameObject *_p) { m_pTarget = _p; }	
 
-	MapEditorObjectCategory GetCategory() { return m_eCategory; }
-	void SetCategory(MapEditorObjectCategory _e) { m_eCategory = _e; }
+	ObjectCategory GetCategory() { return m_eCategory; }
+	void SetCategory(ObjectCategory _e) { m_eCategory = _e; }
 
 	_uint GetObjectType() { return m_iObjectType; }
 	void SetObjectType(_uint _i) { m_iObjectType = _i; }
@@ -63,13 +63,19 @@ public:
 	CGui_Panel *GetInspector() { return m_pPanels[INSPECTOR]; }
 
 	_bool IsCreateMode() { return m_bCreateMode; }
-	void SetCreateMode(_bool _b, MapEditorObjectCategory _e);
+	void SetCreateMode(_bool _b, ObjectCategory _e);
+
+	_bool IsSnap() { return m_bSnap; }
+	void SetSnap(_bool _b) { m_bSnap = _b; }
+
+	const _tchar *GetSelectedThumnailTexture();
 private:
 	_bool m_bCreateMode;
+	_bool m_bSnap;
 	LPDIRECT3DDEVICE9 m_pGraphicDevice;
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;
 	std::array<PANELINFO, (_ulong)(PANEL::NONE)> m_pPanelInfos;
-	MapEditorObjectCategory m_eCategory;
+	ObjectCategory m_eCategory;
 	_uint m_iObjectType;
 };

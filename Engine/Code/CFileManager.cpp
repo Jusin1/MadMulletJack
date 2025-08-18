@@ -1,28 +1,31 @@
 #include "Engine_Define.h"
 #include <fstream>
+#include <filesystem>
 #include <locale>
 #include <codecvt>
 #include <string>
+#include "CDataManager.h"
 #include "CObjectManager.h"
 #include "CFileManager.h"
 
-NLOHMANN_JSON_SERIALIZE_ENUM(PanelType, {
-    {PanelType::WALL_HOR, "WALL_HOR"},
-    {PanelType::WALL_VER, "WALL_VER"},
-    {PanelType::INCLINE, "INCLINE"},
-    {PanelType::FLOOR, "FLOOR"},
-    {PanelType::CEILING, "CEILING"},
-    {PanelType::NONE, "NONE"}
+const filesystem::path GameDataPath = L"../../GameData/";
+
+NLOHMANN_JSON_SERIALIZE_ENUM(WallType, {
+    {WallType::WALL_HOR, "WALL_HOR"},
+    {WallType::WALL_VER, "WALL_VER"},
+    {WallType::INCLINE, "INCLINE"},
+    {WallType::FLOOR, "FLOOR"},
+    {WallType::CEILING, "CEILING"},
+    {WallType::NONE, "NONE"}
     })
 
-NLOHMANN_JSON_SERIALIZE_ENUM(OBJID, {
-    {OBJID::OBJ_PLAYER, "PLAYER"},
-    {OBJID::OBJ_MONSTER, "MONSTER"},
-    {OBJID::OBJ_MAP, "MAP"},
-    {OBJID::OBJ_FLOOR, "FLOOR"},
-    {OBJID::OBJ_INCLINE, "INCLINE"},
-    {OBJID::OBJ_CEILING, "CEILING"},
-    {OBJID::OBJ_END, "NONE"}
+NLOHMANN_JSON_SERIALIZE_ENUM(ObjectCategory, {
+    {ObjectCategory::WALL, "WALL"},
+    {ObjectCategory::TILE, "TILE"},
+    {ObjectCategory::ENV_OBJ, "ENV_OBJ"},
+    {ObjectCategory::MONSTER, "MONSTER"},
+    {ObjectCategory::LIGHT, "LIGHT"},
+    {ObjectCategory::NONE, "NONE"}
     })
 
 IMPLEMENT_SINGLETON(CFileManager)
@@ -39,21 +42,54 @@ void CFileManager::Free()
 {
 }
 
-std::string CFileManager::WStringToUTF8(const std::wstring &wstr)
+inline std::string WStringToUTF8(const std::wstring &wstr)
 {
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	return conv.to_bytes(wstr);
+    if (wstr.empty())
+        return string{};
+    
+    // 필요 버퍼 크기, 널제외
+    int size = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+
+    if (size <= 0)
+        return string{};
+
+    std::string out(size, '\0');
+    int written = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), (int)wstr.size(), out.data(), size, nullptr, nullptr);
+
+    if (written <= 0)
+        return string{};
+
+    return out;
 }
 
-std::wstring CFileManager::UTF8ToWString(const std::string &str)
+inline std::wstring UTF8ToWString(const std::string &str)
 {
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	return conv.from_bytes(str);
+    if (str.empty())
+        return wstring{};
+
+    // 유효하지 않은 UTF-8이면 실패시키기 옵션
+    int wsize = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str.c_str(), (int)str.size(), nullptr, 0);
+    
+    if (wsize <= 0)
+        return wstring{};
+
+    std::wstring out(wsize, L'\0');
+    int ww = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str.c_str(), (int)str.size(), out.data(), wsize);
+    if (ww <= 0)
+        return wstring{};
+
+    return out;
 }
 
-void CFileManager::SaveObjectList(const wstring &filePath, _uint iSceneID, const _tchar *szLayerTag)
+HRESULT CFileManager::SaveDataFile(_uint iSceneID, const _tchar *szLayerTag)
 {
     std::vector<MAPOBJECTDATA> objectDatas = CObjectManager::GetInstance()->ExportObjectData(iSceneID, szLayerTag);
+
+    if (objectDatas.size() <= 0)
+    {
+        MSG_BOX("CFileManager::SaveObjectList, objlist is empty");
+        return E_FAIL;
+    }
 
     json jArray = json::array();
     for (const auto &data : objectDatas)
@@ -61,36 +97,85 @@ void CFileManager::SaveObjectList(const wstring &filePath, _uint iSceneID, const
         jArray.push_back(data);
     }
 
-    std::ofstream ofs(filePath, std::ios::out | std::ios::binary);
+    // " / " 연산자 오버로딩을 통해서 파일 경로 만들기
+    filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / szLayerTag / L"data.json";
+    if (!dir.parent_path().empty())
+    {
+        filesystem::create_directories(dir.parent_path());
+    }
+    else
+    {
+        MSG_BOX("CFileManager::SaveObjectList, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ofstream ofs(dir, std::ios::out | std::ios::binary);
     if (!ofs.is_open())
     {
         MSG_BOX("CFileManager::SaveObjectList, Failed Save");
-        return;
+        return E_FAIL;
     }
 
+    // setw(i) 출력될 값의 최소폭을 i 만큼 지정
+    // Json 이므로 4칸 들여쓰기로 출력
     ofs << std::setw(4) << jArray << std::endl;
     ofs.close();
+
+    return S_OK;
 }
 
-void CFileManager::LoadObjectList(const std::wstring &filePath, _uint iSceneID, const _tchar *szLayerTag)
+HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
 {
-    std::ifstream ifs(filePath, std::ios::in | std::ios::binary);
+    filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / szLayerTag / L"data.json";
+    if (dir.parent_path().empty())
+    { 
+        MSG_BOX("CFileManager::LoadObjectList, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ifstream ifs(dir, std::ios::in | std::ios::binary);
     if (!ifs.is_open())
     {
-        MessageBox(nullptr, L"파일 열기 실패!", L"Error", MB_OK);
-        return;
+        MSG_BOX("CFileManager::LoadObjectList, open failed");
+        return E_FAIL;
     }
 
     json jArray;
     ifs >> jArray;
 
-    // TODO : Parsing Data Save, Scene별, 폴더별(ObjectCategory)로 저장할것
     for (const auto &jObj : jArray)
     {
         MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
-        CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iSceneID, szLayerTag,&objData);
+        CDataManager::GetInstance()->AddData(szLayerTag, objData);
     }
+
     ifs.close();
+    return S_OK;
+}
+
+wstring CFileManager::SceneIdToWstring(_uint iSceneID)
+{
+    switch (iSceneID)
+    {
+    case SCENE_DEV:
+        return L"Dev";
+    case SCENE_TUTORIAL:
+        return L"Tutorial";
+    case SCENE_STAGE_1:
+        return L"Stage_1";
+    case SCENE_STAGE_2:
+        return L"Stage_2";
+    case SCENE_STAGE_3:
+        return L"Stage_3";
+    case SCENE_SNIPE:
+        return L"Snipe";
+    case SCENE_BOSS:
+        return L"Rooftop";
+    case SCENE_CAR:
+        return L"Road";
+    }
+
+    return wstring{};
 }
 
 BEGIN(Engine)
@@ -118,7 +203,7 @@ void to_json(json &_j, const TEXTUREDATA &_tData)
 {
     _j = json
     {
-        {"FilePath", CFileManager::WStringToUTF8(_tData.OriginComponentName)}
+        {"FilePath", WStringToUTF8(_tData.OriginComponentName)}
     };
 }
 
@@ -126,14 +211,14 @@ void from_json(const json &_j, TEXTUREDATA &_tData)
 {
     std::string srcString{ "" };
     _j.at("FilePath").get_to(srcString);
-    _tData.OriginComponentName = CFileManager::UTF8ToWString(srcString);
+    _tData.OriginComponentName = UTF8ToWString(srcString);
 }
 
 void to_json(json &_j, const PANELDATA &_tData)
 {
     _j = json
     {
-        {"PanelType", _tData.eType},
+        {"Type", _tData.eType},
         {"Count_X", _tData.dwCountX},
         {"Count_Y", _tData.dwCountY},
         {"Count_Z", _tData.dwCountZ},
@@ -143,7 +228,7 @@ void to_json(json &_j, const PANELDATA &_tData)
 
 void from_json(const json &_j, PANELDATA &_tData)
 {
-    _j.at("PanelType").get_to(_tData.eType);
+    _j.at("Type").get_to(_tData.eType);
     _j.at("Count_X").get_to(_tData.dwCountX);
     _j.at("Count_Y").get_to(_tData.dwCountY);
     _j.at("Count_Z").get_to(_tData.dwCountZ);
@@ -154,7 +239,9 @@ void to_json(json &_j, const MAPOBJECTDATA &_tData)
 {
     _j = json
     {
-        {"ObjectType", _tData.ObjType},
+        {"ObjectCategory", _tData.eCategory},
+        {"ObjectType", _tData.iType},
+        {"Color", _tData.dwColor},
         {"TransformData", _tData.transform},
         {"TextureData", _tData.texture},
         {"PanelData", _tData.panelBuffer}
@@ -163,7 +250,9 @@ void to_json(json &_j, const MAPOBJECTDATA &_tData)
 
 void from_json(const json &_j, MAPOBJECTDATA &_tData)
 {
-    _j.at("ObjectType").get_to(_tData.ObjType);
+    _j.at("ObjectCategory").get_to(_tData.eCategory);
+    _j.at("ObjectType").get_to(_tData.iType);
+    _j.at("Color").get_to(_tData.dwColor);
     _j.at("TransformData").get_to(_tData.transform);
     _j.at("TextureData").get_to(_tData.texture);
     _j.at("PanelData").get_to(_tData.panelBuffer);

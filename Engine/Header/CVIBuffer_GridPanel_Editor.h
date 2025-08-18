@@ -3,19 +3,19 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CVIBuffer_GridPanel : public CVIBuffer
+class ENGINE_DLL CVIBuffer_GridPanel_Editor : public CVIBuffer
 {
 private:
-	explicit CVIBuffer_GridPanel();
-	explicit CVIBuffer_GridPanel(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CVIBuffer_GridPanel(const CVIBuffer_GridPanel &rhs);
-	virtual ~CVIBuffer_GridPanel();
+	explicit CVIBuffer_GridPanel_Editor();
+	explicit CVIBuffer_GridPanel_Editor(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CVIBuffer_GridPanel_Editor(const CVIBuffer_GridPanel_Editor &rhs);
+	virtual ~CVIBuffer_GridPanel_Editor();
 
 	virtual void		Free();
 	virtual HRESULT Initialize(void *pArg) override;
 public:
 	virtual CComponent *Clone(void *pArg) override;
-	static CVIBuffer_GridPanel *Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg = nullptr);
+	static CVIBuffer_GridPanel_Editor *Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg = nullptr);
 	virtual _bool Picking(class CTransform *pTransform, _vec3 *pOut = nullptr) override;
 public:
 	const PANELDATA *Get_Data() { return &m_tData; }
@@ -23,8 +23,10 @@ public:
 
 	void Increase_RowBuffer();
 	void Increase_ColBuffer();
+	void Increase_Interval();
 	void Decrease_RowBuffer();
 	void Decrease_ColBuffer();
+	void Decrease_Interval();
 private:
 	HRESULT	Ready_Buffer(void *pArg);
 	HRESULT Ready_HorizonWallBuffer();

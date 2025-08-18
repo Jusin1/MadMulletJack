@@ -3,8 +3,11 @@
 #include "CGui_Thumbnail.h"
 #include "Engine_Define.h"
 #include "Editor_Define.h"
+#include "CDInputMgr.h"
 #include "CGameObject.h"
+#include "CTransform.h"
 #include "CObjectManager.h"
+#include "CManagement.h"
 #include "CGui_Log.h"
 #include "CComponentMgr.h"
 #include "CTexture.h"
@@ -15,7 +18,7 @@
 IMPLEMENT_SINGLETON(CGuiManager)
 
 CGuiManager::CGuiManager()
-	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(MapEditorObjectCategory::WALL), m_iObjectType(0), m_bCreateMode(FALSE)
+	: m_pTarget(nullptr), m_pGraphicDevice(nullptr), m_eCategory(ObjectCategory::WALL), m_iObjectType(0), m_bCreateMode(FALSE)
 {
 }
 
@@ -152,38 +155,84 @@ void CGuiManager::AddLog(const char *fmt, ...)
 
 void CGuiManager::Render()
 {
+    // ;
+    // z 축 -15도
+    if (KEY_BUTTON_DOWN(DIK_SEMICOLON) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, -15.f);
+    }
+    // '
+    // z 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_APOSTROPHE) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, 15.f);
+    }
+    // [
+    // y 축 -15도
+    else if (KEY_BUTTON_DOWN(DIK_LBRACKET) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, -15.f);
+    }
+    // ]
+    // y 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_RBRACKET) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, 15.f);
+    }
+    // -
+    // x 축 -15도
+    else if (KEY_BUTTON_DOWN(DIK_MINUS) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, -15.f);
+    }
+    // =
+    // x 축 15도
+    else if (KEY_BUTTON_DOWN(DIK_EQUALS) && GetTarget())
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, 15.f);
+    }
     ShowEditorDockspace();
     ShowInspector();
     ShowConsole();
 }
 
-void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
+void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
 {
+    _uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (_b)
     {
         switch (_e)
         {
-        case MapEditorObjectCategory::WALL:
+        case ObjectCategory::WALL:
         {
             MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
         } break;
-        case MapEditorObjectCategory::TILE:
+        case ObjectCategory::TILE:
         {
-            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", SCENE_EDITOR, L"Dummy_Layer")))
+
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyTile", iCurSceneID, L"Dummy_Layer")))
             {
                 MSG_BOX("CGuiManager::SetCreateMode, DummyTile Creat Failed");
             }
             EDITOR_CONSOLE("TILE");
         } break;
-        case MapEditorObjectCategory::ENV_OBJ:
+        case ObjectCategory::ENV_OBJ:
         {
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", iCurSceneID, L"Dummy_Layer")))
+            {
+                MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
+            }
             EDITOR_CONSOLE("ENV_OBJ");
         } break;
-        case MapEditorObjectCategory::MONSTER:
+        case ObjectCategory::MONSTER:
         {
+            if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DummyPlacementObject", iCurSceneID, L"Dummy_Layer")))
+            {
+                MSG_BOX("CGuiManager::SetCreateMode, DummyPlacementObject Creat Failed");
+            }
             EDITOR_CONSOLE("MONSTER");
         } break;
-        case MapEditorObjectCategory::LIGHT:
+        case ObjectCategory::LIGHT:
         {
             EDITOR_CONSOLE("LIGHT");
         } break;
@@ -191,34 +240,16 @@ void CGuiManager::SetCreateMode(_bool _b, MapEditorObjectCategory _e)
     }
     else
     {
-        switch (_e)
+        auto list = CObjectManager::GetInstance()->Get_ObjectList(iCurSceneID, L"Dummy_Layer");
+        if (list && list->size() > 0)
         {
-        case MapEditorObjectCategory::WALL:
-        {
-            MSG_BOX("CGuiManager::SetCreateMode, Wrong type");
-        } break;
-        case MapEditorObjectCategory::TILE:
-        {
-            auto list = CObjectManager::GetInstance()->Get_ObjectList(SCENE_EDITOR, L"Dummy_Layer");
-            if (list && list->size() > 0)
-            {
-                (*list->begin())->Set_Dead(TRUE);
-            }
-            EDITOR_CONSOLE("TILE");
-        } break;
-        case MapEditorObjectCategory::ENV_OBJ:
-        {
-            EDITOR_CONSOLE("ENV_OBJ");
-        } break;
-        case MapEditorObjectCategory::MONSTER:
-        {
-            EDITOR_CONSOLE("MONSTER");
-        } break;
-        case MapEditorObjectCategory::LIGHT:
-        {
-            EDITOR_CONSOLE("LIGHT");
-        } break;
+            (*list->begin())->Set_Dead(TRUE);
         }
     }
     m_bCreateMode = _b;
+}
+
+const _tchar *CGuiManager::GetSelectedThumnailTexture()
+{
+    return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::INSPECTOR])->GetSelectedThumbnailTexture();
 }

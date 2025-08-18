@@ -46,6 +46,7 @@ public:
 	void Move_Right(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Rotation(_vec3 vAxis, _float fTimeDelta);
 	void RotationDegree(const _vec3& axis, float degrees);
+	void SetDegreeForEditor(const _vec3 &axis, float degrees);
 
 
 public:
@@ -75,6 +76,7 @@ private:
 	TRANSFORMINFO	m_TransformInfo;
 	_vec3			m_vTarget;
 	_float			m_fDir; // Move_RL ½Ã ÇÊ¿ä
+	_float			m_fAngle;
 
 public:
 	virtual CComponent* Clone(void* pArg = nullptr) override;

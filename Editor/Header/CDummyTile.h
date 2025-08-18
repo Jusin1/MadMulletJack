@@ -29,6 +29,7 @@ public:
 private:
 	HRESULT			Set_Component(void *pArg);
 	void PosUpdate();
+	void KeyUpdate();
 public:
 	Engine::CVIBuffer_Rect *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }

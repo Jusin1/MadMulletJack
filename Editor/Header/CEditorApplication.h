@@ -30,6 +30,8 @@ private:
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Scene();
 	void RenderImGuiRender();
+	void Ready_MapFactorFunc();
+	HRESULT Ready_MapObjectTexture();
 private:
 	Engine::CGraphicDev *m_pDeviceClass;
 	Engine::CManagement *m_pManagementClass;

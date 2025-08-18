@@ -4,6 +4,8 @@
 
 #include "CEditLoader.h"
 #include "CEditorScene.h"
+#include "CScene_Tutorial.h"
+#include "CScene_Stage_1.h"
 
 CEditorLoadingScene::CEditorLoadingScene(LPDIRECT3DDEVICE9 pGrahpicDev)
 	: CScene(pGrahpicDev)
@@ -38,9 +40,41 @@ _int CEditorLoadingScene::Update_Scene(const _float &fTimeDelta)
 
 		switch (m_eNextScene)
 		{
-		case SCENE_EDITOR:
+		case SCENE_DEV:
 		{
 			pNewScene = CEditorScene::Create(m_pGraphicDev);
+		} break;
+		case SCENE_TUTORIAL:
+		{
+			pNewScene = CScene_Tutorial::Create(m_pGraphicDev);
+		} break;
+		case SCENE_STAGE_1:
+		{
+			pNewScene = CScene_Stage_1::Create(m_pGraphicDev);
+		} break;
+		case SCENE_STAGE_2:
+		{
+			// TODO
+		} break;
+		case SCENE_STAGE_3:
+		{
+			// TODO
+		} break;
+		case SCENE_SNIPE:
+		{
+			// TODO
+		} break;
+		case SCENE_BOSS:
+		{
+			// TODO
+		} break;
+		case SCENE_CAR:
+		{
+			// TODO
+		} break;
+		default:
+		{
+			MSG_BOX("CEditorLoadingScene::Update_Scene, wrongtype");
 		} break;
 		}
 

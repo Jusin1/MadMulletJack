@@ -101,7 +101,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Idle", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_Idle", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Idle"), m_pTextureCom });
 
@@ -110,7 +110,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 8;
 	texInfo.m_fSpeed = 8.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Op"), m_pTextureCom });
 
@@ -119,7 +119,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 6;
 	texInfo.m_fSpeed = 10.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Att"), m_pTextureCom });
 
@@ -128,7 +128,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 13;
 	texInfo.m_fSpeed = 6.5f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Re"), m_pTextureCom });
 
@@ -137,7 +137,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Idle", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Car_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Idle", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Idle"), m_pTextureCom });
 
@@ -146,7 +146,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 5;
 	texInfo.m_fSpeed = 0.5f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Att", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Car_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Att", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Att"), m_pTextureCom });
 
@@ -155,7 +155,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Zooming", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Car_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Zooming", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Zooming"), m_pTextureCom });
 
@@ -164,7 +164,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 4;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomIdle", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomIdle", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomIdle"), m_pTextureCom });
 
@@ -173,7 +173,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomAtt", SCENE_STAGE, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomAtt", SCENE_STAGE_1, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomAtt"), m_pTextureCom });
 

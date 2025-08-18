@@ -30,13 +30,16 @@ public:
 
 	HRESULT Change_Texture(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg = nullptr);
 	HRESULT Change_Buffer(_uint iSceneIdx, const _tchar *pPrototypeTag, void *pArg = nullptr);
+
+	_uint GetType() { return m_iType; }
+	void SetType(_uint _i) { m_iType = _i; }
 private:
 	HRESULT			Set_Component(void *pArg);
 public:
 	Engine::CVIBuffer_Rect *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
 private:
+	_uint m_iType;
 	Engine::CVIBuffer_Rect *m_pBuffer;
 	Engine::CTexture *m_pTexture;
 };
-

@@ -5,6 +5,20 @@
 
 BEGIN(Engine)
 
+enum class KeyState
+{
+	NONE,
+	PRESS,
+	DOWN,
+	UP,
+	ENDEND
+};
+
+enum
+{
+	KEY_TYPE_COUNT = static_cast<uint32_t>(UINT8_MAX) + 1,
+};
+
 class ENGINE_DLL CDInputMgr : public CBase
 {
 	DECLARE_SINGLETON(CDInputMgr)
@@ -14,6 +28,7 @@ private:
 	virtual ~CDInputMgr(void);
 
 public:
+
 	_byte	Get_DIKeyState(_ubyte byKeyID)
 	{
 		return m_byKeyState[byKeyID];
@@ -33,7 +48,13 @@ public:
 public:
 	HRESULT Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 	void	Update_InputDev(void);
+	bool GetButton(_ubyte byKeyID) const { return m_States[byKeyID] == KeyState::PRESS; }
+	bool GetButtonDown(_ubyte byKeyID) const { return m_States[byKeyID] == KeyState::DOWN; }
+	bool GetButtonUp(_ubyte byKeyID) const { return m_States[byKeyID] == KeyState::UP; }
 
+	bool GetMouseButton(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::PRESS; }
+	bool GetMouseButtonDown(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::DOWN; }
+	bool GetMouseButtonUp(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::UP; }
 private:
 	LPDIRECTINPUT8			m_pInputSDK = nullptr;
 
@@ -44,7 +65,8 @@ private:
 private:
 	_byte					m_byKeyState[256];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
 	DIMOUSESTATE			m_tMouseState;
-
+	std::array<KeyState, KEY_TYPE_COUNT> m_States{ KeyState::NONE };
+	std::array<KeyState, MOUSEKEYSTATE::DIM_END> m_MouseStates{ KeyState::NONE };
 public:
 	virtual void	Free(void);
 

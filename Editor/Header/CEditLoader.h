@@ -15,7 +15,17 @@ public:
 
 	HRESULT			Ready_Loading(SCENE eNextScene);
 	HRESULT			Loading_Editor();
+	HRESULT			Loading_Tutorial();
+	HRESULT			Loading_Stage_1();
+	HRESULT			Loading_Stage_2();
+	HRESULT			Loading_Stage_3();
+	HRESULT			Loading_Snipe();
+	HRESULT			Loading_Rooftop();
+	HRESULT			Loading_Road();
 
+private:
+	void SetData(_uint _iSceneIndex);
+	void InstancingObjects(const wstring &_Layer);
 public:
 	CRITICAL_SECTION *Get_Crt() { return &m_Crt; }
 	SCENE		Get_NextSceneID() const { return m_eNextScene; }

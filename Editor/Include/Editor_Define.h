@@ -1,8 +1,4 @@
 #pragma once
-#include <string>
-using std::wstring;
-
-enum SCENE { SCENE_STATIC, SCENE_LOADING, SCENE_EDITOR, SCENE_END };
 
 enum class EditorType : unsigned int
 {
@@ -21,9 +17,12 @@ enum class MapEditorGuiType : unsigned int
 	ENVOBJ_TYPE_DROPBOX,
 	MONSTER_TYPE_DROPBOX,
 	LIGHT_TYPE_DROPBOX,
+	SCENE_TYPE_DROPBOX,
 	CREATEMODE_CHECKBOX,
+	SNAPMODE_CHECKBOX,
 	CREATE_BUTTONS,
 	PANEL_SIZE_BUTTONS,
+	SAVE_DATA_BUTTON,
 	POSITION,
 	ROTATION,
 	WALL_THUMBNAIL,
@@ -34,62 +33,19 @@ enum class MapEditorGuiType : unsigned int
 };
 constexpr size_t g_MapEditorGuiTypeCount{ static_cast<size_t>(MapEditorGuiType::NONE) };
 
-enum class MapEditorObjectCategory : unsigned int
+enum class MapEditorSceneType : unsigned int
 {
-	WALL = 0,
-	TILE,
-	ENV_OBJ,
-	MONSTER,
-	LIGHT,
+	DEV,
+	TUTORIAL,
+	STAGE_1,
+	STAGE_2,
+	STAGE_3,
+	SNIPE,
+	ROOFTOP,
+	ROAD,
 	NONE
 };
-constexpr size_t g_MapEditorObjectCategoryCount{ static_cast<size_t>(MapEditorObjectCategory::NONE) };
-
-enum class MapEditorWallType : unsigned int
-{
-	WALL_HOR = 0,
-	WALL_VER,
-	INCLINE,
-	FLOOR,
-	CEILING,
-	NONE
-};
-constexpr size_t g_MapEditorWallTypeCount{ static_cast<size_t>(MapEditorWallType::NONE) };
-
-enum class MapEditorTileType : unsigned int
-{
-	tmp,
-	NONE
-};
-constexpr size_t g_MapEditorTileTypeCount{ static_cast<size_t>(MapEditorTileType::NONE) };
-
-enum class MapEditorEnvObjectType : unsigned int
-{
-	tmp,
-	NONE
-};
-constexpr size_t g_MapEditorEnvObjectTypeCount{ static_cast<size_t>(MapEditorEnvObjectType::NONE) };
-
-enum class MapEditorMonsterType : unsigned int
-{
-	tmp,
-	NONE
-};
-constexpr size_t g_MapEditorMonsterTypeCount{ static_cast<size_t>(MapEditorMonsterType::NONE) };
-
-enum class MapEditorLightType : unsigned int
-{
-	tmp,
-	NONE
-};
-constexpr size_t g_MapEditorLightTypeCount{ static_cast<size_t>(MapEditorLightType::NONE) };
-
-enum class EffectEditorGuiType : unsigned int
-{
-	tmp,
-	NONE
-};
-constexpr size_t g_EffectEditorGuiTypeCount{ static_cast<size_t>(EffectEditorGuiType::NONE) };
+constexpr size_t g_MapEditorSceneTypeCount{ static_cast<size_t>(MapEditorSceneType::NONE) };
 
 // TILE
 // Horizon

@@ -51,14 +51,57 @@ HRESULT Engine::CDInputMgr::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 	// 장치에 대한 access 버전을 받아오는 함수
 	m_pMouse->Acquire();
 
-
 	return S_OK;
 }
 
 void Engine::CDInputMgr::Update_InputDev(void)
 {
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(KEY_TYPE_COUNT, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
+
+	for (size_t key = 0; key < KEY_TYPE_COUNT; ++key)
+	{
+		if (Get_DIKeyState(key) & 0x80)
+		{
+			KeyState &state = m_States[key];
+
+			if (state == KeyState::PRESS || state == KeyState::DOWN)
+				state = KeyState::PRESS;
+			else
+				state = KeyState::DOWN;
+		}
+		else
+		{
+			KeyState &state = m_States[key];
+
+			if (state == KeyState::PRESS || state == KeyState::DOWN)
+				state = KeyState::UP;
+			else
+				state = KeyState::NONE;
+		}
+	}
+
+	for (size_t key = 0; key < (size_t)MOUSEKEYSTATE::DIM_END; ++key)
+	{
+		if (Get_DIMouseState(static_cast<MOUSEKEYSTATE>(key)) & 0x80)
+		{
+			KeyState &state = m_MouseStates[key];
+
+			if (state == KeyState::PRESS || state == KeyState::DOWN)
+				state = KeyState::PRESS;
+			else
+				state = KeyState::DOWN;
+		}
+		else
+		{
+			KeyState &state = m_MouseStates[key];
+
+			if (state == KeyState::PRESS || state == KeyState::DOWN)
+				state = KeyState::UP;
+			else
+				state = KeyState::NONE;
+		}
+	}
 }
 
 void Engine::CDInputMgr::Free(void)

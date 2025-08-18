@@ -2,7 +2,14 @@
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
 #include "CEditorCamera.h"
-#include "CVIBuffer_GridPanel.h"
+#include "CDataManager.h"
+#include "CFileManager.h"
+#include "CMapFactory.h"
+#include "CVIBuffer_GridPanel_Editor.h"
+#include "CVIBuffer_Cube_Color.h"
+#include "CManagement.h"
+#include "CDummyPlacementObject.h"
+#include "CPlacementObject.h"
 #include "CDummyTile.h"
 #include "CTile.h"
 #include "CGridPanel.h"
@@ -27,12 +34,39 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 
 	switch (pLoader->Get_NextSceneID())
 	{
-	case SCENE_EDITOR:
+	case SCENE_DEV:
 	{
 		pLoader->Loading_Editor();
 	} break;
+	case SCENE_TUTORIAL:
+	{
+		pLoader->Loading_Tutorial();
+	} break;
+	case SCENE_STAGE_1:
+	{
+		pLoader->Loading_Stage_1();
+	} break;
+	case SCENE_STAGE_2:
+	{
+		// TODO
+	} break;
+	case SCENE_STAGE_3:
+	{
+		// TODO
+	} break;
+	case SCENE_SNIPE:
+	{
+		// TODO
+	} break;
+	case SCENE_BOSS:
+	{
+		// TODO
+	} break;
+	case SCENE_CAR:
+	{
+		// TODO
+	} break;
 	}
-
 	LeaveCriticalSection(pLoader->Get_Crt());
 	return 0;
 }
@@ -85,43 +119,117 @@ HRESULT CEditLoader::Ready_Loading(SCENE eNextScene)
 
 HRESULT CEditLoader::Loading_Editor()
 {
-	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+	SetData(SCENE_DEV);
 
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
-	//// Camera_Dynamic
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_Camera_Edit",
-		CEditorCamera::Create(m_pGraphicDevice))))
-		return E_FAIL;
-
-	// DefaultPanel
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultPanel",
-		CGridPanel::Create(m_pGraphicDevice))))
-		return E_FAIL;
-
-	// DefaultTile
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultTile",
-		CTile::Create(m_pGraphicDevice))))
-		return E_FAIL;
-
-	// DummyTile
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DummyTile",
-		CDummyTile::Create(m_pGraphicDevice))))
-		return E_FAIL;
-
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-
-	// Buffer_PanelDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel::Create(m_pGraphicDevice))))
-		return E_FAIL;
-	
-	// Buffer_TileDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", CVIBuffer_Rect::Create(m_pGraphicDevice))))
-		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
 
 	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Tutorial()
+{
+	SetData(SCENE_TUTORIAL);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Stage_1()
+{
+	SetData(SCENE_STAGE_1);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+	
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Stage_2()
+{
+	SetData(SCENE_STAGE_2);
+
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Stage_3()
+{
+	SetData(SCENE_STAGE_3);
+
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Snipe()
+{
+	SetData(SCENE_SNIPE);
+
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Rooftop()
+{
+	SetData(SCENE_BOSS);
+
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Road()
+{
+	SetData(SCENE_CAR);
+
+	return S_OK;
+}
+
+void CEditLoader::SetData(_uint _iSceneIndex)
+{
+	CDataManager::GetInstance()->Clear();
+	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
+	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
+	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");
+	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
+
+	CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
+}
+
+void CEditLoader::InstancingObjects(const wstring &_Layer)
+{
+	if (vector<MAPOBJECTDATA> *pVecData = CDataManager::GetInstance()->FindData(_Layer))
+	{
+		for (MAPOBJECTDATA &element : *pVecData)
+		{
+			CMapFactory::GetInstance()->Create(element.eCategory, element.iType, &element);
+		}
+	}
 }

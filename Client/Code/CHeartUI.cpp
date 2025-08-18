@@ -187,6 +187,10 @@ void CHeartUI::RenderHearts()
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX + m_heartPosLX, cy, 0.f));
 	CUI::Render_GameObject();
 
+    if (FAILED(Add_Components(L"Com_Texture_Heart", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_Heart"), m_pTextureCom });
+    return S_OK;
 	CTexture* pR = (m_pTexHeartR ? m_pTexHeartR : m_pTexHeartL);
 	pR->Set_Texture(pR->Get_Frame().m_iCurrentTex);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX + m_heartPosRX, cy, 0.f));

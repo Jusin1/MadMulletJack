@@ -15,8 +15,6 @@
 !/Reference/Header/json.hpp
 /Reference/Library/**
 
-/GameData/**
-
 # Weird layout: build intermediates live under Include/
 # (VS puts x64/Debug|Release there in your structure)
 # Client

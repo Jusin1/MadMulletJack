@@ -172,7 +172,7 @@ CComponent* CObjectManager::Get_Component(_uint iSceneIdx, const _tchar* pLayerT
 std::vector<MAPOBJECTDATA> CObjectManager::ExportObjectData(_uint iSceneID, const _tchar *pLayerTag)
 {
 	list<CGameObject *> *pList = Get_ObjectList(iSceneID, pLayerTag);
-	if ((*pList).size() <= 0 || !pList)
+	if (!pList || (*pList).size() <= 0)
 		return {};
 
 	std::vector<MAPOBJECTDATA> returnData;

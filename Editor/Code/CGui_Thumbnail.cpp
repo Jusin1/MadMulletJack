@@ -5,7 +5,7 @@
 #include "CGui_Thumbnail.h"
 
 CGui_Thumbnail::CGui_Thumbnail(const string &_label, _uint _reserve)
-	: CGuiBase(_label), m_iSelectedIndex(-1), m_iCol(3), m_fThumbnailSize(120.f), m_fAreaHeight(500.f)
+	: CGuiBase(_label), m_iSelectedIndex(0), m_iCol(3), m_fThumbnailSize(120.f), m_fAreaHeight(500.f)
 	, m_fPadding(5.f)
 {
 	m_vecThumbnails = vector<vector<GuiThumbnailTexture>>{ _reserve };
@@ -96,6 +96,6 @@ void CGui_Thumbnail::Change_Texture(_uint _iType)
 			pTargetPanel->Change_Texture(SCENE_STATIC, m_vecThumbnails[_iType][m_iSelectedIndex].comp_name);
 		}
 
-		m_iSelectedIndex = -1;
+		//m_iSelectedIndex = -1;
 	}
 }

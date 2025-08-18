@@ -121,6 +121,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,6 +141,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,6 +158,7 @@
     <ClInclude Include="..\Header\CBlackGackGround.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
+    <ClInclude Include="..\Header\CDev.h" />
     <ClInclude Include="..\Header\CChatUI.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
@@ -165,6 +168,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CImageUI.h" />
+    <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CLisaUI.h" />
     <ClInclude Include="..\Header\CHeartUI.h" />
     <ClInclude Include="..\Header\Client_Global.h" />
@@ -191,6 +195,12 @@
     <ClInclude Include="..\Header\CTalkUI.h" />
     <ClInclude Include="..\Header\CSubWeapon.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
+    <ClInclude Include="..\Header\CTileBase.h" />
+    <ClInclude Include="..\Header\CTile_Acid.h" />
+    <ClInclude Include="..\Header\CTile_Deco.h" />
+    <ClInclude Include="..\Header\CTile_Electric.h" />
+    <ClInclude Include="..\Header\CTile_Glass.h" />
+    <ClInclude Include="..\Header\CTile_Vent.h" />
     <ClInclude Include="..\Header\CTextUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
@@ -208,9 +218,11 @@
     <ClCompile Include="..\Code\CBlackGackGround.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
+    <ClCompile Include="..\Code\CDev.cpp" />
     <ClCompile Include="..\Code\CChatUI.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
+    <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
@@ -242,6 +254,12 @@
     <ClCompile Include="..\Code\CSubWeapon.cpp" />
     <ClCompile Include="..\Code\CTalkUI.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
+    <ClCompile Include="..\Code\CTileBase.cpp" />
+    <ClCompile Include="..\Code\CTile_Acid.cpp" />
+    <ClCompile Include="..\Code\CTile_Deco.cpp" />
+    <ClCompile Include="..\Code\CTile_Electric.cpp" />
+    <ClCompile Include="..\Code\CTile_Glass.cpp" />
+    <ClCompile Include="..\Code\CTile_Vent.cpp" />
     <ClCompile Include="..\Code\CTextUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
