@@ -32,6 +32,7 @@ void CUIManager::AddSlideIn(
 
     ui->Set_Active(true);                
     ui->Set_RenderOn(true);
+
     ui->Set_UIPosition(xStart, yStart, w, h);
 
     m_slideTasks.push_back({
@@ -93,8 +94,6 @@ void CUIManager::Update(const _float& dt)
                 if (!n) continue;
 
                 n->Set_Active(false);
-                n->Set_Dead(true);       
-
                 for (auto* ch : n->GetChildren())
                     if (ch) stk.push_back(ch);
             }
@@ -321,6 +320,10 @@ void CUIManager::CreateClearUI()
         talk->Set_Active(true);
         attachAndSlide(talk, 430.f, -250.f, 600.f, 100.f);
     }
+
+
+
+    
 }  // 게임 클리어 UI 생성
 
 void CUIManager::DestroyEnterUI()
@@ -339,7 +342,7 @@ void CUIManager::DestroyEnterUI()
 
     const float OUT_X = WINCX * 1.3f;
     const float OUT_Y = WINCY * 1.3f;
-    const float DUR = 0.18f;
+    const float DUR = -0.4f;
     const float STAG = 0.015f;
 
     float delay = 0.f;

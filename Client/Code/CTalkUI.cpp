@@ -68,6 +68,8 @@ HRESULT CTalkUI::Initialize(void* pArg)
 	if (FAILED(m_pFrame->ChangeTexture(L"TalkFrame")))
 		return E_FAIL;
 
+	Add_Child(m_pFrame);
+
 	return S_OK;
 }
 
@@ -197,5 +199,5 @@ CGameObject* CTalkUI::Clone(void* pArg)
 
 void CTalkUI::Free()
 {
-	__super::Free();
+	CUIBase::Free();
 }

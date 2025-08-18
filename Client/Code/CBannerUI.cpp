@@ -66,6 +66,8 @@ HRESULT CBannerUI::Initialize(void* pArg)
 
 _int CBannerUI::Update_GameObject(const _float& dt)
 {
+	Get_UIPosition(m_x, m_y);
+
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
 
