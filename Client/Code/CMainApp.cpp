@@ -132,6 +132,8 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Jinji", L"궁서", 20, 10, FW_THIN)))
 		return E_FAIL;
 
+
+
 	CFontMgr::GetInstance()->Ready_Font(
 		m_pGraphicDev,
 		L"DefaultFont",   // ← CEfffectUI에서 쓰는 태그와 동일해야 함

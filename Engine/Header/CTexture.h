@@ -26,8 +26,8 @@ public:
 	HRESULT Initialize(void* pArg)override; // 초기화 함수(복사 시 호출)
 	void	Set_Texture(const _uint& iIndex = 0); // 텍스처 바인딩(렌더링 시)
 	IDirect3DBaseTexture9 *Get_Texture(const _uint &iIndex = 0) { return m_vecTexture[iIndex]; }
-
 	bool Is_AnimFinished() const { return m_TextureInfo.m_iCurrentTex >= m_TextureInfo.m_iEndTex; }
+
 
 public:
 	void MoveFrame(); // 애니메이션 프레임 이동
@@ -39,6 +39,7 @@ public:
 	void SetOriginCompName(std::wstring _wstr) { m_OriginComponentName = _wstr; }
 	std::wstring GetOriginCompName() { return m_OriginComponentName; }
 	bool GetFrameSize(UINT index, UINT& w, UINT& h) const;
+	void SetAnimInfo(int iStart, int iEnd, float fSpeed, _bool bLoop);
 
 private:
 	_uint								m_iNumTextures = 0; // 텍스쳐 수

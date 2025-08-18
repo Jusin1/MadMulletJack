@@ -70,6 +70,7 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
     }
 
     CPickingManager::GetInstance()->Picking();
+    CUIManager::GetInstance()->Update(fTimeDelta);
     return iExit;
 }
 
@@ -80,7 +81,11 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
     // 테스트용
     if (GetAsyncKeyState('P'))
     {
-        CUIManager::GetInstance()->CreateEnterUI();
+        CUIManager::GetInstance()->CreateClearUI();
+    }
+    if (GetAsyncKeyState('F'))
+    {
+        CUIManager::GetInstance()->DestroyEnterUI();
     }
 }
 

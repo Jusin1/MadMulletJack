@@ -34,6 +34,9 @@ public:
 		m_fSizeX = fSizeX;
 		m_fSizeY = fSizeY;
 	}
+public:
+	void Get_UIPosition(float& x, float& y) const { x = m_fX; y = m_fY; }
+	void Get_UISize(float& w, float& h) const { w = m_fSizeX; h = m_fSizeY; }
 
 protected:
 	_matrix					m_ProjMatrix;

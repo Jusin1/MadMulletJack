@@ -73,9 +73,6 @@
     <Filter Include="03. Manager\PickingManager">
       <UniqueIdentifier>{f9b54d02-4e72-4866-9974-02b9f5233c87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\HpBar_UI">
-      <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
       <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
     </Filter>
@@ -103,9 +100,6 @@
     <Filter Include="02. GameObject\06. UI\Player_UI\04. Arm">
       <UniqueIdentifier>{c1f62a87-9555-4298-b2e6-0e131ac4d2f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\HpBar_UI\00.Man">
-      <UniqueIdentifier>{4dcb0b0e-d572-4c47-bb80-64fd38bcaf81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. UI\Weapon">
       <UniqueIdentifier>{cd5bba98-7803-422d-8349-d3eec51b7c1d}</UniqueIdentifier>
     </Filter>
@@ -130,7 +124,19 @@
     <Filter Include="02. GameObject\06. UI\GameEnterUI">
       <UniqueIdentifier>{f19cb03f-d78e-42df-abfa-bb60da841d6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI\GameEnterUI\HeartUI">
+    <Filter Include="02. GameObject\06. UI\PanelUI">
+      <UniqueIdentifier>{e42b6daa-b313-4604-8026-2d28bb0ad004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\ScreenUI">
+      <UniqueIdentifier>{1533305b-0726-4a04-b2f3-f306d137aef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\04. LisaUI">
+      <UniqueIdentifier>{4105eb88-8a84-4cdb-9de6-b76837d4f941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\00. BackGroundUI">
+      <UniqueIdentifier>{8b092999-5ace-439b-9d4b-948738d74aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\01. HeartUI">
       <UniqueIdentifier>{10f4f2a4-b01b-46bc-888c-b2ee4a1543df}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. UI\Weapon\01. SubWap">
@@ -138,6 +144,21 @@
     </Filter>
     <Filter Include="02. GameObject\06. UI\Weapon\01. SubWap\00. Knife">
       <UniqueIdentifier>{a614cf80-bc51-4c23-8147-173476cfa0e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\02. ChatUI">
+      <UniqueIdentifier>{c60277f3-158e-4464-9c72-5d4abae9bb03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\03. BannelUI">
+      <UniqueIdentifier>{33157cdf-ad1d-4f91-a4c0-7781fe420e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\ImageUI">
+      <UniqueIdentifier>{4aecd51c-d299-47e8-84b5-8b61859a7bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\TextUI">
+      <UniqueIdentifier>{24eb17b6-b29d-4ff3-baaf-775f305da402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\GameEnterUI\05. TalkUI">
+      <UniqueIdentifier>{08f7d2e1-a373-47d6-9b71-7cfb5aa25f42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -243,11 +264,32 @@
     <ClInclude Include="..\Header\CUIManager.h">
       <Filter>03. Manager\00. UIManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLisaUI.h">
-      <Filter>02. GameObject\06. UI\GameEnterUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CHeartUI.h">
-      <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+      <Filter>02. GameObject\06. UI\GameEnterUI\01. HeartUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPanelUI.h">
+      <Filter>02. GameObject\06. UI\PanelUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBlackGackGround.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\00. BackGroundUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLisaUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\04. LisaUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CChatUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\02. ChatUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBannerUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\03. BannelUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CImageUI.h">
+      <Filter>02. GameObject\06. UI\ImageUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTextUI.h">
+      <Filter>02. GameObject\06. UI\TextUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTalkUI.h">
+      <Filter>02. GameObject\06. UI\GameEnterUI\05. TalkUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CHpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
@@ -356,14 +398,35 @@
     <ClCompile Include="..\Code\CEffectUI.cpp">
       <Filter>02. GameObject\06. UI\EffectUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CHeartUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\01. HeartUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPanelUI.cpp">
+      <Filter>02. GameObject\06. UI\PanelUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBlackGackGround.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\00. BackGroundUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLisaUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\04. LisaUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CChatUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\02. ChatUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBannerUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\03. BannelUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImageUI.cpp">
+      <Filter>02. GameObject\06. UI\ImageUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTextUI.cpp">
+      <Filter>02. GameObject\06. UI\TextUI</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CUIManager.cpp">
       <Filter>03. Manager\00. UIManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLisaUI.cpp">
-      <Filter>02. GameObject\06. UI\GameEnterUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CHeartUI.cpp">
-      <Filter>02. GameObject\06. UI\GameEnterUI\HeartUI</Filter>
+    <ClCompile Include="..\Code\CTalkUI.cpp">
+      <Filter>02. GameObject\06. UI\GameEnterUI\05. TalkUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>

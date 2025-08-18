@@ -264,7 +264,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	if (m_bIsCountHp)
 	{
-		CountHp(fTimeDelta);
+		//CountHp(fTimeDelta);
 	}
 	
 	KeyInput(fTimeDelta);
