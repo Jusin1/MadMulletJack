@@ -10,6 +10,7 @@
 #include "CImageUI.h"
 #include "CTextUI.h"
 #include "CTalkUI.h"
+#include "CPhoneUI.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -101,7 +102,7 @@ void CUIManager::Update(const _float& dt)
     {
         if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished())
         {
-            CreateTimeTextUI(L"01:12:45"); // 예시
+            CreateTimeTextUI(L"01:12:45"); 
             m_spawnedTimeUI = true;
         }
     }
@@ -504,6 +505,26 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
         m_timeAutoRemoveArmed = true;
         m_timeAutoRemoveTimer = 0.f;
     }
+}
+
+void CUIManager::CreatePhoneUI()
+{
+    if (auto* pPhone = dynamic_cast<CPhoneUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_PhoneUI", SCENE_STAGE_1, L"UI_Layer")))
+    {
+        pPhone->Set_UIPosition(-160.F, 0.f, 600.f, 300.f);
+        m_pEnterUI->Add_Child(pPhone);
+        if (auto* pLeftHand = dynamic_cast<CImageUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer")))
+        {
+            pLeftHand->RegisterTexture(L"Com_Texture_leftHandIDLE", L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
+            pLeftHand->Play(true);
+            pLeftHand->Set_UIPosition(180.f, 40.f, 300.f, 400.f);
+            pLeftHand->ChangeTexture(L"Com_Texture_leftHandIDLE");
+        }     
+    } 
 }
 
 void CUIManager::Free()

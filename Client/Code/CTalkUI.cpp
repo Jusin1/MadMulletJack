@@ -166,6 +166,9 @@ void CTalkUI::NextDialogue()
 		if (m_iCurrentIndex == last) {
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
 		}
+		else if (m_iCurrentIndex == 2) {
+			CUIManager::GetInstance()->CreatePhoneUI();
+		}
 
 		m_fAccTime = 0.f;
 		m_bTypingDone = false;

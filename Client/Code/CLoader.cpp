@@ -40,6 +40,7 @@
 #include "CImageUI.h"
 #include "CTextUI.h"
 #include "CTalkUI.h"
+#include "CPhoneUI.h"
 #pragma endregion 게임 진입 UI들
 
 
@@ -439,6 +440,15 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/LIVE ICON.png", 1))))
 		return E_FAIL;
 
+	// PhoneUI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_PhoneUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/PHONEIDLE_%03d.png", 4))))
+		return E_FAIL;
+
+	// Phone Left_Hand UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Phone_LeftHandUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Right_HAND INTERMISSION %03d.png", 2))))
+		return E_FAIL;
 
 #pragma endregion 게임 진입 UI
 
@@ -535,6 +545,12 @@ HRESULT CLoader::Loading_ForStage()
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TalkUI",
 		CTalkUI::Create(m_pGraphicDev))))
 		return E_FAIL;
+
+	// Phone UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PhoneUI",
+		CPhoneUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 
 
 #pragma endregion 게임 진입 UI들 생성

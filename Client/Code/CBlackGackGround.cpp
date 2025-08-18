@@ -16,6 +16,7 @@ CBlackGackGround::CBlackGackGround(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_holeY(0.f)
 	, m_holeW(0.f)
 	, m_holeH(0.f)
+	, m_color(D3DXCOLOR(0, 0, 0, 1))   // 기본 검정
 {
 }
 
@@ -33,6 +34,7 @@ CBlackGackGround::CBlackGackGround(const CBlackGackGround& rhs)
 	, m_holeY(rhs.m_holeY)
 	, m_holeW(rhs.m_holeW)
 	, m_holeH(rhs.m_holeH)
+	, m_color(rhs.m_color)   // 기본 검정
 {
 }
 
@@ -81,11 +83,12 @@ void CBlackGackGround::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	m_pGraphicDev->SetTexture(0, nullptr);
+
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
-	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(m_alpha, 0, 0, 0));
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(m_alpha, (BYTE)(m_color.r * 255), (BYTE)(m_color.g * 255), (BYTE)(m_color.b * 255)));
 
 	if (!m_useHole)
 	{

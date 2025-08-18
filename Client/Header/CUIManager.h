@@ -21,6 +21,7 @@ public:
     void CreateClearUI();         // 진입 UI 생성
     void CreateClearTextUI();
     void CreateTimeTextUI(const std::wstring& timeStr);
+    void CreatePhoneUI();
 
     void DestroyEnterUI();        // 종료 연출
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; } //UI가 동작 중인지 확인

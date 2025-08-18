@@ -15,6 +15,9 @@ public:
 public: // 알파, 페이드
 	void SetAlpha(BYTE alpha) { m_alpha = alpha; }
 	void FadeTo(BYTE target, _float delay, _float duration);
+public:
+	void SetColor(const D3DXCOLOR& color) { m_color = color; }
+	D3DXCOLOR GetColor() const { return m_color; }
 
 public: // 구멍 뚫기
 	void SetHoleRect(_float x, _float y, _float w, _float h);
@@ -28,6 +31,8 @@ public:
 private:
 	void DrawSolidQuad(_float cx, _float cy, _float w, _float h);
 
+private: // 색상
+	D3DXCOLOR m_color;   // 기본값: 검정
 private: // 페이드
 	BYTE  m_alpha;
 	BYTE  m_start;
