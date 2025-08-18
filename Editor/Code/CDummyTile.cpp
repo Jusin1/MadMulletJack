@@ -1,7 +1,9 @@
+#include "pch.h"
 #include "CVIBuffer_Rect.h"
 #include "CRenderer.h"
 #include "CEditorPickingManager.h"
 #include "Engine_Define.h"
+#include "Editor_Define.h"
 #include "CDInputMgr.h"
 #include "Editor_Define.h"
 #include "CManagement.h"
@@ -132,6 +134,7 @@ void CDummyTile::PosUpdate()
 					{
 					case WallType::WALL_HOR:
 					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f, 0.f,1.f }, 90.f);
 						pickPos.x = (int)pickPos.x + 0.5f * pTransform->Get_Scale().x;
 						pickPos.y = (int)pickPos.y + 0.5f * pTransform->Get_Scale().y;
 						pickPos.z -= 0.001f;
@@ -198,6 +201,8 @@ void CDummyTile::PosUpdate()
 
 				if (IS_LBUTTON_DOWN)
 				{
+					IsOutOfScreen()
+						return;
 					MAPOBJECTDATA tTestData;
 					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
 					_vec3 up = pTransform->Get_Info(INFO::INFO_UP);

@@ -1,5 +1,11 @@
 #pragma once
 
+#define IsOutOfScreen()					\
+POINT p; GetCursorPos(&p);				\
+RECT rc; GetClientRect(g_hWnd, &rc);	\
+ScreenToClient(g_hWnd, &p);				\
+if (!PtInRect(&rc, p))
+
 enum class EditorType : unsigned int
 {
 	MAP = 0,

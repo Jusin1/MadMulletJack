@@ -46,6 +46,7 @@ HRESULT CVIBuffer_GridPanel_Editor::Ready_Buffer(void *pArg)
     case WallType::WALL_HOR:
         return Ready_HorizonWallBuffer();
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
         return Ready_VerticalWallBuffer();
     case WallType::INCLINE:
     case WallType::FLOOR:
@@ -134,6 +135,7 @@ _bool CVIBuffer_GridPanel_Editor::IntersectRayWithPlane(_vec3 *pOut)
         iRowMax = m_tData.dwCountY;
     } break;
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         iColMax = m_tData.dwCountZ;
         iRowMax = m_tData.dwCountY;
@@ -202,6 +204,7 @@ _bool CVIBuffer_GridPanel_Editor::IntersectRayWithPlaneForEditor(_vec3 *pOut)
         iRowMax = m_tData.dwCountY;
     } break;
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         iColMax = m_tData.dwCountZ;
         iRowMax = m_tData.dwCountY;
@@ -284,6 +287,7 @@ HRESULT CVIBuffer_GridPanel_Editor::Set_Buffer(_ulong iRowMax, _ulong iColMax)
                 };
             } break;
             case WallType::WALL_VER:
+            case WallType::SIDE_DASH:
             {
                 pVertex[dwIndex].vPosition = { 0,
                                            (_float)i *m_tData.dwInterval,
@@ -354,6 +358,7 @@ void CVIBuffer_GridPanel_Editor::Increase_RowBuffer()
     {
     case WallType::WALL_HOR:
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         m_tData.dwCountY += 1;
     } break;
@@ -381,6 +386,7 @@ void CVIBuffer_GridPanel_Editor::Increase_ColBuffer()
         m_tData.dwCountX += 1;
     } break;
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         m_tData.dwCountZ += 1;
     } break;
@@ -412,6 +418,7 @@ void CVIBuffer_GridPanel_Editor::Decrease_RowBuffer()
     {
     case WallType::WALL_HOR:
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         m_tData.dwCountY -= 1;
     } break;
@@ -439,6 +446,7 @@ void CVIBuffer_GridPanel_Editor::Decrease_ColBuffer()
         m_tData.dwCountX -= 1;
     } break;
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         m_tData.dwCountZ -= 1;
     } break;
@@ -476,6 +484,7 @@ void CVIBuffer_GridPanel_Editor::Update_BufferInfo()
         return Update_Buffer(m_tData.dwCountY, m_tData.dwCountX);
     }        
     case WallType::WALL_VER:
+    case WallType::SIDE_DASH:
     {
         Update_BufferInfo_Vertical();
         return Update_Buffer(m_tData.dwCountY, m_tData.dwCountZ);
@@ -534,6 +543,7 @@ void CVIBuffer_GridPanel_Editor::Update_Buffer(_ulong iRowMax, _ulong iColMax)
                 };
             } break;
             case WallType::WALL_VER:
+            case WallType::SIDE_DASH:
             {
                 pVertex[dwIndex].vPosition = { 0,
                                            (_float)i * m_tData.dwInterval,

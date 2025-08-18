@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CVIBuffer_Cube_Color.h"
 #include "Engine_Enum.h"
 #include "Engine_Define.h"
@@ -248,6 +249,7 @@ void CDummyPlacementObject::PosUpdate()
 					{
 					case WallType::WALL_HOR:
 					{
+						pTransform->SetDegreeForEditor(_vec3{ 0.f, 0.f,1.f }, 90.f);
 						pickPos.x = (int)pickPos.x + 0.5f;
 						pickPos.y = (int)pickPos.y + 0.5f;
 						pickPos.z -= (pTransform->Get_Scale().z + 0.001f);
@@ -314,6 +316,9 @@ void CDummyPlacementObject::PosUpdate()
 
 				if (IS_LBUTTON_DOWN)
 				{
+					IsOutOfScreen()
+						return;
+
 					MAPOBJECTDATA tTestData;
 					_vec3 right = pTransform->Get_Info(INFO::INFO_RIGHT);
 					_vec3 up = pTransform->Get_Info(INFO::INFO_UP);

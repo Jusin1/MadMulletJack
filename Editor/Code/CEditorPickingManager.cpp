@@ -49,10 +49,7 @@ _bool CEditorPickingManager::Picking()
 {
 	if (!(GetAsyncKeyState(VK_LBUTTON) & 0x8000)) return FALSE;
 
-	POINT p; GetCursorPos(&p);
-	RECT rc; GetClientRect(g_hWnd, &rc);
-	ScreenToClient(g_hWnd, &p);
-	if (!PtInRect(&rc, p))
+	IsOutOfScreen()
 		return FALSE;
 
 	vector<CGameObject *> vecPicked;
@@ -149,10 +146,7 @@ _bool CEditorPickingManager::Picking()
 
 _bool CEditorPickingManager::Picking_ForDummy()
 {
-	POINT p; GetCursorPos(&p);
-	RECT rc; GetClientRect(g_hWnd, &rc);
-	ScreenToClient(g_hWnd, &p);
-	if (!PtInRect(&rc, p))
+	IsOutOfScreen()
 		return FALSE;
 
 	vector<CGameObject *> vecPicked;
