@@ -212,7 +212,7 @@ HRESULT CPanelUI::Texture_Clone()
         CTexture::TEXINFO info{};
         info.m_iStart = 0; info.m_iEndTex = 0; info.m_fSpeed = 0.f; info.m_bLoop = false;
         CTexture* p = nullptr;
-        if (FAILED(Add_Components(tag, SCENE_STAGE, proto, (CComponent**)&p, &info))) return E_FAIL;
+        if (FAILED(Add_Components(tag, SCENE_STAGE_1, proto, (CComponent**)&p, &info))) return E_FAIL;
         m_mapTextures.insert({ tag, p });
         return S_OK;
         };

@@ -73,6 +73,9 @@
     <Filter Include="03. Manager\PickingManager">
       <UniqueIdentifier>{f9b54d02-4e72-4866-9974-02b9f5233c87}</UniqueIdentifier>
     </Filter>
+	<Filter Include="02. GameObject\06. UI\HpBar_UI">
+	  <UniqueIdentifier>{3208e0d7-db07-4d44-8943-c316867a2fff}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Suit">
       <UniqueIdentifier>{2d24f50e-aca2-4087-9ce6-140403d3f4e5}</UniqueIdentifier>
     </Filter>
@@ -100,6 +103,9 @@
     <Filter Include="02. GameObject\06. UI\Player_UI\04. Arm">
       <UniqueIdentifier>{c1f62a87-9555-4298-b2e6-0e131ac4d2f7}</UniqueIdentifier>
     </Filter>
+	<Filter Include="02. GameObject\06. UI\HpBar_UI\00.Man">
+	  <UniqueIdentifier>{4dcb0b0e-d572-4c47-bb80-64fd38bcaf81}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\06. UI\Weapon">
       <UniqueIdentifier>{cd5bba98-7803-422d-8349-d3eec51b7c1d}</UniqueIdentifier>
     </Filter>

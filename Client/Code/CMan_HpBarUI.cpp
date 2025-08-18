@@ -137,7 +137,7 @@ HRESULT CMan_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 16;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManN", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarManN", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManN", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManN", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_ManN"), m_pTextureCom });
 
@@ -146,7 +146,7 @@ HRESULT CMan_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 16;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManH", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarManH", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManH", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManH", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_ManH"), m_pTextureCom });
 
@@ -155,7 +155,7 @@ HRESULT CMan_HpBarUI::Texture_Clone()
 	texInfo.m_iEndTex = 16;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManD", SCENE_STAGE, L"Prototype_Component_Texture_UIHpBarManD", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_HpBar_ManD", SCENE_STAGE_1, L"Prototype_Component_Texture_UIHpBarManD", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_HpBar_ManD"), m_pTextureCom });
 

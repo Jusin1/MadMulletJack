@@ -83,7 +83,7 @@ HRESULT CChatUI::Texture_Clone()
     texInfo.m_fSpeed = 7.f;
     texInfo.m_bLoop = true;
 
-    if (FAILED(Add_Components(L"Com_Texture_Lisa", SCENE_STAGE, L"Prototype_Component_Texture_ChatUI", (CComponent**)&m_pTextureCom, &texInfo)))
+    if (FAILED(Add_Components(L"Com_Texture_Lisa", SCENE_STAGE_1, L"Prototype_Component_Texture_ChatUI", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Lisa"), m_pTextureCom });
     return S_OK;

@@ -85,7 +85,7 @@ HRESULT CKnife_SubW::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 5.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Knife_Idle", SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Knife_Idle", SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Knife_Idle"), m_pTextureCom });
 
@@ -94,7 +94,7 @@ HRESULT CKnife_SubW::Texture_Clone()
 	texInfo.m_iEndTex = 1;
 	texInfo.m_fSpeed = 0.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Knife_Item", SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Item", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Knife_Item", SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Item", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Knife_Item"), m_pTextureCom });
 
@@ -103,7 +103,7 @@ HRESULT CKnife_SubW::Texture_Clone()
 	texInfo.m_iEndTex = 2;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Knife_Att", SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Att", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Knife_Att", SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Att", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Knife_Att"), m_pTextureCom });
 

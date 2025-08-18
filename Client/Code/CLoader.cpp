@@ -226,16 +226,16 @@ HRESULT CLoader::Loading_ForStage()
 	// Knife
 	// Knife - idle
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\idle\CLEAVER_IDLE002.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Idle",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/idle/CLEAVER_IDLE%03d.png", 3))))
 		return E_FAIL;
 	// Knife - item
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\item\CLEAVER_ITEM.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Item",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Item",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/item/CLEAVER_ITEM.png", 1))))
 		return E_FAIL;
 	// Knife - attack
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SubWKnife_Att",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SubWKnife_Att",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
 		return E_FAIL;
 
@@ -359,11 +359,11 @@ HRESULT CLoader::Loading_ForStage()
 #pragma region 패널 UI
 
 	// GridUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_FileGridUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_FileGridUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/CYBER BACKGROUND.png", 1))))
 		return E_FAIL;
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_FrameUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_FrameUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/Frame.png", 1))))
 		return E_FAIL;
 #pragma endregion 패널 UI
@@ -379,7 +379,7 @@ HRESULT CLoader::Loading_ForStage()
 		return E_FAIL;
 
 	// HEAT BEAT 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_BEAT",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_BEAT",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HEART BEAT.png", 1))))
 		return E_FAIL;
 
@@ -390,52 +390,52 @@ HRESULT CLoader::Loading_ForStage()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default/Lisa_Default_%03d.png", 12))))
 		return E_FAIL;
 	// BYE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaByeUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaByeUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/wink/Lisa_Wink_%03d.png", 10))))
 		return E_FAIL;
 
 	// LisaHead - IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaHair_Default",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaHair_Default",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default_Hair/HAIR%03d.png", 3))))
 		return E_FAIL;
 
 	// LisaHead - Bye
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LisaHair_Bye",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LisaHair_Bye",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Wink_Hair/MASCOT_HAIR_WINK%03d.png", 3))))
 		return E_FAIL;
 	// Lisa - TalkUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_Talk",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Talk",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/BALLON.png", 1))))
 		return E_FAIL;
 #pragma endregion LisaUI
 
 	// CHAT UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ChatUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_ChatUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Chat/CHAT%03d.png", 7))))
 		return E_FAIL;
 
 	// Arrow UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_ArrowUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_ArrowUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/ARROW.png", 1))))
 		return E_FAIL;
 
 	// LOGO
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LogoUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LogoUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PEACE LOGO 2.png", 1))))
 		return E_FAIL;
 
 	// TITLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SmallTitleUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SmallTitleUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SMALLTITLE.png", 1))))
 		return E_FAIL;
 
 	// TextUI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_SmallTextUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SmallTextUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/MsgText.png", 1))))
 		return E_FAIL;
 
 	// LiveIcon
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE, L"Prototype_Component_Texture_LiveIconUI",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_LiveIconUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/LIVE ICON.png", 1))))
 		return E_FAIL;
 

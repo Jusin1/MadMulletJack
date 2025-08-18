@@ -20,7 +20,7 @@ public:
 public:
     void Add_Child(CUIBase* pChild); // 자식 추가
     CUIBase* Find_Child_ByTag(const _tchar* pTag); // 자식 찾을 때 태그로 찾음
-    const vector<CUIBase*>& GetChildren() const { return m_vecChildren; }
+    const list<CUIBase*>& GetChildren() const { return m_vecChildren; }
     void		Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY); // pos를 기준으로 offset을 줘서 pos를 셋팅
 
 public:

@@ -288,7 +288,7 @@ HRESULT CPlayer_HandR::Set_WeaponUI()
     }
 
     // knife 생성 및 list에 넣기
-    CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", SCENE_STAGE, L"UI_Layer"));
+    CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", SCENE_STAGE_1, L"UI_Layer"));
     if (pKnifeUI)
     {
         pKnifeUI->Set_ObjTag(L"KnifeUI");

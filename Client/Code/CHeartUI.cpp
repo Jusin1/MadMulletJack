@@ -1,7 +1,5 @@
 #include "pch.h"
-#include "CHeartUI.h"
-
-#include "pch.h"
+#include "CTexture.h"
 #include "CHeartUI.h"
 
 CHeartUI::CHeartUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -187,11 +185,7 @@ void CHeartUI::RenderHearts()
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX + m_heartPosLX, cy, 0.f));
 	CUI::Render_GameObject();
 
-    if (FAILED(Add_Components(L"Com_Texture_Heart", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTextureCom, &texInfo)))
-        return E_FAIL;
-    m_mapTextures.insert({ TEXT("Com_Texture_Heart"), m_pTextureCom });
-    return S_OK;
-	CTexture* pR = (m_pTexHeartR ? m_pTexHeartR : m_pTexHeartL);
+	CTexture *pR = (m_pTexHeartR ? m_pTexHeartR : m_pTexHeartL);
 	pR->Set_Texture(pR->Get_Frame().m_iCurrentTex);
 	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX + m_heartPosRX, cy, 0.f));
 	CUI::Render_GameObject();
@@ -215,19 +209,19 @@ void CHeartUI::SetBeatYOffset(_float py) { m_beatY = py; m_beatYOverride = true;
 HRESULT CHeartUI::Texture_Clone()
 {
 	CTexture::TEXINFO iL{ 0, 5, 3.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_L", SCENE_STAGE, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTexHeartL, &iL)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_L", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI", (CComponent**)&m_pTexHeartL, &iL)))
 		return E_FAIL;
 
 	CTexture::TEXINFO iR{ 0, 5, 6.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_R", SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_B", (CComponent**)&m_pTexHeartR, &iR)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_R", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_B", (CComponent**)&m_pTexHeartR, &iR)))
 		m_pTexHeartR = nullptr;
 
 	CTexture::TEXINFO iLine{ 0, 0, 0.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_LINE", SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_LINE", (CComponent**)&m_pTexLine, &iLine)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_LINE", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_LINE", (CComponent**)&m_pTexLine, &iLine)))
 		m_pTexLine = nullptr;
 
 	CTexture::TEXINFO iPulse{ 0, 0, 0.f, true };
-	if (FAILED(Add_Components(L"Com_Texture_Heart_PULSE", SCENE_STAGE, L"Prototype_Component_Texture_HeartUI_BEAT", (CComponent**)&m_pTexPulse, &iPulse)))
+	if (FAILED(Add_Components(L"Com_Texture_Heart_PULSE", SCENE_STAGE_1, L"Prototype_Component_Texture_HeartUI_BEAT", (CComponent**)&m_pTexPulse, &iPulse)))
 		m_pTexPulse = nullptr;
 
 	return S_OK;

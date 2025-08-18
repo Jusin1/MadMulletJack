@@ -118,7 +118,7 @@ void CUIManager::CreateClearUI()
 
     m_pEnterUI = dynamic_cast<CUIBase*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIRoot", SCENE_STAGE, L"UI_Layer"));
+            L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, L"UI_Layer"));
     if (!m_pEnterUI) return;
 
     m_pEnterUI->Set_Active(true);
@@ -137,7 +137,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BlackBackground", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_BlackBackground", SCENE_STAGE_1, L"UI_Layer"))) {
         pBlack->Set_UIPosition(0.f, 0.f, (float)WINCX, (float)WINCY);
         pBlack->SetAlpha(0);
         pBlack->FadeTo(190, 0.0f, 0.25f);
@@ -147,7 +147,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PanelUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_PanelUI", SCENE_STAGE_1, L"UI_Layer"))) {
         pFrame->UseGreenFramePreset(-130.f, -70.f, 1080.f, 600.f, 3.f, true);
         attachAndSlide(pFrame, -130.f, -70.f, 1080.f, 600.f);
     }
@@ -156,19 +156,19 @@ void CUIManager::CreateClearUI()
 
     if (auto* pLisa = dynamic_cast<CLisaUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_LisaUI", SCENE_STAGE, L"UI_Layer")))
+            L"Prototype_GameObject_LisaUI", SCENE_STAGE_1, L"UI_Layer")))
         attachAndSlide(pLisa, faceX, faceY, faceW, faceH);
 
     if (auto* pFaceFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PanelUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_PanelUI", SCENE_STAGE_1, L"UI_Layer"))) {
         pFaceFrame->UseGreenFramePreset(faceX, faceY, faceW, faceH, 3.f, true);
         attachAndSlide(pFaceFrame, faceX, faceY, faceW, faceH);
     }
 
     if (auto* pChat = dynamic_cast<CChatUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_ChatUI", SCENE_STAGE, L"UI_Layer")))
+            L"Prototype_GameObject_ChatUI", SCENE_STAGE_1, L"UI_Layer")))
         attachAndSlide(pChat, 550.f, 200.f, 220.f, 320.f);
 
     const float lisaBottom = faceY + faceH * 0.5f;
@@ -177,7 +177,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pBanner = dynamic_cast<CBannerUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BannerUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_BannerUI", SCENE_STAGE_1, L"UI_Layer"))) {
         pBanner->SetBannerRect(bx, by, bw, bh);
         pBanner->SetText(L"FLOOR 01");
         pBanner->SetAccentColor(D3DCOLOR_ARGB(255, 60, 255, 60));
@@ -203,7 +203,7 @@ void CUIManager::CreateClearUI()
     auto mkPanel = [&](float cx, float cy, float pw, float ph, D3DCOLOR tint) -> CPanelUI* {
         auto* p = dynamic_cast<CPanelUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_PanelUI", SCENE_STAGE, L"UI_Layer"));
+                L"Prototype_GameObject_PanelUI", SCENE_STAGE_1, L"UI_Layer"));
         if (!p) return nullptr;
         p->SetPanelPos(cx, cy);
         p->SetPanelSize(pw, ph);
@@ -219,7 +219,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* heart = dynamic_cast<CHeartUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_HeartUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_HeartUI", SCENE_STAGE_1, L"UI_Layer"))) {
         heart->Set_UIPosition(X, Y, W2, H2);
         heart->SetHeartSizePx(80.f);
         heart->SetHeartManual(-W2 * 0.5f + 60.f, +W2 * 0.5f - 60.f, 0.f);
@@ -238,7 +238,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* img = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"))) {
         img->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_LogoUI", 0, 0, 0.f, false);
         img->ChangeTexture(L"Com_Texture_Logo");
         img->SetTintRGBA(100, 255, 120, 255);
@@ -249,7 +249,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* titleImage = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"))) {
         titleImage->RegisterTexture(L"Com_Texture_Title", L"Prototype_Component_Texture_SmallTitleUI", 0, 0, 0.f, false);
         titleImage->ChangeTexture(L"Com_Texture_Title");
         attachAndSlide(titleImage, -550.f, 300.f, 200.f, 100.f);
@@ -257,7 +257,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* textImage = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"))) {
         textImage->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_SmallTextUI", 0, 0, 0.f, false);
         textImage->ChangeTexture(L"Com_Texture_Text");
         attachAndSlide(textImage, -530.f, 360.f, 250.f, 30.f);
@@ -265,7 +265,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* liveIcon1 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"))) {
         liveIcon1->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_LiveIconUI", 0, 0, 0.f, false);
         liveIcon1->ChangeTexture(L"Com_Texture_Text");
         liveIcon1->SetTintRGBA(57, 255, 20, 255);
@@ -276,7 +276,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* txt = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", SCENE_STAGE_1, L"UI_Layer"))) {
         txt->SetFontTag(L"UIFont");
         txt->SetText(L"LIVESTREAM");
         txt->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f));
@@ -288,7 +288,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* liveIcon2 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", SCENE_STAGE_1, L"UI_Layer"))) {
         liveIcon2->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_LiveIconUI", 0, 0, 0.f, false);
         liveIcon2->ChangeTexture(L"Com_Texture_Text");
         liveIcon2->SetTintRGBA(255, 0, 0, 255);
@@ -299,7 +299,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", SCENE_STAGE_1, L"UI_Layer"))) {
         txt1->SetFontTag(L"UIFont");
         txt1->SetText(L"PEACE CROP CODEC");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
@@ -311,7 +311,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* talk = dynamic_cast<CTalkUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TalkUI", SCENE_STAGE, L"UI_Layer"))) {
+            L"Prototype_GameObject_TalkUI", SCENE_STAGE_1, L"UI_Layer"))) {
         std::vector<std::wstring> dialogues = {
             L"대화테스트 1.", L"대화테스트 2", L"대화테스트 3", L"종료"
         };
