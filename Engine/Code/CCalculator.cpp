@@ -1,5 +1,4 @@
 #include "CCalculator.h"
-#include "CVIBUffer_Terrian.h"
 #include "CTransform.h"
 
 CCalculator::CCalculator(LPDIRECT3DDEVICE9 pGraphicDev)

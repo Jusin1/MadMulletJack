@@ -7,7 +7,6 @@
 // TEST
 #include "CBackGround.h"
 #include "CPlayer.h"
-#include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CUIBase.h"

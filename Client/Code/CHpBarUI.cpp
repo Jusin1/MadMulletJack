@@ -7,7 +7,7 @@
 #include "CColRect_HpBarUI.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CUI(pGraphicDev), m_iHitCount(0.f), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false)
+	:CUI(pGraphicDev), m_iHitCount(0), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false)
 {
 }
 

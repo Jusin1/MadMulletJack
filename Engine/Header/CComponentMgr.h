@@ -5,7 +5,6 @@
 #include "CTriCol.h"
 #include "CRcCol.h"
 #include "CVIBuffer_Rect.h"
-#include "CVIBuffer_Terrian.h"
 #include "VIBuffer_Cube.h"
 #include "CColider_Rect.h"
 #include "CColider_Cube.h"

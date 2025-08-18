@@ -55,5 +55,7 @@ protected:
 	_bool m_bJumping;
 	_float m_fJumpTime;
 
+	_uint m_iCurrentGridPanelIndex{ 0 };
+
 	virtual void Free() override;
 };

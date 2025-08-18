@@ -3,7 +3,6 @@
 #include "CBackGround.h"
 #include "CPlayer.h"
 #include "CMonster.h"
-#include "CTerrain.h"
 #include "CStage.h"
 #include "CManagement.h"
 #include "CFontMgr.h"

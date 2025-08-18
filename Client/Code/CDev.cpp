@@ -7,7 +7,6 @@
 #include "CObjectManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
-#include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"

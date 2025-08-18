@@ -31,9 +31,6 @@
     <Filter Include="02. GameObject\00. BackGround">
       <UniqueIdentifier>{339f2345-7ecf-41a6-9988-7ed0d488a1c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Terrain">
-      <UniqueIdentifier>{bb8e5189-9757-475d-bfd1-5b68823a8462}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\02. Loading">
       <UniqueIdentifier>{d8c4b272-1c4a-46ca-b9c9-68997636653a}</UniqueIdentifier>
     </Filter>
@@ -240,9 +237,6 @@
     <ClInclude Include="..\Header\CMonster.h">
       <Filter>02. GameObject\01. Character\02. Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CTerrain.h">
-      <Filter>02. GameObject\03. Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CStage.h">
       <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
@@ -409,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CTerrain.cpp">
-      <Filter>02. GameObject\03. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStage.cpp">
       <Filter>01. Scene\01. Stage</Filter>

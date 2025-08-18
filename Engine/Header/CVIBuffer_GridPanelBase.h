@@ -14,6 +14,10 @@ protected:
 	virtual HRESULT Initialize(void *pArg) override;
 public:
 	virtual _bool Picking(CTransform *pTransform, _vec3 *pOut = nullptr) override;
+	_ulong GetColMax() const { return m_iColMax; }
+	_ulong GetRowMax() const { return m_iRowMax; }
+	PANELDATA *GetData() { return &m_tData; }
+	_vec3 *GetVerticesData() { return m_pVerticesData; }
 protected:
 	virtual HRESULT	Ready_Buffer(void *pArg);
 	virtual HRESULT Set_Buffer();

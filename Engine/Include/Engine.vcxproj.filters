@@ -82,9 +82,6 @@
     <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\01. Rect">
       <UniqueIdentifier>{bd2d0bcb-19ca-4bb8-aacf-df1754d4934d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\03. Terrian">
-      <UniqueIdentifier>{879eabcc-12f9-4a1f-a3a1-71fdf41ea76c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Manager\03. Management\03. Component\00. VIBuffer\02. Cube">
       <UniqueIdentifier>{aa8e89cd-00b5-4fbe-ba20-89a5bf716784}</UniqueIdentifier>
     </Filter>
@@ -170,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTexture.cpp">
       <Filter>00. Manager\03. Management\03. Component\02. Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CVIBuffer_Terrian.cpp">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\03. Terrian</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CRenderer.cpp">
       <Filter>00. Manager\03. Management\03. Component\05. Renderer</Filter>
@@ -304,9 +298,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTexture.h">
       <Filter>00. Manager\03. Management\03. Component\02. Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CVIBuffer_Terrian.h">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\03. Terrian</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CRenderer.h">
       <Filter>00. Manager\03. Management\03. Component\05. Renderer</Filter>

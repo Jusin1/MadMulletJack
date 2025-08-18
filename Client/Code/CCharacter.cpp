@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "CCharacter.h"
+#include "CGridPanel.h"
+#include "CVIBuffer_GridPanel_Normal.h"
+#include "CManagement.h"
 #include "CObjectManager.h"
 
 CCharacter::CCharacter(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -47,7 +50,7 @@ HRESULT CCharacter::Initialize(void* pArg)
 _int CCharacter::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
-	//Set_OnTerrain();
+	Set_OnTerrain();
 
 	return NO_EVENT;
 }
@@ -82,10 +85,33 @@ void CCharacter::Set_OnTerrain()
 {
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 
-	Engine::CVIBuffer_Terrian* pTerrainBufferCom =dynamic_cast<Engine::CVIBuffer_Terrian*>
-		(CObjectManager::GetInstance()->Get_Component(SCENE_STATIC, L"Environment_Layer", L"Com_VIBuffer", 0));
+	/*auto Floorlist = CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Floor_Layer");
+
+	for (auto itr = Floorlist->begin();
+		itr != Floorlist->end();
+		++itr)
+	{
+		if (!(*itr))
+			continue;
+
+		CGridPanel *pFloor = static_cast<CGridPanel *>(*itr);
+		Engine::CVIBuffer_GridPanel_Normal *pFloorBuffer = static_cast<CVIBuffer_GridPanel_Normal *>(pFloor->GetBuffer());
+		_float fHeight = m_pCalculatorCom-> Compute_HeightOnTerrain(&vPos,
+				pFloorBuffer->GetVerticesData(),
+				pFloorBuffer->GetColMax(),
+				pFloorBuffer->GetRowMax(),
+				pFloorBuffer->GetData()->dwInterval);
+	}*/
+
+
+	Engine::CVIBuffer_GridPanel_Normal * pFloorBuffer =static_cast<Engine::CVIBuffer_GridPanel_Normal *>
+		(CObjectManager::GetInstance()->Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Floor_Layer", L"Com_Buffer", 0));
 	_float fHeight = m_pCalculatorCom->
-		Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ, VTXITV);
+		Compute_HeightOnTerrain(&vPos,
+			pFloorBuffer->GetVerticesData(),
+			pFloorBuffer->GetColMax(),
+			pFloorBuffer->GetRowMax(),
+			pFloorBuffer->GetData()->dwInterval);
 	
 	if (m_bJumping)
 	{

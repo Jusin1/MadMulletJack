@@ -199,7 +199,6 @@
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTalkUI.h" />
     <ClInclude Include="..\Header\CSubWeapon.h" />
-    <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTileBase.h" />
     <ClInclude Include="..\Header\CTile_Acid.h" />
     <ClInclude Include="..\Header\CTile_Deco.h" />
@@ -263,7 +262,6 @@
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CSubWeapon.cpp" />
     <ClCompile Include="..\Code\CTalkUI.cpp" />
-    <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTileBase.cpp" />
     <ClCompile Include="..\Code\CTile_Acid.cpp" />
     <ClCompile Include="..\Code\CTile_Deco.cpp" />
