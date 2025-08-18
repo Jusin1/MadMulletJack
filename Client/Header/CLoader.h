@@ -20,7 +20,7 @@ public:
 	HRESULT			Ready_Loading(SCENE eNextScene); // 로딩 준비
 	HRESULT			Loading_Logo(); // 로고 씬 로딩
 	HRESULT			Loading_ForStage(); // 스테이지 씬 로딩
-
+	HRESULT			Loading_MapObjectTexture();
 private:
 	SCENE					m_eNextScene = SCENE_END;
 	_bool					m_isFinished = false;

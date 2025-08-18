@@ -51,10 +51,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Set_PlayerUI()))
 		return E_FAIL;
 
+	// StartPosition 설정
+	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+	{
+		GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+		GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+		GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
 
-	m_vPosition = { 10.f, 1.f, 10.f };
-	m_pTransformCom->Set_Info(INFO_POS, m_vPosition);
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Apply_WorldMatrix();
+	}
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 

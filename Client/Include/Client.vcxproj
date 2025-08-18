@@ -121,7 +121,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,8 +160,10 @@
     <ClInclude Include="..\Header\CCharacter.h" />
     <ClInclude Include="..\Header\CDev.h" />
     <ClInclude Include="..\Header\CChatUI.h" />
+    <ClInclude Include="..\Header\CDummyBase.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffectUI.h" />
+    <ClInclude Include="..\Header\CEndPoint.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
@@ -220,8 +222,10 @@
     <ClCompile Include="..\Code\CCharacter.cpp" />
     <ClCompile Include="..\Code\CDev.cpp" />
     <ClCompile Include="..\Code\CChatUI.cpp" />
+    <ClCompile Include="..\Code\CDummyBase.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffectUI.cpp" />
+    <ClCompile Include="..\Code\CEndPoint.cpp" />
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />

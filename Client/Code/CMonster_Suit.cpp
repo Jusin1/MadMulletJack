@@ -32,7 +32,7 @@ namespace {
 #endif
 
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev)
+    : CMonster(pGraphicDev, MonsterType::SUIT)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
     , m_pPlayerTr(nullptr)
     , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
@@ -66,11 +66,9 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
     CTransform::TRANSFORMINFO TransformInfo{};
     TransformInfo.fSpeed = 5.f;
     TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-    TransformInfo.vStartPos = _vec3(4.f, 0.f, 0.f);
 
     m_pTransformCom->SetTransformInfo(TransformInfo);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(4.f, 1.f, 0.f));
-    m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+    m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
     GetPlayerTransform();
 
@@ -384,7 +382,7 @@ CTransform* CMonster_Suit::GetPlayerTransform()
     if (!m_pPlayerTr)
     {
         m_pPlayerTr = dynamic_cast<CTransform*>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, L"Player_Layer", L"Com_Transform", 0));
+            CObjectManager::GetInstance()->Get_Component(SCENE_DEV, L"Player_Layer", L"Com_Transform", 0));
     }
     return m_pPlayerTr;
 }

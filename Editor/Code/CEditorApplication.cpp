@@ -238,14 +238,17 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 		return E_FAIL;
 
 	// Buffer_PanelDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault", CVIBuffer_GridPanel_Editor::Create(m_pGraphicDevice))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault",
+		CVIBuffer_GridPanel_Editor::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
 	// Buffer_TileDefault
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", CVIBuffer_Rect::Create(m_pGraphicDevice))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_TileDefault",
+		CVIBuffer_Rect::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", CVIBuffer_Cube_Color::Create(m_pGraphicDevice))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_CubeColor",
+		CVIBuffer_Cube_Color::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
 	return S_OK;

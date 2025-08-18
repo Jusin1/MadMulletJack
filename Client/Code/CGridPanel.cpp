@@ -9,12 +9,12 @@
 
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: Engine::CGameObject(pGraphicDevice), m_pBuffer(nullptr)
-	, m_pTexture(nullptr), m_eType(WallType::NONE)
+	, m_pTexture(nullptr), m_eType(WallType::NONE), m_eCategory(ObjectCategory::WALL)
 {
 }
 
 CGridPanel::CGridPanel(const CGridPanel &rhs)
-	: Engine::CGameObject(rhs), m_pBuffer(nullptr), m_pTexture(nullptr), m_eType(WallType::NONE)
+	: Engine::CGameObject(rhs), m_pBuffer(nullptr), m_pTexture(nullptr), m_eType(WallType::NONE), m_eCategory(ObjectCategory::WALL)
 {
 }
 
@@ -82,7 +82,7 @@ _int CGridPanel::Update_GameObject(const _float &fTimeDelta)
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+	m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
 	return NO_EVENT;
 }
@@ -92,8 +92,6 @@ void CGridPanel::LateUpdate_GameObject(const _float &fTimeDelta)
 	if (m_bDead)
 		return;
 
-	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
-
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -101,6 +99,8 @@ void CGridPanel::Render_GameObject()
 {
 	if (m_bDead)
 		return;
+
+	m_pTransformCom->Apply_WorldMatrix();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -144,6 +144,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Horizon", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
 					return E_FAIL;
 			} break;
+			case WallType::WALL_SLIDE:
 			case WallType::WALL_VER:
 			{
 				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Vertical", (CComponent **)&m_pBuffer, &(p->panelBuffer))))

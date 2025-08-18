@@ -3,16 +3,15 @@
 
 namespace Engine
 {
-	class CVIBuffer_Rect;
-	class CTexture;
+	class CColider_Sphere;
 }
 
-class CTileBase : public CGameObject
+class CDummyBase : public CGameObject
 {
 protected:
-	explicit CTileBase(LPDIRECT3DDEVICE9 pGraphicDevice, TileType _e);
-	explicit CTileBase(const CTileBase &rhs, TileType _e);
-	virtual ~CTileBase();
+	explicit CDummyBase(LPDIRECT3DDEVICE9 pGraphicDevice, EnvType _e);
+	explicit CDummyBase(const CDummyBase &rhs, EnvType _e);
+	virtual ~CDummyBase();
 
 	virtual void Free();
 public:
@@ -22,9 +21,8 @@ public:
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
 
-	const CVIBuffer_Rect *GetBuffer() const { m_pBuffer; }
-	const CTexture *GetTexture() const { m_pTexture; }
-	TileType GetType() const { return m_eType; }
+	Engine::CColider_Sphere *GetCollider() { m_pCollider; }
+	EnvType GetType() const { return m_eType; }
 	RENDERID GetRenderId() const { return m_eRenderID; }
 	ObjectCategory GetCategory() const { return m_eCategory; }
 private:
@@ -32,10 +30,8 @@ private:
 	HRESULT			Set_Component(void *pArg);
 protected:
 	ObjectCategory m_eCategory;
-	TileType m_eType;
-	CVIBuffer_Rect *m_pBuffer;
-	// TODO - Render ³ª´©±â
+	EnvType m_eType;
 	RENDERID m_eRenderID;
-	Engine::CTexture *m_pTexture;
+	Engine::CColider_Sphere *m_pCollider;
 };
 

@@ -8,8 +8,8 @@
 class CMonster : public CCharacter
 {
 protected:
-	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMonster(const CMonster& rhs);
+	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev, MonsterType _iType);
+	explicit CMonster(const CMonster& rhs, MonsterType _eType);
 	virtual ~CMonster();
 
 public:
@@ -19,6 +19,9 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+public:
+	ObjectCategory GetCategory() const { return m_eCategory; }
+	MonsterType GetType() const { return m_eType; }
 protected:
 	HRESULT	Set_Component();
 
@@ -40,7 +43,8 @@ protected:
 	map<const _tchar*, CTexture*> m_mapTexture;
 
 public:
-	static CMonster* Create(LPDIRECT3DDEVICE9 pGrahpicDev);
+	ObjectCategory m_eCategory;
+	MonsterType m_eType;
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

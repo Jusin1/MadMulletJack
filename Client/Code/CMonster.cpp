@@ -7,13 +7,13 @@
 #include "CPickingManager.h"
 #include "CColiderManager.h"
 
-CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev)
+CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, MonsterType _eType)
+	: CCharacter(pGraphicDev), m_eType(_eType), m_eCategory(ObjectCategory::MONSTER)
 {
 }
 
-CMonster::CMonster(const CMonster& rhs)
-	: CCharacter(rhs)
+CMonster::CMonster(const CMonster& rhs, MonsterType _eType)
+	: CCharacter(rhs), m_eType(_eType), m_eCategory(ObjectCategory::MONSTER)
 {
 }
 
@@ -37,6 +37,16 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	if (FAILED(Set_Component()))
 		return E_FAIL;
+
+	if (MAPOBJECTDATA *pData = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+	{
+		GetTransform()->Set_Info(INFO::INFO_RIGHT, pData->transform.Right);
+		GetTransform()->Set_Info(INFO::INFO_UP, pData->transform.Up);
+		GetTransform()->Set_Info(INFO::INFO_LOOK, pData->transform.Look);
+		GetTransform()->Set_Info(INFO::INFO_POS, pData->transform.Pos);
+
+		m_pTransformCom->Apply_WorldMatrix();
+	}
 
 	return S_OK;
 }
@@ -150,19 +160,6 @@ HRESULT CMonster::Change_Texture(const _tchar* LayerTag)
 		m_pTextureCom->Set_Zero_Frame();
 	}
 	return S_OK;
-}
-
-CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CMonster* pInstance = new CMonster(pGraphicDev);
-
-	if (FAILED(pInstance->Ready_GameObject()))
-	{
-		MSG_BOX("pMonster Create Failed");
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
 }
 
 CGameObject* CMonster::Clone(void* pArg)

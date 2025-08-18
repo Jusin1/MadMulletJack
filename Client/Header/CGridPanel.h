@@ -37,7 +37,10 @@ public:
 	Engine::CTexture *GetTexture() { return m_pTexture; }
 	void SetType(WallType _e) { m_eType = _e; }
 	WallType GetType() const { return m_eType; }
+	void SetCategory(ObjectCategory _e) { m_eCategory = _e; }
+	ObjectCategory GetCategory() const { return m_eCategory; }
 private:
+	ObjectCategory m_eCategory;
 	WallType m_eType;
 	CVIBuffer_GridPanelBase *m_pBuffer;
 	Engine::CTexture *m_pTexture;

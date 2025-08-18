@@ -91,7 +91,7 @@ HRESULT CTile_Deco::Set_Component(void *pArg)
     {
         if (MAPOBJECTDATA *pData = reinterpret_cast<MAPOBJECTDATA *>(pArg))
         {
-            if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, pData->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture), pData))
+            if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, pData->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture), pData))
                 return E_FAIL;
         }
         else

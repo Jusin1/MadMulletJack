@@ -37,7 +37,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 
     if (GetAsyncKeyState(VK_SPACE) & 0X8000)
     {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_STAGE_1))))
+        if (FAILED(CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
             return E_FAIL;
     }
     

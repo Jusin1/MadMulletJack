@@ -572,9 +572,9 @@ CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
 	}
 
 	//==================
-	// SIDE_DASH
+	// WALL_SLIDE
 	//==================
-	AddThumbnail("Wall_Slidedash", L"Proto_Wall_Slidedash", pThumbnail, WallType::SIDE_DASH);
+	AddThumbnail("Wall_Slidedash", L"Proto_Wall_Slidedash", pThumbnail, WallType::WALL_SLIDE);
 
 	return pThumbnail;
 }

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "CDev.h"
 #include "CBackGround.h"
+#include "CDataManager.h"
+#include "CFileManager.h"
+#include "CMapFactory.h"
 #include "CObjectManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
@@ -24,24 +27,29 @@ CDev::~CDev()
 HRESULT CDev::Ready_Scene()
 {
     if (FAILED(CScene::Ready_Scene()))
-        return E_FAIL;
+        return E_FAIL;        
+
+    SetData(SCENE_DEV);
 
     if (FAILED(Ready_Wall_Layer(L"Wall_Layer")))
         return E_FAIL;
 
-    if (FAILED(Ready_Wall_Layer(L"Tile_Layer")))
+    if (FAILED(Ready_Tile_Layer(L"Tile_Layer")))
         return E_FAIL;
     
-    if (FAILED(Ready_Wall_Layer(L"Trigger_Layer")))
+    if (FAILED(Ready_Floor_Layer(L"Floor_Layer")))
         return E_FAIL;
 
-    if (FAILED(Ready_Wall_Layer(L"EnvObj_Layer")))
+    if (FAILED(Ready_SlideWall_Layer(L"SlideWall_Layer")))
+        return E_FAIL;
+
+    if (FAILED(Ready_Ceiling_Layer(L"Ceiling_Layer")))
         return E_FAIL;
 
     if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
         return E_FAIL;
 
-    if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+    if (FAILED(Ready_EnvObj_Layer(L"Env_Layer")))
         return E_FAIL;
 
     if (FAILED(Ready_Player_Layer(L"Player_Layer")))
@@ -82,6 +90,8 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
     }
 
     CPickingManager::GetInstance()->Picking();
+    CUIManager::GetInstance()->Update(fTimeDelta);
+    auto p = CObjectManager::GetInstance();
     return iExit;
 }
 
@@ -94,6 +104,10 @@ void CDev::LateUpdate_Scene(const _float &fTimeDelta)
     {
         CUIManager::GetInstance()->CreateClearUI();
     }
+    if (GetAsyncKeyState('F'))
+    {
+        CUIManager::GetInstance()->DestroyEnterUI();
+    }
 }
 
 void CDev::Render_Scene()
@@ -101,28 +115,36 @@ void CDev::Render_Scene()
     // 디버깅용 코드
 }
 
-HRESULT CDev::Ready_Environment_Layer(const _tchar *pLayerTag)
+HRESULT CDev::Ready_SlideWall_Layer(const _tchar *pLayerTag)
+{
+    return S_OK;
+}
+
+HRESULT CDev::Ready_Floor_Layer(const _tchar *pLayerTag)
 {
     return S_OK;
 }
 
 HRESULT CDev::Ready_Wall_Layer(const _tchar *pLayerTag)
 {
+    InstancingObjects(L"Wall_Layer");
+    return S_OK;
+}
+
+HRESULT CDev::Ready_Ceiling_Layer(const _tchar *pLayerTag)
+{
     return S_OK;
 }
 
 HRESULT CDev::Ready_Tile_Layer(const _tchar *pLayerTag)
 {
-    return S_OK;
-}
-
-HRESULT CDev::Ready_Trigger_Layer(const _tchar *pLayerTag)
-{
+    InstancingObjects(L"Tile_Layer");
     return S_OK;
 }
 
 HRESULT CDev::Ready_EnvObj_Layer(const _tchar *pLayerTag)
 {
+    InstancingObjects(L"Env_Layer");
     return S_OK;
 }
 
@@ -143,7 +165,7 @@ HRESULT CDev::Ready_Camera_Layer(const _tchar *pLayerTag)
     CamInfo.TransformInfo.fSpeed = 10.f;
     CamInfo.TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_STAGE_1, pLayerTag, &CamInfo)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_DEV, pLayerTag, &CamInfo)))
         return E_FAIL;
 
 
@@ -152,37 +174,13 @@ HRESULT CDev::Ready_Camera_Layer(const _tchar *pLayerTag)
 
 HRESULT CDev::Ready_Player_Layer(const _tchar *pLayerTag)
 {
-    // Player
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(TEXT("Prototype_GameObject_Player"), SCENE_STAGE_1, pLayerTag)))
-        return E_FAIL;
     return S_OK;
 }
 
 HRESULT CDev::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
-    const float baseX = -8.f;
-    const float gap = 4.f;
-    const float posY = 1.f;
-    const float posZ = 0.f;
+    InstancingObjects(L"Monster_Layer");
 
-    for (int i = 0; i < 5; ++i) {
-        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", SCENE_STAGE_1, pLayerTag))) {
-            MSG_BOX("Monster spawn failed");
-            // 실패해도 계속 가려면 continue
-            return E_FAIL;
-
-        }
-    }
-
-    for (int i = 0; i < 5; ++i) {
-        auto tr = dynamic_cast<CTransform *>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_STAGE_1, pLayerTag, L"Com_Transform", i));
-        if (tr) {
-            const float x = baseX + gap * i;           // 좌→우로 늘어놓기
-            tr->Set_Info(INFO_POS, _vec3(x, posY, posZ));
-            tr->LookAt(_vec3(x, posY, posZ + 1.f));    // 필요하면 정면 보정
-        }
-    }
     return S_OK;
 }
 
@@ -193,15 +191,35 @@ HRESULT CDev::Ready_GameLogic_Layer(const _tchar *pLayerTag)
 
 HRESULT CDev::Ready_UI_Layer(const _tchar *pLayerTag)
 {
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STAGE_1, pLayerTag)))
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_DEV, pLayerTag)))
         return E_FAIL;
-
-
 
     return S_OK;
 }
 
 
+
+void CDev::SetData(_uint _iSceneIndex)
+{
+    CDataManager::GetInstance()->Clear();
+    CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
+    CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
+    CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");
+    CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
+
+    CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
+}
+
+void CDev::InstancingObjects(const wstring &_Layer)
+{
+    if (vector<MAPOBJECTDATA> *pVecData = CDataManager::GetInstance()->FindData(_Layer))
+    {
+        for (MAPOBJECTDATA &element : *pVecData)
+        {
+            CMapFactory::GetInstance()->Create(element.eCategory, element.iType, &element);
+        }
+    }
+}
 
 CDev *CDev::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

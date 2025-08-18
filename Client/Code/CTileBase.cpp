@@ -7,12 +7,14 @@
 #include "CTileBase.h"
 
 CTileBase::CTileBase(LPDIRECT3DDEVICE9 pGraphicDevice, TileType _e)
-	: Engine::CGameObject(pGraphicDevice), m_pTexture(nullptr), m_pBuffer(nullptr), m_eType(_e), m_eRenderID(RENDERID::RENDER_END)
+	: Engine::CGameObject(pGraphicDevice), m_pTexture(nullptr), m_pBuffer(nullptr), m_eType(_e)
+	, m_eRenderID(RENDERID::RENDER_END), m_eCategory(ObjectCategory::TILE)
 {
 }
 
 CTileBase::CTileBase(const CTileBase &rhs, TileType _e)
-	: Engine::CGameObject(rhs), m_pTexture(nullptr), m_pBuffer(nullptr), m_eType(_e), m_eRenderID(RENDERID::RENDER_END)
+	: Engine::CGameObject(rhs), m_pTexture(nullptr), m_pBuffer(nullptr), m_eType(_e)
+	, m_eRenderID(RENDERID::RENDER_END), m_eCategory(ObjectCategory::TILE)
 {
 }
 
@@ -75,7 +77,7 @@ void CTileBase::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	//m_pTransformCom->Apply_WorldMatrix();
+	m_pTransformCom->Apply_WorldMatrix();
 	m_pTexture->Set_Texture();
 	m_pBuffer->Render_Buffer();
 
@@ -88,13 +90,14 @@ HRESULT CTileBase::Set_Component(void *pArg)
 	{
 		if (MAPOBJECTDATA *pData = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 		{
-			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_TileDefault", (CComponent **)&m_pBuffer), pData))
+			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent **)&m_pBuffer), pData))
 				return E_FAIL;
 
 			GetTransform()->Set_Info(INFO::INFO_RIGHT, pData->transform.Right);
 			GetTransform()->Set_Info(INFO::INFO_UP, pData->transform.Up);
 			GetTransform()->Set_Info(INFO::INFO_LOOK, pData->transform.Look);
 			GetTransform()->Set_Info(INFO::INFO_POS, pData->transform.Pos);
+			GetTransform()->Apply_WorldMatrix();
 		}
 		else
 		{

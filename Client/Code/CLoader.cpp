@@ -50,6 +50,14 @@
 // 몬스터
 #include "CMonster_Suit.h"
 
+// MapObject
+#include "CGridPanel.h"
+#include "CTile_Acid.h"
+#include "CTile_Deco.h"
+#include "CTile_Glass.h"
+#include "CTile_Electric.h"
+#include "CTile_Vent.h"
+#include "CEndPoint.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -69,7 +77,7 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	switch (pLoader->Get_NextSceneID())
 	{
 	case SCENE_LOGO:  pLoader->Loading_Logo();  break;
-	case SCENE_STAGE_1: pLoader->Loading_ForStage(); break;
+	case SCENE_DEV: pLoader->Loading_ForStage(); break;
 	}
 	return 0;
 }
@@ -119,15 +127,12 @@ HRESULT CLoader::Loading_Logo()
 HRESULT CLoader::Loading_ForStage()
 {
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
-	// Terriann
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_Terrian",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Terrain0.png", 1))))
-		return E_FAIL;
 
-	// SkyBox
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_SkyBox",
-		CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger3.dds", 4))))
+#pragma region 맵오브젝트 테스트
+	if(FAILED(Loading_MapObjectTexture()))
 		return E_FAIL;
+#pragma endregion
+
 #pragma region 플레이어 테스트
 	// Player
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STAGE_1, L"Prototype_Component_Texture_PlayerTest",
@@ -444,20 +449,10 @@ HRESULT CLoader::Loading_ForStage()
 
 	// 객체 생성
 	lstrcpy(m_szLoading, L"객체 생성 중.");
-	//// Terrian
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Terrian",
-		CTerrain::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// SkyBox
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SkyBox",
-		CSkyBox::Create(m_pGraphicDev))))
-		return E_FAIL;
-
 	// Camera_FPS
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
 		CCameraFPS::Create(m_pGraphicDev))))
 		return E_FAIL;
-
 
 	// Player
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Player",
@@ -569,10 +564,37 @@ HRESULT CLoader::Loading_ForStage()
 
 #pragma endregion HpBar UI
 
-	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-	// TerrianTex
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_TerrianBuffer", Engine::CVIBuffer_Terrian::Create(m_pGraphicDev))))
+#pragma region MapObject
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DefaultPanel",
+		CGridPanel::Create(m_pGraphicDev))))
 		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DecoTile",
+		CTile_Deco::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GlassTile",
+		CTile_Glass::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_AcidTile",
+		CTile_Acid::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_ElectricTile",
+		CTile_Electric::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_VentTile",
+		CTile_Vent::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_EndPoint",
+		CEndPoint::Create(m_pGraphicDev))))
+		return E_FAIL;
+#pragma endregion
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	// CubeTex
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOADING, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDev))))
@@ -602,6 +624,138 @@ void CLoader::Free()
 	CloseHandle(m_hThread);
 	DeleteCriticalSection(&m_Crt);
 	Safe_Release(m_pGraphicDev);
+}
+
+// 0818 - 강병준
+// TODO - 추후 사용하는 텍스쳐만 로드하도록 분할 예정
+HRESULT CLoader::Loading_MapObjectTexture()
+{
+	CComponentMgr *pCompMgr = CComponentMgr::GetInstance();
+#define AddTexture(CompName, Path) if(FAILED(pCompMgr->Add_Prototype(SCENE_STATIC, CompName,	\
+												CTexture::Create(m_pGraphicDev, TEX_NORMAL, Path, 1))))	\
+												return E_FAIL
+
+	AddTexture(L"Proto_GridDefault", L"../Bin/Resource/MapObject/Grid/GridBox_Default.png");
+	AddTexture(L"Proto_GridTrigger", L"../Bin/Resource/MapObject/Grid/GridBox_Trigger.png");
+	AddTexture(L"Proto_GridNoDraw", L"../Bin/Resource/MapObject/Grid/GridBox_NoDraw.png");
+	AddTexture(L"Proto_GridCollider", L"../Bin/Resource/MapObject/Grid/GridBox_Collider.png");
+	AddTexture(L"Proto_Floor_1", L"../Bin/Resource/MapObject/Floor/FLOOR 1.png");
+	AddTexture(L"Proto_Floor_2", L"../Bin/Resource/MapObject/Floor/FLOOR 2.png");
+	AddTexture(L"Proto_Floor_3", L"../Bin/Resource/MapObject/Floor/FLOOR 3.png");
+	AddTexture(L"Proto_Floor_4", L"../Bin/Resource/MapObject/Floor/FLOOR 4.png");
+	AddTexture(L"Proto_Floor_5", L"../Bin/Resource/MapObject/Floor/FLOOR 5.png");
+	AddTexture(L"Proto_Floor_6", L"../Bin/Resource/MapObject/Floor/FLOOR 6.png");
+	AddTexture(L"Proto_Floor_7", L"../Bin/Resource/MapObject/Floor/FLOOR 7.png");
+	AddTexture(L"Proto_Acid_Floor_1", L"../Bin/Resource/MapObject/Acid/ACID A.png");
+	AddTexture(L"Proto_Acid_Floor_2", L"../Bin/Resource/MapObject/Acid/ACID D.png");
+	AddTexture(L"Proto_Acid_Wall_1", L"../Bin/Resource/MapObject/Acid/ACID B.png");
+	AddTexture(L"Proto_Acid_Wall_2", L"../Bin/Resource/MapObject/Acid/ACID C.png");
+	AddTexture(L"Proto_Concrete_Wall", L"../Bin/Resource/MapObject/Wall/CONCRETE WALL.png");
+	AddTexture(L"Proto_Corner_Wall_1", L"../Bin/Resource/MapObject/Wall/WALL 1 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_2", L"../Bin/Resource/MapObject/Wall/WALL 2 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_3", L"../Bin/Resource/MapObject/Wall/WALL 3 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_4", L"../Bin/Resource/MapObject/Wall/WALL 4 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_5_1", L"../Bin/Resource/MapObject/Wall/WALL 5 CORNER_1.png");
+	AddTexture(L"Proto_Corner_Wall_5_2", L"../Bin/Resource/MapObject/Wall/WALL 5 CORNER_2.png");
+	AddTexture(L"Proto_Corner_Wall_6", L"../Bin/Resource/MapObject/Wall/WALL 6 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_7", L"../Bin/Resource/MapObject/Wall/WALL 7 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_8", L"../Bin/Resource/MapObject/Wall/WALL 8 CORNER.png");
+	AddTexture(L"Proto_Corner_Wall_Boss", L"../Bin/Resource/MapObject/Wall/WALL BOSS 3 CORNER.png");
+	AddTexture(L"Proto_Wall_1A", L"../Bin/Resource/MapObject/Wall/WALL 1A.png");
+	AddTexture(L"Proto_Wall_1B", L"../Bin/Resource/MapObject/Wall/WALL 1B.png");
+	AddTexture(L"Proto_Wall_1C", L"../Bin/Resource/MapObject/Wall/WALL 1C.png");
+	AddTexture(L"Proto_Wall_2A", L"../Bin/Resource/MapObject/Wall/WALL 2A.png");
+	AddTexture(L"Proto_Wall_2B", L"../Bin/Resource/MapObject/Wall/WALL 2B.png");
+	AddTexture(L"Proto_Wall_2C", L"../Bin/Resource/MapObject/Wall/WALL 2C.png");
+	AddTexture(L"Proto_Wall_3A_1", L"../Bin/Resource/MapObject/Wall/WALL 3A_1.png");
+	AddTexture(L"Proto_Wall_3A_2", L"../Bin/Resource/MapObject/Wall/WALL 3A_2.png");
+	AddTexture(L"Proto_Wall_3B_1", L"../Bin/Resource/MapObject/Wall/WALL 3B_1.png");
+	AddTexture(L"Proto_Wall_3B_2", L"../Bin/Resource/MapObject/Wall/WALL 3B_2.png");
+	AddTexture(L"Proto_Wall_3C_1", L"../Bin/Resource/MapObject/Wall/WALL 3C_1.png");
+	AddTexture(L"Proto_Wall_3C_2", L"../Bin/Resource/MapObject/Wall/WALL 3C_2.png");
+	AddTexture(L"Proto_Wall_4A", L"../Bin/Resource/MapObject/Wall/WALL 4A.png");
+	AddTexture(L"Proto_Wall_4B", L"../Bin/Resource/MapObject/Wall/WALL 4B.png");
+	AddTexture(L"Proto_Wall_4C_1", L"../Bin/Resource/MapObject/Wall/WALL 4C_1.png");
+	AddTexture(L"Proto_Wall_4C_2", L"../Bin/Resource/MapObject/Wall/WALL 4C_2.png");
+	AddTexture(L"Proto_Wall_5A", L"../Bin/Resource/MapObject/Wall/WALL 5A.png");
+	AddTexture(L"Proto_Wall_5B", L"../Bin/Resource/MapObject/Wall/WALL 5B.png");
+	AddTexture(L"Proto_Wall_5C", L"../Bin/Resource/MapObject/Wall/WALL 5C.png");
+	AddTexture(L"Proto_Wall_6A", L"../Bin/Resource/MapObject/Wall/WALL 6A.png");
+	AddTexture(L"Proto_Wall_6B", L"../Bin/Resource/MapObject/Wall/WALL 6B.png");
+	AddTexture(L"Proto_Wall_6C", L"../Bin/Resource/MapObject/Wall/WALL 6C.png");
+	AddTexture(L"Proto_Wall_7A", L"../Bin/Resource/MapObject/Wall/WALL 7A.png");
+	AddTexture(L"Proto_Wall_7B", L"../Bin/Resource/MapObject/Wall/WALL 7B.png");
+	AddTexture(L"Proto_Wall_7C", L"../Bin/Resource/MapObject/Wall/WALL 7C.png");
+	AddTexture(L"Proto_Wall_8A", L"../Bin/Resource/MapObject/Wall/WALL 8A.png");
+	AddTexture(L"Proto_Wall_8B", L"../Bin/Resource/MapObject/Wall/WALL 8B.png");
+	AddTexture(L"Proto_Wall_8C", L"../Bin/Resource/MapObject/Wall/WALL 8C.png");
+	AddTexture(L"Proto_Wall_9A", L"../Bin/Resource/MapObject/Wall/WALL 9A.png");
+	AddTexture(L"Proto_Wall_9B", L"../Bin/Resource/MapObject/Wall/WALL 9B.png");
+	AddTexture(L"Proto_Wall_9C", L"../Bin/Resource/MapObject/Wall/WALL 9C.png");
+	AddTexture(L"Proto_Wall_10A", L"../Bin/Resource/MapObject/Wall/WALL 10A.png");
+	AddTexture(L"Proto_Wall_10B", L"../Bin/Resource/MapObject/Wall/WALL 10B.png");
+	AddTexture(L"Proto_Wall_10C", L"../Bin/Resource/MapObject/Wall/WALL 10C.png");
+	AddTexture(L"Proto_Wall_Deco_1", L"../Bin/Resource/MapObject/Wall/WALL DECO 1.png");
+	AddTexture(L"Proto_Wall_Deco_2", L"../Bin/Resource/MapObject/Wall/WALL DECO 2.png");
+	AddTexture(L"Proto_Wall_Deco_3", L"../Bin/Resource/MapObject/Wall/WALL DECO 3.png");
+	AddTexture(L"Proto_Wall_Deco_4", L"../Bin/Resource/MapObject/Wall/WALL DECO 4.png");
+	AddTexture(L"Proto_Wall_Deco_5", L"../Bin/Resource/MapObject/Wall/WALL DECO 5.png");
+	AddTexture(L"Proto_Wall_Deco_6", L"../Bin/Resource/MapObject/Wall/WALL DECO 6.png");
+	AddTexture(L"Proto_Wall_Deco_7", L"../Bin/Resource/MapObject/Wall/WALL DECO 7.png");
+	AddTexture(L"Proto_Wall_Deco_8", L"../Bin/Resource/MapObject/Wall/WALL DECO 8.png");
+	AddTexture(L"Proto_Wall_Hole_1", L"../Bin/Resource/MapObject/Wall/WALL HOLE 1.png");
+	AddTexture(L"Proto_Wall_Hole_2", L"../Bin/Resource/MapObject/Wall/WALL HOLE 2.png");
+	AddTexture(L"Proto_Wall_Hole_3", L"../Bin/Resource/MapObject/Wall/WALL HOLE 3.png");
+	AddTexture(L"Proto_Wall_Hole_4", L"../Bin/Resource/MapObject/Wall/WALL HOLE 4.png");
+	AddTexture(L"Proto_Wall_Boss_1", L"../Bin/Resource/MapObject/Wall/WALL boss 3 1.png");
+	AddTexture(L"Proto_Wall_Boss_2", L"../Bin/Resource/MapObject/Wall/WALL boss 3 2.png");
+	AddTexture(L"Proto_Wall_Boss_3", L"../Bin/Resource/MapObject/Wall/WALL boss 3 3.png");
+	AddTexture(L"Proto_Wall_Border", L"../Bin/Resource/MapObject/Wall/WALL BORDER.png");
+	AddTexture(L"Proto_Fence", L"../Bin/Resource/MapObject/FENCE.png");
+	AddTexture(L"Proto_JumpBorder", L"../Bin/Resource/MapObject/JUMP BORDER.png");
+	AddTexture(L"Proto_Wall_Slidedash", L"../Bin/Resource/MapObject/Wall/SIDE DASH WALL.png");
+	AddTexture(L"Proto_Steira", L"../Bin/Resource/MapObject/STEIRA.png");
+	AddTexture(L"Proto_Windows", L"../Bin/Resource/MapObject/WINDOWS.png");
+	AddTexture(L"Proto_Floor_Elevator", L"../Bin/Resource/MapObject/Elevator/ELEVATOR FLOOR.png");
+	AddTexture(L"Proto_Wall_Elevator", L"../Bin/Resource/MapObject/Elevator/ELEVATOR COLUMS.png");
+	AddTexture(L"Proto_Ceiling_Elevator", L"../Bin/Resource/MapObject/Elevator/ELEVATOR ROOF.png");
+	AddTexture(L"Proto_Platform_1", L"../Bin/Resource/MapObject/Platform/PLATFORM 1.png");
+	AddTexture(L"Proto_Platform_2", L"../Bin/Resource/MapObject/Platform/PLATFORM 2.png");
+
+	// tile
+	AddTexture(L"Proto_Acid_Env", L"../Bin/Resource/MapObject/Acid/acid dash.png");
+	AddTexture(L"Proto_Electric_Wall", L"../Bin/Resource/MapObject/Wall/ELECTRIC WALL.png");
+	AddTexture(L"Proto_Glass", L"../Bin/Resource/MapObject/GLASS.png");
+	AddTexture(L"Proto_BIO_1", L"../Bin/Resource/MapObject/Wall/WALL BIO 1.png");
+	AddTexture(L"Proto_BIO_2", L"../Bin/Resource/MapObject/Wall/WALL BIO 2.png");
+	AddTexture(L"Proto_Rug_1", L"../Bin/Resource/MapObject/Rug/RUG 1.png");
+	AddTexture(L"Proto_Rug_2", L"../Bin/Resource/MapObject/Rug/RUG 2.png");
+	AddTexture(L"Proto_Rug_3", L"../Bin/Resource/MapObject/Rug/RUG 3.png");
+	AddTexture(L"Proto_Rug_4", L"../Bin/Resource/MapObject/Rug/RUG 4.png");
+	AddTexture(L"Proto_Wall_Katana", L"../Bin/Resource/MapObject/Wall/WALL KATANAS.png");
+	AddTexture(L"Proto_Wall_Transparent_1", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 1.png");
+	AddTexture(L"Proto_Wall_Transparent_2", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 2.png");
+	AddTexture(L"Proto_Wall_Transparent_3", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 3.png");
+	AddTexture(L"Proto_Wall_Transparent_4", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 4.png");
+	AddTexture(L"Proto_Vent", L"../Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER.png");
+
+	// display
+	AddTexture(L"Proto_Bandit_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/BANDIT.png");
+	AddTexture(L"Proto_Beach_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/BEACH.png");
+	AddTexture(L"Proto_Beer_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/BEER.png");
+	AddTexture(L"Proto_Fuck_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/FKU001.png");
+	AddTexture(L"Proto_Kimono_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/KIMONO.png");
+	AddTexture(L"Proto_SaveHer_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/SAVEHER.png");
+	AddTexture(L"Proto_Shoes_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/SHOES.png");
+
+	// signs
+	AddTexture(L"Proto_Signs_1", L"../Bin/Resource/MapObject/Signs/SIGNS 1.png");
+	AddTexture(L"Proto_Signs_2", L"../Bin/Resource/MapObject/Signs/SIGNS 3.png");
+	AddTexture(L"Proto_Signs_3", L"../Bin/Resource/MapObject/Signs/SIGNS 4.png");
+	AddTexture(L"Proto_Signs_4", L"../Bin/Resource/MapObject/Signs/SIGNS 5.png");
+	AddTexture(L"Proto_Signs_5", L"../Bin/Resource/MapObject/Signs/SIGNS 6.png");
+	AddTexture(L"Proto_Signs_6", L"../Bin/Resource/MapObject/Signs/SIGNS 7.png");
+	AddTexture(L"Proto_Signs_7", L"../Bin/Resource/MapObject/Signs/SIGNS 8.png");
 }
 
 

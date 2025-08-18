@@ -87,7 +87,7 @@ void CTile_Acid::Render_GameObject()
 
 HRESULT CTile_Acid::Set_Component(void *pArg)
 {
-    if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Acid_Floor", (CComponent **)&m_pTexture)))
+    if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Acid_Floor_1", (CComponent **)&m_pTexture)))
         return E_FAIL;
 
     // TODO - Player와 충돌시 Trigger Component

@@ -27,7 +27,7 @@ private:
 	HRESULT			Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev);
 	HRESULT			Ready_Scene(SCENE eScene);
 	HRESULT			Ready_Prototype_Component();
-
+	void			Ready_MapFactorFunc();
 private:
 	Engine::CGraphicDev* m_pDeviceClass;
 	Engine::CRenderer* m_pRenderer;

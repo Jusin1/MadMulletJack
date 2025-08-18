@@ -1,13 +1,25 @@
 #include "pch.h"
 #include "CMainApp.h"
-#include "CManagement.h"
-#include "CLoading_Scene.h"
-#include "CLogo.h"
-#include "CTimerMgr.h"
-#include "CFrameMgr.h"
-#include "CRenderer.h"
-#include "CFontMgr.h"
+
+//============
+// Component
+//============
 #include "VIBuffer_Color.h"
+#include "CVIBuffer_GridPanel_Horizon.h"
+#include "CVIBuffer_GridPanel_Vertical.h"
+#include "CVIBuffer_GridPanel_Normal.h"
+
+//============
+// Object
+//============
+
+//============
+// Manager
+//============
+#include "CManagement.h"
+#include "CRenderer.h"
+#include "CTimerMgr.h"
+#include "CFontMgr.h"
 #include "CDInputMgr.h"
 #include "CColiderManager.h"
 #include "CObjectManager.h"
@@ -15,6 +27,18 @@
 #include "CPicking.h"
 #include "CPickingManager.h"
 #include "CUIManager.h"
+#include "CMapFactory.h"
+#include "CFrameMgr.h"
+#include "CFileManager.h"
+#include "CMapFactory.h"
+#include "CDataManager.h"
+
+//============
+// Scene
+//============
+#include "CLoading_Scene.h"
+#include "CLogo.h"
+
 
 CMainApp::CMainApp() : m_pGraphicDev(nullptr)
 , m_pRenderer(nullptr)
@@ -58,6 +82,8 @@ HRESULT CMainApp::Ready_MainApp()
 	// 로고 씬으로 시작
 	if (FAILED(Ready_Scene(SCENE_LOGO)))
 		return E_FAIL;
+
+	Ready_MapFactorFunc();
 
 	return S_OK;
 }
@@ -172,38 +198,170 @@ HRESULT CMainApp::Ready_Scene(SCENE eScene)
 
 HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 {
-	// Transform
-	if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-		return E_FAIL;
-
+	//======================
+	// Buffer
+	//======================
 	// RectBuffer
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer", Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Rect_Buffer",
+		Engine::CVIBuffer_Rect::Create(m_pGraphicDev))))
 		return E_FAIL;
-
-	// Colider_Rect
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Rect", Engine::CColider_Rect::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Colider_Cube
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Cube", Engine::CColider_Cube::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Colider_Sphere
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Sphere", Engine::CColider_Sphere::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// Renderer
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer", m_pRenderer = Engine::CRenderer::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// calculator 
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
-		return E_FAIL;
-
 	// RectColorBuffer
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Color_Buffer", Engine::VIBuffer_Color::Create(m_pGraphicDev))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Color_Buffer",
+		Engine::VIBuffer_Color::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// GridPanel Buffers
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Buffer_GridPanel_Horizon",
+		Engine::CVIBuffer_GridPanel_Horizon::Create(m_pGraphicDev))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Buffer_GridPanel_Vertical",
+		Engine::CVIBuffer_GridPanel_Vertical::Create(m_pGraphicDev))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal",
+		Engine::CVIBuffer_GridPanel_Normal::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	//======================
+	// Collider
+	//======================
+	// Colider_Rect
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Rect",
+		Engine::CColider_Rect::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Colider_Cube
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Cube",
+		Engine::CColider_Cube::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Colider_Sphere
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Colider_Sphere",
+		Engine::CColider_Sphere::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	//======================
+	// Common
+	//======================
+	// Transform
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Transform",
+		Engine::CTransform::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Renderer
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Renderer",
+		m_pRenderer = Engine::CRenderer::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// calculator 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Calculator",
+		Engine::CCalculator::Create(m_pGraphicDev))))
+		return E_FAIL;
+}
+
+void CMainApp::Ready_MapFactorFunc()
+{
+	CMapFactory *pMapFactory = CMapFactory::GetInstance();
+
+#pragma region Wall
+	std::function<HRESULT(void *)> _func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_HOR), _func);
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_VER), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Floor_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::FLOOR), _func);
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::INCLINE), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Ceiling_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::CEILING), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"SlideWall_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_SLIDE), _func);
+#pragma endregion
+
+#pragma region Tile
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DecoTile", iTargetScene, L"Tile_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::DECO), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_GlassTile", iTargetScene, L"Tile_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::GLASS), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_AcidTile", iTargetScene, L"Tile_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::ACID), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_ElectricTile", iTargetScene, L"Tile_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::ELECTRIC), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_VentTile", iTargetScene, L"Tile_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::VENT), _func);
+#pragma endregion
+
+#pragma region Env
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Player", iTargetScene, L"Player_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::ENV_OBJ, static_cast<_uint>(EnvType::SPAWNPOINT), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_EndPoint", iTargetScene, L"Env_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::ENV_OBJ, static_cast<_uint>(EnvType::ENDPOINT), _func);
+#pragma endregion
+
+#pragma region Monster
+	_func =
+		[](void *pData = nullptr)->HRESULT
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", iTargetScene, L"Monster_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::SUIT), _func);
+#pragma endregion
 }
 
 CMainApp* CMainApp::Create()
@@ -233,6 +391,9 @@ void CMainApp::Free()
 	CFontMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();
+	CFileManager::GetInstance()->DestroyInstance();
+	CDataManager::GetInstance()->DestroyInstance();
+	CMapFactory::GetInstance()->DestroyInstance();
 	CDInputMgr::GetInstance()->DestroyInstance();
 	CPickingManager::GetInstance()->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

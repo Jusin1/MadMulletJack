@@ -40,7 +40,7 @@ namespace Engine
 		INCLINE,
 		FLOOR,
 		CEILING,
-		SIDE_DASH,
+		WALL_SLIDE,
 		NONE
 	};
 	constexpr size_t g_WallTypeCount{ static_cast<size_t>(WallType::NONE) };

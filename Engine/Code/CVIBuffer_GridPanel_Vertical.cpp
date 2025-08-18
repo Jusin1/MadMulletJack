@@ -110,9 +110,9 @@ HRESULT CVIBuffer_GridPanel_Vertical::Set_Buffer()
         {
             dwIndex = i * m_iColMax + j;
 
-            pVertex[dwIndex].vPosition = { (_float)j * m_tData.dwInterval,
-                                       0,
-                                       (_float)i * m_tData.dwInterval };
+            pVertex[dwIndex].vPosition = { 0,
+                                       (_float)i *m_tData.dwInterval,
+                                       (_float)j *m_tData.dwInterval };
 
             pVertex[dwIndex].vTexUV = { (_float)j, (_float)(m_iRowMax - 1 - i) };
 
