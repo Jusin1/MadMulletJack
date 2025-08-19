@@ -19,7 +19,7 @@ enum UIMOVE { MV_NON, MV_RIGHT,MV_LEFT,MV_RL,
 enum UISTATE {UI_CREATE,UI_ACTIVE,UI_NOACTIVE, UI_RENDERON, UI_RENDEROFF, UI_STATEEND ,UI_END }; // 굳이..?
 
 struct PlayerStateInfo {
-
+    // 플레이어의 state들을 가지고 있는 구조체. -> 이 info로 상태 좌지우지
 	PLAYERSTATE ePlayerState;
 	WEAPON		eWeapon;
 	WEAPON2		eWeapon2;
@@ -36,4 +36,12 @@ struct PlayerStateInfo {
             eWeapon == other.eWeapon &&
             eWeapon2 == other.eWeapon2);
     }
+};
+
+struct UIMoveInfo
+{
+    UIMOVE eUIMove; // 움직임 enum 값 -> 여러 움직임을 주고 싶으면 vector로 해둘까??
+    bool  bStop;   // range 까지 움직이고 stop 할건지 말건지
+    float fRange;  // fRange 움직임 범위
+    float fSumRange; // 움직임 누적 범위
 };

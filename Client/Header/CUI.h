@@ -15,13 +15,6 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-public:
-	UIMOVE Get_UIMove() const { return m_eMove; }
-	void Set_UIMove(UIMOVE _eMove) { m_eMove = _eMove; }
-
-	_float Get_Rnage() const { return m_fRange; }
-	void Set_Range(_float _fRange) { m_fRange = _fRange; }
-	
 protected:
 	CTexture* m_pTextureCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
@@ -37,16 +30,29 @@ public:
 
 	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
 
+	// getter setter func
 public:
 	void Get_UIPosition(float& x, float& y) const { x = m_fX; y = m_fY; }
 	void Get_UISize(float& w, float& h) const { w = m_fSizeX; h = m_fSizeY; }
+
+	/*UIMOVE Get_UIMove() const { return m_eMove; }
+	void Set_UIMove(UIMOVE _eMove) { m_eMove = _eMove; }
+
+	_float Get_Rnage() const { return m_fRange; }
+	void Set_Range(_float _fRange) { m_fRange = _fRange; }*/
+
+	void Set_UIMoveInfo(UIMoveInfo _tMoveInfo) { m_tMoveInfo = _tMoveInfo; }
+	UIMoveInfo Get_UIMoveInfo() const { return m_tMoveInfo; }
+	void Set_UIMove(UIMOVE _eUIMove) { m_tMoveInfo.eUIMove = _eUIMove; }
 
 protected:
 	_matrix					m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
-	UIMOVE m_eMove; // UI 움직임 state
-	_float m_fRange; // 움직임 범위 필요할 경우
+	//UIMOVE m_eMove; // UI 움직임 state
+	//_float m_fRange; // 움직임 범위 필요할 경우
+
+	UIMoveInfo m_tMoveInfo;
 
 protected:
 	virtual		HRESULT	Set_Component();

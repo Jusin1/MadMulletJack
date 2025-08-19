@@ -59,10 +59,12 @@ public:
 	void Move_PosDir(_float fTimeDelta, _vec3 _vDir);
 
 	// UIMove¿ë func
-	void Move_YUp(_float fTimeDelta);
-	void Move_YDown(_float fTimeDelta);
-	void Move_RL(_float fTimeDelta, _float  fRange);
-	void Move_YUpDown(_float fTimeDelta, _float  fRange);
+	void Move_PosLeft(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
+	void Move_PosRight(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
+	void Move_YUp(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
+	void Move_YDown(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
+	void Move_RL(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
+	void Move_YUpDown(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange);
 
 public:
 	void LookAt(_vec3 _targetPos);

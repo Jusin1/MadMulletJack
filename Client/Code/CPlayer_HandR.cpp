@@ -168,8 +168,7 @@ HRESULT CPlayer_HandR::Set_Texture()
             //// info¸¦ »õ·Î ¸ÂÃçÁÜ
             Set_New_TransInfo(150.f, 0.f);
 
-            m_eMove = MV_UP;
-            m_fRange = 10.f;
+            m_tMoveInfo = { MV_UP, false, 10.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -220,7 +219,7 @@ HRESULT CPlayer_HandR::Set_Texture()
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(15.f) * 1;
 
-            m_eMove = MV_LEFT;
+            m_tMoveInfo = { MV_LEFT, false, 10.f, 0.f };
         }
 
         else {
@@ -238,7 +237,7 @@ HRESULT CPlayer_HandR::Set_Texture()
 
         Set_New_TransInfo(10.f, 0.f);
 
-        m_eMove = MV_DOWN;
+        m_tMoveInfo = { MV_DOWN, false, 0.f, 0.f };
     }
         break;
 
@@ -252,8 +251,7 @@ HRESULT CPlayer_HandR::Set_Texture()
 
         Set_New_TransInfo(50.f, 0.f);
 
-        m_eMove = MV_RL;
-        m_fRange = 30.f;
+        m_tMoveInfo = { MV_RL, false, 30.f, 0.f };
     }
         break;
     }

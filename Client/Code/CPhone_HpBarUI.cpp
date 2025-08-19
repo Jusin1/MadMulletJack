@@ -36,6 +36,7 @@ HRESULT CPhone_HpBarUI::Initialize(void* pArg)
 	//timer 할래말래
 	Set_UISizeAndPos(420.f, 900.f, WINCX * 0.5f - 450.f, WINCY * 0.5f + 400.f);
 	Set_New_TransInfo(50.f, 0.f);
+
 	return S_OK;
 }
 
@@ -78,6 +79,8 @@ HRESULT CPhone_HpBarUI::Set_Texture(SCENE _eSCENE)
 	Set_Origin_Rot();
 
 	m_bRenderOn = true;
+
+	m_tMoveInfo.fRange = 10.f;
 
 	switch (_eSCENE)
 	{

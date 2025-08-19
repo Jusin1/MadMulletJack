@@ -124,8 +124,8 @@ HRESULT CPlayer_Foot::Set_Texture()
 
         Set_New_TransInfo(150.f, 0.f);
 
-        m_fRange = 15.f;
-        m_eMove = MV_UpDown;
+
+        m_tMoveInfo = { MV_UpDown, false, 15.f, 0.f };
     }
         break;
 
@@ -138,8 +138,7 @@ HRESULT CPlayer_Foot::Set_Texture()
 
         Set_New_TransInfo(80.f, 0.f);
 
-        m_fRange = 10.f;
-        m_eMove = MV_UpDown;
+        m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
     }
         break;
 

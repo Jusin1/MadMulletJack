@@ -40,9 +40,11 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 
 	HitCount_Reset(); // hitcount <- 0 (scene 전환시 0으로 맞추기 위함)
 
-	m_fRange = 10.f;
+	m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
 	
 	Set_New_TransInfo(5.f, 0.f);
+
+	
 
 	//timer 할래말래
 
@@ -53,10 +55,18 @@ _int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	// 만약 HpBar Set_UIMoveInfo가 안 바뀌면 MoveUI만 해주면 됨
 	for (auto& pChild : m_vecChildren)
 	{
-		pChild->GetTransform()->Move_YUpDown(fTimeDelta, m_fRange);
+		CUI* pCUI = dynamic_cast<CUI*>(pChild);
+		if (pCUI)
+		{
+			pCUI->Set_UIMoveInfo(m_tMoveInfo);
+			//pCUI->Set_UIMove(m_tMoveInfo.eUIMove);
+			pCUI->Move_UI(fTimeDelta);
+		}
 	}
+	//pChild->GetTransform()->Move_YUpDown(fTimeDelta, m_fRange);
 
 	return NO_EVENT;
 }

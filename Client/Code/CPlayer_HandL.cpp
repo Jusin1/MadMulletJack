@@ -154,7 +154,7 @@ HRESULT CPlayer_HandL::Set_Texture()
 
             Set_New_TransInfo(10.f, -10.f);
 
-            m_eMove = MV_ROTATIONZ;
+            m_tMoveInfo = { MV_ROTATIONZ, false, 0.f, 0.f };
         }
 
         else {
@@ -171,11 +171,11 @@ HRESULT CPlayer_HandL::Set_Texture()
 
             Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
 
-            Set_New_TransInfo(350.f, -40.f);
+            Set_New_TransInfo(500.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_eMove = MV_RIGHT;
+            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -188,7 +188,7 @@ HRESULT CPlayer_HandL::Set_Texture()
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian (-40.f) * 1;
 
-            m_eMove = MV_RIGHT;
+            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
         }
 
         else {
@@ -209,7 +209,7 @@ HRESULT CPlayer_HandL::Set_Texture()
             m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian (-20.f) * 1;
 
-            m_eMove = MV_RIGHT;
+            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
         }
 
         else {
@@ -228,7 +228,7 @@ HRESULT CPlayer_HandL::Set_Texture()
         //// info∏¶ ªı∑Œ ∏¬√Á¡‹
         Set_New_TransInfo(140.f, 0.f);
 
-        m_eMove = MV_NON;
+        m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
     }
     break;
 
