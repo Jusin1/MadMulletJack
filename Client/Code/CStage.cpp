@@ -2,6 +2,7 @@
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CObjectManager.h"
+#include "CGameDataManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CDynamicCamera.h"

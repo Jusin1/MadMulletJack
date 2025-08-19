@@ -2,6 +2,12 @@
 #include "CGameObject.h"
 #include "Clinet_Define.h"
 #include "CComponentMgr.h"
+
+namespace Engine
+{
+	class CGrounding;
+}
+
 class CCharacter :
 	public CGameObject
 {
@@ -10,7 +16,7 @@ protected:
 	explicit CCharacter(const CCharacter& rhs);
 	virtual ~CCharacter();
 
-
+	virtual void Free() override;
 public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			HRESULT		Initialize(void* pArg) override;
@@ -41,9 +47,11 @@ public:
 	void Set_JumpTime(_float _fJumpTime) { m_fJumpTime = _fJumpTime; }
 	_float Get_JumpTime() const { return m_fJumpTime; }
 
+	WallType GetGroundedFloorType();
 protected:
 	Engine::CCalculator* m_pCalculatorCom; // terrain충돌 위함
 	Engine::CVIBuffer_Rect* m_pBufferCom;
+	Engine::CGrounding *m_pGroundingCom;
 protected:
 	OBJID m_eObjID; //OBJ_END
 	_bool m_bPickingTrue;
@@ -54,8 +62,4 @@ protected:
 
 	_bool m_bJumping;
 	_float m_fJumpTime;
-
-	_uint m_iCurrentGridPanelIndex{ 0 };
-
-	virtual void Free() override;
 };

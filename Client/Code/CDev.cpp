@@ -7,6 +7,7 @@
 #include "CObjectManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
+#include "CGameDataManager.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
@@ -63,6 +64,10 @@ HRESULT CDev::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
+    // GameDataManager에 바닥을 z기준 정렬
+    CGameDataManager::GetInstance()->Bind_FloorList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Floor_Layer"));
+    auto pData = CGameDataManager::GetInstance()->Get_SortedFloorEntries();
+    *pData;
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;

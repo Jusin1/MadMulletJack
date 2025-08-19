@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CCharacter.h"
 #include "CGridPanel.h"
+#include "CGrounding.h"
+#include "CGameDataManager.h"
 #include "CVIBuffer_GridPanel_Normal.h"
 #include "CManagement.h"
 #include "CObjectManager.h"
@@ -50,14 +52,13 @@ HRESULT CCharacter::Initialize(void* pArg)
 _int CCharacter::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
-	Set_OnTerrain();
-
 	return NO_EVENT;
 }
 
 void CCharacter::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
+	Set_OnTerrain();
 }
 
 void CCharacter::Render_GameObject()
@@ -72,6 +73,10 @@ HRESULT	CCharacter::Set_Component()
 
 	if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent**)&m_pBufferCom)))
 		return E_FAIL;
+
+	if (FAILED(Add_Components(L"Com_Grounding", SCENE_STATIC, L"Proto_Grounding", (CComponent **)&m_pGroundingCom)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -85,34 +90,14 @@ void CCharacter::Set_OnTerrain()
 {
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 
-	/*auto Floorlist = CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Floor_Layer");
-
-	for (auto itr = Floorlist->begin();
-		itr != Floorlist->end();
-		++itr)
+	_float fHeight;
+	if (m_pGroundingCom->GetHeight(CGameDataManager::GetInstance()->Get_SortedFloorEntries(), vPos.x, vPos.z, &fHeight))
 	{
-		if (!(*itr))
-			continue;
+		fHeight += m_pTransformCom->Get_Scale().y * 0.5f;
+	}
+	else
+		fHeight = vPos.y;
 
-		CGridPanel *pFloor = static_cast<CGridPanel *>(*itr);
-		Engine::CVIBuffer_GridPanel_Normal *pFloorBuffer = static_cast<CVIBuffer_GridPanel_Normal *>(pFloor->GetBuffer());
-		_float fHeight = m_pCalculatorCom-> Compute_HeightOnTerrain(&vPos,
-				pFloorBuffer->GetVerticesData(),
-				pFloorBuffer->GetColMax(),
-				pFloorBuffer->GetRowMax(),
-				pFloorBuffer->GetData()->dwInterval);
-	}*/
-
-
-	Engine::CVIBuffer_GridPanel_Normal * pFloorBuffer =static_cast<Engine::CVIBuffer_GridPanel_Normal *>
-		(CObjectManager::GetInstance()->Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Floor_Layer", L"Com_Buffer", 0));
-	_float fHeight = m_pCalculatorCom->
-		Compute_HeightOnTerrain(&vPos,
-			pFloorBuffer->GetVerticesData(),
-			pFloorBuffer->GetColMax(),
-			pFloorBuffer->GetRowMax(),
-			pFloorBuffer->GetData()->dwInterval);
-	
 	if (m_bJumping)
 	{
 		vPos.y = vPos.y -  m_fVelocity * m_fJumpTime - (9.8f * m_fJumpTime * m_fJumpTime) * 0.5f;
@@ -126,6 +111,11 @@ void CCharacter::Set_OnTerrain()
 	}
 
 	m_pTransformCom->Set_Info(INFO_POS, { vPos.x , fHeight , vPos.z });
+}
+
+WallType CCharacter::GetGroundedFloorType()
+{
+	return (*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType;
 }
 
 void CCharacter::Free()

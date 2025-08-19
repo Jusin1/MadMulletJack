@@ -1,7 +1,28 @@
 #pragma once
 #include "CVIBuffer.h"
 
+
+
 BEGIN(Engine)
+
+class CVIBuffer_GridPanelBase;
+
+typedef struct tagPanelEntry
+{
+	WallType eType;
+	_float fMin_X;
+	_float fMax_X;
+	_float fMin_Z;
+	_float fMax_Z;
+	_float fY;
+	_float fInverseItv;
+	_float fHalfX;
+	_float fHalfZ;
+	_vec3 fLocalCenter;
+	CVIBuffer_GridPanelBase *pBuffer;
+	_matrix matWorldInv;
+	_matrix matWorld;
+} PANELENTRY;
 
 class ENGINE_DLL CVIBuffer_GridPanelBase : public CVIBuffer
 {

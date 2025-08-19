@@ -72,6 +72,9 @@ HRESULT CGridPanel::Initialize(void *pArg)
 	if (FAILED(Set_Component(pArg)))
 		return E_FAIL;
 
+	// 캐싱용 월드행렬 역행렬
+	D3DXMatrixInverse(&m_matInverse, nullptr, GetTransform()->Get_World());
+
 	return S_OK;
 }
 

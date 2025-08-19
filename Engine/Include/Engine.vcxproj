@@ -164,7 +164,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CDataManager.h" />
     <ClInclude Include="..\Header\CFileManager.h" />
-    <ClInclude Include="..\Header\CGameDataManager.h" />
+    <ClInclude Include="..\Header\CGrounding.h" />
     <ClInclude Include="..\Header\CMapFactory.h" />
     <ClInclude Include="..\Header\CPicking.h" />
     <ClInclude Include="..\Header\CVIBuffer_Cube_Color.h" />
@@ -212,7 +212,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CDataManager.cpp" />
     <ClCompile Include="..\Code\CFileManager.cpp" />
-    <ClCompile Include="..\Code\CGameDataManager.cpp" />
+    <ClCompile Include="..\Code\CGrounding.cpp" />
     <ClCompile Include="..\Code\CMapFactory.cpp" />
     <ClCompile Include="..\Code\CPicking.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_Cube_Color.cpp" />

@@ -205,6 +205,9 @@
     <Filter Include="02. GameObject\06. UI\HpBar_UI\02. ColorRect">
       <UniqueIdentifier>{cff72b26-8b9f-45f0-bbfc-d473be7f129a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\GameDataManager">
+      <UniqueIdentifier>{15df7013-6f76-4c67-afaf-0823eba6a3a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -387,6 +390,9 @@
     <ClInclude Include="..\Header\CColRect_HpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGameDataManager.h">
+      <Filter>03. Manager\GameDataManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -559,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameDataManager.cpp">
+      <Filter>03. Manager\GameDataManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

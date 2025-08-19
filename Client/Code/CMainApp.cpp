@@ -8,6 +8,8 @@
 #include "CVIBuffer_GridPanel_Horizon.h"
 #include "CVIBuffer_GridPanel_Vertical.h"
 #include "CVIBuffer_GridPanel_Normal.h"
+#include "CGrounding.h"
+#include "CRenderer.h"
 
 //============
 // Object
@@ -17,10 +19,10 @@
 // Manager
 //============
 #include "CManagement.h"
-#include "CRenderer.h"
 #include "CTimerMgr.h"
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
+#include "CGameDataManager.h"
 #include "CColiderManager.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
@@ -251,6 +253,12 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Calculator",
 		Engine::CCalculator::Create(m_pGraphicDev))))
 		return E_FAIL;
+	// Grounding
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Grounding",
+		Engine::CGrounding::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CMainApp::Ready_MapFactorFunc()
@@ -388,6 +396,7 @@ void CMainApp::Free()
 	CUIManager::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
+	CGameDataManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();

@@ -42,6 +42,7 @@ public:
 private:
 	ObjectCategory m_eCategory;
 	WallType m_eType;
-	CVIBuffer_GridPanelBase *m_pBuffer;
+	Engine::CVIBuffer_GridPanelBase *m_pBuffer;
 	Engine::CTexture *m_pTexture;
+	_matrix m_matInverse;
 };

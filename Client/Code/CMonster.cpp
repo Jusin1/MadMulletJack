@@ -96,7 +96,6 @@ void CMonster::Render_GameObject()
 	// ¿ø»óº¹±Í
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
 }
 
 
