@@ -58,7 +58,7 @@ _int CCharacter::Update_GameObject(const _float& fTimeDelta)
 void CCharacter::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-	Set_OnTerrain();
+	Set_OnTerrain(fTimeDelta);
 }
 
 void CCharacter::Render_GameObject()
@@ -86,31 +86,37 @@ HRESULT	CCharacter::Set_Component()
 // z값에 기반하여 순차적으로 데이터를 불러와 인스턴싱을 하고, 순회를 할 때 선형적인 타임어택 게임에 아이디어를 가져온다.
 // 지나온 terrain은 다시는 밟을 일이 없으니 currentindex를 가지고 다음 terrain을 밟을 시 currentindex를 갱신시켜 연산량을 줄여나간다.
 // 이렇게 하면 땅을 밟고 있는 상황에선 항상 하나의 Terrain만 검사하게 될것이다.
-void CCharacter::Set_OnTerrain()
+void CCharacter::Set_OnTerrain(const _float &fTimeDelta)
 {
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 
 	_float fHeight;
 	if (m_pGroundingCom->GetHeight(CGameDataManager::GetInstance()->Get_SortedFloorEntries(), vPos.x, vPos.z, &fHeight))
 	{
-		fHeight += m_pTransformCom->Get_Scale().y * 0.5f;
-	}
-	else
-		fHeight = vPos.y;
-
-	if (m_bJumping)
-	{
-		vPos.y = vPos.y -  m_fVelocity * m_fJumpTime - (9.8f * m_fJumpTime * m_fJumpTime) * 0.5f;
-		m_fJumpTime += 0.2f;
-
-		if (vPos.y <= fHeight)
+		if (m_bJumping)
 		{
-			m_bJumping = false;
-			m_fJumpTime = 0.f;
+			vPos.y = vPos.y + m_fVelocity * fTimeDelta;
+
+			if (vPos.y - m_pTransformCom->Get_Scale().y * 0.5f <= fHeight)
+			{
+				m_bJumping = false;
+				vPos.y = fHeight + m_pTransformCom->Get_Scale().y * 0.5f;
+			}
 		}
+		else
+			vPos.y = fHeight + m_pTransformCom->Get_Scale().y * 0.5f;
 	}
 
-	m_pTransformCom->Set_Info(INFO_POS, { vPos.x , fHeight , vPos.z });
+	
+
+	m_pTransformCom->Set_Info(INFO_POS, { vPos.x , vPos.y , vPos.z });
+}
+
+void CCharacter::Gravity(const _float &fDeltaTime)
+{
+	_float fVel = Get_Velocity();
+	fVel -= 9.8f * fDeltaTime * 0.5f * 3.f/*Mess*/;
+	Set_Velocity(fVel);
 }
 
 WallType CCharacter::GetGroundedFloorType()

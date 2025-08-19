@@ -26,7 +26,7 @@ public:
 
 protected:
 	HRESULT	Set_Component();
-	void	Set_OnTerrain();
+	void	Set_OnTerrain(const _float &fTimeDelta);
 
 	// getter setter func
 public:
@@ -46,6 +46,8 @@ public:
 
 	void Set_JumpTime(_float _fJumpTime) { m_fJumpTime = _fJumpTime; }
 	_float Get_JumpTime() const { return m_fJumpTime; }
+
+	void Gravity(const _float &fDeltaTime);
 
 	WallType GetGroundedFloorType();
 protected:

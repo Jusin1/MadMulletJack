@@ -89,7 +89,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	__super::LateUpdate_GameObject(fTimeDelta);
+	Set_OnTerrain(fTimeDelta);
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
@@ -316,19 +316,22 @@ void CPlayer::IDLE_End()
 // jump
 void CPlayer::JUMP_Begin()
 {
-	m_fJumpTime = 0.2f;
-	m_bJumping = true;
+	Set_Velocity(5.5f);
+	Set_Jumping(true);
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
 {
 	if (!m_bJumping)
 		Set_State_Idle();
+
+	Gravity(fTimeDelta);
 }
 
 void CPlayer::JUMP_End()
 {
-	m_fJumpTime = 0.f;
+	Set_Velocity(0.f);
+	Set_Jumping(false);
 }
 
 // dash attack
