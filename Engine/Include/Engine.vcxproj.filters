@@ -124,6 +124,9 @@
     <Filter Include="00. Manager\13. MapFactory">
       <UniqueIdentifier>{632ee93a-237a-46c6-a5c1-fc872bca42fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\14. GameDataManager">
+      <UniqueIdentifier>{a2c72afb-a84a-4394-a458-50a356a5560e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMapFactory.cpp">
       <Filter>00. Manager\13. MapFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameDataManager.cpp">
+      <Filter>00. Manager\14. GameDataManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMapFactory.h">
       <Filter>00. Manager\13. MapFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGameDataManager.h">
+      <Filter>00. Manager\14. GameDataManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
