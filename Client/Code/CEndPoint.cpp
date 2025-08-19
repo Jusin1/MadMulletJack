@@ -2,6 +2,7 @@
 #include "CColiderManager.h"
 #include "CColider_Sphere.h"
 #include "CEndPoint.h"
+#include "CUIManager.h"
 
 CEndPoint::CEndPoint(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CDummyBase(pGraphicDevice, EnvType::ENDPOINT)
@@ -95,12 +96,6 @@ void CEndPoint::Update_Collider()
 	if (m_pCollider)
 		m_pCollider->Update_ColliderSphere();
 
-	if (CColiderManager::GetInstance()->CollisionGroup(
-		CColiderManager::COLLISION_PLAYER, this,
-		CColiderManager::COLLISION_SPHERE, nullptr))
-	{
-		MSG_BOX("Collide with EndPoint");
-	}
 }
 
 HRESULT CEndPoint::Set_Component()

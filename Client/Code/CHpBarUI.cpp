@@ -53,9 +53,29 @@ _int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	// 만약 HpBar Set_UIMoveInfo가 안 바뀌면 MoveUI만 해주면 됨
 	for (auto& pChild : m_vecChildren)
 	{
-		pChild->GetTransform()->Move_YUpDown(fTimeDelta, m_fRange);
+		CUI* pCUI = dynamic_cast<CUI*>(pChild);
+		if (pCUI)
+		{
+			pCUI->Move_UI(fTimeDelta);
+		}
+	}
+
+	if (!m_bRenderOn)
+	{
+		for (auto& pChild : m_vecChildren)
+		{
+			pChild->Set_RenderOn(false);
+		}
+	}
+	else
+	{
+		for (auto& pChild : m_vecChildren)
+		{
+			pChild->Set_RenderOn(true);
+		}
 	}
 
 	return NO_EVENT;

@@ -720,11 +720,16 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/PHONEIDLE_%03d.png", 4))))
 		return E_FAIL;
 
-	// Phone Left_Hand UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_LeftHandUI",
+	// Phone Right_Hand UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_RightHandUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Right_HAND INTERMISSION %03d.png", 2))))
 		return E_FAIL;
+	// Phone Left_Hand UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_LeftHandUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/LEFT_HAND INTERMISSION %03d.png", 2))))
+		return E_FAIL;
 
+	
 #pragma endregion 게임 진입 UI
 
 	// Camera_FPS

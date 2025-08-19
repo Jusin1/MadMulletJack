@@ -43,7 +43,6 @@ void CUIManager::AddSlideIn(
     const float yStart = yTarget + offsetY;
 
     ui->Set_Active(true);                
-    ui->Set_RenderOn(true);
 
     ui->Set_UIPosition(xStart, yStart, w, h);
 
@@ -69,6 +68,11 @@ void CUIManager::AddSlideTo(CUI* ui, float xEnd, float yEnd, float delay, float 
         y,  yEnd,
         0.f, delay, dur, false
         });
+}
+
+void CUIManager::SliderPhoneUI()
+{
+    AddSlideInY(m_pPhone, -160.f, 0.f, 600.f, 300.f, +600.f, 0.f, 0.5f);
 }
 
 void CUIManager::Update(const _float& dt)
@@ -169,6 +173,7 @@ void CUIManager::CreateClearUI()
             L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
     if (!m_pEnterUI) return;
 
+    CreatePhoneUI();
     m_pEnterUI->Set_Active(true);
     auto attachAndSlide = [&](CUI* ui, float x, float y, float w, float h, float extraDelay = 0.f)
         {
@@ -508,23 +513,47 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 }
 
 void CUIManager::CreatePhoneUI()
-{
-    if (auto* pPhone = dynamic_cast<CPhoneUI*>(
+{ 
+    if (m_pPhone = dynamic_cast<CPhoneUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_PhoneUI", SCENE_STATIC, L"UI_Layer")))
     {
-        pPhone->Set_UIPosition(-160.F, 0.f, 600.f, 300.f);
-        m_pEnterUI->Add_Child(pPhone);
+        // 핸드폰을 화면 아래에서 시작
+        m_pPhone->Set_UIPosition(-160.f, 600.f, 600.f, 300.f);
+        m_pEnterUI->Add_Child(m_pPhone);
+
+        // 왼손
         if (auto* pLeftHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
         {
-            pLeftHand->RegisterTexture(L"Com_Texture_leftHandIDLE", L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
+            pLeftHand->RegisterTexture(L"Com_Texture_RightHandIDLE",
+                L"Prototype_Component_Texture_Phone_RightHandUI", 0, 2, 4.f, true);
             pLeftHand->Play(true);
-            pLeftHand->Set_UIPosition(180.f, 40.f, 300.f, 400.f);
-            pLeftHand->ChangeTexture(L"Com_Texture_leftHandIDLE");
-        }     
-    } 
+
+            // 부모(Phone) 기준 offset만 줌
+            pLeftHand->Set_UIPosition(180.f, 40.f, 300.f, 450.f);
+            pLeftHand->ChangeTexture(L"Com_Texture_RightHandIDLE");
+
+            m_pPhone->Add_Child(pLeftHand);
+        }
+
+        // 오른손
+        if (auto* pRightHand = dynamic_cast<CImageUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+        {
+            pRightHand->RegisterTexture(L"Com_Texture_LeftHandIDLE",
+                L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
+            pRightHand->Play(true);
+
+            // 부모(Phone) 기준 offset만 줌
+            pRightHand->Set_UIPosition(-425.f, 40.f, 300.f, 450.f);
+            pRightHand->ChangeTexture(L"Com_Texture_LeftHandIDLE");
+
+            m_pPhone->Add_Child(pRightHand);
+        }
+    }
 }
 
 void CUIManager::Free()
