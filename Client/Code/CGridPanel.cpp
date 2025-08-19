@@ -2,6 +2,8 @@
 #include "CGridPanel.h"
 #include "CTexture.h"
 #include "Clinet_Define.h"
+#include "Client_Global.h"
+#include "CColider_Cube.h"
 #include "CComponentMgr.h"
 #include "CTransform.h"
 #include "CVIBuffer_GridPanelBase.h"
@@ -10,11 +12,13 @@
 CGridPanel::CGridPanel(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: Engine::CGameObject(pGraphicDevice), m_pBuffer(nullptr)
 	, m_pTexture(nullptr), m_eType(WallType::NONE), m_eCategory(ObjectCategory::WALL)
+	, m_pColliderCube(nullptr)
 {
 }
 
 CGridPanel::CGridPanel(const CGridPanel &rhs)
 	: Engine::CGameObject(rhs), m_pBuffer(nullptr), m_pTexture(nullptr), m_eType(WallType::NONE), m_eCategory(ObjectCategory::WALL)
+	, m_pColliderCube(nullptr)
 {
 }
 
@@ -94,7 +98,8 @@ void CGridPanel::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
 		return;
-
+	if(m_pColliderCube)
+		m_pColliderCube->Update_ColliderBox();
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -111,6 +116,11 @@ void CGridPanel::Render_GameObject()
 	m_pBuffer->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+#ifdef _DEBUG
+	if (g_ColiderRender && m_pColliderCube)
+		m_pColliderCube->Render_ColliderBox();
+#endif
 }
 
 _bool CGridPanel::Picking(_vec3 *PickingPoint)
@@ -139,6 +149,22 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 			// Type
 			SetType(static_cast<WallType>(p->iType));
 
+			// Texture
+			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
+				return E_FAIL;
+
+			// Transform
+			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			m_pTransformCom->Apply_WorldMatrix();
+
+
+			_float fWidth{ 0.f };
+			_float fHeight{ 0.f };
+			Engine::CColider_Cube::COLLRECTDESC tDesc;
+
 			// VIBuffer
 			switch (GetType())
 			{
@@ -147,8 +173,8 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Horizon", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
 					return E_FAIL;
 			} break;
-			case WallType::WALL_SLIDE:
 			case WallType::WALL_VER:
+			case WallType::WALL_SLIDE:
 			{
 				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Vertical", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
 					return E_FAIL;
@@ -162,17 +188,46 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 			} break;
 			}
 
-			// Texture
-			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
-				return E_FAIL;
+			// Collider
+			switch (GetType())
+			{
+			case WallType::WALL_HOR:
+			{
+				tDesc.fRadiusX = fWidth * 0.5f;
+				tDesc.fRadiusY = fHeight * 0.5f;
+				tDesc.fOffSetX = fWidth * 0.5f;
+				tDesc.fOffSetY = fHeight * 0.5f;
+				tDesc.fOffsetZ = 0.5f;
 
-			// Transform
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+					return E_FAIL;
+			} break;
+			case WallType::WALL_VER:
+			{
+				tDesc.fRadiusZ = fWidth * 0.5f;
+				tDesc.fRadiusY = fHeight * 0.5f;
+				tDesc.fOffSetX = 0.5f;
+				tDesc.fOffSetY = fHeight * 0.5f;
+				tDesc.fOffsetZ = fWidth * 0.5f;
 
-			m_pTransformCom->Apply_WorldMatrix();
+				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+					return E_FAIL;
+			} break;
+			case WallType::CEILING:
+			{
+				tDesc.fRadiusX = fWidth * 0.5f;
+				tDesc.fRadiusZ = fHeight * 0.5f;
+				tDesc.fOffSetX = fWidth * 0.5f ;
+				tDesc.fOffSetY = 0.5f;
+				tDesc.fOffsetZ = fHeight * 0.5f;
+
+				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+					return E_FAIL;
+			} break;
+			}
+
+			if(m_pColliderCube)
+				m_pColliderCube->Set_Transform(m_pTransformCom);
 		}
 		else
 		{

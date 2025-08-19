@@ -6,6 +6,7 @@ namespace Engine
 	class CRenderer;
 	class CTexture;
 	class CTransform;
+	class CColider_Cube;
 	class CVIBuffer_GridPanelBase;
 }
 
@@ -43,6 +44,7 @@ private:
 	ObjectCategory m_eCategory;
 	WallType m_eType;
 	Engine::CVIBuffer_GridPanelBase *m_pBuffer;
+	Engine::CColider_Cube *m_pColliderCube;
 	Engine::CTexture *m_pTexture;
 	_matrix m_matInverse;
 };

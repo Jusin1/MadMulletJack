@@ -106,6 +106,8 @@ void CCharacter::Set_OnTerrain(const _float &fTimeDelta)
 		else
 			vPos.y = fHeight + m_pTransformCom->Get_Scale().y * 0.5f;
 	}
+	else
+		vPos.y = vPos.y + m_fVelocity * fTimeDelta;
 
 	
 
