@@ -35,6 +35,9 @@ public:
 protected:
     virtual HRESULT			Set_Component();
     void Set_Origin_Rot(); // 전에 local 행렬을 돌렸다면 다시 돌려두기
+    _vec3 m_vLocalOffset;
+    void Set_LocalOffset(const _vec3& offset) { m_vLocalOffset = offset; }
+    _vec3 Get_LocalOffset() const { return m_vLocalOffset; }
     
 
 protected:

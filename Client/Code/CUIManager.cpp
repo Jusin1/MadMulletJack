@@ -70,11 +70,6 @@ void CUIManager::AddSlideTo(CUI* ui, float xEnd, float yEnd, float delay, float 
         });
 }
 
-void CUIManager::SliderPhoneUI()
-{
-    AddSlideInY(m_pPhone, -160.f, 0.f, 600.f, 300.f, +600.f, 0.f, 0.5f);
-}
-
 void CUIManager::Update(const _float& dt)
 {
     // 슬라이드 진행
@@ -514,46 +509,82 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 
 void CUIManager::CreatePhoneUI()
 { 
+    // 화면 스크린 생성
+    m_pPhoneScreen = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+
+    if (m_pPhoneScreen)
+    {
+        m_pPhoneScreen->RegisterTexture(L"Com_Texture_PhoneLogoUI", L"Prototype_Component_Texture_Phone_ScreenUI", 0, 6, 4.f, true);
+        m_pPhoneScreen->Play(true);
+        m_pPhoneScreen->Set_UIPosition(-120.f, 600.f, 410.f, 250.f); 
+        m_pPhoneScreen->ChangeTexture(L"Com_Texture_PhoneLogoUI");
+        m_pEnterUI->Add_Child(m_pPhoneScreen);
+    }
+
     if (m_pPhone = dynamic_cast<CPhoneUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_PhoneUI", SCENE_STATIC, L"UI_Layer")))
     {
-        // 핸드폰을 화면 아래에서 시작
         m_pPhone->Set_UIPosition(-160.f, 600.f, 600.f, 300.f);
         m_pEnterUI->Add_Child(m_pPhone);
 
         // 왼손
-        if (auto* pLeftHand = dynamic_cast<CImageUI*>(
+        m_pLeftHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+        if (m_pLeftHand)
         {
-            pLeftHand->RegisterTexture(L"Com_Texture_RightHandIDLE",
+            m_pLeftHand->RegisterTexture(L"Com_Texture_RightHandIDLE",
                 L"Prototype_Component_Texture_Phone_RightHandUI", 0, 2, 4.f, true);
-            pLeftHand->Play(true);
+            m_pLeftHand->Play(true);
 
-            // 부모(Phone) 기준 offset만 줌
-            pLeftHand->Set_UIPosition(180.f, 40.f, 300.f, 450.f);
-            pLeftHand->ChangeTexture(L"Com_Texture_RightHandIDLE");
+            m_pLeftHand->Set_UIPosition(180.f, 600.f + 40.f, 300.f, 450.f);
+            m_pLeftHand->ChangeTexture(L"Com_Texture_RightHandIDLE");
 
-            m_pPhone->Add_Child(pLeftHand);
+            m_pPhone->Add_Child(m_pLeftHand);
         }
 
         // 오른손
-        if (auto* pRightHand = dynamic_cast<CImageUI*>(
+        m_pRightHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+        if (m_pRightHand)
         {
-            pRightHand->RegisterTexture(L"Com_Texture_LeftHandIDLE",
+            m_pRightHand->RegisterTexture(L"Com_Texture_LeftHandIDLE",
                 L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
-            pRightHand->Play(true);
+            m_pRightHand->Play(true);
 
-            // 부모(Phone) 기준 offset만 줌
-            pRightHand->Set_UIPosition(-425.f, 40.f, 300.f, 450.f);
-            pRightHand->ChangeTexture(L"Com_Texture_LeftHandIDLE");
+            m_pRightHand->Set_UIPosition(-425.f, 600.f + 40.f, 300.f, 450.f);
+            m_pRightHand->ChangeTexture(L"Com_Texture_LeftHandIDLE");
 
-            m_pPhone->Add_Child(pRightHand);
+            m_pPhone->Add_Child(m_pRightHand);
         }
     }
+}
+
+void CUIManager::SliderPhoneUI()
+{
+    AddSlideInY(m_pPhone, -160.f, 0.f, 600.f, 300.f, +600.f, 0.f, 1.f);
+
+    // 왼손
+    if (m_pLeftHand)
+        AddSlideInY(m_pLeftHand, 180.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
+
+    // 오른손
+    if (m_pRightHand)
+        AddSlideInY(m_pRightHand, -425.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
+
+    // 화면 스크린
+    if (m_pPhoneScreen)
+        AddSlideInY(m_pPhoneScreen, -120.f, 0.f, 410.f, 250.f, +600.f, 0.f, 1.f);
+}
+
+
+void CUIManager::CreatePhoneScreen()
+{
+
 }
 
 void CUIManager::Free()
