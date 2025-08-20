@@ -67,7 +67,8 @@ _bool CGrounding::GetHeight(const vector<PANELENTRY> *pPanelEntries, _float fX, 
 	if (pPanelEntries->empty())
 		return false;
 
-	auto lambda_Inside = [&](int _i)
+	auto lambda_Inside =
+	[&](int _i)->bool
 	{
 		return (*pPanelEntries)[_i].eType == WallType::FLOOR
 			? IsInside((*pPanelEntries)[_i], fX, fZ)

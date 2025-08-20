@@ -23,13 +23,21 @@ public:
 	
 public:
 	HRESULT Bind_FloorList(list<Engine::CGameObject *> *_pFloorlist);
+	HRESULT Bind_SideWallList(list<Engine::CGameObject *> *_pSlideWalllist);
 	vector<PANELENTRY> *Get_SortedFloorEntries() { return &m_vecSortedFloorEntries; }
+	vector<PANELENTRY> *Get_SortedSlideWallEntries()
+	{
+		if (m_vecSortedSlideWallEntries.size() <= 0)
+			return nullptr;
+
+		return &m_vecSortedSlideWallEntries;
+	}
 private:
-	void Sort_FloorList();
+	void Sort_List_ByZValue(const vector<PANELENTRY> &_list);
 	void Clear_FloorList();
+	void Clear_SliedWallList();
 private:
 	vector<PANELENTRY> m_vecSortedFloorEntries;
-	// 점프 했을때 찾는 용도
-	vector<_float> m_fZStarts;
+	vector<PANELENTRY> m_vecSortedSlideWallEntries;
 };
 
