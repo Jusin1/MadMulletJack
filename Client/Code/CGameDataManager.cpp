@@ -75,7 +75,7 @@ HRESULT CGameDataManager::Bind_SideWallList(list<Engine::CGameObject *> *_pSlide
 {
 	if (!_pSlideWalllist)
 	{
-		MSG_BOX("CGameDataManager::Bind_SideWallList, loorlist is nullptr");
+		MSG_BOX("CGameDataManager::Bind_SideWallList, SlideWall is nullptr");
 		return E_FAIL;
 	}
 
@@ -120,13 +120,21 @@ HRESULT CGameDataManager::Bind_SideWallList(list<Engine::CGameObject *> *_pSlide
 	return S_OK;
 }
 
+vector<PANELENTRY> *CGameDataManager::Get_SortedSlideWallEntries()
+{
+	if (m_vecSortedSlideWallEntries.size() <= 0)
+		return nullptr;
+
+	return &m_vecSortedSlideWallEntries;
+}
+
 void CGameDataManager::AllClear()
 {
 	Clear_FloorList();
 	Clear_SliedWallList();
 }
 
-void CGameDataManager::Sort_List_ByZValue(const vector<PANELENTRY> &_veclist)
+void CGameDataManager::Sort_List_ByZValue(vector<PANELENTRY> &_veclist)
 {
 	if (_veclist.size() <= 1)
 		return;

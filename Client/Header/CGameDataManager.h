@@ -25,15 +25,9 @@ public:
 	HRESULT Bind_FloorList(list<Engine::CGameObject *> *_pFloorlist);
 	HRESULT Bind_SideWallList(list<Engine::CGameObject *> *_pSlideWalllist);
 	vector<PANELENTRY> *Get_SortedFloorEntries() { return &m_vecSortedFloorEntries; }
-	vector<PANELENTRY> *Get_SortedSlideWallEntries()
-	{
-		if (m_vecSortedSlideWallEntries.size() <= 0)
-			return nullptr;
-
-		return &m_vecSortedSlideWallEntries;
-	}
+	vector<PANELENTRY> *Get_SortedSlideWallEntries();
 private:
-	void Sort_List_ByZValue(const vector<PANELENTRY> &_list);
+	void Sort_List_ByZValue(vector<PANELENTRY> &_veclist);
 	void Clear_FloorList();
 	void Clear_SliedWallList();
 private:
