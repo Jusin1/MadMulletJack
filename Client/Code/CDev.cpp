@@ -98,16 +98,6 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
 void CDev::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
-    // 테스트용
-    if (GetAsyncKeyState('P'))
-    {
-        CUIManager::GetInstance()->CreateClearUI();
-    }
-    if (GetAsyncKeyState('F'))
-    {
-        CUIManager::GetInstance()->DestroyEnterUI();
-    }
 }
 
 void CDev::Render_Scene()

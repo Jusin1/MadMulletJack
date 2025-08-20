@@ -208,6 +208,9 @@
     <Filter Include="02. GameObject\06. UI\HpBar_UI\02. ColorRect">
       <UniqueIdentifier>{cff72b26-8b9f-45f0-bbfc-d473be7f129a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\ButtonUI">
+      <UniqueIdentifier>{b64c51d0-1d8d-43e9-b011-d6199d84e97b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -393,6 +396,9 @@
     <ClInclude Include="..\Header\CColRect_HpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CButtonUI.h">
+      <Filter>02. GameObject\06. UI\ButtonUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -568,6 +574,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CButtonUI.cpp">
+      <Filter>02. GameObject\06. UI\ButtonUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

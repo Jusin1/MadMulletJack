@@ -44,6 +44,7 @@
 #include "CTextUI.h"
 #include "CTalkUI.h"
 #include "CPhoneUI.h"
+#include "CButtonUI.h"
 #pragma endregion 게임 진입 UI들
 
  
@@ -734,7 +735,43 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/POLICE BADGE%03d.png", 6))))
 		return E_FAIL;
 
+	// PhoneScreenError UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ErrorScreenUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/ErrorScreen%03d.png", 4))))
+		return E_FAIL;
 
+	// PhoneScreenTitle UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ScreenTitleUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Phone_Title.png", 1))))
+		return E_FAIL;
+
+	// PhoneScreenTitle UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_FrameUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/INT-sheet_%03d.png", 4))))
+		return E_FAIL;
+
+	// ShopFrame UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_FrameUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/HUD/HUD UPGRADES BUTTON.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_BoardFrameUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/UPGRADE BORDER.png", 1))))
+		return E_FAIL;
+
+	// 상점 이미지 UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SlowMo_Art",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/TOXIC MASCULINITY.png", 1))))
+		return E_FAIL;
+
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_BossKiller_Art",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 3.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Sniper_Art",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 2.png", 1))))
+		return E_FAIL;
 
 	
 #pragma endregion 게임 진입 UI
@@ -763,6 +800,11 @@ HRESULT CLoader::Loading_UI()
 	// ImageUI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
 		CImageUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ButtonUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIButton",
+		CButtonUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// TextUI

@@ -11,6 +11,7 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_CollisionMatrix{}
     , m_bActive(false)
     , m_bRenderOn(true)
+    , m_fCamDistance(0.f)
 {
     if (m_pGraphicDev)
         m_pGraphicDev->AddRef();
@@ -25,6 +26,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
     , m_CollisionMatrix(rhs.m_CollisionMatrix)
     , m_mapComponent(rhs.m_mapComponent) // 얕복임 (주의: 컴포넌트 깊복 필요시 따로 처리해야 함)
     , m_bRenderOn(rhs.m_bRenderOn)
+    , m_fCamDistance(rhs.m_fCamDistance)
 {
     if (m_pGraphicDev)
         m_pGraphicDev->AddRef();
@@ -65,6 +67,24 @@ HRESULT CGameObject::Set_Component()
     if (FAILED(Add_Components(L"Com_Renderer", 0, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
         return E_FAIL;
     return S_OK;
+}
+
+void CGameObject::Compute_CamDistance(_vec3 WorldPos)
+{
+    _matrix view, invView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &view);
+
+    // 역행렬은 별도 변수에 받는 게 안전
+    if (D3DXMatrixInverse(&invView, nullptr, &view) == nullptr) {
+        m_fCamDistance = 0.f;
+        return;
+    }
+
+    _vec3 camPos(invView._41, invView._42, invView._43);
+
+    _vec3 diff = camPos - WorldPos;
+    m_fCamDistance = D3DXVec3Length(&diff);
+
 }
 
 

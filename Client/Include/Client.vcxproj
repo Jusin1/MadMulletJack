@@ -156,6 +156,7 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBannerUI.h" />
     <ClInclude Include="..\Header\CBlackGackGround.h" />
+    <ClInclude Include="..\Header\CButtonUI.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
     <ClInclude Include="..\Header\CColRect_HpBarUI.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBannerUI.cpp" />
     <ClCompile Include="..\Code\CBlackGackGround.cpp" />
+    <ClCompile Include="..\Code\CButtonUI.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
     <ClCompile Include="..\Code\CColRect_HpBarUI.cpp" />
