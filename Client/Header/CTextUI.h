@@ -56,6 +56,9 @@ private:
 	float m_appearStart = 0.8f;   // 시작 배율(상대)
 	float m_appearOver = 1.25f;  // 오버슈트 배율(상대)
 
+private:
+	_bool m_bPosFix;
+
 public: // 생성/복제/해제
 	static CTextUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

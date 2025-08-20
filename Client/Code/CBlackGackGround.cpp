@@ -17,6 +17,7 @@ CBlackGackGround::CBlackGackGround(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_holeW(0.f)
 	, m_holeH(0.f)
 	, m_color(D3DXCOLOR(0, 0, 0, 1))   // 기본 검정
+	, m_bPosFix(true)
 {
 }
 
@@ -35,6 +36,7 @@ CBlackGackGround::CBlackGackGround(const CBlackGackGround& rhs)
 	, m_holeW(rhs.m_holeW)
 	, m_holeH(rhs.m_holeH)
 	, m_color(rhs.m_color)   // 기본 검정
+	, m_bPosFix(rhs.m_bPosFix)
 {
 }
 
@@ -54,8 +56,11 @@ HRESULT CBlackGackGround::Initialize(void* pArg)
 _int CBlackGackGround::Update_GameObject(const _float& fTimeDelta)
 {
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
-
+	if (m_bPosFix)
+	{
+		m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
+	}
+	
 	if (m_fadeActive)
 	{
 		m_t += fTimeDelta;

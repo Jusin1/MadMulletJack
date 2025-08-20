@@ -273,7 +273,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	if (m_bIsCountHp)
 	{
-		//CountHp(fTimeDelta);
+		CountHp(fTimeDelta);
 	}
 	
 	KeyInput(fTimeDelta);
@@ -296,6 +296,11 @@ void CPlayer::StateNormalSet()
 
 	m_pHpBarUI->Set_Active(true);
 	m_pHpBarUI->Set_RenderOn(true);
+
+	m_pPlayerUI->Set_Active(true);
+	m_pPlayerUI->Set_RenderOn(true);
+
+
 }
 
 // idle
@@ -335,20 +340,20 @@ void CPlayer::JUMP_End()
 void CPlayer::DASH_ATTACK_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
 }
 
 void CPlayer::DASH_ATTACK_On(const _float& fTimeDelta)
 {
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
-	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
 		Set_State_Idle();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
 }
 
 void CPlayer::DASH_ATTACK_End()
@@ -360,20 +365,21 @@ void CPlayer::DASH_ATTACK_End()
 void CPlayer::DASH_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
+
 }
 
 void CPlayer::DASH_On(const _float& fTimeDelta)
 {
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
-	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
 		Set_State_Idle();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
 }
 
 void CPlayer::DASH_End()
@@ -481,7 +487,7 @@ void CPlayer::ZOOM_End()
 void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
-	m_fStateTime = 1.f;
+	m_fStateTime = 2.f; // origin 0.5 debug 2.f
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -563,6 +569,9 @@ void CPlayer::OPENING_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	m_pPlayerUI->Set_RenderOn(false);
+	//m_pPlayerUI->Set_Active(false);
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -669,6 +678,8 @@ void CPlayer::CountHp(const _float& fTimeDelta)
 {
 	Add_Hp(-1.f * fTimeDelta);
 
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
+
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
 
@@ -734,6 +745,8 @@ void CPlayer::Set_Collider(void)
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+
+		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 
 		// Dash_attack 중일때 몬스터와 충돌하면 
 		if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)

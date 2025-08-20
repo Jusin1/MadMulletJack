@@ -28,7 +28,7 @@
 #include "CHpbarUI.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
-#include "CColRect_HpBarUI.h"
+
 
 // Effect UI
 #include "CEffectUI.h"
@@ -852,10 +852,6 @@ HRESULT CLoader::Loading_UI()
 	// HpBar - Phone
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
 		CPhone_HpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// HpBar - ColorRect
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_ColRect",
-		CColRect_HpBarUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 #pragma endregion HpBar UI
