@@ -94,18 +94,13 @@ void CEndPoint::Render_GameObject()
 void CEndPoint::Update_Collider()
 {
 	if (m_pCollider)
-		m_pCollider->Update_ColliderSphere();
+		m_pCollider->Update_ColliderBox();
 
 }
 
 HRESULT CEndPoint::Set_Component()
 {
-	CColider_Sphere::COLLINFO CollSphereInfo;
-	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;
-	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
-
-	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent **)&m_pCollider, &CollSphereInfo)))
+	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pCollider)))
 		return E_FAIL;
 
 	m_pCollider->Set_Transform(m_pTransformCom);

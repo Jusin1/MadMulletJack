@@ -88,6 +88,28 @@ _bool  CColiderManager::CollisionGroup(COLLISION_GROUP eGroup, class CGameObject
 					(dynamic_cast<CColider_Sphere*>(DamageOwner)->Collision_Check((CColider_Sphere*)Target, pOutDistance))))
 					return true;
 				break;
+			case Engine::CColiderManager::COLLISION_SPHERE_CUBE:
+			{
+				auto* pSphere = dynamic_cast<CColider_Sphere*>(pGameObject->Find_Component(TEXT("Com_Collider_Sphere")));
+				auto* pCube = dynamic_cast<CColider_Cube*>(iter->Find_Component(TEXT("Com_Collider_Cube")));
+				if (!pSphere || !pCube) continue;
+
+				if (pSphere->Is_Active() && pCube->Is_Active() &&
+					pSphere->Collision_Check(pCube, pOutDistance))
+					return true;
+			}
+			break;
+			case Engine::CColiderManager::COLLISION_CUBE_SPHERE:
+			{
+				auto* pCube = dynamic_cast<CColider_Cube*>(pGameObject->Find_Component(TEXT("Com_Collider_Cube")));
+				auto* pSphere = dynamic_cast<CColider_Sphere*>(iter->Find_Component(TEXT("Com_Collider_Sphere")));
+				if (!pCube || !pSphere) continue;
+
+				if (pSphere->Is_Active() && pCube->Is_Active() &&
+					pSphere->Collision_Check(pCube, pOutDistance))
+					return true;
+			}
+			break;
 			default:
 				break;
 			}	

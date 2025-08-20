@@ -773,7 +773,7 @@ void CPlayer::Set_Collider(void)
 		}*/
 			
 	}
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
 	{
 		CUIManager::GetInstance()->CreateClearUI();
 		m_tPlayerInfo.ePlayerState = CLEAR;

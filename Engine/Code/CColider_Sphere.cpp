@@ -1,5 +1,6 @@
 
 #include "CColider_Sphere.h"
+#include "CColider_Cube.h"
 #include "CTransform.h"
 
 CColider_Sphere::CColider_Sphere(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -128,6 +129,53 @@ _bool CColider_Sphere::Collision_Check(CColider_Sphere* pTarget, _vec3* pOutDist
         {
             D3DXVec3Normalize(pOutDistance, &vDelta);
             *pOutDistance *= (fSumRadius - fDist);
+        }
+        return true;
+    }
+
+    return false;
+}
+
+_bool CColider_Sphere::Collision_Check(CColider_Cube* pCube, _vec3* pOutDistance)
+{
+    if (!pCube) return false;
+
+    _vec3 vMin, vMax;
+    auto GetTransformedMinMax = [&](const _vec3* pPoints, const _matrix& matWorld, _vec3& outMin, _vec3& outMax) {
+        _vec3 vTransformed[8];
+        for (int i = 0; i < 8; ++i)
+            D3DXVec3TransformCoord(&vTransformed[i], &pPoints[i], &matWorld);
+
+        outMin = outMax = vTransformed[0];
+        for (int i = 1; i < 8; ++i) {
+            outMin.x = min(outMin.x, vTransformed[i].x);
+            outMin.y = min(outMin.y, vTransformed[i].y);
+            outMin.z = min(outMin.z, vTransformed[i].z);
+            outMax.x = max(outMax.x, vTransformed[i].x);
+            outMax.y = max(outMax.y, vTransformed[i].y);
+            outMax.z = max(outMax.z, vTransformed[i].z);
+        }
+    };
+
+    GetTransformedMinMax(pCube->m_vPoint, pCube->m_matWorld, vMin, vMax);
+
+    _vec3 vClosest;
+    vClosest.x = max(vMin.x, min(m_vCenter.x, vMax.x));
+    vClosest.y = max(vMin.y, min(m_vCenter.y, vMax.y));
+    vClosest.z = max(vMin.z, min(m_vCenter.z, vMax.z));
+
+    _vec3 vDelta = m_vCenter - vClosest;
+    float fDistSq = D3DXVec3LengthSq(&vDelta);
+
+    if (fDistSq <= m_fRadius * m_fRadius) {
+        if (pOutDistance) {
+            float fDist = sqrtf(fDistSq);
+            if (fDist > 0.0001f) {
+                D3DXVec3Normalize(pOutDistance, &vDelta);
+                *pOutDistance *= (m_fRadius - fDist);
+            } else {
+                *pOutDistance = _vec3(0, m_fRadius, 0); // Ãæµ¹ º¸Á¤ (»ìÂ¦ ¹Ò)
+            }
         }
         return true;
     }
