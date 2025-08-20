@@ -43,7 +43,6 @@ void CUIManager::AddSlideIn(
     const float yStart = yTarget + offsetY;
 
     ui->Set_Active(true);                
-    ui->Set_RenderOn(true);
 
     ui->Set_UIPosition(xStart, yStart, w, h);
 
@@ -169,6 +168,7 @@ void CUIManager::CreateClearUI()
             L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
     if (!m_pEnterUI) return;
 
+    CreatePhoneUI();
     m_pEnterUI->Set_Active(true);
     auto attachAndSlide = [&](CUI* ui, float x, float y, float w, float h, float extraDelay = 0.f)
         {
@@ -508,23 +508,83 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 }
 
 void CUIManager::CreatePhoneUI()
-{
-    if (auto* pPhone = dynamic_cast<CPhoneUI*>(
+{ 
+    // 화면 스크린 생성
+    m_pPhoneScreen = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+
+    if (m_pPhoneScreen)
+    {
+        m_pPhoneScreen->RegisterTexture(L"Com_Texture_PhoneLogoUI", L"Prototype_Component_Texture_Phone_ScreenUI", 0, 6, 4.f, true);
+        m_pPhoneScreen->Play(true);
+        m_pPhoneScreen->Set_UIPosition(-120.f, 600.f, 410.f, 250.f); 
+        m_pPhoneScreen->ChangeTexture(L"Com_Texture_PhoneLogoUI");
+        m_pEnterUI->Add_Child(m_pPhoneScreen);
+    }
+
+    if (m_pPhone = dynamic_cast<CPhoneUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_PhoneUI", SCENE_STATIC, L"UI_Layer")))
     {
-        pPhone->Set_UIPosition(-160.F, 0.f, 600.f, 300.f);
-        m_pEnterUI->Add_Child(pPhone);
-        if (auto* pLeftHand = dynamic_cast<CImageUI*>(
+        m_pPhone->Set_UIPosition(-160.f, 600.f, 600.f, 300.f);
+        m_pEnterUI->Add_Child(m_pPhone);
+
+        // 왼손
+        m_pLeftHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+        if (m_pLeftHand)
         {
-            pLeftHand->RegisterTexture(L"Com_Texture_leftHandIDLE", L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
-            pLeftHand->Play(true);
-            pLeftHand->Set_UIPosition(180.f, 40.f, 300.f, 400.f);
-            pLeftHand->ChangeTexture(L"Com_Texture_leftHandIDLE");
-        }     
-    } 
+            m_pLeftHand->RegisterTexture(L"Com_Texture_RightHandIDLE",
+                L"Prototype_Component_Texture_Phone_RightHandUI", 0, 2, 4.f, true);
+            m_pLeftHand->Play(true);
+
+            m_pLeftHand->Set_UIPosition(180.f, 600.f + 40.f, 300.f, 450.f);
+            m_pLeftHand->ChangeTexture(L"Com_Texture_RightHandIDLE");
+
+            m_pPhone->Add_Child(m_pLeftHand);
+        }
+
+        // 오른손
+        m_pRightHand = dynamic_cast<CImageUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+        if (m_pRightHand)
+        {
+            m_pRightHand->RegisterTexture(L"Com_Texture_LeftHandIDLE",
+                L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
+            m_pRightHand->Play(true);
+
+            m_pRightHand->Set_UIPosition(-425.f, 600.f + 40.f, 300.f, 450.f);
+            m_pRightHand->ChangeTexture(L"Com_Texture_LeftHandIDLE");
+
+            m_pPhone->Add_Child(m_pRightHand);
+        }
+    }
+}
+
+void CUIManager::SliderPhoneUI()
+{
+    AddSlideInY(m_pPhone, -160.f, 0.f, 600.f, 300.f, +600.f, 0.f, 1.f);
+
+    // 왼손
+    if (m_pLeftHand)
+        AddSlideInY(m_pLeftHand, 180.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
+
+    // 오른손
+    if (m_pRightHand)
+        AddSlideInY(m_pRightHand, -425.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
+
+    // 화면 스크린
+    if (m_pPhoneScreen)
+        AddSlideInY(m_pPhoneScreen, -120.f, 0.f, 410.f, 250.f, +600.f, 0.f, 1.f);
+}
+
+
+void CUIManager::CreatePhoneScreen()
+{
+
 }
 
 void CUIManager::Free()

@@ -167,7 +167,7 @@ void CTalkUI::NextDialogue()
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
 		}
 		else if (m_iCurrentIndex == 2) {
-			CUIManager::GetInstance()->CreatePhoneUI();
+			CUIManager::GetInstance()->SliderPhoneUI();
 		}
 
 		m_fAccTime = 0.f;

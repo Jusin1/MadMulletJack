@@ -99,6 +99,8 @@ private:
 	void PLAYERDEAD_On(const _float& fTimeDelta);
 	void PLAYERDEAD_End();
 
+	void Clear_Begin();
+
 	void KeyInput(const _float& fTimeDelta);
 	void Set_State_Idle();
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "CComponent.h"
 BEGIN(Engine)
+
+class CColider_Cube;  
 class ENGINE_DLL CColider_Sphere : public CComponent
 {
 public:
@@ -21,6 +23,7 @@ public:
 	HRESULT Update_ColliderSphere(); 
 	HRESULT Render_ColliderSphere();
 	_bool	Collision_Check(CColider_Sphere* pTarget, _vec3* pOutDistance = nullptr);
+	_bool	Collision_Check(CColider_Cube* pCube, _vec3* pOutDistance);
 
 public:
 	void Set_Transform(class CTransform* pTransform);

@@ -54,6 +54,8 @@ protected:
 	_uint m_iIndicesByte = 0;
 	D3DFORMAT m_eIndexFormat;
 
+	friend class CColider_Sphere;
+
 public:
 	static CColider_Cube* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg = nullptr) override;

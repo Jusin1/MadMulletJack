@@ -7,6 +7,8 @@ class CLisaUI;
 class CTextUI;
 class CBlackGackGround;
 class CPanelUI;
+class CPhoneUI;
+class CImageUI;
 // UI 생성 및 관리
 class CUIManager :
     public CBase
@@ -22,6 +24,7 @@ public:
     void CreateClearTextUI();
     void CreateTimeTextUI(const std::wstring& timeStr);
     void CreatePhoneUI();
+    void CreatePhoneScreen();
 
     void DestroyEnterUI();        // 종료 연출
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; } //UI가 동작 중인지 확인
@@ -42,6 +45,8 @@ public:
 
     void AddSlideTo(CUI* ui,
         float xEnd, float yEnd, float delay, float dur); // 임의 위치로 슬라이드 이동
+
+    void SliderPhoneUI();
 
 public:
     virtual void Free() override; 
@@ -74,6 +79,13 @@ private:
     CPanelUI* m_pTimeFrame = nullptr; // timeFrame
     CTextUI* m_pTimeText = nullptr; // timeText
     CLisaUI* m_pLisaUI = nullptr;
+
+
+    // 핸드폰 관련 UI
+    CPhoneUI* m_pPhone = nullptr;
+    CImageUI* m_pLeftHand = nullptr;
+    CImageUI* m_pRightHand = nullptr;
+    CImageUI* m_pPhoneScreen = nullptr;
 
     bool   m_timeAutoRemoveArmed = false; // 삭제 타이머 작동 중인지
     float  m_timeAutoRemoveTimer = 0.f;   // 경과 시간

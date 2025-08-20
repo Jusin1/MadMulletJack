@@ -14,6 +14,7 @@
 #include "CHpBarUI.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
+#include "CUIManager.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
@@ -151,7 +152,6 @@ void CPlayer::Add_Hp(_float _fAddHp)
 
 void CPlayer::ChangeState(PLAYERSTATE _e)
 {
-
 	if (m_tPrePlayerInfo.ePlayerState == _e)
 		return;
 
@@ -195,6 +195,9 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 		OPENING_Begin();break;
 	case PLAYERDEAD:
 		PLAYERDEAD_Begin();break;
+	case CLEAR:
+		Clear_Begin(); break;
+		break;
 	}
 
 	// 변경된 player info 전달
@@ -311,6 +314,7 @@ void CPlayer::IDLE_On(const _float& fTimeDelta)
 
 void CPlayer::IDLE_End()
 {
+
 }
 
 // jump
@@ -594,6 +598,15 @@ void CPlayer::PLAYERDEAD_End()
 	// m_bDead = true; // 객체 dead 설정
 }
 
+void CPlayer::Clear_Begin()
+{
+	m_eMove = MOVE_NON;
+	m_pPlayerUI->Set_RenderOn(false);
+	m_pPlayerUI->Set_Active(false);
+	m_pHpBarUI->Set_RenderOn(false);
+	m_pHpBarUI->Set_Active(false);
+}
+
 void CPlayer::KeyInput(const _float& fTimeDelta)
 {
 	// 움직임 키
@@ -763,6 +776,11 @@ void CPlayer::Set_Collider(void)
 		}*/
 			
 	}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
+	{
+		CUIManager::GetInstance()->CreateClearUI();
+		m_tPlayerInfo.ePlayerState = CLEAR;
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -896,6 +914,7 @@ const TCHAR* CPlayer::StateToString(PLAYERSTATE eState)
 	case WALL: return TEXT("State: WALL\n");
 	case OPENING: return TEXT("State: OPENING\n");
 	case PLAYERDEAD: return TEXT("State: PLAYERDEAD\n");
+	case CLEAR: return TEXT("State: CLEAR\n");
 	default: return TEXT("State: UNKNOWN\n");
 	}
 }

@@ -25,7 +25,6 @@ CDummyBase::~CDummyBase()
 void CDummyBase::Free()
 {
 	Engine::CGameObject::Free();
-	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 }
 
 CGameObject *CDummyBase::Clone(void *pArg)

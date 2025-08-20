@@ -241,6 +241,9 @@ HRESULT CPlayer_HandR::Set_Texture()
         m_eMove = MV_DOWN;
     }
         break;
+    case CLEAR:
+        Set_RenderOn(false);
+        break;
 
     default:
     {
@@ -275,6 +278,7 @@ HRESULT CPlayer_HandR::Set_WeaponUI()
 {
     m_pWeaponUI = dynamic_cast<CUIBase*>(
         CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
+    Add_Child(m_pWeaponUI);
     if (m_pWeaponUI == nullptr)
         return E_FAIL;
 
@@ -332,6 +336,8 @@ void CPlayer_HandR::Update_Weapon_Pistol()
            // pPistol->Set_Active(true);
             pPistol->Set_RenderOn(true);
             break;
+        case CLEAR:
+            pPistol->Set_RenderOn(false);
 
         default:
             // HandR의 texture가 Idle이면 -> pitol idle로 render

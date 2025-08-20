@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	class CColider_Sphere;
+	class CColider_Cube;
 }
 
 class CDummyBase : public CGameObject
@@ -21,7 +21,7 @@ public:
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
 
-	Engine::CColider_Sphere *GetCollider() { m_pCollider; }
+	Engine::CColider_Cube*GetCollider() { m_pCollider; }
 	EnvType GetType() const { return m_eType; }
 	RENDERID GetRenderId() const { return m_eRenderID; }
 	ObjectCategory GetCategory() const { return m_eCategory; }
@@ -32,6 +32,6 @@ protected:
 	ObjectCategory m_eCategory;
 	EnvType m_eType;
 	RENDERID m_eRenderID;
-	Engine::CColider_Sphere *m_pCollider;
+	Engine::CColider_Cube *m_pCollider;
 };
 

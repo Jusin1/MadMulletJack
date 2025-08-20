@@ -19,6 +19,7 @@ public:
 
 public:
     void Add_Child(CUIBase* pChild); // 자식 추가
+    void Add_ChildFront(CUIBase* child);
     CUIBase* Find_Child_ByTag(const _tchar* pTag); // 자식 찾을 때 태그로 찾음
     const list<CUIBase*>& GetChildren() const { return m_vecChildren; }
     void		Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY); // pos를 기준으로 offset을 줘서 pos를 셋팅
@@ -34,6 +35,9 @@ public:
 protected:
     virtual HRESULT			Set_Component();
     void Set_Origin_Rot(); // 전에 local 행렬을 돌렸다면 다시 돌려두기
+    _vec3 m_vLocalOffset;
+    void Set_LocalOffset(const _vec3& offset) { m_vLocalOffset = offset; }
+    _vec3 Get_LocalOffset() const { return m_vLocalOffset; }
     
 
 protected:
