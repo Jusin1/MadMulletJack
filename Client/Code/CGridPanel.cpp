@@ -201,7 +201,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				tDesc.fOffSetY = fHeight * 0.5f;
 				tDesc.fOffsetZ = 0.5f;
 
-				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
 					return E_FAIL;
 			} break;
 			case WallType::WALL_VER:
@@ -214,7 +214,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				tDesc.fOffSetY = fHeight * 0.5f;
 				tDesc.fOffsetZ = fWidth * 0.5f;
 
-				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
 					return E_FAIL;
 			} break;
 			case WallType::CEILING:
@@ -227,7 +227,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				tDesc.fOffSetY = -0.5f;
 				tDesc.fOffsetZ = fHeight * 0.5f;
 
-				if (FAILED(Add_Components(L"Com_Collider", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
 					return E_FAIL;
 			} break;
 			}
@@ -258,9 +258,12 @@ void CGridPanel::Update_CollisionGroup()
 	switch (GetType())
 	{
 	case WallType::WALL_HOR:
+	{
+		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_HORWALL, this);
+	} break;
 	case WallType::WALL_VER:
 	{
-		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_WALL, this);
+		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_VERWALL, this);
 	} break;
 	case WallType::CEILING:
 	{
@@ -271,33 +274,11 @@ void CGridPanel::Update_CollisionGroup()
 
 void CGridPanel::Set_Collider()
 {
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	_vec3 vDistance;
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE_SPHERE, &vDistance))
 	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-
-		// Dash_attack 중일때 몬스터와 충돌하면 
-		if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
-		{
-			// wap2에 따라 state 변경
-			switch (m_tPlayerInfo.eWeapon2)
-			{
-			case WP_KICK:
-				m_tPlayerInfo.ePlayerState = KICK;
-				//m_pTransformCom->Move_PosDown(0.5);
-				break;
-
-			case WP_KNIFE:
-			case WP_BOOK:
-				m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
-				break;
-			}
-		}
-
-		// Dash attack이 아니면 hit
-		/*else
-		{
-			m_tPlayerInfo.ePlayerState = HIT;
-		}*/
-
+	}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_CUBE_SPHERE, &vDistance))
+	{
 	}
 }

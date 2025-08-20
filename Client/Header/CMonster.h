@@ -24,7 +24,7 @@ public:
 	MonsterType GetType() const { return m_eType; }
 protected:
 	HRESULT	Set_Component();
-
+	
 
 protected: 
 	virtual _bool Picking(_vec3* PickingPoint) override;
@@ -32,6 +32,7 @@ protected:
 
 protected:
 	void SetUp_BillBoard();
+	void Set_Collider_With_Wall();
 
 protected:
 	virtual HRESULT Texture_Clone();

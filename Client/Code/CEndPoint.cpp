@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CColiderManager.h"
-#include "CColider_Sphere.h"
+#include "CColider_Cube.h"
 #include "CEndPoint.h"
 #include "CUIManager.h"
 
@@ -100,7 +100,10 @@ void CEndPoint::Update_Collider()
 
 HRESULT CEndPoint::Set_Component()
 {
-	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pCollider)))
+	CColider_Cube::COLLRECTDESC tDesc;
+
+	tDesc.bMapObject = true;
+	if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pCollider, &tDesc)))
 		return E_FAIL;
 
 	m_pCollider->Set_Transform(m_pTransformCom);

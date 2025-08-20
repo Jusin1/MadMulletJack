@@ -144,6 +144,26 @@ void CMonster::SetUp_BillBoard()
 	m_pTransformCom->Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
 }
 
+void CMonster::Set_Collider_With_Wall()
+{
+	_vec3 vDistance;
+
+	if (CColiderManager::GetInstance()->CollisionGroup(
+		CColiderManager::COLLISION_HORWALL, this,
+		CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+	}
+	if (CColiderManager::GetInstance()->CollisionGroup(
+		CColiderManager::COLLISION_VERWALL, this,
+		CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+	}
+}
+
 
 HRESULT CMonster::Texture_Clone()
 {

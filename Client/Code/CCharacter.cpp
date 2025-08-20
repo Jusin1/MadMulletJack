@@ -58,7 +58,6 @@ _int CCharacter::Update_GameObject(const _float& fTimeDelta)
 void CCharacter::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-	Set_OnTerrain(fTimeDelta);
 }
 
 void CCharacter::Render_GameObject()

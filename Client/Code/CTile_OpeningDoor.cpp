@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CTile_OpeningDoor.h"
 
 CTile_OpeningDoor::CTile_OpeningDoor(LPDIRECT3DDEVICE9 pGraphicDevice)

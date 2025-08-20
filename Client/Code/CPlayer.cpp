@@ -99,7 +99,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
+	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CPlayer::Render_GameObject()
@@ -780,6 +780,28 @@ void CPlayer::Set_Collider(void)
 	{
 		CUIManager::GetInstance()->CreateClearUI();
 		m_tPlayerInfo.ePlayerState = CLEAR;
+	}
+	Set_Collider_With_Wall();
+}
+
+void CPlayer::Set_Collider_With_Wall()
+{
+	_vec3 vDistance;
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_HORWALL, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+	}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_VERWALL, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+	}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance + _vec3{ 0.f, 0.01f, 0.f }));
+		Set_Velocity(Get_Velocity() * -1.f);
 	}
 }
 
