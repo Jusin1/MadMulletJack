@@ -208,6 +208,9 @@
     <Filter Include="03. Manager\GameDataManager">
       <UniqueIdentifier>{15df7013-6f76-4c67-afaf-0823eba6a3a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Door">
+      <UniqueIdentifier>{c340b809-b0d4-4672-a218-2d2e1f87ec1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -393,6 +396,12 @@
     <ClInclude Include="..\Header\CGameDataManager.h">
       <Filter>03. Manager\GameDataManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTile_NormalDoor.h">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTile_OpeningDoor.h">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -568,6 +577,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGameDataManager.cpp">
       <Filter>03. Manager\GameDataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile_NormalDoor.cpp">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile_OpeningDoor.cpp">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

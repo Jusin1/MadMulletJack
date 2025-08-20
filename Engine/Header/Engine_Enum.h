@@ -52,6 +52,8 @@ namespace Engine
 		ACID,
 		ELECTRIC,
 		VENT,
+		NORMALDOOR,
+		OPENINGDOOR,
 		NONE
 	};
 	constexpr size_t g_TileTypeCount{ static_cast<size_t>(TileType::NONE) };

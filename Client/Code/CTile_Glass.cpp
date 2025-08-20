@@ -43,7 +43,7 @@ CTile_Glass *CTile_Glass::Create(LPDIRECT3DDEVICE9 pGraphicDevice)
     if (FAILED(pProto->Ready_GameObject()))
     {
         Safe_Release(pProto);
-        MSG_BOX("TCTile_Glass::Create, Failed");
+        MSG_BOX("CTile_Glass::Create, Failed");
         return nullptr;
     }
 
