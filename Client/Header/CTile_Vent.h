@@ -29,6 +29,8 @@ public:
 	TileType GetType() const { return m_eType; }
 	RENDERID GetRenderId() const { return m_eRenderID; }
 
+	void RotateProp(const _float &fTimeDelta);
+
 	Engine::CColider_Sphere *GetCollider() { return m_pColliderSphere; }
 	bool IsKilled() const { return m_bKilled; }
 private:

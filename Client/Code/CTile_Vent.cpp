@@ -77,6 +77,8 @@ _int CTile_Vent::Update_GameObject(const _float &fTimeDelta)
 {
     if (m_bDead) return DEAD;
 
+    RotateProp(fTimeDelta);
+
     CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_TILE_VENT, this);
     return __super::Update_GameObject(fTimeDelta);
 }
@@ -165,4 +167,9 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
     // TODO - Monster와 충돌시 Trigger Component
 
     return S_OK;
+}
+
+void CTile_Vent::RotateProp(const _float &fTimeDelta)
+{
+    m_pProp->GetTransform()->RotationDegree(_vec3{ 0.f,0.f,1.f }, 180.f * fTimeDelta);
 }
