@@ -122,7 +122,7 @@ HRESULT CTile_Bottle::Set_Component(void *pArg)
         if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, pData->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
             return E_FAIL;
 
-        m_pTransformCom->Set_Scale(0.5f, 1.f, 1.f);
+        m_pTransformCom->Set_Scale(0.125f, 0.25f, 1.f);
         _vec3 src = m_pTransformCom->Get_Info(INFO_POS);
         src.y += m_pTransformCom->Get_Scale().y * 0.5f;
         m_pTransformCom->Set_Info(INFO_POS, src);
