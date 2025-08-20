@@ -24,6 +24,9 @@ public:
 	virtual _int Update_GameObject(const _float &fTimeDelta) override;
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
+
+	CColider_Sphere *GetCollider() { return m_pColiderSphere; }
+	bool IsOpened() const { return m_bOpend; }
 private:
 	HRESULT Set_Component(void *pArg);
 	void PivotRotate();

@@ -5,12 +5,12 @@
 #include "CTile_Vent.h"
 
 CTile_Vent::CTile_Vent(LPDIRECT3DDEVICE9 pGraphicDevice)
-    : CTileBase(pGraphicDevice, TileType::VENT)
+    : CTileBase(pGraphicDevice, TileType::VENT), m_pProp(nullptr), m_pColliderSphere(nullptr)
 {
 }
 
 CTile_Vent::CTile_Vent(const CTile_Vent &rhs)
-    : CTileBase(rhs, TileType::VENT)
+    : CTileBase(rhs, TileType::VENT), m_pProp(nullptr), m_pColliderSphere(nullptr)
 {
 }
 
@@ -90,7 +90,26 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
     if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Vent", (CComponent **)&m_pTexture)))
         return E_FAIL;
 
-    // TODO - 회전되는 Animation Texture나 Object 추가 해야함
+    if (MAPOBJECTDATA *pData = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+    {
+        wstring originName = pData->texture.OriginComponentName;
+        pData->texture.OriginComponentName = originName + L"_Prop";
+        _matrix vTransformData;
+        ::D3DXMatrixIdentity(&vTransformData);
+        vTransformData._41 -= 0.25f;
+        vTransformData *= (*m_pTransformCom->Get_World());
+        ::memcpy(&pData->transform.Right[0], vTransformData.m[0], sizeof(_vec3));
+        ::memcpy(&pData->transform.Up[0], vTransformData.m[1], sizeof(_vec3));
+        ::memcpy(&pData->transform.Look[0], vTransformData.m[2], sizeof(_vec3));
+        ::memcpy(&pData->transform.Pos[0], vTransformData.m[3], sizeof(_vec3));
+        if (FAILED(CObjectManager::GetInstance()->Add_GameObject(
+            L"Prototype_GameObject_DecoTile",
+            CMapFactory::GetInstance()->GetTargetSceneIndex(),
+            L"Tile_Layer",
+            pData)))
+            return E_FAIL;
+    }
+    
 
     // TODO - Monster와 충돌시 Trigger Component
 

@@ -1,6 +1,13 @@
 #pragma once
 #include "CTileBase.h"
 
+namespace Engine
+{
+	class CColider_Sphere;
+}
+
+class CTile_Deco;
+
 class CTile_Vent : public CTileBase
 {
 protected:
@@ -21,8 +28,15 @@ public:
 	const CTexture *GetTexture() const { m_pTexture; }
 	TileType GetType() const { return m_eType; }
 	RENDERID GetRenderId() const { return m_eRenderID; }
+
+	Engine::CColider_Sphere *GetCollider() { return m_pColliderSphere; }
+	bool IsKilled() const { return m_bKilled; }
 private:
 	virtual CGameObject *Clone(void *pArg = nullptr) override;
 	HRESULT			Set_Component(void *pArg);
+private:
+	bool m_bKilled{ false };
+	Engine::CColider_Sphere *m_pColliderSphere;
+	CTile_Deco *m_pProp;
 };
 

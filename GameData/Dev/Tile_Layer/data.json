@@ -2222,7 +2222,7 @@
     {
         "Color": 3435973836,
         "ObjectCategory": 1,
-        "ObjectType": 0,
+        "ObjectType": 4,
         "PanelData": {
             "Count_X": 2,
             "Count_Y": 2,
@@ -2259,7 +2259,7 @@
     {
         "Color": 3435973836,
         "ObjectCategory": 1,
-        "ObjectType": 0,
+        "ObjectType": 3,
         "PanelData": {
             "Count_X": 2,
             "Count_Y": 2,
