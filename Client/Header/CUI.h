@@ -35,12 +35,6 @@ public:
 	void Get_UIPosition(float& x, float& y) const { x = m_fX; y = m_fY; }
 	void Get_UISize(float& w, float& h) const { w = m_fSizeX; h = m_fSizeY; }
 
-	/*UIMOVE Get_UIMove() const { return m_eMove; }
-	void Set_UIMove(UIMOVE _eMove) { m_eMove = _eMove; }
-
-	_float Get_Rnage() const { return m_fRange; }
-	void Set_Range(_float _fRange) { m_fRange = _fRange; }*/
-
 	void Set_UIMoveInfo(UIMoveInfo _tMoveInfo) { m_tMoveInfo = _tMoveInfo; }
 	UIMoveInfo Get_UIMoveInfo() const { return m_tMoveInfo; }
 	void Set_UIMove(UIMOVE _eUIMove) { m_tMoveInfo.eUIMove = _eUIMove; }
@@ -49,15 +43,13 @@ protected:
 	_matrix					m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
-	//UIMOVE m_eMove; // UI 움직임 state
-	//_float m_fRange; // 움직임 범위 필요할 경우
-
-	UIMoveInfo m_tMoveInfo;
+	UIMoveInfo m_tMoveInfo; //ui 움직임시 필요한 정보를 담는 struct.
 
 protected:
 	virtual		HRESULT	Set_Component();
 	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
 
+public:
 	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY); // size부터 pos까지 셋팅
 	void		Set_UISize(_float _fSizeX, _float _fSizeY); // size만 셋팅
 	

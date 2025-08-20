@@ -168,9 +168,10 @@ void CTransform::Move_PosLeft(_float fTimeDelta, _float fRange, _bool bStop, _fl
 	_vec3 vPos = Get_Info(INFO_POS);
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
-		if (fRange >= fSumRange)
+		if (fRange <= fSumRange)
 			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
 	}
 
 	vPos.x -= fTimeDelta * m_TransformInfo.fSpeed;
@@ -183,9 +184,10 @@ void CTransform::Move_PosRight(_float fTimeDelta, _float fRange, _bool bStop, _f
 	_vec3 vPos = Get_Info(INFO_POS);
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
-		if (fRange >= fSumRange)
+		if (fRange <= fSumRange)
 			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
 	}
 
 	vPos.x += fTimeDelta * m_TransformInfo.fSpeed;
@@ -199,9 +201,10 @@ void CTransform::Move_YUp(_float fTimeDelta, _float fRange, _bool bStop, _float&
 
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange +=  fTimeDelta * m_TransformInfo.fSpeed;
-		if (fRange >= fSumRange)
+		if (fRange <= fSumRange)
 			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
 	}
 
 	vPos += _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
@@ -215,9 +218,10 @@ void CTransform::Move_YDown(_float fTimeDelta, _float fRange, _bool bStop, _floa
 
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
-		if (fRange >= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
 			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
 	}
 
 	vPos -= _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
@@ -231,9 +235,10 @@ void CTransform::Move_RL(_float fTimeDelta, _float fRange, _bool bStop, _float& 
 
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
-		if (fRange >= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
 			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
 	}
 
 	// 방향에 맞춰 이동
@@ -260,9 +265,10 @@ void CTransform::Move_YUpDown(_float fTimeDelta, _float fRange, _bool bStop, _fl
 
 	if (bStop) // 멈춰야 한다면
 	{
-		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
-		if (fRange >= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
 			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
 	}
 
 	// 방향에 맞춰 이동

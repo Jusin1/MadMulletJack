@@ -56,11 +56,12 @@ void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
 
 void CUIBase::Render_GameObject() // 자식 Render
 {
-    if (!m_bActive || m_bDead) return;
+    if (!m_bActive || m_bDead) 
+        return;
 
     for (auto& pChild : m_vecChildren) {
         if (!pChild) continue;
-        if (!pChild->Is_Active() || pChild->Get_Dead()) continue; 
+        if (!pChild->Is_Active()||pChild->Get_Dead()) continue; 
         if (pChild->Get_RenderOn())
             pChild->Render_GameObject();
     }

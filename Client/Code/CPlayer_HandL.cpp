@@ -117,7 +117,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 0.8f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -171,11 +171,11 @@ HRESULT CPlayer_HandL::Set_Texture()
 
             Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
 
-            Set_New_TransInfo(500.f, -40.f);
+            Set_New_TransInfo(100.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 50.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
