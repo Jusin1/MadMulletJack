@@ -605,32 +605,32 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	// 움직임 키
 	switch (m_eMove) {
 	case MOVE_NORMAL: // 상하좌우
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_W))
 		{
 			m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_S))
 		{
 			m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
 		}
 		// break 있으면 안됨
 	case MOVE_LR: // 좌우
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_A))
 		{
 			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
 			// camera state -> left
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_D))
 		{
 			m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 			// camera state -> right
 		}
 		break;
 	case MOVE_STOP: // idle로 바뀜
-		if ((CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80) ||
-			(CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80))
+		if ((KEY_BUTTON_DOWN(DIK_W)) ||
+			(KEY_BUTTON_DOWN(DIK_S)))
 		{
 			Set_State_Idle();
 		}
@@ -639,29 +639,31 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 	// 상태 전환 키
 	if (m_bIsKeyInput) {
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT) & 0x80)
+		//DIK_LSHIFT
+		if (KEY_BUTTON_DOWN(DIK_LSHIFT))
 		{
 			m_tPlayerInfo.ePlayerState = DASH;
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
+		//DIK_SPACE
+		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
 			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
-		if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)) // 좌클릭
+		if (m_bIsAttack && IS_LBUTTON_DOWN) // 좌클릭
 		{
 			m_tPlayerInfo.ePlayerState = ATTACK;
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80) // 우클릭
+		if (IS_RBUTTON_DOWN) // 우클릭
 		{
 			m_tPlayerInfo.ePlayerState = DASH_ATTACK;
 		}
 
 		if (m_tPlayerInfo.eWeapon != WP_NON)
 		{
-			if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+			if (KEY_BUTTON_DOWN(DIK_R))
 			{
 				m_tPlayerInfo.ePlayerState = RELOAD;
 			}
