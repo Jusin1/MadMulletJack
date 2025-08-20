@@ -1,5 +1,13 @@
 #pragma once
 #include "CTileBase.h"
+
+namespace Engine
+{
+	class CColider_Sphere;
+}
+
+class CTile_Deco;
+
 class CTile_NormalDoor : public CTileBase
 {
 private:
@@ -18,5 +26,12 @@ public:
 	virtual void Render_GameObject() override;
 private:
 	HRESULT Set_Component(void *pArg);
+	void PivotRotate();
+private:
+	bool m_bOpend{ false };
+	_float m_fTargetAngle{ 0.f };
+	_float m_fAngle{ 0.f };
+	Engine::CColider_Sphere *m_pColiderSphere;
+	vector<CTile_Deco *> m_pDoors;
 };
 

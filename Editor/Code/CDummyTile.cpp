@@ -3,6 +3,7 @@
 #include "CRenderer.h"
 #include "CEditorPickingManager.h"
 #include "Engine_Define.h"
+#include "CGuiManager.h"
 #include "Editor_Define.h"
 #include "CDInputMgr.h"
 #include "Editor_Define.h"
@@ -212,6 +213,8 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
 					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
+					tTestData.eCategory = CGuiManager::GetInstance()->GetCategory();
+					tTestData.iType = CGuiManager::GetInstance()->GetObjectType();
 					_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
 					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Tile_Layer", &tTestData)))
 					{

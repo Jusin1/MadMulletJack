@@ -1,5 +1,8 @@
 #pragma once
 #include "CTileBase.h"
+
+class CTile_Deco;
+
 class CTile_OpeningDoor : public CTileBase
 {
 private:
@@ -18,5 +21,7 @@ public:
 	virtual void Render_GameObject() override;
 private:
 	HRESULT Set_Component(void *pArg);
+private:
+
 };
 

@@ -141,6 +141,7 @@ private:
 	HRESULT			Set_Component();
 	void			Set_Collider(void);
 	void			Set_Collider_With_Wall();
+	void			Set_Collider_With_Door();
 private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* componentTag);

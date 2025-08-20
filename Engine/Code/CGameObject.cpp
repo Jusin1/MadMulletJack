@@ -59,10 +59,10 @@ void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 
 HRESULT CGameObject::Set_Component()
 {
-    if (FAILED(Add_Components(L"Com_Transform", 0, L"Proto_Transform", (CComponent**)&m_pTransformCom)))
+    if (FAILED(Add_Components(L"Com_Transform", SCENE_STATIC, L"Proto_Transform", (CComponent**)&m_pTransformCom)))
         return E_FAIL;
 
-    if (FAILED(Add_Components(L"Com_Renderer", 0, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
+    if (FAILED(Add_Components(L"Com_Renderer", SCENE_STATIC, L"Proto_Renderer", (CComponent**)&m_pRendererCom)))
         return E_FAIL;
     return S_OK;
 }

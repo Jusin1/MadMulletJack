@@ -451,6 +451,10 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Wall_Transparent_3", L"../../Client/Bin/Resource/MapObject/Wall/WALL TRANSPARENT 3.png");
 	AddTextureForThumbnail(L"Proto_Wall_Transparent_4", L"../../Client/Bin/Resource/MapObject/Wall/WALL TRANSPARENT 4.png");
 	AddTextureForThumbnail(L"Proto_Vent", L"../../Client/Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER.png");
+	AddTextureForThumbnail(L"Proto_NormalDoor_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2.png");
+	AddTextureForThumbnail(L"Proto_NormalDoor_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 3.png");
+	AddTextureForThumbnail(L"Proto_NormalDoor_3", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4.png");
+	AddTextureForThumbnail(L"Proto_OpeningDoor", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR.png");
 
 	// display
 	AddTextureForThumbnail(L"Proto_Bandit_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/BANDIT.png");

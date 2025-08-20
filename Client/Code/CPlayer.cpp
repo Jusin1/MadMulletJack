@@ -646,22 +646,22 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 	// 상태 전환 키
 	if (m_bIsKeyInput) {
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT) & 0x80)
+		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
 			m_tPlayerInfo.ePlayerState = DASH;
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE) & 0x80)
+		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
 			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
-		if (m_bIsAttack && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_Q) & 0x80)) // 좌클릭
+		if (m_bIsAttack && KEY_BUTTON_DOWN(DIK_Q)) // 좌클릭
 		{
 			m_tPlayerInfo.ePlayerState = ATTACK;
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_E) & 0x80) // 우클릭
+		if (KEY_BUTTON_DOWN(DIK_E)) // 우클릭
 		{
 			m_tPlayerInfo.ePlayerState = DASH_ATTACK;
 		}
@@ -782,6 +782,7 @@ void CPlayer::Set_Collider(void)
 		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
 	Set_Collider_With_Wall();
+	Set_Collider_With_Door();
 }
 
 void CPlayer::Set_Collider_With_Wall()
@@ -802,6 +803,14 @@ void CPlayer::Set_Collider_With_Wall()
 		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
 		m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance + _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
+	}
+}
+
+void CPlayer::Set_Collider_With_Door()
+{
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DOOR, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	{
+		//MSG_BOX("Yeah");
 	}
 }
 

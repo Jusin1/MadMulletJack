@@ -84,5 +84,5 @@ void CTile_OpeningDoor::Render_GameObject()
 
 HRESULT CTile_OpeningDoor::Set_Component(void *pArg)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }

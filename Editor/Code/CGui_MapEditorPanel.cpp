@@ -194,6 +194,8 @@ CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
 	Names[2] = "Acid";
 	Names[3] = "Electric";
 	Names[4] = "Vent";
+	Names[5] = "NormalDoor";
+	Names[6] = "OpeningDoor";
 
 	return CGui_Dropbox<TileType>::Create("TileType", TileType::DECO, Names);
 }
@@ -616,6 +618,14 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 
 	// Vent
 	AddThumbnail("Vent", L"Proto_Vent", pThumbnail, TileType::VENT);
+	
+	// NormalDoor
+	AddThumbnail("Door_1", L"Proto_NormalDoor_1", pThumbnail, TileType::NORMALDOOR);
+	AddThumbnail("Door_2", L"Proto_NormalDoor_2", pThumbnail, TileType::NORMALDOOR);
+	AddThumbnail("Door_3", L"Proto_NormalDoor_3", pThumbnail, TileType::NORMALDOOR);
+
+	// OpeningDoor
+	AddThumbnail("OpeningDoor", L"Proto_OpeningDoor", pThumbnail, TileType::OPENINGDOOR);
 
 	return pThumbnail;
 }

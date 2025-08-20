@@ -142,7 +142,7 @@ CComponent* CVIBuffer_Rect::Clone(void* pArg)
         Safe_Release(pInstance);
     }
 
-    return pInstance;
+     return pInstance;
 }
 
 void CVIBuffer_Rect::Free()

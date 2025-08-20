@@ -57,6 +57,8 @@
 #include "CTile_Electric.h"
 #include "CTile_Vent.h"
 #include "CEndPoint.h"
+#include "CTile_NormalDoor.h"
+#include "CTile_OpeningDoor.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -238,6 +240,10 @@ HRESULT CLoader::Loading_Dev()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_ElectricTile",
 		CTile_Electric::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_NormalDoorTile",
+		CTile_NormalDoor::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_VentTile",
@@ -435,6 +441,16 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Wall_Transparent_3", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 3.png");
 	AddTexture(L"Proto_Wall_Transparent_4", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 4.png");
 	AddTexture(L"Proto_Vent", L"../Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER.png");
+
+	// door
+	AddTexture(L"Proto_NormalDoor_1_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2_1.png");
+	AddTexture(L"Proto_NormalDoor_1_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2_2.png");
+	AddTexture(L"Proto_NormalDoor_2_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 3_1.png");
+	AddTexture(L"Proto_NormalDoor_2_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 3_2.png");
+	AddTexture(L"Proto_NormalDoor_3_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4_1.png");
+	AddTexture(L"Proto_NormalDoor_3_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4_2.png");
+	AddTexture(L"Proto_OpeningDoor_1", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR_1.png");
+	AddTexture(L"Proto_OpeningDoor_2", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR_2.png");
 
 	// display
 	AddTexture(L"Proto_Bandit_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/BANDIT.png");
