@@ -54,15 +54,15 @@ namespace Engine
 		VENT,
 		NORMALDOOR,
 		OPENINGDOOR,
+		DISPLAY,
+		BOTTLE,
+		VENDINGMACHINE,
 		NONE
 	};
 	constexpr size_t g_TileTypeCount{ static_cast<size_t>(TileType::NONE) };
 
 	enum class EnvType : unsigned int
 	{
-		DISPLAY,
-		BOTTLE,		// °¥»ö
-		VENDINGMACHINE,
 		SPAWNPOINT,
 		ENDPOINT,
 		NONE

@@ -211,6 +211,12 @@
     <Filter Include="02. GameObject\07. MapObject\02. Tile\Door">
       <UniqueIdentifier>{c340b809-b0d4-4672-a218-2d2e1f87ec1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\Bottle">
+      <UniqueIdentifier>{50bb4e54-6e0d-4212-9b47-962a83031c49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. MapObject\02. Tile\VendingMachine">
+      <UniqueIdentifier>{502b03fc-a593-4106-8018-5fbe3b28d27b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -402,6 +408,12 @@
     <ClInclude Include="..\Header\CTile_OpeningDoor.h">
       <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTile_Bottle.h">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Bottle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTile_VendingMachine.h">
+      <Filter>02. GameObject\07. MapObject\02. Tile\VendingMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -583,6 +595,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTile_OpeningDoor.cpp">
       <Filter>02. GameObject\07. MapObject\02. Tile\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile_Bottle.cpp">
+      <Filter>02. GameObject\07. MapObject\02. Tile\Bottle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile_VendingMachine.cpp">
+      <Filter>02. GameObject\07. MapObject\02. Tile\VendingMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

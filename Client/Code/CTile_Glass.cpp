@@ -104,7 +104,6 @@ HRESULT CTile_Glass::Set_Component(void *pArg)
     if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, L"Proto_Glass", (CComponent **)&m_pTexture)))
         return E_FAIL;
     
-    // TODO - Player의 공격에 충돌되면 개박살나는 Trigger Component
     // TODO - Effect Component
 
     return S_OK;

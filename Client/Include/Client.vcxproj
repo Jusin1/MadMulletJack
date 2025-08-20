@@ -185,6 +185,7 @@
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CTile_Bottle.h" />
     <ClInclude Include="..\Header\CTile_NormalDoor.h" />
     <ClInclude Include="..\Header\CPhone_HpBarUI.h" />
     <ClInclude Include="..\Header\CPanelUI.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="..\Header\CTile_Electric.h" />
     <ClInclude Include="..\Header\CTile_Glass.h" />
     <ClInclude Include="..\Header\CTile_OpeningDoor.h" />
+    <ClInclude Include="..\Header\CTile_VendingMachine.h" />
     <ClInclude Include="..\Header\CTile_Vent.h" />
     <ClInclude Include="..\Header\CTextUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
@@ -251,6 +253,7 @@
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CTile_Bottle.cpp" />
     <ClCompile Include="..\Code\CTile_NormalDoor.cpp" />
     <ClCompile Include="..\Code\CPhone_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CPanelUI.cpp" />
@@ -273,6 +276,7 @@
     <ClCompile Include="..\Code\CTile_Electric.cpp" />
     <ClCompile Include="..\Code\CTile_Glass.cpp" />
     <ClCompile Include="..\Code\CTile_OpeningDoor.cpp" />
+    <ClCompile Include="..\Code\CTile_VendingMachine.cpp" />
     <ClCompile Include="..\Code\CTile_Vent.cpp" />
     <ClCompile Include="..\Code\CTextUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />

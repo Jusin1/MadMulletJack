@@ -349,6 +349,22 @@ void CMainApp::Ready_MapFactorFunc()
 		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_NormalDoorTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::NORMALDOOR), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+		{
+			_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+			return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_VendingMachine", iTargetScene, L"Tile_Layer", pData);
+		};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::VENDINGMACHINE), _func);
+
+	_func =
+		[](void *pData = nullptr)->HRESULT
+		{
+			_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+			return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Bottle", iTargetScene, L"Tile_Layer", pData);
+		};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::BOTTLE), _func);
 #pragma endregion
 
 #pragma region Env

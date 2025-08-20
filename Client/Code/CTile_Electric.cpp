@@ -47,7 +47,7 @@ CTile_Electric *CTile_Electric::Create(LPDIRECT3DDEVICE9 pGraphicDevice)
     if (FAILED(pProto->Ready_GameObject()))
     {
         Safe_Release(pProto);
-        MSG_BOX("TCTile_Electric::Create, Failed");
+        MSG_BOX("CTile_Electric::Create, Failed");
         return nullptr;
     }
 

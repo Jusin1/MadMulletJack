@@ -59,6 +59,8 @@
 #include "CEndPoint.h"
 #include "CTile_NormalDoor.h"
 #include "CTile_OpeningDoor.h"
+#include "CTile_VendingMachine.h"
+#include "CTile_Bottle.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -248,6 +250,14 @@ HRESULT CLoader::Loading_Dev()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_VentTile",
 		CTile_Vent::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_VendingMachine",
+		CTile_VendingMachine::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Bottle",
+		CTile_Bottle::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_EndPoint",
@@ -461,6 +471,18 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Kimono_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/KIMONO.png", 1);
 	AddTexture(L"Proto_SaveHer_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/SAVEHER.png", 1);
 	AddTexture(L"Proto_Shoes_Outdoor", L"../Bin/Resource/MapObject/DisplayBoard/SHOES.png", 1);
+
+	// bottle
+	AddTexture(L"Proto_Bottle_1", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle1.png", 1);
+	AddTexture(L"Proto_Bottle_2", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle2.png", 1);
+	AddTexture(L"Proto_Bottle_3", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle3.png", 1);
+	AddTexture(L"Proto_Bottle_4", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle4.png", 1);
+	AddTexture(L"Proto_Bottle_5", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle5.png", 1);
+	AddTexture(L"Proto_Bottle_6", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle6.png", 1);
+	AddTexture(L"Proto_Bottle_7", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle7.png", 1);
+
+	// vendingmachine
+	AddTexture(L"Proto_VendingMachine", L"../../Client/Bin/Resource/MapObject/soda/SODA MACHINE_%02d.png", 2);
 
 	// signs
 	AddTexture(L"Proto_Signs_1", L"../Bin/Resource/MapObject/Signs/SIGNS 1.png", 1);

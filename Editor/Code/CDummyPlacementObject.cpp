@@ -192,14 +192,6 @@ void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 {
 	switch (_e)
 	{
-	case EnvType::BOTTLE:
-	{
-		pData->dwColor = g_Color_Brown;
-	} break;
-	case EnvType::VENDINGMACHINE:
-	{
-		pData->dwColor = g_Color_Green;
-	} break;
 	case EnvType::SPAWNPOINT:
 	{
 		pData->dwColor = g_Color_Red;

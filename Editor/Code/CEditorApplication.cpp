@@ -465,6 +465,18 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_SaveHer_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/SAVEHER.png");
 	AddTextureForThumbnail(L"Proto_Shoes_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/SHOES.png");	
 
+	// bottle
+	AddTextureForThumbnail(L"Proto_Bottle_1", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle1.png");
+	AddTextureForThumbnail(L"Proto_Bottle_2", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle2.png");
+	AddTextureForThumbnail(L"Proto_Bottle_3", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle3.png");
+	AddTextureForThumbnail(L"Proto_Bottle_4", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle4.png");
+	AddTextureForThumbnail(L"Proto_Bottle_5", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle5.png");
+	AddTextureForThumbnail(L"Proto_Bottle_6", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle6.png");
+	AddTextureForThumbnail(L"Proto_Bottle_7", L"../../Client/Bin/Resource/MapObject/Bottle/Bottle7.png");
+
+	// vendingmachine
+	AddTextureForThumbnail(L"Proto_VendingMachine", L"../../Client/Bin/Resource/MapObject/soda/SODA MACHINE_00.png");
+
 	// signs
 	AddTextureForThumbnail(L"Proto_Signs_1", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 1.png");
 	AddTextureForThumbnail(L"Proto_Signs_2", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 3.png");
@@ -473,4 +485,6 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Signs_5", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 6.png");
 	AddTextureForThumbnail(L"Proto_Signs_6", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 7.png");
 	AddTextureForThumbnail(L"Proto_Signs_7", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 8.png");
+
+	return S_OK;
 }

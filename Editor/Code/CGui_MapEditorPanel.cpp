@@ -196,6 +196,9 @@ CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
 	Names[4] = "Vent";
 	Names[5] = "NormalDoor";
 	Names[6] = "OpeningDoor";
+	Names[7] = "Display";
+	Names[8] = "Bottle";
+	Names[9] = "VendingMachine";
 
 	return CGui_Dropbox<TileType>::Create("TileType", TileType::DECO, Names);
 }
@@ -203,13 +206,10 @@ CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
 CGuiBase *CGui_MapEditorPanel::EnvObjtypeDropbox_Create()
 {
 	vector<string> Names{ g_EnvTypeCount };
-	Names[0] = "Display";
-	Names[1] = "Bottle";
-	Names[2] = "VendingMachine";
-	Names[3] = "SpawnPoint";
-	Names[4] = "EndPoint";
+	Names[0] = "SpawnPoint";
+	Names[1] = "EndPoint";
 
-	return CGui_Dropbox<EnvType>::Create("EnvType", EnvType::DISPLAY, Names);
+	return CGui_Dropbox<EnvType>::Create("EnvType", EnvType::SPAWNPOINT, Names);
 }
 
 CGuiBase *CGui_MapEditorPanel::MonstertypeDropbox_Create()
@@ -627,23 +627,37 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	// OpeningDoor
 	AddThumbnail("OpeningDoor", L"Proto_OpeningDoor", pThumbnail, TileType::OPENINGDOOR);
 
+	//==================
+	// Display
+	//==================
+	AddThumbnail("Band", L"Proto_Bandit_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("Beach", L"Proto_Beach_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("Beer", L"Proto_Beer_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("Fuck", L"Proto_Fuck_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("Kimono", L"Proto_Kimono_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("SaveHer", L"Proto_SaveHer_Outdoor", pThumbnail, TileType::DISPLAY);
+	AddThumbnail("Shoes", L"Proto_Shoes_Outdoor", pThumbnail, TileType::DISPLAY);
+
+	//==================
+	// Bottle
+	//==================
+	AddThumbnail("Bottle_1", L"Proto_Bottle_1", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_2", L"Proto_Bottle_2", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_3", L"Proto_Bottle_3", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_4", L"Proto_Bottle_4", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_5", L"Proto_Bottle_5", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_6", L"Proto_Bottle_6", pThumbnail, TileType::BOTTLE);
+	AddThumbnail("Bottle_7", L"Proto_Bottle_7", pThumbnail, TileType::BOTTLE);
+
+	// VandingMachine
+	AddThumbnail("VendingMachine", L"Proto_VendingMachine", pThumbnail, TileType::VENDINGMACHINE);
+
 	return pThumbnail;
 }
 
 CGuiBase *CGui_MapEditorPanel::EnvThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_EnvTypeCount);
-
-	//==================
-	// Display
-	//==================
-	AddThumbnail("Band", L"Proto_Bandit_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("Beach", L"Proto_Beach_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("Beer", L"Proto_Beer_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("Fuck", L"Proto_Fuck_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("Kimono", L"Proto_Kimono_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("SaveHer", L"Proto_SaveHer_Outdoor", pThumbnail, EnvType::DISPLAY);
-	AddThumbnail("Shoes", L"Proto_Shoes_Outdoor", pThumbnail, EnvType::DISPLAY);
 
 	////==================
 	//// Signs

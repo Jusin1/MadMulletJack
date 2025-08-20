@@ -1,0 +1,28 @@
+#pragma once
+#include "CTileBase.h"
+
+class CTile_Bottle : public CTileBase
+{
+protected:
+	explicit CTile_Bottle(LPDIRECT3DDEVICE9 pGraphicDevice);
+	explicit CTile_Bottle(const CTile_Bottle &rhs);
+	virtual ~CTile_Bottle();
+
+	virtual void Free();
+	virtual CGameObject *Clone(void *pArg = nullptr) override;
+public:
+	static CTile_Bottle *Create(LPDIRECT3DDEVICE9 pGraphicDevice);
+	virtual HRESULT Ready_GameObject() override;
+	virtual HRESULT Initialize(void *pArg) override;
+	virtual _int Update_GameObject(const _float &fTimeDelta) override;
+	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
+	virtual void Render_GameObject() override;
+
+	virtual _bool Picking(_vec3 *PickingPoint) override;
+	virtual void PickingTrue() override;
+
+	void SetUp_BillBoard();
+private:
+	HRESULT			Set_Component(void *pArg);
+};
+

@@ -2,7 +2,7 @@
     {
         "Color": 4294901760,
         "ObjectCategory": 2,
-        "ObjectType": 3,
+        "ObjectType": 0,
         "PanelData": {
             "Count_X": 2,
             "Count_Y": 2,
@@ -39,7 +39,7 @@
     {
         "Color": 4278255615,
         "ObjectCategory": 2,
-        "ObjectType": 4,
+        "ObjectType": 1,
         "PanelData": {
             "Count_X": 2,
             "Count_Y": 2,
