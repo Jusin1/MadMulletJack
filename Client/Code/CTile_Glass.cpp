@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine_Define.h"
 #include "Clinet_Define.h"
+#include "CVIBuffer_Rect.h"
+#include "CPickingManager.h"
 #include "CTexture.h"
 #include "CTile_Glass.h"
 
@@ -70,6 +72,7 @@ _int CTile_Glass::Update_GameObject(const _float &fTimeDelta)
 {
     if (m_bDead) return DEAD;
 
+    CPickingManager::GetInstance()->Remove_PickingGroup(this);
     return __super::Update_GameObject(fTimeDelta);
 }
 
@@ -77,12 +80,23 @@ void CTile_Glass::LateUpdate_GameObject(const _float &fTimeDelta)
 {
     if (m_bDead) return;
 
+    CPickingManager::GetInstance()->Add_PickingGroup(this);
     __super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CTile_Glass::Render_GameObject()
 {
     __super::Render_GameObject();
+}
+
+_bool CTile_Glass::Picking(_vec3 *PickingPoint)
+{
+    return m_pBuffer->Picking(m_pTransformCom, PickingPoint);
+}
+
+void CTile_Glass::PickingTrue()
+{
+    Set_Dead(TRUE);
 }
 
 HRESULT CTile_Glass::Set_Component(void *pArg)

@@ -15,8 +15,12 @@ public:
 	virtual _int Update_GameObject(const _float &fTimeDelta) override;
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
+
+	void SetTextureIndex(int _i) { m_iTextureIndex = _i; }
 private:
 	virtual CGameObject *Clone(void *pArg = nullptr) override;
 	HRESULT			Set_Component(void *pArg);
+private:
+	int m_iTextureIndex{ 0 };
 };
 

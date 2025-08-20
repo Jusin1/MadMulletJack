@@ -85,7 +85,8 @@ _int CTile_NormalDoor::Update_GameObject(const _float &fTimeDelta)
 		PivotRotate();
 	}
 
-	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
+	if (!m_bOpend)
+		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
 	return __super::Update_GameObject(fTimeDelta);
 }
 

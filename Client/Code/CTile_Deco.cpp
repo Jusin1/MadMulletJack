@@ -2,6 +2,7 @@
 #include "Engine_Define.h"
 #include "Clinet_Define.h"
 #include "CTexture.h"
+#include "CVIBuffer_Rect.h"
 #include "CTile_Deco.h"
 
 CTile_Deco::CTile_Deco(LPDIRECT3DDEVICE9 pGraphicDevice)
@@ -82,7 +83,20 @@ void CTile_Deco::LateUpdate_GameObject(const _float &fTimeDelta)
 
 void CTile_Deco::Render_GameObject()
 {
-    __super::Render_GameObject();
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    m_pTransformCom->Apply_WorldMatrix();
+    m_pTexture->Set_Texture(m_iTextureIndex);
+
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+    m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+    m_pBuffer->Render_Buffer();
+
+    // ¿ø»óº¹±Í
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 HRESULT CTile_Deco::Set_Component(void *pArg)

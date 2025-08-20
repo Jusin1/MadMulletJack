@@ -16,6 +16,9 @@ public:
 	virtual _int Update_GameObject(const _float &fTimeDelta) override;
 	virtual void LateUpdate_GameObject(const _float &fTimeDelta) override;
 	virtual void Render_GameObject() override;
+
+	virtual _bool Picking(_vec3 *PickingPoint) override;
+	virtual void PickingTrue() override;
 private:
 	HRESULT			Set_Component(void *pArg);
 };
