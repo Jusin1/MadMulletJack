@@ -9,6 +9,7 @@ public:
 	{
 		_float fRadiusX = 0.5f, fRadiusY = 0.5f, fRadiusZ = 0.5f;
 		_float fOffSetX = 0.f, fOffSetY = 0.f, fOffsetZ = 0.f;
+		_bool bMapObject = false;
 	};
 
 public:
@@ -25,6 +26,7 @@ public:
 
 public:
 	void Set_Transform(class CTransform* pTransform);
+	void Initialize_Matrix_WithDescription();
 	void Set_IsInverse(_bool bIsInverse) { m_bIsInverse = bIsInverse; }
 	COLLRECTDESC Get_CollRectDesc() const { return m_StateDesc; }
 	void Set_Active(_bool bActive) { m_bActive = bActive; }

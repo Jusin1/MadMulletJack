@@ -104,12 +104,29 @@ HRESULT CColider_Cube::Initialize(void* pArg)
 	if (pArg != nullptr)
 		memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));
 
+	if (!m_StateDesc.bMapObject)
+		m_matWorld = *m_pTransform->Get_World();
+
 	return S_OK;
 }
 
 void CColider_Cube::Set_Transform(CTransform* pTransform)
 {
 	m_pTransform = pTransform;
+}
+
+void CColider_Cube::Initialize_Matrix_WithDescription()
+{
+	// S * R * T * world °öÀ¸·Î Àû¿ë
+	_matrix matScale;
+	_matrix matRotation;
+	_matrix matTransition;
+
+	::D3DXMatrixScaling(&matScale, m_StateDesc.fRadiusX * 2.f, m_StateDesc.fRadiusY * 2.f, m_StateDesc.fRadiusZ * 2.f);
+	::D3DXMatrixIdentity(&matRotation);
+	::D3DXMatrixTranslation(&matTransition, m_StateDesc.fOffSetX, m_StateDesc.fOffSetY, m_StateDesc.fOffsetZ);
+
+	m_matWorld = matScale * matRotation * matTransition * (*m_pTransform->Get_World());
 }
 
 HRESULT CColider_Cube::Update_ColliderBox()
@@ -226,3 +243,4 @@ void CColider_Cube::Free()
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }
+

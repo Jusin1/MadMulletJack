@@ -33,6 +33,8 @@ public:
 
 private:
 	HRESULT			Set_Component(void *pArg);
+	void			Update_CollisionGroup();
+	void			Set_Collider();
 public:
 	CVIBuffer_GridPanelBase *GetBuffer() { return m_pBuffer; }
 	Engine::CTexture *GetTexture() { return m_pTexture; }
