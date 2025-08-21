@@ -800,6 +800,8 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 		CUIManager::GetInstance()->CreateClearUI();
 		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
+	Set_Collider_With_Wall();
+	Set_Collider_With_Door();
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -834,8 +836,6 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		CUIManager::GetInstance()->CreateClearUI();
 		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
-	Set_Collider_With_Wall();
-	Set_Collider_With_Door();
 }
 
 void CPlayer::Set_Collider_With_Wall()

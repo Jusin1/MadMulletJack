@@ -70,7 +70,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     if (false == m_bFix)
     {
         Mouse_Move();
-        //Mouse_Fix();
+        Mouse_Fix();
     }
 
 }
