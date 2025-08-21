@@ -144,6 +144,53 @@ _bool CColiderManager::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vecto
 	}
 }
 
+_bool CColiderManager::CollisionGroupWho(COLLISION_GROUP eGroup, CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _vec3* pOutDistance, CGameObject*& pWho)
+{
+	CComponent* Target = nullptr;
+	CComponent* DamageOwner = nullptr;
+
+	for (auto& iter : m_GameObjects[eGroup])
+	{
+		switch (eCollisionType)
+		{
+		case Engine::CColiderManager::COLLISION_RECT:
+			DamageOwner = (CColider_Rect*)pGameObject->Find_Component(TEXT("Com_Collider_Rect"));
+			Target = (CColider_Rect*)iter->Find_Component(TEXT("Com_Collider_Rect"));
+			if (Target == nullptr)
+				continue;
+			if (true == (dynamic_cast<CColider_Rect*>(DamageOwner)->Collision_Check((CColider_Rect*)Target, pOutDistance)))
+				return true;
+			break;
+		case Engine::CColiderManager::COLLISION_CUBE:
+			DamageOwner = (CColider_Cube*)pGameObject->Find_Component(TEXT("Com_Collider_Cube"));
+			Target = (CColider_Cube*)iter->Find_Component(TEXT("Com_Collider_Cube"));
+			if (Target == nullptr)
+				continue;
+			if (true == ((dynamic_cast<CColider_Cube*>(DamageOwner)->Is_Active()) &&
+				(dynamic_cast<CColider_Cube*>(Target)->Is_Active()) &&
+				(dynamic_cast<CColider_Cube*>(DamageOwner)->Collision_Check((CColider_Cube*)Target, pOutDistance))))
+				return true;
+			break;
+		case Engine::CColiderManager::COLLISION_SPHERE:
+			DamageOwner = (CColider_Sphere*)pGameObject->Find_Component(TEXT("Com_Collider_Sphere"));
+			Target = (CColider_Sphere*)iter->Find_Component(TEXT("Com_Collider_Sphere"));
+			if (Target == nullptr)
+				continue;
+			if (true == ((dynamic_cast<CColider_Sphere*>(DamageOwner)->Is_Active()) &&
+				(dynamic_cast<CColider_Sphere*>(Target)->Is_Active()) &&
+				(dynamic_cast<CColider_Sphere*>(DamageOwner)->Collision_Check((CColider_Sphere*)Target, pOutDistance))))
+			{
+				pWho = iter;
+				return true;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
 
 void CColiderManager::Free()
 {

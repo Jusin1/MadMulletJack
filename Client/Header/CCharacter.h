@@ -48,6 +48,7 @@ protected:
 	OBJID m_eObjID; //OBJ_END
 	_bool m_bPickingTrue;
 
+	_float m_fMaxHp;	// 최대 hp
 	_float m_fHp;		// hp
 	_float m_fAttack;	// 공격치
 	_float m_fVelocity; // 중력

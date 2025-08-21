@@ -117,7 +117,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Attack
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 6;
-	texInfo.m_fSpeed = 10.f;
+	texInfo.m_fSpeed = 6.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;

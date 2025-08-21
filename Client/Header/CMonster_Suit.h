@@ -4,7 +4,7 @@
 
 class CMonster_Suit : public CMonster
 {
-    enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, DEATH, };
+    enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, KICKED, INSKILL, DEATH, };
 
 public:
     enum HIT_PART { HIT_HEAD, HIT_BODY, HIT_BALLS, HIT_LEG, HIT_UNKNOWN };

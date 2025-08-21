@@ -28,12 +28,13 @@ public:
 
 	// state func
 private:
-	void ChangeState(PLAYERSTATE  _e);
-	void StateNormalSet();
+	// 이전state end -> statenormalset -> 현재 state begin
+	void ChangeState(PLAYERSTATE  _e);	//현재 state와 이전 state가 바뀌었으면 바꿔줌
+	void StateNormalSet();				// state 변화전 변수들 초기화
 
-	void StateBegin(PLAYERSTATE _e);
-	void StateEnd(PLAYERSTATE _e);
-	void StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta);
+	void StateBegin(PLAYERSTATE _e); // state의 begin 함수를 실행
+	void StateEnd(PLAYERSTATE _e);	// state의 end 함수를 실행
+	void StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta);	// state의 on 하수를 실행
 
 	void IDLE_Begin();
 	void IDLE_On(const _float& fTimeDelta);
@@ -79,10 +80,6 @@ private:
 	void RELOAD_On(const _float& fTimeDelta);
 	void RELOAD_End();
 
-	void HIT_Begin();
-	void HIT_On(const _float& fTimeDelta);
-	void HIT_End();
-
 	void DOPING_Begin();
 	void DOPING_On(const _float& fTimeDelta);
 	void DOPING_End();
@@ -100,12 +97,12 @@ private:
 	void PLAYERDEAD_End();
 
 	void KeyInput(const _float& fTimeDelta);
-	void Set_State_Idle();
+	void Set_State_Idle(); // state를 idle로 바꿈
 
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
 	void CountHp(const _float& fTimeDelta);
 
-	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime);
+	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f);
 
 	// getter setter func
 public:
@@ -137,7 +134,9 @@ public:
 
 private:
 	HRESULT			Set_Component();
-	void			Set_Collider(void);
+	void			Set_Collider(const _float& fTimeDelta);
+	_float			CosRadian(_vec3 v1, _vec3 v2);
+	void			HitFromObject(const _float& fTimeDelta,_float fHit);
 
 private:
 	HRESULT Texture_Clone();
@@ -164,9 +163,9 @@ private:
 	_bool m_bIsAttack; // 공격 할래 말래
 	_bool m_bIsCountHp; // hp 깎을래 말래
 
-	_float m_fMaxHp; // 최대 hp
 	_float m_fAddTime; // state 누적 시간
 	_float m_fStateTime; // state 지속할 시간
+	_float m_fHitTime; // hit 시간
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;

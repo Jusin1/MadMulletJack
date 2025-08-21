@@ -17,16 +17,17 @@
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
-	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END), m_fMaxHp(10.f),
-	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false)
+	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
+	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
+	m_fHitTime(0.f)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
-	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove), m_fMaxHp(rhs.m_fMaxHp),
+	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
-	, m_bIsCountHp(rhs.m_bIsCountHp)
+	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime)
 {
 }
 
@@ -93,7 +94,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
-	Set_Collider();
+	Set_Collider(fTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -151,7 +152,6 @@ void CPlayer::Add_Hp(_float _fAddHp)
 
 void CPlayer::ChangeState(PLAYERSTATE _e)
 {
-
 	if (m_tPrePlayerInfo.ePlayerState == _e)
 		return;
 
@@ -185,8 +185,6 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 		ATTACK_INSTANT_Begin();break;
 	case RELOAD:
 		RELOAD_Begin();break;
-	case HIT:
-		HIT_Begin();break;
 	case DOPING:
 		DOPING_Begin();break;
 	case WALL:
@@ -223,8 +221,6 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 		ATTACK_INSTANT_End();break;
 	case RELOAD:
 		RELOAD_End();break;
-	case HIT:
-		HIT_End();break;
 	case DOPING:
 		DOPING_End();break;
 	case WALL:
@@ -259,8 +255,6 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		ATTACK_INSTANT_On(fTimeDelta);break;
 	case RELOAD:
 		RELOAD_On(fTimeDelta);break;
-	case HIT:
-		HIT_On(fTimeDelta);break;
 	case DOPING:
 		DOPING_On(fTimeDelta);break;
 	case WALL:
@@ -299,8 +293,6 @@ void CPlayer::StateNormalSet()
 
 	m_pPlayerUI->Set_Active(true);
 	m_pPlayerUI->Set_RenderOn(true);
-
-
 }
 
 // idle
@@ -410,7 +402,8 @@ void CPlayer::SLIED_End()
 // kick
 void CPlayer::KICK_Begin()
 {
-	m_fStateTime = 0.25f;
+	m_fStateTime = 0.5f;
+	m_bIsInvincible = true;
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
@@ -442,6 +435,8 @@ void CPlayer::ATTACK_End()
 // attack instant
 void CPlayer::ATTACK_INSTANT_Begin()
 {
+	m_bIsInvincible = true;
+
 	m_eMove = MOVE_NON;
 	m_fStateTime = 0.5f;
 
@@ -461,6 +456,7 @@ void CPlayer::ATTACK_INSTANT_End()
 
 void CPlayer::ZOOMING_Begin()
 {
+	m_bIsInvincible = true;
 }
 
 void CPlayer::ZOOMING_On(const _float& fTimeDelta)
@@ -487,7 +483,7 @@ void CPlayer::ZOOM_End()
 void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
-	m_fStateTime = 2.f; // origin 0.5 debug 2.f
+	m_fStateTime = 0.5f; // origin 0.5 debug 2.f
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -495,31 +491,12 @@ void CPlayer::RELOAD_Begin()
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	if (StateTime_IsEnd(fTimeDelta, 1.5f))
+	if (StateTime_IsEnd(fTimeDelta, 1.f))
 		Set_State_Idle();
 }
 
 void CPlayer::RELOAD_End()
 {
-}
-
-// hit
-void CPlayer::HIT_Begin()
-{
-	m_bIsKeyInput = true;
-	m_bIsAttack = true;
-}
-
-void CPlayer::HIT_On(const _float& fTimeDelta)
-{
-	// hp-
-	if (m_fHp <= 0)
-		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
-}
-
-void CPlayer::HIT_End()
-{
-
 }
 
 // doping
@@ -531,6 +508,9 @@ void CPlayer::DOPING_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	// hit count reset
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -555,6 +535,8 @@ void CPlayer::WALL_On(const _float& fTimeDelta)
 {
 	// state가 끝나면
 	// jump로 변신
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		m_tPlayerInfo.ePlayerState = JUMP;
 }
 
 void CPlayer::WALL_End()
@@ -566,12 +548,12 @@ void CPlayer::OPENING_Begin()
 {
 	m_eMove = MOVE_NON;
 	m_bIsCountHp = false;
+	m_bIsInvincible = true;
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
 
 	m_pPlayerUI->Set_RenderOn(false);
-	//m_pPlayerUI->Set_Active(false);
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -720,7 +702,7 @@ HRESULT CPlayer::Set_Component()
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
+	CollSphereInfo.fRadius = 0.8f;                    // 반지름 1 -> 0.8 eunbi
 	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
 
 	// Colider_Sphere
@@ -731,7 +713,7 @@ HRESULT CPlayer::Set_Component()
 	return S_OK;
 }
 
-void CPlayer::Set_Collider(void)
+void CPlayer::Set_Collider(const _float& fTimeDelta)
 {
 	//m_pColliderCom->Update_ColliderBox();
 	m_pColiderSphere->Update_ColliderSphere();
@@ -744,36 +726,86 @@ void CPlayer::Set_Collider(void)
 	}
 	*/
 	// 구 충돌
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	CGameObject* pColiObj;
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr, pColiObj))
 	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
-
-		// Dash_attack 중일때 몬스터와 충돌하면 
-		if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
+		if ( !m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
-			// wap2에 따라 state 변경
-			switch (m_tPlayerInfo.eWeapon2)
-			{
-			case WP_KICK:
-				m_tPlayerInfo.ePlayerState = KICK;
-				//m_pTransformCom->Move_PosDown(0.5);
-				break;
+			// 내가 몬스터를 바라보는 방향벡터
+			_vec3 vDir = pColiObj->GetTransform()->Get_Info(INFO_POS) - Get_Pos();
+			// 정규화 후 내적
+			_float fDot = CosRadian(vDir, Get_Look());
 
-			case WP_KNIFE:
-			case WP_BOOK:
-				m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
-				break;
+			// 내적 결과가 0 ~90도 이면 -> 앞에
+			// 만약 앞에 있다면
+			if (fDot >= 0)
+			{
+				// Dash_attack 중일때 몬스터와 충돌하면 
+				if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
+				{
+					// wap2에 따라 state 변경
+					switch (m_tPlayerInfo.eWeapon2)
+					{
+					case WP_KICK:
+						m_tPlayerInfo.ePlayerState = KICK;
+						//m_pTransformCom->Move_PosDown(0.5);
+						break;
+
+					case WP_KNIFE:
+					case WP_BOOK:
+						m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
+						break;
+					}
+				}
+
+				// Dash attack이 아니면 hit
+				else
+				{
+					// 부딫힌 obj의 attack을 가져옴
+					//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
+					HitFromObject(fTimeDelta,1.f);
+				}
+			}
+
+			// 앞에 없다면 hit
+			else
+			{
+				// 부딫힌 obj의 attack을 가져옴
+				//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
+				HitFromObject(fTimeDelta,1.f);
 			}
 		}
+	}
+}
 
-		// Dash attack이 아니면 hit
-		/*else
-		{
-			m_tPlayerInfo.ePlayerState = HIT;
-		}*/
-			
+_float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
+{
+	D3DXVec3Normalize(&v1, &v1);
+	D3DXVec3Normalize(&v2, &v2);
+	return D3DXVec3Dot(&v1, &v2); //cos세타
+}
+
+void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
+{
+	// hit누적 time이 0일때만
+	if (m_fHitTime == 0)
+	{
+		// hp 깎기
+		Add_Hp(fHit * -1.f);
+		// hit count 증가
+		dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Up();
+	}
+
+	// hit 시간 누적
+	m_fHitTime += fTimeDelta;
+
+	// 누적 시간이 5초 이상이면
+	if (m_fHitTime >= 5.f)
+	{
+		// 0초로 초기화
+		m_fHitTime = 0.f;
 	}
 }
 
@@ -903,7 +935,6 @@ const TCHAR* CPlayer::StateToString(PLAYERSTATE eState)
 	case ATTACK: return TEXT("State: ATTACK\n");
 	case ATTACK_INSTANT: return TEXT("State: ATTACK_INSTANT\n");
 	case RELOAD: return TEXT("State: RELOAD\n");
-	case HIT: return TEXT("State: HIT\n");
 	case DOPING: return TEXT("State: DOPING\n");
 	case WALL: return TEXT("State: WALL\n");
 	case OPENING: return TEXT("State: OPENING\n");

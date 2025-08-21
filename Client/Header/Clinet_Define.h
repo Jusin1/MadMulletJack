@@ -4,7 +4,7 @@ enum STATE {STATE_BEGIN, STATE_ON, STATE_END}; // state가 끝났는지 안 끝났는지 �
 
 enum PLAYERSTATE {
 	IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
-	ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END};
+	ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END};
 
 enum WEAPON { WP_NON, WP_PISTOL, WP_SHOTGUN, WP_RIFLE, WP_KATANA, WP_SNIPER, WP_END };
 
@@ -44,4 +44,6 @@ struct UIMoveInfo
     bool  bStop;   // range 까지 움직이고 stop 할건지 말건지
     float fRange;  // fRange 움직임 범위
     float fSumRange; // 움직임 누적 범위
+    
+    bool IsRangeEnd() { return (bStop && (fRange <= fSumRange)); };
 };

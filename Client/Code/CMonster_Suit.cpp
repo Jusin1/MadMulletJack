@@ -116,10 +116,12 @@ void CMonster_Suit::Set_Collider()
         _vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
         (void)vPosition;
 
-        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == DASH_ATTACK)
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
         {
             // 임시방편 -> 살짝 뒤로 보내기
-            m_pTransformCom->Move_PosDown(0.1);
+            //m_pTransformCom->Move_PosDown(-0.1f);
+            SetState(KICKED);
+            m_bKillAfterHit = false;
         }
     }
 }
@@ -238,6 +240,8 @@ HRESULT CMonster_Suit::Texture_Clone()
         { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 13.f, true },
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 13.f, true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 13.f, true },
+        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,13.f,false},
+        {L"Com_Texture_Instance_Kill",   L"Prototype_Component_Texture_Monster_Suit_InstanceKill",   0,13,13.f,false}
     };
 
     for (auto& a : anims)
@@ -285,6 +289,14 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
             m_pTextureCom->Resume_Anim();
         }
         return;
+
+    case KICKED:
+        tag = L"Com_Texture_Blocking";
+        break;
+
+    case INSKILL:
+        tag = L"Com_Texture_Instance_Kill";
+        break;
 
     case DEATH:
         tag = L"Com_Texture_Death";
@@ -348,6 +360,18 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         if (m_pTextureCom->Is_AnimFinished()) {
             if (m_bKillAfterHit) m_bDead = true;
             else SetState((m_ePrevState == DEATH) ? DEATH : IDLE);
+        }
+        break;
+
+    case KICKED:
+        if (m_pTextureCom->Is_AnimFinished()) { // 애니메이션 끝나면
+            if (m_bKillAfterHit) m_bDead = true;
+            else SetState((m_ePrevState == DEATH) ? DEATH : IDLE);
+        }
+        else
+        {
+            // 뒤로 날아가
+            m_pTransformCom->Move_PosDir(dt, (m_pTransformCom->Get_Info(INFO_LOOK)));
         }
         break;
 
