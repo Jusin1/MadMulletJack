@@ -5,7 +5,7 @@ class CLisaUI :
     public CUI
 {
 public:
-    enum class AnimState { Default, Bye }; 
+    enum class AnimState { Default, WINK, Bye }; 
 
 protected:
     explicit CLisaUI(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -24,9 +24,10 @@ HRESULT CManagement::Open_Scene(unsigned int iSceneIdx, CScene* pNewScene)
 {
 	if (nullptr != m_pCurrentScene)
 	{
-		m_iPrevSceneIndex = m_iSceneIndex;
+ 		m_iPrevSceneIndex = m_iSceneIndex;
 		CComponentMgr::GetInstance()->Clear(m_iSceneIndex);
 		CObjectManager::GetInstance()->Clear(m_iSceneIndex);
+		
 	}
 
 

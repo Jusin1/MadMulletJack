@@ -10,6 +10,7 @@ class CPanelUI;
 class CPhoneUI;
 class CImageUI;
 class CButtonUI;
+class CTalkUI;
 // UI 생성 및 관리
 class CUIManager :
     public CBase
@@ -118,11 +119,13 @@ private:
     void OnShopCardClicked(int slot); // 0,1,2 중 하나
     void LayoutShopCard(ShopCardUI& card);
 
+    public:
+        void ClearAllUI();
+
 public:
     virtual void Free() override;
 
 private:
-    void CancelSlidesForSubtree(CUIBase* root);
     bool PhoneSlidesDone() const;   // 슬라이드 완료 체크 
 
     struct SlideTask {
@@ -155,6 +158,9 @@ private:
     CTextUI* m_pTimeText = nullptr;
     CLisaUI* m_pLisaUI = nullptr;
 
+    // 대화 UI
+    CTalkUI* m_pTalkUI = nullptr;
+
     // Phone parts
     CPhoneUI* m_pPhone = nullptr;
     CImageUI* m_pLeftHand = nullptr;
@@ -166,11 +172,14 @@ private:
     bool  m_timeAutoRemoveArmed = false;
     float m_timeAutoRemoveTimer = 0.f;
 
+    bool m_bRemoveUI = false;
+    float m_timeUIRemoveTimer = 0.f;
+
     bool  m_phoneSlideActive = false; // 슬라이드가 실제 시작되었는가?
     bool  m_phonePullArmed = false;   // 완료 후 딜레이 카운트 중?
     bool  m_phonePullStarted = false; // 중앙 확대 시작했는가(1회용)
     float m_phonePullTimer = 0.f;
-    float m_phonePullDelay = 1.f;    // 슬라이드 종료 뒤 대기시간
+    float m_phonePullDelay = 0.6f;    // 슬라이드 종료 뒤 대기시간
 
     // 딜레이 후 PhoneScreen 생성 타이머
     bool  m_createPhoneScreenPending = false;

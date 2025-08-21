@@ -22,6 +22,9 @@ HRESULT CPlayer_Foot::Ready_GameObject()
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
 
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerFoot"))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -30,8 +33,6 @@ HRESULT CPlayer_Foot::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerFoot"))))
-        return E_FAIL;
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;

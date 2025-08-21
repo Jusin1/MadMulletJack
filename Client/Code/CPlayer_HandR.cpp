@@ -5,6 +5,7 @@
 #include "CObjectManager.h"
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
+#include "CMapFactory.h"
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev),m_tInfo({ PLAYER_END, WP_END, WP2_END })
@@ -25,6 +26,9 @@ HRESULT CPlayer_HandR::Ready_GameObject()
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
 
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -33,8 +37,6 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandR"))))
-        return E_FAIL;
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;
@@ -274,14 +276,15 @@ HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
 
 HRESULT CPlayer_HandR::Set_WeaponUI()
 {
+    _uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
     m_pWeaponUI = dynamic_cast<CUIBase*>(
-        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
+        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", iSceneIndex, L"UI_Layer"));
     Add_Child(m_pWeaponUI);
     if (m_pWeaponUI == nullptr)
         return E_FAIL;
 
     // pistol 积己 棺 list俊 持扁
-    CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", SCENE_STATIC, L"UI_Layer"));
+    CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", iSceneIndex, L"UI_Layer"));
     if (pPistolUI)
     {
         pPistolUI->Set_ObjTag(L"PistolUI");
@@ -290,7 +293,7 @@ HRESULT CPlayer_HandR::Set_WeaponUI()
     }
 
     // knife 积己 棺 list俊 持扁
-    CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", SCENE_STATIC, L"UI_Layer"));
+    CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", iSceneIndex, L"UI_Layer"));
     if (pKnifeUI)
     {
         pKnifeUI->Set_ObjTag(L"KnifeUI");

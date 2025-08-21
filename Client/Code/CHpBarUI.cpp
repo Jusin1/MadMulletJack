@@ -6,6 +6,7 @@
 #include "CBlackGackGround.h"
 #include "CTextUI.h"
 #include "CManagement.h"
+#include "CMapFactory.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CUI(pGraphicDev), m_iHitCount(0), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false)
@@ -140,14 +141,15 @@ HRESULT CHpBarUI::Set_Component()
 
 HRESULT CHpBarUI::Set_HpBarUI()
 {
-	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", SCENE_STATIC, L"UI_Layer"));
+	auto iSceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", iSceneIdx, L"UI_Layer"));
 	if (pPhoneUI)
 	{
 		pPhoneUI->Set_ObjTag(L"PhoneUI");
 		Add_Child(pPhoneUI); // 루트 UI에 등록
 	}
 
-	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", SCENE_STATIC, L"UI_Layer"));
+	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", iSceneIdx, L"UI_Layer"));
 	if (pManUI)
 	{
 		pManUI->Set_ObjTag(L"ManUI");
@@ -156,7 +158,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 
 	if (auto* pRect = dynamic_cast<CBlackGackGround*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+			L"Prototype_GameObject_BlackBackground", iSceneIdx, L"UI_Layer"))) {
 		pRect->Set_UISizeAndPos(128.f,100.f,264.f, 638.f);
 		m_fRectY = 100.f;
 		pRect->SetColor(D3DXCOLOR{0.f,1.f,0.f,1.f});
@@ -174,7 +176,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 
 	if (auto* txt1 = dynamic_cast<CTextUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+			L"Prototype_GameObject_TextUI", iSceneIdx, L"UI_Layer"))) {
 		txt1->SetFontTag(L"UIFont");
 		txt1->SetText(L"");
 		txt1->SetColor(g_Color_White);

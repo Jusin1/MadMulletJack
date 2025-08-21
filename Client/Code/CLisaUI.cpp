@@ -2,6 +2,7 @@
 #include "CLisaUI.h"
 #include "CImageUI.h"
 #include "CObjectManager.h"
+#include "CManagement.h"
 
 
 CLisaUI::CLisaUI(LPDIRECT3DDEVICE9 dev) : CUI(dev) {}
@@ -48,6 +49,7 @@ HRESULT CLisaUI::Texture_Clone()
         texInfo.m_bLoop = true;
 
         CTexture* pTex = nullptr;
+        auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
         if (FAILED(Add_Components(L"Com_Texture_Lisa_Default", SCENE_STATIC,
             L"Prototype_Component_Texture_LisaUI",
             (CComponent**)&pTex, &texInfo)))
@@ -73,6 +75,23 @@ HRESULT CLisaUI::Texture_Clone()
         m_mapTextures.insert({ L"Com_Texture_Lisa_Bye", pTex });
     }
 
+    // WINK
+    {
+        CTexture::TEXINFO texInfo{};
+        texInfo.m_iStart = 0;
+        texInfo.m_iEndTex = 10;
+        texInfo.m_fSpeed = 8.f;
+        texInfo.m_bLoop = true;
+
+        CTexture* pTex = nullptr;
+        if (FAILED(Add_Components(L"Com_Texture_Lisa_WINK", SCENE_STATIC,
+            L"Prototype_Component_Texture_LisaSideUI",
+            (CComponent**)&pTex, &texInfo)))
+            return E_FAIL;
+
+        m_mapTextures.insert({ L"Com_Texture_Lisa_WINK", pTex });
+    }
+
     return S_OK;
 }
 
@@ -90,9 +109,10 @@ HRESULT CLisaUI::Change_Texture(const _tchar* pTextureTag)
 
 HRESULT CLisaUI::Create_HairPart()
 {
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     m_pHair = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
     if (!m_pHair) return E_FAIL;
 
@@ -107,6 +127,11 @@ HRESULT CLisaUI::Create_HairPart()
         L"Lisa_Hair_Bye",
         L"Prototype_Component_Texture_LisaHair_Bye",
         0, 3, 8.f, true);
+
+    m_pHair->RegisterTexture(
+        L"Lisa_Hair_Wink",
+        L"Prototype_Component_Texture_LisaHair_WINK",
+        0, 6, 8.f, true);
 
     m_pHair->ChangeTexture(L"Lisa_Hair_Default");
     return S_OK;
@@ -172,6 +197,8 @@ void CLisaUI::ApplyStateToParts(AnimState st)
         Change_Texture(L"Com_Texture_Lisa_Default");
     else if (st == AnimState::Bye)
         Change_Texture(L"Com_Texture_Lisa_Bye");
+    else if (st == AnimState::WINK)
+        Change_Texture(L"Com_Texture_Lisa_WINK");
 
     // --- 머리카락 ---
     if (m_pHair)
@@ -180,6 +207,8 @@ void CLisaUI::ApplyStateToParts(AnimState st)
             m_pHair->ChangeTexture(L"Lisa_Hair_Default");
         else if (st == AnimState::Bye)
             m_pHair->ChangeTexture(L"Lisa_Hair_Bye");
+        else if (st == AnimState::WINK)
+            m_pHair->ChangeTexture(L"Lisa_Hair_Wink");
 
         m_pHair->Play(true);
     }

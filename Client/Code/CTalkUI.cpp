@@ -5,6 +5,7 @@
 #include "CFontMgr.h"
 #include "CUIManager.h"
 #include "CLisaUI.h"
+#include "CManagement.h"
 
 CTalkUI::CTalkUI(LPDIRECT3DDEVICE9 dev)
 	: CUI(dev)
@@ -56,9 +57,10 @@ HRESULT CTalkUI::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 	m_pFrame = dynamic_cast<CImageUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
 	if (!m_pFrame)
 		return E_FAIL;
@@ -162,14 +164,13 @@ void CTalkUI::NextDialogue()
 	{
 		++m_iCurrentIndex;
 		m_CurrentText = m_vecDialogues[m_iCurrentIndex];
-
 		if (m_iCurrentIndex == last) {
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
 		}
-		else if (m_iCurrentIndex == 2) {
+		else if (m_iCurrentIndex == 1) {
 			CUIManager::GetInstance()->SliderPhoneUI();
+			m_pLisa->SetState(CLisaUI::AnimState::WINK);
 		}
-
 		m_fAccTime = 0.f;
 		m_bTypingDone = false;
 		return;

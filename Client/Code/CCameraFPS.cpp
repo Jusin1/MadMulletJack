@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CCameraFPS.h"
+#include "CMapFactory.h"
+#include "CManagement.h"
 #include "CObjectManager.h"
 #include "CDInputMgr.h"
 #include "Clinet_Define.h"
@@ -43,11 +45,11 @@ HRESULT CCameraFPS::Initialize(void* pArg)
 _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
 {
     CCamera::Update_GameObject(fTimeDelta);
-
+    
     // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_DEV, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return -1;
 
@@ -102,7 +104,7 @@ void CCameraFPS::Mouse_Move()
     // 플레이어에게 y축 회전 넘겨줌
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_DEV, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return;
 
@@ -151,7 +153,7 @@ HRESULT CCameraFPS::Set_PlayerPos()
     // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(SCENE_DEV, L"Player_Layer", L"Com_Transform", 0));
+            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
         return E_FAIL;
 

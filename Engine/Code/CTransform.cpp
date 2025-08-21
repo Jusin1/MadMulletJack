@@ -50,7 +50,7 @@ _vec3 CTransform::Get_Scale()
 	return _vec3(D3DXVec3Length(&vRight), D3DXVec3Length(&vUp), D3DXVec3Length(&vLook));
 }
 
-void CTransform::Set_Scale(_float x, _float y, _float z)
+void CTransform::Set_Scale(_float x, _float y, _float z) 
 {
 	_vec3		vRight = Get_Info(INFO_RIGHT);
 	_vec3		vUp = Get_Info(INFO_UP);

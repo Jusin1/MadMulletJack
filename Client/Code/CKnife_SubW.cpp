@@ -21,6 +21,9 @@ HRESULT CKnife_SubW::Ready_GameObject()
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
+	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_SubWap_Knife"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -29,8 +32,6 @@ HRESULT CKnife_SubW::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_SubWap_Knife"))))
-		return E_FAIL;
 
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;

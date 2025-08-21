@@ -23,15 +23,15 @@ HRESULT CPistol_Gun::Ready_GameObject()
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
+	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_WapPisotl"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CPistol_Gun::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
-	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_WapPisotl"))))
 		return E_FAIL;
 
 	if (FAILED(Texture_Clone()))

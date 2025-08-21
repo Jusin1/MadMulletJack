@@ -211,6 +211,7 @@
     <ClInclude Include="..\Header\CTile_VendingMachine.h" />
     <ClInclude Include="..\Header\CTile_Vent.h" />
     <ClInclude Include="..\Header\CTextUI.h" />
+    <ClInclude Include="..\Header\CTutorial.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\Code\CTile_VendingMachine.cpp" />
     <ClCompile Include="..\Code\CTile_Vent.cpp" />
     <ClCompile Include="..\Code\CTextUI.cpp" />
+    <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
