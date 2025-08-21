@@ -10,15 +10,12 @@ HRESULT CButtonUI::Initialize(void* pArg)
     SetColorMode(CImageUI::ColorMode::TintMultiply);
     SetAdditive(false);
 
-    if (!m_useSolid) {
-        SetTintRGBA(255, 255, 255, 255); 
-    }
+    if (!m_useSolid) SetTintRGBA(255, 255, 255, 255);
 
     m_curScale = m_targetScale = 1.f;
     m_curColor = m_targetColor = m_colNormal;
 
     updateTextureByState();
-
     return S_OK;
 }
 
@@ -43,19 +40,13 @@ _int CButtonUI::Update_GameObject(const _float& dt)
         Set_UIPosition(m_baseX, m_baseY, w, h);
     }
 
-
-    const float kc = 1.f - expf(-m_colorLerpSpeed * dt);
-    m_curColor.r += (m_targetColor.r - m_curColor.r) * kc;
-    m_curColor.g += (m_targetColor.g - m_curColor.g) * kc;
-    m_curColor.b += (m_targetColor.b - m_curColor.b) * kc;
-    m_curColor.a += (m_targetColor.a - m_curColor.a) * kc;
-
-    if (!m_useSolid) {
-        const _ubyte r = (_ubyte)std::clamp(m_curColor.r * 255.f, 0.f, 255.f);
-        const _ubyte g = (_ubyte)std::clamp(m_curColor.g * 255.f, 0.f, 255.f);
-        const _ubyte b = (_ubyte)std::clamp(m_curColor.b * 255.f, 0.f, 255.f);
-        const _ubyte a = (_ubyte)std::clamp(m_curColor.a * 255.f, 0.f, 255.f);
-        SetTintRGBA(r, g, b, a);
+    // 색 보간: Solid 모드에서만 의미 있음
+    if (m_useSolid) {
+        const float kc = 1.f - expf(-m_colorLerpSpeed * dt);
+        m_curColor.r += (m_targetColor.r - m_curColor.r) * kc;
+        m_curColor.g += (m_targetColor.g - m_curColor.g) * kc;
+        m_curColor.b += (m_targetColor.b - m_curColor.b) * kc;
+        m_curColor.a += (m_targetColor.a - m_curColor.a) * kc;
     }
 
     return __super::Update_GameObject(dt);
@@ -66,14 +57,26 @@ void CButtonUI::Render_GameObject()
     if (!Is_Active() || Get_Dead()) return;
 
     if (m_useSolid) {
+        // 최소 상태만 저장/복원 (StateBlock 제거)
         LPDIRECT3DDEVICE9 dev = m_pGraphicDev;
-        LPDIRECT3DSTATEBLOCK9 sb = nullptr;
-        if (SUCCEEDED(dev->CreateStateBlock(D3DSBT_ALL, &sb))) sb->Capture();
+
+        DWORD oldAlpha = 0, oldSrc = 0, oldDst = 0, oldTF = 0;
+        DWORD oldColorOp = 0, oldColorArg1 = 0, oldAlphaOp = 0, oldAlphaArg1 = 0;
+
+        dev->GetRenderState(D3DRS_ALPHABLENDENABLE, &oldAlpha);
+        dev->GetRenderState(D3DRS_SRCBLEND, &oldSrc);
+        dev->GetRenderState(D3DRS_DESTBLEND, &oldDst);
+        dev->GetRenderState(D3DRS_TEXTUREFACTOR, &oldTF);
+        dev->GetTextureStageState(0, D3DTSS_COLOROP, &oldColorOp);
+        dev->GetTextureStageState(0, D3DTSS_COLORARG1, &oldColorArg1);
+        dev->GetTextureStageState(0, D3DTSS_ALPHAOP, &oldAlphaOp);
+        dev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &oldAlphaArg1);
 
         dev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
         dev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
         dev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
         dev->SetTexture(0, nullptr);
+
         dev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
         dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
         dev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
@@ -87,7 +90,14 @@ void CButtonUI::Render_GameObject()
 
         CUI::Render_GameObject();
 
-        if (sb) { sb->Apply(); sb->Release(); }
+        dev->SetRenderState(D3DRS_TEXTUREFACTOR, oldTF);
+        dev->SetRenderState(D3DRS_ALPHABLENDENABLE, oldAlpha);
+        dev->SetRenderState(D3DRS_SRCBLEND, oldSrc);
+        dev->SetRenderState(D3DRS_DESTBLEND, oldDst);
+        dev->SetTextureStageState(0, D3DTSS_COLOROP, oldColorOp);
+        dev->SetTextureStageState(0, D3DTSS_COLORARG1, oldColorArg1);
+        dev->SetTextureStageState(0, D3DTSS_ALPHAOP, oldAlphaOp);
+        dev->SetTextureStageState(0, D3DTSS_ALPHAARG1, oldAlphaArg1);
     }
     else {
         CImageUI::Render_GameObject();
@@ -98,9 +108,12 @@ void CButtonUI::Render_GameObject()
             ch->Render_GameObject();
 }
 
+// ===== 입력/상태 =====
 
 void CButtonUI::getMousePosUI(float& x, float& y) const
 {
+    if (s_mouseValid) { x = s_mouseX; y = s_mouseY; return; }
+
     HWND hWnd = GetActiveWindow();
     POINT pt{ 0,0 };
     ::GetCursorPos(&pt);
@@ -134,7 +147,6 @@ void CButtonUI::updateInput()
     const bool up = CDInputMgr::GetInstance()->GetMouseButtonUp((uint8_t)MOUSEKEYSTATE::DIM_LB);
 
     if (inside && down) m_pressed = true;
-
     if (up) {
         if (m_pressed && inside && m_onClick) m_onClick();
         m_pressed = false;
@@ -188,13 +200,14 @@ void CButtonUI::updateTextureByState()
     case State::Hover:    wanted = &m_texHover;    break;
     default:              wanted = &m_texNormal;   break;
     }
-    if (!wanted || wanted->empty()) return;       
-    if (m_curTexTag == *wanted) return;              
+    if (!wanted || wanted->empty()) return;
+    if (m_curTexTag == *wanted) return;
 
     ChangeTexture(wanted->c_str());
     m_curTexTag = *wanted;
 }
 
+// factory
 CButtonUI* CButtonUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CButtonUI* p = new CButtonUI(pGraphicDev);

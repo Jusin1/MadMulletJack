@@ -112,27 +112,27 @@ void CTextUI::Render_GameObject()
 
 
 		// 회전 적용을 위해서
-		//if (m_bPosFix)
-		//{
-		//	// 회전 중심: 문장 전체의 중앙
-		//	float totalWidth = measureTotalWidth(currScale);
-		//	_vec2 center = { pos.x + totalWidth * 0.5f, pos.y };
+		if (m_bPosFix)
+		{
+			// 회전 중심: 문장 전체의 중앙
+			float totalWidth = measureTotalWidth(currScale);
+			_vec2 center = { pos.x + totalWidth * 0.5f, pos.y };
 
-		//	_vec2 rotated;
-		//	rotated.x = center.x + (charPos.x - center.x) * cosf(m_fRotSum) - (charPos.y - center.y) * sinf(m_fRotSum);
-		//	rotated.y = center.y + (charPos.x - center.x) * sinf(m_fRotSum) + (charPos.y - center.y) * cosf(m_fRotSum);
+			_vec2 rotated;
+			rotated.x = center.x + (charPos.x - center.x) * cosf(m_fRotSum) - (charPos.y - center.y) * sinf(m_fRotSum);
+			rotated.y = center.y + (charPos.x - center.x) * sinf(m_fRotSum) + (charPos.y - center.y) * cosf(m_fRotSum);
 
 
-		//	Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
-		//		m_fontTag.c_str(), buf, &rotated, m_color, currScale);
+			Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
+				m_fontTag.c_str(), buf, &rotated, m_color, currScale);
 
-		//	_vec2 sz{};
-		//	Engine::CFontMgr::GetInstance()->Measure_Scaled(
-		//		m_fontTag.c_str(), buf, &sz, currScale);
+			_vec2 sz{};
+			Engine::CFontMgr::GetInstance()->Measure_Scaled(
+				m_fontTag.c_str(), buf, &sz, currScale);
 
-		//	x += sz.x + m_letterSpacing;
-		//	return;
-		//}
+			x += sz.x + m_letterSpacing;
+			return;
+		}
 		//else
 		{
 			// per-char 회전 API 없으므로 스케일만 적용

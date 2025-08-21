@@ -60,7 +60,7 @@ HRESULT CMonster_Suit::Ready_GameObject()
 HRESULT CMonster_Suit::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg))) return E_FAIL;
-
+    
     m_fHp = 2;
 
     CTransform::TRANSFORMINFO TransformInfo{};

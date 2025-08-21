@@ -41,7 +41,24 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
             pChild->Update_GameObject(fTimeDelta);
     }
 
+    //// 부모 위치 가져오기
+    //_vec3 vParentPos = m_pTransformCom->Get_Info(INFO_POS);
+
+    //// 자식들 위치 갱신
+    //for (auto& pChild : m_vecChildren)
+    //{
+    //    if (!pChild) continue;
+
+    //    // 부모 좌표 + 오프셋 = 자식 좌표
+    //    _vec3 childPos = vParentPos + pChild->Get_LocalOffset();
+    //    pChild->GetTransform()->Set_Info(INFO_POS, childPos);
+
+    //    if (pChild->Is_Active())
+    //        pChild->Update_GameObject(fTimeDelta);
+    //}
+
     return NO_EVENT;
+
 }
 
 void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate
@@ -96,6 +113,17 @@ void CUIBase::Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed)
     TransformInfo.fRotationSpeed = D3DXToRadian(_fRotSpeed);
     TransformInfo.vStartPos = m_pTransformCom->Get_Info(INFO_POS);
     m_pTransformCom->SetTransformInfo(TransformInfo);
+}
+
+void CUIBase::Set_ActiveRecursive(bool bActive)
+{
+    Set_Active(bActive);
+
+    for (auto& pChild : m_vecChildren)
+    {
+        if (pChild)
+            pChild->Set_Active(bActive);
+    }
 }
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가

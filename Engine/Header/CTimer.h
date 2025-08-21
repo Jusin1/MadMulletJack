@@ -12,7 +12,8 @@ private:
 
 public:
 	_float					Get_TimeDelta() const { return m_fTimeDelta; }
-
+public:
+	void Reset();
 public:
 	HRESULT			Ready_Timer();
 	void			Update_Timer();

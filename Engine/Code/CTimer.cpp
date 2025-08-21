@@ -12,6 +12,15 @@ CTimer::~CTimer()
 {
 }
 
+void CTimer::Reset()
+{
+	QueryPerformanceCounter(&m_FrameTime);
+	QueryPerformanceCounter(&m_LastTime);
+	QueryPerformanceCounter(&m_FixTime);
+
+	m_fTimeDelta = 0.f;
+}
+
 HRESULT CTimer::Ready_Timer()
 {
 	QueryPerformanceCounter(&m_FrameTime);			// 1077

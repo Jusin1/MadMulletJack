@@ -45,6 +45,15 @@ HRESULT CTimerMgr::Ready_Timer(const _tchar* pTimerTag)
 	return S_OK;
 }
 
+void CTimerMgr::Reset_Timers()
+{
+	for (auto& pair : m_mapTimer)
+	{
+		if (pair.second)
+			pair.second->Reset();
+	}
+}
+
 CTimer* CTimerMgr::Find_Timer(const _tchar* pTimerTag)
 {
 	auto		iter = find_if(m_mapTimer.begin(), m_mapTimer.end(), 

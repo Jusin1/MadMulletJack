@@ -12,18 +12,18 @@ public:
     CButtonUI(const CButtonUI& rhs) : CImageUI(rhs) {}
     virtual ~CButtonUI() {}
 
-
+    // ===== 수명주기 =====
     HRESULT Initialize(void* pArg) override;
     _int    Update_GameObject(const _float& dt) override;
     void    Render_GameObject() override;
 
-
+    // ===== 설정 =====
     void Set_ButtonRect(float cx, float cy, float w, float h) {
         Set_UIPosition(cx, cy, w, h);
         cacheBaseRect(); m_baseCached = true;
     }
 
-
+    // 단색/텍스처 겸용
     void SetSolidMode(bool on) {
         m_useSolid = on;
         if (m_useSolid) {
@@ -37,9 +37,10 @@ public:
             m_colHover = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
             m_colPressed = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
             m_colDisabled = D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.f);
+            SetTintRGBA(255, 255, 255, 255);
         }
-        updateTargetsByState(); 
-        updateTextureByState(); 
+        updateTargetsByState();
+        updateTextureByState();
     }
 
     void SetSolidColors(D3DXCOLOR normal, D3DXCOLOR hover, D3DXCOLOR pressed, D3DXCOLOR disabled) {
@@ -47,7 +48,7 @@ public:
         updateTargetsByState(); updateTextureByState();
     }
 
-
+    // 상태별 텍스처 태그
     void SetStateTextures(const wchar_t* normal,
         const wchar_t* hover = L"",
         const wchar_t* pressed = L"",
@@ -57,13 +58,12 @@ public:
         m_texHover = hover ? hover : L"";
         m_texPressed = pressed ? pressed : L"";
         m_texDisabled = disabled ? disabled : L"";
-        updateTextureByState(); 
+        updateTextureByState();
     }
-
     void SetStateTextureTag(State s, const std::wstring& tag) {
         switch (s) {
-        case State::Normal:   m_texNormal = tag; break;
-        case State::Hover:    m_texHover = tag; break;
+        case State::Normal:   m_texNormal = tag;  break;
+        case State::Hover:    m_texHover = tag;   break;
         case State::Pressed:  m_texPressed = tag; break;
         case State::Disabled: m_texDisabled = tag; break;
         }
@@ -82,17 +82,22 @@ public:
     void SetOnHoverExit(std::function<void()> cb) { m_onHoverExit = std::move(cb); }
     void SetOnHoverStay(std::function<void()> cb) { m_onHoverStay = std::move(cb); }
 
+    // 프레임당 1회 외부 설정하는 마우스 UI좌표 (모든 버튼 공유)
+    static void SetFrameMouseUIPos(float x, float y) { s_mouseX = x; s_mouseY = y; s_mouseValid = true; }
+    static void InvalidateMouseUIPos() { s_mouseValid = false; }
+
 public:
     static CButtonUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     CGameObject* Clone(void* pArg = nullptr) override;
     void Free() override;
 
 private:
+    // 입력/상태
     void updateInput();
     bool hitTest(float mx, float my) const;
     void setState(State s);
     void updateTargetsByState();
-    void updateTextureByState(); 
+    void updateTextureByState();
 
     void cacheBaseRect() { Get_UIPosition(m_baseX, m_baseY); Get_UISize(m_baseW, m_baseH); }
     void getMousePosUI(float& x, float& y) const;
@@ -110,8 +115,7 @@ private:
     float m_hoverScale = 1.06f, m_pressScale = 1.02f;
     float m_scaleLerpSpeed = 12.f;
 
-
-    bool       m_useSolid = false; 
+    bool       m_useSolid = false;
     D3DXCOLOR  m_colNormal = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
     D3DXCOLOR  m_colHover = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
     D3DXCOLOR  m_colPressed = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
@@ -121,11 +125,15 @@ private:
     float      m_colorLerpSpeed = 10.f;
 
     std::wstring m_texNormal, m_texHover, m_texPressed, m_texDisabled;
-    std::wstring m_curTexTag; 
+    std::wstring m_curTexTag;
 
     std::function<void()> m_onClick;
     std::function<void()> m_onHoverEnter;
     std::function<void()> m_onHoverExit;
     std::function<void()> m_onHoverStay;
+
+    // 프레임 공유 마우스 좌표
+    static inline float s_mouseX = 0.f, s_mouseY = 0.f;
+    static inline bool  s_mouseValid = false;
 };
 
