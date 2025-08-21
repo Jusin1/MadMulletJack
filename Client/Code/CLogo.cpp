@@ -39,7 +39,6 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
         if (FAILED(CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
             return E_FAIL;
     }
-    
 }
 
 void CLogo::LateUpdate_Scene(const _float& fTimeDelta)

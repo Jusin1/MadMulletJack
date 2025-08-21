@@ -2,6 +2,7 @@
 #include "CPlayer_HandL.h"
 #include "CTimerMgr.h"
 #include "CObjectManager.h"
+#include "CMapFactory.h"
 
 CPlayer_HandL::CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
@@ -22,6 +23,9 @@ HRESULT CPlayer_HandL::Ready_GameObject()
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
 
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandL"))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -30,8 +34,6 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerHandL"))))
-        return E_FAIL;
 
     if (FAILED(Texture_Clone()))
         return E_FAIL;

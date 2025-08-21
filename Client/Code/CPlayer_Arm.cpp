@@ -22,15 +22,15 @@ HRESULT CPlayer_Arm::Ready_GameObject()
     if (FAILED(__super::Ready_GameObject()))
         return E_FAIL;
 
+    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerArm"))))
+        return E_FAIL;
+
     return S_OK;
 }
 
 HRESULT CPlayer_Arm::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
-        return E_FAIL;
-
-    if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_PlayerArm"))))
         return E_FAIL;
 
     Set_UISizeAndPos(700.f, 600.f, WINCX * 0.5f, WINCY * 0.5f + 300);

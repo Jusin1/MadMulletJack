@@ -5,6 +5,7 @@
 #include "CLoader.h"
 #include "CLogo.h"
 #include "CStage.h"
+#include "CTutorial.h"
 #include "CDev.h"
 
 CLoading_Scene::CLoading_Scene(LPDIRECT3DDEVICE9 pGrahpicDev) : CScene(pGrahpicDev)
@@ -47,6 +48,9 @@ _int CLoading_Scene::Update_Scene(const _float& fTimeDelta)
 				break;
 			case SCENE_DEV:
 				pNewScene = CDev::Create(m_pGraphicDev);
+				break;
+			case SCENE_TUTORIAL:
+				pNewScene = CTutorial::Create(m_pGraphicDev);
 				break;
 			}
 

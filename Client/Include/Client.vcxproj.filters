@@ -220,6 +220,9 @@
     <Filter Include="02. GameObject\06. UI\ButtonUI">
       <UniqueIdentifier>{b64c51d0-1d8d-43e9-b011-d6199d84e97b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\04. Tutorial">
+      <UniqueIdentifier>{20714cf0-2295-4e74-a49d-ac22b1d671e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -399,9 +402,6 @@
     <ClInclude Include="..\Header\CPhone_HpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI\01. Phone</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CColRect_HpBarUI.h">
-      <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CGameDataManager.h">
       <Filter>03. Manager\GameDataManager</Filter>
     </ClInclude>
@@ -419,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CButtonUI.h">
       <Filter>02. GameObject\06. UI\ButtonUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTutorial.h">
+      <Filter>01. Scene\04. Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -607,6 +610,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CButtonUI.cpp">
       <Filter>02. GameObject\06. UI\ButtonUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTutorial.cpp">
+      <Filter>01. Scene\04. Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

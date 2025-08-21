@@ -83,12 +83,12 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	case SCENE_LOGO:  pLoader->Loading_Logo();  break;
 	case SCENE_DEV:
 	{
-		pLoader->Loading_UI();
+		pLoader->Loading_UI(); 
 		pLoader->Loading_Dev();
 	}break;
 	case SCENE_TUTORIAL:
 	{
-
+		pLoader->Loading_Tutorial();
 	} break;
 	case SCENE_STAGE_1:
 	{
@@ -292,6 +292,7 @@ HRESULT CLoader::Loading_Dev()
 HRESULT CLoader::Loading_Tutorial()
 {
 	m_isFinished = true;
+	lstrcpy(m_szLoading, TEXT("튜토리얼 로딩이 완료되었습니다."));
 	return S_OK;
 }
 
@@ -719,6 +720,11 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/wink/Lisa_Wink_%03d.png", 10))))
 		return E_FAIL;
 
+	// WINK
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaSideUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Side/Lisa_Side_%03d.png", 10))))
+		return E_FAIL;
+
 	// LisaHead - IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaHair_Default",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Default_Hair/HAIR%03d.png", 3))))
@@ -728,6 +734,12 @@ HRESULT CLoader::Loading_UI()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaHair_Bye",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Wink_Hair/MASCOT_HAIR_WINK%03d.png", 3))))
 		return E_FAIL;
+
+	// LisaHead - WINK
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LisaHair_WINK",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Lisa/Side_Hair/Side_Hair_%03d.png", 6))))
+		return E_FAIL;
+
 	// Lisa - TalkUI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Talk",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/BALLON.png", 1))))
@@ -789,9 +801,9 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 	//// PhoneScreenTitle UI
-	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ScreenTitleUI",
-	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Phone_Title.png", 1))))
-	//	return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ScreenTitleUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/HUD UPGRADES BAR.png", 1))))
+		return E_FAIL;
 
 	// PhoneScreenTitle UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_FrameUI",

@@ -12,6 +12,8 @@
 #include "CTalkUI.h"
 #include "CPhoneUI.h"
 #include "CButtonUI.h"
+#include "CManagement.h"
+#include "CLoading_Scene.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -26,7 +28,9 @@ static void DetachAndKill(CUIBase* parent, CUIBase*& node)
 IMPLEMENT_SINGLETON(CUIManager)
 
 
-CUIManager::CUIManager() {}
+CUIManager::CUIManager()
+{
+}
 CUIManager::~CUIManager() {}
 
 static inline float EaseOutCubic(float t) {
@@ -170,6 +174,16 @@ void CUIManager::Update(const _float& dt)
         }
     }
 
+    // UI 삭제 타이머
+    if (m_bRemoveUI) {
+        m_timeUIRemoveTimer += dt;
+        if (m_timeUIRemoveTimer >= 1.F) {
+            m_bRemoveUI = false;
+            m_timeUIRemoveTimer = 0.f;
+            DestroyEnterUI();
+        }
+    }
+
   
     if (m_timeAutoRemoveArmed) {
         m_timeAutoRemoveTimer += dt;
@@ -179,15 +193,17 @@ void CUIManager::Update(const _float& dt)
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeBlack));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pVictoryText));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pFloorTimeText));
-
+            auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
             if (auto* talk = dynamic_cast<CTalkUI*>(CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_TalkUI", SCENE_STATIC, L"UI_Layer"))) {
-                std::vector<std::wstring> dialogues = { L"안녕하세요", L"잘가세요", L"잘있어요", L"다시만나요" };
+                L"Prototype_GameObject_TalkUI", sceneIdx, L"UI_Layer"))) {
+                std::vector<std::wstring> dialogues = { L"클리어하셨군요...", L"좋은 걸 보여드릴게요", L"좋은 선택이길!!" };
                 talk->LoadDialogues(dialogues);
                 talk->Set_TextPos(420.f, -500.f);
                 talk->Set_TextScale(0.5f);
                 talk->Set_Active(true);
                 talk->Set_OwnerLisa(m_pLisaUI);
+                m_pTalkUI = talk;
+                m_pEnterUI->Add_Child(m_pTalkUI);
             }
             m_timeAutoRemoveArmed = false;
             m_timeAutoRemoveTimer = 0.f;
@@ -213,7 +229,6 @@ void CUIManager::Update(const _float& dt)
 
     if (m_exitingEnter && m_slideTasks.empty()) {
         if (m_pEnterUI) {
-            CancelSlidesForSubtree(m_pEnterUI);
             std::vector<CUIBase*> stk{ m_pEnterUI };
             while (!stk.empty()) {
                 CUIBase* n = stk.back(); stk.pop_back();
@@ -238,10 +253,10 @@ void CUIManager::CreateClearUI()
     constexpr float STAGGER = 0.02f;
 
     float baseDelay = 0.f;
-
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     m_pEnterUI = dynamic_cast<CUIBase*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
+            L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
     if (!m_pEnterUI) return;
 
     CreatePhoneUI();
@@ -261,7 +276,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
         pBlack->Set_UIPosition(0.f, 0.f, (float)WINCX, (float)WINCY);
         pBlack->SetAlpha(0);
         pBlack->FadeTo(190, 0.0f, 0.25f);
@@ -271,7 +286,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PanelUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_PanelUI", sceneIdx, L"UI_Layer"))) {
         pFrame->UseGreenFramePreset(-130.f, -70.f, 1080.f, 600.f, 3.f, true);
         attachAndSlide(pFrame, -130.f, -70.f, 1080.f, 600.f);
     }
@@ -280,7 +295,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pLisa = dynamic_cast<CLisaUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_LisaUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_LisaUI", sceneIdx, L"UI_Layer")))
     {
         m_pLisaUI = pLisa;
         attachAndSlide(pLisa, faceX, faceY, faceW, faceH);
@@ -288,14 +303,14 @@ void CUIManager::CreateClearUI()
 
     if (auto* pFaceFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PanelUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_PanelUI", sceneIdx, L"UI_Layer"))) {
         pFaceFrame->UseGreenFramePreset(faceX, faceY, faceW, faceH, 3.f, true);
         attachAndSlide(pFaceFrame, faceX, faceY, faceW, faceH);
     }
 
     if (auto* pChat = dynamic_cast<CChatUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_ChatUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_ChatUI", sceneIdx, L"UI_Layer")))
         attachAndSlide(pChat, 550.f, 200.f, 220.f, 320.f);
 
     const float lisaBottom = faceY + faceH * 0.5f;
@@ -304,7 +319,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* pBanner = dynamic_cast<CBannerUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BannerUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_BannerUI", sceneIdx, L"UI_Layer"))) {
         pBanner->SetBannerRect(bx, by, bw, bh);
         pBanner->SetText(L"FLOOR 01");
         pBanner->SetAccentColor(D3DCOLOR_ARGB(255, 60, 255, 60));
@@ -326,11 +341,10 @@ void CUIManager::CreateClearUI()
 
     const float X = -100.f, Y = 300.f, H2 = 96.f, W2 = 600.f;
     const float CAP_L = 260.f, CAP_R = 260.f;
-
     auto mkPanel = [&](float cx, float cy, float pw, float ph, D3DCOLOR tint) -> CPanelUI* {
         auto* p = dynamic_cast<CPanelUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_PanelUI", SCENE_STATIC, L"UI_Layer"));
+                L"Prototype_GameObject_PanelUI", sceneIdx, L"UI_Layer"));
         if (!p) return nullptr;
         p->SetPanelPos(cx, cy);
         p->SetPanelSize(pw, ph);
@@ -343,10 +357,9 @@ void CUIManager::CreateClearUI()
     mkPanel(X, Y, W2, H2, D3DCOLOR_ARGB(190, 255, 120, 180));
     mkPanel(X - (W2 * 0.5f - CAP_L * 0.5f), Y, CAP_L, H2, D3DCOLOR_ARGB(220, 255, 60, 60));
     mkPanel(X + (W2 * 0.5f - CAP_R * 0.5f), Y, CAP_R, H2, D3DCOLOR_ARGB(220, 255, 60, 60));
-
     if (auto* heart = dynamic_cast<CHeartUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_HeartUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_HeartUI", sceneIdx, L"UI_Layer"))) {
         heart->Set_UIPosition(X, Y, W2, H2);
         heart->SetHeartSizePx(80.f);
         heart->SetHeartManual(-W2 * 0.5f + 60.f, +W2 * 0.5f - 60.f, 0.f);
@@ -365,7 +378,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* img = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
         img->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_LogoUI", 0, 0, 0.f, false);
         img->ChangeTexture(L"Com_Texture_Logo");
         img->SetTintRGBA(100, 255, 120, 255);
@@ -376,23 +389,21 @@ void CUIManager::CreateClearUI()
 
     if (auto* titleImage = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
         titleImage->RegisterTexture(L"Com_Texture_Title", L"Prototype_Component_Texture_SmallTitleUI", 0, 0, 0.f, false);
         titleImage->ChangeTexture(L"Com_Texture_Title");
         attachAndSlide(titleImage, -550.f, 300.f, 200.f, 100.f);
     }
-
     if (auto* textImage = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
         textImage->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_SmallTextUI", 0, 0, 0.f, false);
         textImage->ChangeTexture(L"Com_Texture_Text");
         attachAndSlide(textImage, -530.f, 360.f, 250.f, 30.f);
     }
-
     if (auto* liveIcon1 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
         liveIcon1->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_LiveIconUI", 0, 0, 0.f, false);
         liveIcon1->ChangeTexture(L"Com_Texture_Text");
         liveIcon1->SetTintRGBA(57, 255, 20, 255);
@@ -400,10 +411,9 @@ void CUIManager::CreateClearUI()
         liveIcon1->SetAdditive(false);
         attachAndSlide(liveIcon1, -630.f, -330.f, 25.f, 25.f);
     }
-
     if (auto* txt = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
         txt->SetFontTag(L"UIFont");
         txt->SetText(L"LIVESTREAM");
         txt->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f));
@@ -415,7 +425,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* liveIcon2 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
         liveIcon2->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_LiveIconUI", 0, 0, 0.f, false);
         liveIcon2->ChangeTexture(L"Com_Texture_Text");
         liveIcon2->SetTintRGBA(255, 0, 0, 255);
@@ -426,7 +436,7 @@ void CUIManager::CreateClearUI()
 
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
         txt1->SetFontTag(L"UIFont");
         txt1->SetText(L"PEACE CROP CODEC");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
@@ -446,7 +456,6 @@ void CUIManager::DestroyEnterUI()
 {
     if (m_exitingEnter || !m_pEnterUI) return;
 
-    CancelSlidesForSubtree(m_pEnterUI);
 
     vector<CUI*> uis;
     function<void(CUIBase*)> dfs = [&](CUIBase* n) {
@@ -470,27 +479,20 @@ void CUIManager::DestroyEnterUI()
         if (auto* bg = dynamic_cast<CBlackGackGround*>(ui)) {
             bg->FadeTo(0, 0.0f, DUR * 0.9f);
         }
-    }
-    m_exitingEnter = true;
+    }  
+
+    
+    // 씬 교체 (로딩씬으로)
+    LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
+
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_TUTORIAL));
+    ClearAllUI();
+    
+
+    m_exitingEnter = true; 
 }
 
-void CUIManager::CancelSlidesForSubtree(CUIBase* root)
-{
-    if (!root) return;
 
-    std::unordered_set<CUIBase*> nodes;
-    std::function<void(CUIBase*)> dfs = [&](CUIBase* n) {
-        if (!n) return;
-        nodes.insert(n);
-        for (auto* ch : n->GetChildren()) dfs(ch);
-        };
-    dfs(root);
-
-    m_slideTasks.erase(
-        std::remove_if(m_slideTasks.begin(), m_slideTasks.end(),
-            [&](const SlideTask& t) { return t.ui && nodes.count(t.ui) > 0; }),
-        m_slideTasks.end());
-}
 
 bool CUIManager::PhoneSlidesDone() const
 {
@@ -595,10 +597,10 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     // ── 1) 카드 버튼(프레임)
     const float CARD_W = 200.f;
     const float CARD_H = 300.f;
-
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     auto* btn = dynamic_cast<CButtonUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIButton", SCENE_STATIC, L"UI_Layer"));
+            L"Prototype_GameObject_UIButton", sceneIdx, L"UI_Layer"));
     if (!btn) return;
 
     btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
@@ -630,7 +632,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
 
     CTextUI* buyLabel = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"));
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
     if (buyLabel)
     {
         buyLabel->SetFontTag(L"UIFont");
@@ -662,7 +664,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     // ── 2) 아이콘
     if (auto* icon = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
         const float ICON_W = 140.f, ICON_H = 140.f;
         const float ICON_Y = cy - 30.f;
@@ -677,7 +679,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     //  제목
     if (auto* t = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
         t->SetFontTag(L"UIFont");
         t->SetText(def.title);
@@ -694,7 +696,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     //  설명
     if (auto* t = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
         std::vector<std::wstring> lines;
         {
@@ -722,7 +724,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         for (size_t i = 0; i < lines.size(); ++i) {
             auto* line = dynamic_cast<CTextUI*>(
                 CObjectManager::GetInstance()->Clone_GameObject(
-                    L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"));
+                    L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
             if (!line) continue;
 
             line->SetFontTag(L"UIFont");
@@ -747,7 +749,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     //  클릭시 등장 시킬 이미지
     if (auto* sold = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
         const float SOLD_W = 96.f, SOLD_H = 40.f;
         const float SOLD_X = cx + 50.f, SOLD_Y = cy - 110.f;
@@ -763,8 +765,8 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     // ── 클릭 로직
     btn->SetOnClick([this, &outCard]()
         {
-            DestroyEnterUI();
-            // 플레이어에 산 거반영
+            m_bRemoveUI = true;
+            m_pTalkUI->NextDialogue();
         });
 }
 
@@ -809,12 +811,74 @@ void CUIManager::LayoutShopCard(ShopCardUI& card)
     }
 }
 
+void CUIManager::ClearAllUI()
+{
+    // --- 기본 UI 포인터 정리 ---
+    Safe_Release(m_pEnterUI);             m_pEnterUI = nullptr;
+    Safe_Release(m_pMonsterDieEffect);    m_pMonsterDieEffect = nullptr;
+
+    Safe_Release(m_pVictoryText);         m_pVictoryText = nullptr;
+    Safe_Release(m_pFloorTimeText);       m_pFloorTimeText = nullptr;
+    Safe_Release(m_pTimeBlack);           m_pTimeBlack = nullptr;
+    Safe_Release(m_pTimeFrame);           m_pTimeFrame = nullptr;
+    Safe_Release(m_pTimeText);            m_pTimeText = nullptr;
+    Safe_Release(m_pLisaUI);              m_pLisaUI = nullptr;
+
+    Safe_Release(m_pTalkUI);              m_pTalkUI = nullptr;
+
+    Safe_Release(m_pPhone);               m_pPhone = nullptr;
+    Safe_Release(m_pLeftHand);            m_pLeftHand = nullptr;
+    Safe_Release(m_pRightHand);           m_pRightHand = nullptr;
+    Safe_Release(m_pPhoneScreen);         m_pPhoneScreen = nullptr;
+    Safe_Release(m_pPhoeScreenBackGround); m_pPhoeScreenBackGround = nullptr;
+
+    // --- 상점 UI ---
+    Safe_Release(m_pShopRoot);            m_pShopRoot = nullptr;
+    for (auto& card : m_shopCards) {
+        Safe_Release(card.btn);
+        Safe_Release(card.icon);
+        Safe_Release(card.title);
+        Safe_Release(card.desc);
+        Safe_Release(card.price);
+        Safe_Release(card.soldTag);
+    }
+    m_shopCards.clear();
+    m_shopIndices.clear();
+    m_shopOpen = false;
+
+    // --- 상태 변수 초기화 ---
+    m_spawnedTimeUI = false;
+    m_timeAutoRemoveArmed = false;
+    m_timeAutoRemoveTimer = 0.f;
+
+    m_bRemoveUI = false;
+    m_timeUIRemoveTimer = 0.f;
+
+    m_phoneSlideActive = false;
+    m_phonePullArmed = false;
+    m_phonePullStarted = false;
+    m_phonePullFinished = false;
+    m_phonePullTimer = 0.f;
+
+    m_createPhoneScreenPending = false;
+    m_createPhoneScreenTimer = 0.f;
+    m_createPhoneScreenDelay = 0.2f;
+
+    m_exitingEnter = false;
+    m_changeScreenOnPullFinish = false;
+    m_nextPhoneScreenTexTag.clear();
+
+    m_slideTasks.clear();
+    m_scaleTasks.clear();
+}
+
 
 void CUIManager::CreateClearTextUI()
 {
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
         pBlack->Set_UIPosition(-130.f, -50.f, 1080.f, 100.f);
         pBlack->SetAlpha(0);
         pBlack->FadeTo(190, 0.0f, 0.25f);
@@ -824,7 +888,7 @@ void CUIManager::CreateClearTextUI()
 
     if (auto* pTimeFrame = dynamic_cast<CPanelUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PanelUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_PanelUI", sceneIdx, L"UI_Layer"))) {
 
         const float X = -130.f, Y = -50.f, W = 1080.F, H = 100.f;
 
@@ -835,7 +899,7 @@ void CUIManager::CreateClearTextUI()
 
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
         txt1->SetFontTag(L"UIFont");
         txt1->SetText(L"VICTORY");
@@ -854,7 +918,7 @@ void CUIManager::CreateClearTextUI()
 
     if (auto* txt2 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
         txt2->SetFontTag(L"UIFont");
         txt2->SetText(L"FLOOR TIME");
@@ -880,9 +944,10 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 {
     if (!m_pEnterUI) return;
 
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (auto* timeTxt = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
         timeTxt->SetFontTag(L"UIFont");
         timeTxt->SetText(timeStr);
@@ -902,9 +967,10 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 
 void CUIManager::CreatePhoneUI()
 {
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (m_pPhoeScreenBackGround = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
         m_pPhoeScreenBackGround->Set_UIPosition(-100.f, 0.f, (float)650.f, (float)420.f);
         m_pPhoeScreenBackGround->SetAlpha(255);     
         m_pPhoeScreenBackGround->Set_Active(false);
@@ -914,7 +980,7 @@ void CUIManager::CreatePhoneUI()
     // 화면 스크린 생성
     m_pPhoneScreen = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
 
     if (m_pPhoneScreen)
@@ -929,7 +995,7 @@ void CUIManager::CreatePhoneUI()
 
     if (m_pPhone = dynamic_cast<CPhoneUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_PhoneUI", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_PhoneUI", sceneIdx, L"UI_Layer")))
     {
         m_pPhone->Set_UIPosition(-160.f, 600.f, 600.f, 300.f);
         m_pEnterUI->Add_Child(m_pPhone);
@@ -937,7 +1003,7 @@ void CUIManager::CreatePhoneUI()
         // 왼손
         m_pLeftHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+                L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
         if (m_pLeftHand)
         {
             m_pLeftHand->RegisterTexture(L"Com_Texture_RightHandIDLE",
@@ -953,7 +1019,7 @@ void CUIManager::CreatePhoneUI()
         // 오른손
         m_pRightHand = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
+                L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
         if (m_pRightHand)
         {
             m_pRightHand->RegisterTexture(L"Com_Texture_LeftHandIDLE",
@@ -978,10 +1044,11 @@ void CUIManager::CreatePhoneScreen()
         : m_pEnterUI;
     if (!parent) return;
 
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     // 2) 왼쪽 세로 타이틀
     if (auto* img = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
         img->Set_UIPosition(-380.f, -10.f, 60.f, 390.f);
         img->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Phone_ScreenTitleUI", 0, 1, 0.f, false);
@@ -989,10 +1056,29 @@ void CUIManager::CreatePhoneScreen()
         parent->Add_Child(img);
     }
 
-    // 3) 폰 프레임(테두리) ? 콘텐츠 위에 오도록 맨 앞에 꽂고 싶으면 Add_ChildFront 사용
+    // 구매 타이틀
+    if (auto* shopTitle = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
+    {
+        shopTitle->SetFontTag(L"UIFont");
+        shopTitle->SetText(L"CHOOSE YOUR UPGRADE!");
+        shopTitle->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        shopTitle->SetScale(0.7f);
+        shopTitle->SetCentered(true);
+        shopTitle->SetLetterSpacing(4.f);
+        shopTitle->Set_UIPosition(-100.f, 200.f, 0.f, 0.f);
+        m_pEnterUI->Add_Child(shopTitle);
+    }
+
+
+    OpenShop();
+
+
+    // 3) 폰 프레임
     if (auto* img2 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
         img2->Set_UIPosition(-100.f, 0.f, 630.f, 420.f); // 화면 프레임
         img2->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Phone_FrameUI", 0, 4, 10.f, true);
@@ -1000,13 +1086,7 @@ void CUIManager::CreatePhoneScreen()
         img2->Play(true);
         // 프레임을 최상단으로 올리고 싶으면:
         parent->Add_ChildFront(img2);
-        // 그냥 일반 순서면:
-        // parent->Add_Child(img2);
     }
-
-    // 4) 상점 오픈 (카드 3장 생성)
-    OpenShop();
-    
 }
 
 void CUIManager::SliderPhoneUI()
@@ -1117,6 +1197,7 @@ void CUIManager::StartPhonePullAnim()
             rightHandEndX, HAND_Y, HAND_W, HAND_H,
             DELAY, DUR);
     }
+
 }
 
 
@@ -1137,7 +1218,5 @@ void CUIManager::ChangePhoneScreenAfterPull(const std::wstring& texTag)
 
 void CUIManager::Free()
 {
-    m_slideTasks.clear();
-    m_scaleTasks.clear();
-    Safe_Release(m_pEnterUI);
+    ClearAllUI();
 }

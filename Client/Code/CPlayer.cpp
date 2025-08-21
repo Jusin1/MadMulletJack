@@ -7,6 +7,7 @@
 #include "CUIBase.h"
 #include "CDInputMgr.h"
 #include "CGlobal_Info.h"
+#include "CMapFactory.h"
 #include "CPlayer_HandR.h"
 #include "CPlayer_HandL.h"
 #include "CPlayer_Arm.h"
@@ -15,6 +16,7 @@
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
 #include "CUIManager.h"
+#include "CManagement.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
@@ -39,6 +41,9 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Ready_GameObject()
 {
 	if (FAILED(__super::Ready_GameObject()))
+		return E_FAIL;
+
+	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -695,8 +700,7 @@ _bool CPlayer::StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime)
 
 HRESULT CPlayer::Set_Component()
 {
-	if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(TEXT("Timer_Player"))))
-		return E_FAIL;
+
 
 	//// Texture
 	//if (Texture_Clone())
@@ -719,7 +723,7 @@ HRESULT CPlayer::Set_Component()
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 0.8f;                    // 반지름 1 -> 0.8 eunbi
+	CollSphereInfo.fRadius = 0.4f;                    // 반지름 1 -> 0.8 eunbi
 	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
 
 	// Colider_Sphere
@@ -798,6 +802,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
 	{
 		CUIManager::GetInstance()->CreateClearUI();
+		m_pColiderSphere->Set_Active(false);
 		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
 	Set_Collider_With_Wall();
@@ -883,14 +888,15 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 
 HRESULT CPlayer::Set_PlayerUI()
 {
+	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 	m_pPlayerUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", SCENE_STATIC, L"UI_Layer"));
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", iSceneIndex, L"UI_Layer"));
 
 	if (m_pPlayerUI == nullptr)
 		return E_FAIL;
 
 	// habdR UI 생성
-	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", SCENE_STATIC, L"UI_Layer"));
+	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", iSceneIndex, L"UI_Layer"));
 	if (pHandRUI)
 	{
 		// pHandRUI -> Initailize()
@@ -898,21 +904,21 @@ HRESULT CPlayer::Set_PlayerUI()
 		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
 	}
 	// handL UI 생성
-	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", SCENE_STATIC, L"UI_Layer"));
+	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", iSceneIndex, L"UI_Layer"));
 	if (pHandLUI)
 	{
 		pHandLUI->Set_ObjTag(L"HandLUI");
 		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
 	}
 	// foot UI 생성
-	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STATIC, L"UI_Layer"));
+	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", iSceneIndex, L"UI_Layer"));
 	if (pFootUI)
 	{
 		pFootUI->Set_ObjTag(L"FootUI");
 		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
 	}
 	// arm UI 생성
-	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", SCENE_STATIC, L"UI_Layer"));
+	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", iSceneIndex, L"UI_Layer"));
 	if (pArmUI)
 	{
 		pArmUI->Set_ObjTag(L"ArmUI");
@@ -924,8 +930,10 @@ HRESULT CPlayer::Set_PlayerUI()
 
 HRESULT CPlayer::Set_HpBarUI()
 {
+	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+
 	m_pHpBarUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", SCENE_STATIC, L"UI_Layer"));
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", iSceneIndex, L"UI_Layer"));
 
 	if (m_pHpBarUI == nullptr)
 		return E_FAIL;
