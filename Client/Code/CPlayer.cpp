@@ -412,10 +412,14 @@ void CPlayer::KICK_Begin()
 {
 	m_fStateTime = 0.5f;
 	m_bIsInvincible = true;
+	m_pTransformCom->GetTransformInfo().fSpeed = 10.f;
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
 {
+	// 앞으로 움직여라
+	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
 	if (StateTime_IsEnd(fTimeDelta, 1.f))
 		Set_State_Idle();
 }
@@ -798,6 +802,9 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 		CUIManager::GetInstance()->CreateClearUI();
 		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
+
+	Set_Collider_With_Wall();
+	Set_Collider_With_Door();
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -863,6 +870,7 @@ void CPlayer::Set_Collider_With_Door()
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DOOR, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
 		//MSG_BOX("Yeah");
+		m_tPlayerInfo.ePlayerState = KICK;
 	}
 }
 

@@ -163,7 +163,7 @@ private:
 
 	_bool m_bIsKeyInput; // 상태 변화를 위한 키 값 받을래 말래
 	_bool m_bIsInvincible; // 무적 상태일래 말래
-	_bool m_bIsAttack; // 공격 할래 말래
+	_bool m_bIsAttack;		// 공격 할래 말래
 	_bool m_bIsCountHp; // hp 깎을래 말래
 
 	_float m_fAddTime; // state 누적 시간
