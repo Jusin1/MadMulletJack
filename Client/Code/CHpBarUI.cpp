@@ -157,15 +157,15 @@ HRESULT CHpBarUI::Set_HpBarUI()
 	if (auto* pRect = dynamic_cast<CBlackGackGround*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
-		pRect->Set_UISizeAndPos(129.f,100.f,263.f, 633.f);
-		
+		pRect->Set_UISizeAndPos(128.f,100.f,264.f, 638.f);
+		m_fRectY = 100.f;
 		pRect->SetColor(D3DXCOLOR{0.f,1.f,0.f,1.f});
 		pRect->SetAlpha(1.f);
 		pRect->FadeTo(190,0.f,0.2f);
 		
 		pRect->Set_IsPosFix(false);
 
-		pRect->Set_New_TransInfo(50.f, 7.f);
+		pRect->Set_New_TransInfo(50.f, 7.2f);
 		pRect->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
 
 		pRect->Set_ObjTag(L"RectUI");
@@ -212,14 +212,18 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 
 	m_fHpPercent = _fCurHp / _fMaxHp; // 지금은 여기 함수 안에서만 쓰여서 local 변수로 바꿔도 될듯.. 일단 남겨둠
 
+	if (_fCurHp < -1)
+		return;
+
 	// percent 에 따라 색깔 (R:1-percent, G : percent , B =0)
 	CBlackGackGround* pRect = dynamic_cast<CBlackGackGround*>(this->Find_Child_ByTag(TEXT("RectUI")));
 	if (pRect)
 	{
 		pRect->SetColor(D3DXCOLOR{ 1.f- m_fHpPercent, m_fHpPercent, 0.f, 1.f });
 		_float fSizeX, fSizeY;
+		_float fSpeed = pRect->GetTransform()->GetTransformInfo().fSpeed;
 		pRect->Get_UISize(fSizeX, fSizeY);
-		//pRect->Set_UISize(fSizeX, fSizeY * m_fHpPercent); rect 사이즈 줄어들게,, but 실패
+		pRect->Set_UISize(fSizeX, m_fRectY * m_fHpPercent);// rect 사이즈 줄어들게 .. 위치 변경은 아직
 	}
 
 	// curhp에 따라 출력 글씨 셋팅

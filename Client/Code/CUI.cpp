@@ -108,6 +108,12 @@ void CUI::Set_UISize(_float _fSizeX, _float _fSizeY)
 
 void CUI::Move_UI(const _float& fTimeDelta)
 {
+	if (m_tMoveInfo.IsRangeEnd())
+	{
+		m_bRenderOn = false;
+		return;
+	}
+
 	switch (m_tMoveInfo.eUIMove) {
 	case MV_RIGHT:
 		m_pTransformCom ->Move_PosRight(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
