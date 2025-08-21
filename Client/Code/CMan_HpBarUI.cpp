@@ -112,6 +112,16 @@ HRESULT CMan_HpBarUI::Set_Texture(_int _iHitCount)
 	//Set_Origin_Rot();
 
 	m_bRenderOn = true;
+
+	// 3이상이면 manD texture로 설정
+	if (_iHitCount > 3)
+	{
+		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManD"))))
+			return E_FAIL;
+
+		return S_OK;
+	}
+		
 	
 	// ihitcount으로 texture 바꾸고
 	switch (_iHitCount)
@@ -129,8 +139,6 @@ HRESULT CMan_HpBarUI::Set_Texture(_int _iHitCount)
 		break;
 
 	default:
-		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_ManD"))))
-			return E_FAIL;
 		break;
 	}
 
@@ -148,7 +156,10 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 	switch (_eSCENE)
 	{
 	case SCENE_DEV:
+	case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
+	case SCENE_STAGE_2:
+	case SCENE_STAGE_3:
 		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 430.f, WINCY * 0.5f + 160.f);
 		Set_New_TransInfo(50.f, 7.f);
 		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
@@ -158,7 +169,9 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 
 		break;
 
+	case SCENE_SNIPE:
 	case SCENE_BOSS:
+	case SCENE_CAR:
 		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 435.f, WINCY * 0.5f + 160.f);
 		break;
 
@@ -178,7 +191,7 @@ HRESULT CMan_HpBarUI::Change_Texture(const _tchar* pTextureTag)
 	if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	m_pTextureCom->Set_Zero_Frame();
+	//m_pTextureCom->Set_Zero_Frame();
 	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
 	return S_OK;
 }

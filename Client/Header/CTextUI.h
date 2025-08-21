@@ -27,6 +27,8 @@ public: // 텍스트 설정 관련
 	void SetAutoSize(bool on);                     // 텍스트 크기 자동 맞춤
 	void FitToText();                              // 텍스트에 맞게 크기 조정
 
+	void SetPosFix(_bool bPosFix) { m_bPosFix = bPosFix; }
+
 public:
 	void PlayAppear(float duration = 0.6f, float startMul = 0.8f, float overMul = 1.25f); // Text 등장 애니메이션
 public:
