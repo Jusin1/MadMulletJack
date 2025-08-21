@@ -17,7 +17,7 @@
 #include "CUIManager.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f)
@@ -353,7 +353,7 @@ void CPlayer::DASH_ATTACK_On(const _float& fTimeDelta)
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed ±ðÀ½ (like ¸¶Âû·Â)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 9.f;
 }
 
 void CPlayer::DASH_ATTACK_End()
@@ -379,7 +379,7 @@ void CPlayer::DASH_On(const _float& fTimeDelta)
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed ±ðÀ½ (like ¸¶Âû·Â)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 9.f;
 }
 
 void CPlayer::DASH_End()
@@ -560,8 +560,6 @@ void CPlayer::OPENING_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
-
-	m_pPlayerUI->Set_RenderOn(false);
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -829,6 +827,7 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		// 0ÃÊ·Î ÃÊ±âÈ­
 		m_fHitTime = 0.f;
 	}
+
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
 	{
 		CUIManager::GetInstance()->CreateClearUI();
