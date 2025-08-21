@@ -19,7 +19,7 @@ CTextUI::CTextUI(LPDIRECT3DDEVICE9 dev)
 	, m_letterSpacing(0.f)
 	, m_autoSize(false)
 	, m_dirtyMeasure(true)
-	, m_bPosFix(true)
+	, m_bPosFix(false)
 {
 }
 CTextUI::CTextUI(const CTextUI& rhs)

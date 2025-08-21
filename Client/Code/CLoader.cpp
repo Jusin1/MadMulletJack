@@ -130,6 +130,7 @@ HRESULT CLoader::Ready_Loading(SCENE eNextScene)
 		this, // 쓰레드 함수의 매개 변수로 전달할 데이터 주소
 		0,	  // 쓰레드의 생성 및 실행을 조절하기 위한 flag
 		NULL); // 쓰레드 ID 반환
+
 	if (0 == m_hThread)
 		return E_FAIL;
 
@@ -787,10 +788,10 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/ErrorScreen%03d.png", 4))))
 		return E_FAIL;
 
-	// PhoneScreenTitle UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ScreenTitleUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Phone_Title.png", 1))))
-		return E_FAIL;
+	//// PhoneScreenTitle UI
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_ScreenTitleUI",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/Phone_Title.png", 1))))
+	//	return E_FAIL;
 
 	// PhoneScreenTitle UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Phone_FrameUI",

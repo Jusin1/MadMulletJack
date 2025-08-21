@@ -147,7 +147,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	// 만약 체력이 0이 되면 state <- PLAYERDEAD
 	if (m_fHp <= 0)
 	{
-		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
+		//m_tPlayerInfo.ePlayerState = PLAYERDEAD;
 	}
 }
 
@@ -794,6 +794,11 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 				HitFromObject(fTimeDelta,1.f);
 			}
 		}
+	}
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
+	{
+		CUIManager::GetInstance()->CreateClearUI();
+		m_tPlayerInfo.ePlayerState = CLEAR;
 	}
 }
 
