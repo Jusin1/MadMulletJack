@@ -86,7 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_Immediate");
             _float fTimer_Immediate = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_Immediate");
 
-            if (CFrameMgr::GetInstance()->IsPermit_Call(L"Frame60", fTimer_Immediate))
+            //if (CFrameMgr::GetInstance()->IsPermit_Call(L"Frame60", fTimer_Immediate))
             {
                 CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_60");
                 _float fTimer_60 = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_60");

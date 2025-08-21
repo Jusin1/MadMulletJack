@@ -102,7 +102,6 @@ _int CTutorial::Update_Scene(const _float& fTimeDelta)
 void CTutorial::LateUpdate_Scene(const _float& fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    SetWindowText(g_hWnd, TEXT("튜토리얼입니다."));
 }
 
 void CTutorial::Render_Scene()
@@ -196,6 +195,8 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 void CTutorial::SetData(_uint _iSceneIndex)
 {
     CDataManager::GetInstance()->Clear();
+    CGameDataManager::GetInstance()->AllClear();
+
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");

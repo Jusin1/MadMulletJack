@@ -1,6 +1,7 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CComponentMgr.h"
+#include "CDataManager.h"
 #include "CObjectManager.h"
 
 IMPLEMENT_SINGLETON(CManagement)
@@ -26,8 +27,7 @@ HRESULT CManagement::Open_Scene(unsigned int iSceneIdx, CScene* pNewScene)
 	{
  		m_iPrevSceneIndex = m_iSceneIndex;
 		CComponentMgr::GetInstance()->Clear(m_iSceneIndex);
-		CObjectManager::GetInstance()->Clear(m_iSceneIndex);
-		
+		CObjectManager::GetInstance()->Clear(m_iSceneIndex);	
 	}
 
 
