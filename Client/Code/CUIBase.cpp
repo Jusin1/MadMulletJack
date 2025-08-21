@@ -105,6 +105,36 @@ void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가
     pChild->Add_Ref();         
 }
 
+void CUIBase::Add_ChildFront(CUIBase* pChild)
+{
+    if (!pChild) return;
+
+    // 같은 부모인 경우: 목록 내 위치만 맨 앞으로 이동
+    if (pChild->m_pParent == this) {
+        auto it = std::find(m_vecChildren.begin(), m_vecChildren.end(), pChild);
+        if (it != m_vecChildren.end() && it != m_vecChildren.begin()) {
+            m_vecChildren.erase(it);
+            m_vecChildren.insert(m_vecChildren.begin(), pChild);
+        }
+        else if (it == m_vecChildren.end()) {
+            // 이 부모로 되어있는데 리스트엔 없으면 비정상 상황?앞에 꽂아줌
+            m_vecChildren.insert(m_vecChildren.begin(), pChild);
+            pChild->Add_Ref();
+        }
+        return;
+    }
+
+    // 다른 부모에 붙어있으면 먼저 떼기
+    if (pChild->m_pParent) {
+        pChild->m_pParent->Remove_Child(pChild); // 프로젝트에 이미 있는 함수
+    }
+
+    // 맨 앞에 추가
+    pChild->m_pParent = this;
+    m_vecChildren.insert(m_vecChildren.begin(), pChild);
+    pChild->Add_Ref();
+}
+
 CUIBase* CUIBase::Find_Child_ByTag(const _tchar* pTag) // 자식 찾기(태그로)
 {
     for (auto& pChild : m_vecChildren)

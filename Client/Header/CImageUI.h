@@ -11,7 +11,7 @@ public:
         TintOnly       // Tint만(단색 사각처럼 사용, 알파 포함)
     };
 
-private:
+protected:
     explicit CImageUI(LPDIRECT3DDEVICE9 dev);
     explicit CImageUI(const CImageUI& rhs);
     virtual ~CImageUI();
@@ -50,7 +50,7 @@ public: // 애니메이션
     void   ResetToFirstFrame();
 
 
-private:
+protected:
     D3DCOLOR      m_tint = D3DCOLOR_ARGB(255, 255, 255, 255);
     bool          m_additive = false;  // 블렌딩(출력) 단계
     float         m_repX = 1.f, m_repY = 1.f;

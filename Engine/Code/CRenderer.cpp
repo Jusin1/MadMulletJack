@@ -76,9 +76,13 @@ HRESULT CRenderer::Render_NonAlpha()
 	return S_OK;
 }
 
-// 아직 추가안함(알파sorting해서 정렬예정)
 HRESULT CRenderer::Render_Alpha()
 {
+	m_RenderGroup[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)
+		{
+			return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+		});
+
 	for (auto& pGameObject : m_RenderGroup[RENDER_ALPHA])
 	{
 		if (nullptr != pGameObject)

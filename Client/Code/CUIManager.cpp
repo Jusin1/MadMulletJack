@@ -11,6 +11,7 @@
 #include "CTextUI.h"
 #include "CTalkUI.h"
 #include "CPhoneUI.h"
+#include "CButtonUI.h"
 
 // À¯Æ¿ - UI Á×ÀÌ±â
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -38,12 +39,10 @@ void CUIManager::AddSlideIn(
     float offsetX, float offsetY, float delay, float dur)
 {
     if (!ui) return;
-
     const float xStart = x + offsetX;
     const float yStart = yTarget + offsetY;
 
-    ui->Set_Active(true);                
-
+    ui->Set_Active(true);
     ui->Set_UIPosition(xStart, yStart, w, h);
 
     m_slideTasks.push_back({
@@ -57,7 +56,6 @@ void CUIManager::AddSlideIn(
 void CUIManager::AddSlideTo(CUI* ui, float xEnd, float yEnd, float delay, float dur)
 {
     if (!ui) return;
-
     float x, y, w, h;
     ui->Get_UIPosition(x, y);
     ui->Get_UISize(w, h);
@@ -70,12 +68,27 @@ void CUIManager::AddSlideTo(CUI* ui, float xEnd, float yEnd, float delay, float 
         });
 }
 
+void CUIManager::AddScaleIn(CUI* ui,
+    float xStart, float yStart, float wStart, float hStart,
+    float xEnd, float yEnd, float wEnd, float hEnd,
+    float delay, float dur)
+{
+    if (!ui) return;
+    ui->Set_UIPosition(xStart, yStart, wStart, hStart);
+
+    m_scaleTasks.push_back({
+        ui,
+        0.f, delay, dur, false,
+        xStart, yStart, wStart, hStart,
+        xEnd,   yEnd,   wEnd,   hEnd
+        });
+}
+
 void CUIManager::Update(const _float& dt)
 {
-    // ½½¶óÀÌµå ÁøÇà
+    // === slide ===
     for (auto& t : m_slideTasks) {
         if (t.done || !t.ui) continue;
-
         t.elapsed += dt;
         if (t.elapsed < t.delay) continue;
 
@@ -85,43 +98,91 @@ void CUIManager::Update(const _float& dt)
         const float k = EaseOutCubic(u);
         const float x = t.xStart + (t.xEnd - t.xStart) * k;
         const float y = t.yStart + (t.yEnd - t.yStart) * k;
-
         t.ui->Set_UIPosition(x, y, t.w, t.h);
     }
-
-    // ³¡³­ ÀÛ¾÷ Á¤¸®
+    // ¾Ö´Ï¸ÞÀÌ¼Ç ½½¶óÀÌµå (UI)
     m_slideTasks.erase(
         std::remove_if(m_slideTasks.begin(), m_slideTasks.end(),
             [](const SlideTask& t) { return t.done || t.ui == nullptr; }),
         m_slideTasks.end());
 
+    // ¾Ö´Ï¸ÞÀÌ¼Ç Å©±â Å°¿ì±â ½½¶óÀÌµå
+    for (auto& t : m_scaleTasks) {
+        if (t.done || !t.ui) continue;
+        t.elapsed += dt;
+        if (t.elapsed < t.delay) continue;
 
-    // µÑ ´Ù µµÂøÇÏ¸é ½Ã°£ UI ½ºÆù
-    if (!m_spawnedTimeUI && m_pVictoryText && m_pFloorTimeText)
-    {
-        if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished())
-        {
-            CreateTimeTextUI(L"01:12:45"); 
+        float u = (t.elapsed - t.delay) / max(0.0001f, t.dur);
+        if (u >= 1.f) { u = 1.f; t.done = true; }
+
+        const float k = EaseOutCubic(u);
+        const float x = t.xStart + (t.xEnd - t.xStart) * k;
+        const float y = t.yStart + (t.yEnd - t.yStart) * k;
+        const float w = t.wStart + (t.wEnd - t.wStart) * k;
+        const float h = t.hStart + (t.hEnd - t.hStart) * k;
+        t.ui->Set_UIPosition(x, y, w, h);
+    }
+
+    m_scaleTasks.erase(
+        std::remove_if(m_scaleTasks.begin(), m_scaleTasks.end(),
+            [](const ScaleTask& t) { return t.done || t.ui == nullptr; }),
+        m_scaleTasks.end());
+
+    // Å¸ÀÓ ÅØ½ºÆ® ½Ã°£ ½ºÆù
+    if (!m_spawnedTimeUI && m_pVictoryText && m_pFloorTimeText) {
+        if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished()) {
+            CreateTimeTextUI(L"01:12:45");
             m_spawnedTimeUI = true;
         }
     }
 
-    if (m_timeAutoRemoveArmed)
-    {
+    // ¦¡¦¡ ÇÚµåÆù ´ç±â±â
+    if (m_phonePullStarted && !m_phonePullFinished && PhoneScaleDone()) {
+        m_phonePullFinished = true;
+
+        if (m_pPhoneScreen) {
+            const wchar_t* tag = m_nextPhoneScreenTexTag.empty()
+                ? L"Com_Texture_PhoneErrorUI"
+                : m_nextPhoneScreenTexTag.c_str();
+
+            if (m_changeScreenOnPullFinish) {
+                m_pPhoneScreen->ChangeTexture(tag);
+                m_pPhoneScreen->Play(true);
+
+                // 1ÃÊ ÈÄ ÇÚµåÆù ´ó±â±â
+                m_createPhoneScreenPending = true;
+                m_createPhoneScreenTimer = 0.f;
+                m_createPhoneScreenDelay = 1.0f;
+
+                m_changeScreenOnPullFinish = false;
+                m_nextPhoneScreenTexTag.clear();
+            }
+        }
+    }
+
+    // ÇÚµåÆù ´ó±â±â Å¸ÀÌ¸Ó
+    if (m_createPhoneScreenPending) {
+        m_createPhoneScreenTimer += dt;
+        if (m_createPhoneScreenTimer >= m_createPhoneScreenDelay) {
+            m_createPhoneScreenPending = false;
+            m_createPhoneScreenTimer = 0.f;
+            CreatePhoneScreen();
+        }
+    }
+
+  
+    if (m_timeAutoRemoveArmed) {
         m_timeAutoRemoveTimer += dt;
-        if (m_timeAutoRemoveTimer >= 2.0f) 
-        {
+        if (m_timeAutoRemoveTimer >= 2.0f) {
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeText));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeFrame));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pTimeBlack));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pVictoryText));
             DetachAndKill(m_pEnterUI, reinterpret_cast<CUIBase*&>(m_pFloorTimeText));
-            if (auto* talk = dynamic_cast<CTalkUI*>(
-                CObjectManager::GetInstance()->Clone_GameObject(
-                    L"Prototype_GameObject_TalkUI", SCENE_STATIC, L"UI_Layer"))) {
-                std::vector<std::wstring> dialogues = {
-                    L"¾È³çÇÏ¼¼¿ä", L"Àß°¡¼¼¿ä", L"ÀßÀÖ¾î¿ä", L"´Ù½Ã¸¸³ª¿ä"
-                };
+
+            if (auto* talk = dynamic_cast<CTalkUI*>(CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_TalkUI", SCENE_STATIC, L"UI_Layer"))) {
+                std::vector<std::wstring> dialogues = { L"¾È³çÇÏ¼¼¿ä", L"Àß°¡¼¼¿ä", L"ÀßÀÖ¾î¿ä", L"´Ù½Ã¸¸³ª¿ä" };
                 talk->LoadDialogues(dialogues);
                 talk->Set_TextPos(420.f, -500.f);
                 talk->Set_TextScale(0.5f);
@@ -133,19 +194,34 @@ void CUIManager::Update(const _float& dt)
         }
     }
 
+    // ÇÚµåÆù ´ç±â±â Æ®¸®°Å
+    if (m_phoneSlideActive && !m_phonePullArmed && PhoneSlidesDone()) {
+        m_phonePullArmed = true;
+        m_phonePullTimer = 0.f;
+        m_phoneSlideActive = false;   // Áßº¹ ¹æÁö
+    }
+
+    if (m_phonePullArmed && !m_phonePullStarted) {
+        m_phonePullTimer += dt;
+        if (m_phonePullTimer >= m_phonePullDelay) {
+            StartPhonePullAnim();                
+            ChangePhoneScreenAfterPull(L"Com_Texture_PhoneErrorUI");
+            m_phonePullStarted = true;
+        }
+    }
+
+
     if (m_exitingEnter && m_slideTasks.empty()) {
         if (m_pEnterUI) {
-            CancelSlidesForSubtree(m_pEnterUI); 
+            CancelSlidesForSubtree(m_pEnterUI);
             std::vector<CUIBase*> stk{ m_pEnterUI };
             while (!stk.empty()) {
                 CUIBase* n = stk.back(); stk.pop_back();
                 if (!n) continue;
-
                 n->Set_Active(false);
                 for (auto* ch : n->GetChildren())
                     if (ch) stk.push_back(ch);
             }
-
             m_pEnterUI = nullptr;
         }
         m_exitingEnter = false;
@@ -416,6 +492,323 @@ void CUIManager::CancelSlidesForSubtree(CUIBase* root)
         m_slideTasks.end());
 }
 
+bool CUIManager::PhoneSlidesDone() const
+{
+    auto checkDone = [&](CUI* ui) {
+        return std::none_of(m_slideTasks.begin(), m_slideTasks.end(),
+            [&](const SlideTask& t) { return t.ui == ui; });
+        };
+    return checkDone(m_pPhone) &&
+        checkDone(m_pLeftHand) &&
+        checkDone(m_pRightHand) &&
+        checkDone(m_pPhoneScreen);
+}
+
+void CUIManager::OpenShop()
+{
+    if (m_shopOpen) return;
+    m_shopOpen = true;
+
+    m_pShopRoot = m_pPhoeScreenBackGround
+        ? static_cast<CUIBase*>(m_pPhoeScreenBackGround)
+        : m_pEnterUI;
+    if (!m_pShopRoot) return;
+    float scx = -100.f, scy = 0.f; 
+    float sw = 630.f, sh = 300.f;
+    if (auto* ui = dynamic_cast<CUI*>(m_pShopRoot)) {
+        ui->Get_UIPosition(scx, scy);
+        ui->Get_UISize(sw, sh);
+        if (sw <= 0.f || sh <= 0.f) { sw = 630.f; sh = 420.f; }
+    }
+
+    const float SAFE_L = 80.f;  
+    const float SAFE_R = 55.f;
+    const float SAFE_T = 10.f;
+    const float SAFE_B = 32.f;
+
+    const float CARD_W = 170.f;   
+    const float CARD_H = 340.f;
+
+    const int nCards = (int)std::min<size_t>(3, kShopPool.size());
+    m_shopCards.clear();
+    m_shopCards.reserve(nCards);
+
+    const float innerW = sw - SAFE_L - SAFE_R;
+    float gap = 16.f;
+    if (nCards > 1)
+        gap = max(16.f, (innerW - CARD_W * nCards) / (nCards - 1));
+
+    const float left = scx - sw * 0.5f + SAFE_L + CARD_W * 0.5f;
+    const float cy = scy - sh * 0.5f + SAFE_T + CARD_H * 0.5f + 40.f; 
+
+    for (int i = 0; i < nCards; ++i)
+    {
+        const float cx = (nCards == 1) ? scx : left + i * (CARD_W + gap);
+
+        ShopCardUI card{};
+        CreateShopCardAt( i, cx, cy, card);
+
+        if (card.btn) card.btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
+
+        m_shopCards.push_back(card);
+    }
+}
+
+void CUIManager::CloseShop()
+{
+    for (auto& c : m_shopCards)
+    {
+        if (m_pShopRoot && c.btn) m_pShopRoot->Remove_Child(c.btn); 
+        Safe_Release(c.btn);
+        Safe_Release(c.icon);
+        Safe_Release(c.title);
+        Safe_Release(c.desc);
+        Safe_Release(c.price);
+        Safe_Release(c.soldTag);
+    }
+
+    if (m_pShopRoot && m_pShopRoot != m_pEnterUI)
+    {
+        if (m_pEnterUI) m_pEnterUI->Remove_Child(m_pShopRoot);
+        Safe_Release(m_pShopRoot);
+    }
+    m_pShopRoot = nullptr;
+    m_shopOpen = false;
+}
+
+
+void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& outCard)
+{
+    if (poolIdx < 0 || poolIdx >= (int)kShopPool.size()) return;
+    const ShopItemDef& def = kShopPool[poolIdx];
+
+    CUIBase* parent = m_pShopRoot ? m_pShopRoot : m_pEnterUI;
+    if (!parent) return;
+
+    auto attach = [&](CUIBase* ui)
+        {
+            if (!ui) return;
+            ui->Set_RenderOn(true);
+            parent->Add_Child(ui);
+        };
+
+    // ¦¡¦¡ 1) Ä«µå ¹öÆ°(ÇÁ·¹ÀÓ)
+    const float CARD_W = 200.f;
+    const float CARD_H = 300.f;
+
+    auto* btn = dynamic_cast<CButtonUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIButton", SCENE_STATIC, L"UI_Layer"));
+    if (!btn) return;
+
+    btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
+    btn->SetSolidMode(false);
+
+
+    btn->SetHoverScale(1.14f);   
+    btn->SetPressScale(1.04f);  
+    btn->SetLerpSpeeds(22.f, 14.f);
+
+
+    btn->RegisterTexture(L"Com_Btn_Idle", L"Prototype_Component_Texture_PhoneShop_FrameUI", 0, 0, 0.f, false);
+    btn->RegisterTexture(L"Com_Btn_Hover", L"Prototype_Component_Texture_PhoneShop_BoardFrameUI", 0, 1, 0.f, false);
+
+
+    btn->SetStateTextures(
+        L"Com_Btn_Idle",   
+        L"Com_Btn_Hover", 
+        L"",         
+        L""               
+    );
+
+    btn->ChangeTexture(L"Com_Btn_Idle");
+
+    attach(btn);
+    outCard.btn = btn;
+    outCard.id = def.id;
+
+
+    CTextUI* buyLabel = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"));
+    if (buyLabel)
+    {
+        buyLabel->SetFontTag(L"UIFont");
+        buyLabel->SetText(L"±¸¸Å");
+        buyLabel->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f)); 
+        buyLabel->SetScale(0.75f);
+        buyLabel->SetCentered(true);
+        buyLabel->SetLetterSpacing(1.f);
+
+        const float BUY_Y = cy + CARD_H * 0.5f - 22.f;
+        buyLabel->Set_UIPosition(cx, BUY_Y, 120.f, 26.f);
+
+
+        buyLabel->Set_Active(false);
+        buyLabel->Set_RenderOn(false);
+
+        attach(buyLabel);
+
+
+        btn->SetOnHoverEnter([buyLabel]() {
+            if (buyLabel) { buyLabel->Set_Active(true); buyLabel->Set_RenderOn(true); }
+            });
+
+        btn->SetOnHoverExit([buyLabel]() {
+            if (buyLabel) { buyLabel->Set_RenderOn(false); buyLabel->Set_Active(false); }
+            });
+    }
+
+    // ¦¡¦¡ 2) ¾ÆÀÌÄÜ
+    if (auto* icon = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+    {
+        const float ICON_W = 140.f, ICON_H = 140.f;
+        const float ICON_Y = cy - 30.f;
+        icon->RegisterTexture(def.artTag.c_str(), def.artProto.c_str(), 0, 0, 0.f, false);
+        icon->ChangeTexture(def.artTag.c_str());
+        icon->SetAdditive(false);
+        icon->Set_UIPosition(cx, ICON_Y, ICON_W, ICON_H);
+        attach(icon);
+        outCard.icon = icon;
+    }
+
+    //  Á¦¸ñ
+    if (auto* t = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer")))
+    {
+        t->SetFontTag(L"UIFont");
+        t->SetText(def.title);
+        t->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        t->SetScale(0.6f);
+        t->SetCentered(true);
+        t->SetLetterSpacing(1.f);
+        const float TITLE_Y = cy - 20.f;
+        t->Set_UIPosition(cx, TITLE_Y, 180.f, 36.f);
+        attach(t);
+        outCard.title = t;
+    }
+
+    //  ¼³¸í
+    if (auto* t = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer")))
+    {
+        std::vector<std::wstring> lines;
+        {
+            const std::wstring& s = def.desc;
+            size_t start = 0;
+            for (;;) {
+                size_t pos = s.find(L'\n', start);
+                if (pos == std::wstring::npos) { lines.emplace_back(s.substr(start)); break; }
+                lines.emplace_back(s.substr(start, pos - start));
+                start = pos + 1;
+            }
+            if (lines.empty()) lines.emplace_back(L"");
+        }
+
+        // 2) ¹èÄ¡ ÆÄ¶ó¹ÌÅÍ
+        const float DESC_Y = cy - 100.f;   
+        const float DESC_W = 160.f;
+        const float LINE_GAP = 20.f;       
+        const float BASE_SCALE = 0.5f;
+        const D3DXCOLOR COLOR = D3DXCOLOR(0.9f, 0.95f, 1.f, 1.f);
+
+        const float startY = DESC_Y + ((lines.size() - 1) * LINE_GAP * 0.5f);
+
+        CTextUI* firstLine = nullptr;
+        for (size_t i = 0; i < lines.size(); ++i) {
+            auto* line = dynamic_cast<CTextUI*>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"));
+            if (!line) continue;
+
+            line->SetFontTag(L"UIFont");
+            line->SetText(lines[i]);
+            line->SetColor(COLOR);
+            line->SetScale(BASE_SCALE);
+            line->SetCentered(true);
+            line->SetLetterSpacing(0.5f);
+
+            const float lineY = startY - static_cast<float>(i) * LINE_GAP; 
+            line->Set_UIPosition(cx, lineY, DESC_W, 20.f);
+            attach(line);
+
+            if (!firstLine) firstLine = line;
+        }
+
+        outCard.desc = firstLine; 
+    }
+
+
+
+    //  Å¬¸¯½Ã µîÀå ½ÃÅ³ ÀÌ¹ÌÁö
+    if (auto* sold = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+    {
+        const float SOLD_W = 96.f, SOLD_H = 40.f;
+        const float SOLD_X = cx + 50.f, SOLD_Y = cy - 110.f;
+        sold->RegisterTexture(L"Com_Tex_Sold", L"Prototype_Component_Texture_Shop_Sold",
+            0, 0, 0.f, false);
+        sold->ChangeTexture(L"Com_Tex_Sold");
+        sold->Set_Active(false);
+        sold->Set_UIPosition(SOLD_X, SOLD_Y, SOLD_W, SOLD_H);
+        attach(sold);
+        outCard.soldTag = sold;
+    }
+
+    // ¦¡¦¡ Å¬¸¯ ·ÎÁ÷
+    btn->SetOnClick([this, &outCard]()
+        {
+            DestroyEnterUI();
+            // ÇÃ·¹ÀÌ¾î¿¡ »ê °Å¹Ý¿µ
+        });
+}
+
+void CUIManager::OnShopCardClicked(int slot)
+{
+    if (slot < 0 || slot >= (int)m_shopCards.size()) return;
+    auto& card = m_shopCards[slot];
+    if (!card.btn || card.bought) return;
+
+    card.bought = true;
+    if (card.soldTag) card.soldTag->Set_Active(true);
+}
+
+void CUIManager::LayoutShopCard(ShopCardUI& card)
+{
+    if (!card.btn) return;
+
+    float cx, cy; card.btn->Get_UIPosition(cx, cy);
+    float w, h;  card.btn->Get_UISize(w, h);
+
+    // ¾ÆÀÌÄÜ
+    if (card.icon) {
+        const float iw = w * 0.62f, ih = iw;
+        const float iy = cy - h * 0.23f;
+        card.icon->Set_UIPosition(cx, iy, iw, ih);
+    }
+    // Á¦¸ñ
+    if (card.title) {
+        const float ty = cy + h * 0.04f;
+        card.title->Set_UIPosition(cx, ty, w * 0.80f, h * 0.15f);
+    }
+    // ¼³¸í
+    if (card.desc) {
+        const float dy = cy + h * 0.25f;
+        card.desc->Set_UIPosition(cx, dy, w * 0.85f, h * 0.30f);
+    }
+    // SOLD ÅÂ±×
+    if (card.soldTag) {
+        const float sw = w * 0.32f, sh = h * 0.15f;
+        const float sx = cx + w * 0.28f, sy = cy - h * 0.42f;
+        card.soldTag->Set_UIPosition(sx, sy, sw, sh);
+    }
+}
+
 
 void CUIManager::CreateClearTextUI()
 {
@@ -508,17 +901,28 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
 }
 
 void CUIManager::CreatePhoneUI()
-{ 
+{
+    if (m_pPhoeScreenBackGround = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+        m_pPhoeScreenBackGround->Set_UIPosition(-100.f, 0.f, (float)650.f, (float)420.f);
+        m_pPhoeScreenBackGround->SetAlpha(255);     
+        m_pPhoeScreenBackGround->Set_Active(false);
+        m_pEnterUI->Add_Child(m_pPhoeScreenBackGround);
+    }
+
     // È­¸é ½ºÅ©¸° »ý¼º
     m_pPhoneScreen = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer"));
 
+
     if (m_pPhoneScreen)
     {
         m_pPhoneScreen->RegisterTexture(L"Com_Texture_PhoneLogoUI", L"Prototype_Component_Texture_Phone_ScreenUI", 0, 6, 4.f, true);
+        m_pPhoneScreen->RegisterTexture(L"Com_Texture_PhoneErrorUI", L"Prototype_Component_Texture_Phone_ErrorScreenUI", 0, 4, 5.f, true);
         m_pPhoneScreen->Play(true);
-        m_pPhoneScreen->Set_UIPosition(-120.f, 600.f, 410.f, 250.f); 
+        m_pPhoneScreen->Set_UIPosition(-120.f, 600.f, 410.f, 250.f);
         m_pPhoneScreen->ChangeTexture(L"Com_Texture_PhoneLogoUI");
         m_pEnterUI->Add_Child(m_pPhoneScreen);
     }
@@ -540,7 +944,7 @@ void CUIManager::CreatePhoneUI()
                 L"Prototype_Component_Texture_Phone_RightHandUI", 0, 2, 4.f, true);
             m_pLeftHand->Play(true);
 
-            m_pLeftHand->Set_UIPosition(180.f, 600.f + 40.f, 300.f, 450.f);
+            m_pLeftHand->Set_UIPosition(190.f, 600.f + 80.f, 350.f, 410.f);
             m_pLeftHand->ChangeTexture(L"Com_Texture_RightHandIDLE");
 
             m_pPhone->Add_Child(m_pLeftHand);
@@ -556,7 +960,7 @@ void CUIManager::CreatePhoneUI()
                 L"Prototype_Component_Texture_Phone_LeftHandUI", 0, 2, 4.f, true);
             m_pRightHand->Play(true);
 
-            m_pRightHand->Set_UIPosition(-425.f, 600.f + 40.f, 300.f, 450.f);
+            m_pRightHand->Set_UIPosition(-450.f, 600.f + 80.f, 350.f, 410.f);
             m_pRightHand->ChangeTexture(L"Com_Texture_LeftHandIDLE");
 
             m_pPhone->Add_Child(m_pRightHand);
@@ -564,31 +968,176 @@ void CUIManager::CreatePhoneUI()
     }
 }
 
+void CUIManager::CreatePhoneScreen()
+{
+    // 1) ·Î°í ¾Ö´Ï ²ô°í, ¹è°æ ÆÐ³Î È°¼ºÈ­
+    if (m_pPhoneScreen)           m_pPhoneScreen->Set_Active(false);
+    if (m_pPhoeScreenBackGround)  m_pPhoeScreenBackGround->Set_Active(true);
+
+    CUIBase* parent = m_pPhoeScreenBackGround ? static_cast<CUIBase*>(m_pPhoeScreenBackGround)
+        : m_pEnterUI;
+    if (!parent) return;
+
+    // 2) ¿ÞÂÊ ¼¼·Î Å¸ÀÌÆ²
+    if (auto* img = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+    {
+        img->Set_UIPosition(-380.f, -10.f, 60.f, 390.f);
+        img->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Phone_ScreenTitleUI", 0, 1, 0.f, false);
+        img->ChangeTexture(L"Com_Texture_Logo");
+        parent->Add_Child(img);
+    }
+
+    // 3) Æù ÇÁ·¹ÀÓ(Å×µÎ¸®) ? ÄÜÅÙÃ÷ À§¿¡ ¿Àµµ·Ï ¸Ç ¾Õ¿¡ ²È°í ½ÍÀ¸¸é Add_ChildFront »ç¿ë
+    if (auto* img2 = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_STATIC, L"UI_Layer")))
+    {
+        img2->Set_UIPosition(-100.f, 0.f, 630.f, 420.f); // È­¸é ÇÁ·¹ÀÓ
+        img2->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Phone_FrameUI", 0, 4, 10.f, true);
+        img2->ChangeTexture(L"Com_Texture_Logo");
+        img2->Play(true);
+        // ÇÁ·¹ÀÓÀ» ÃÖ»ó´ÜÀ¸·Î ¿Ã¸®°í ½ÍÀ¸¸é:
+        parent->Add_ChildFront(img2);
+        // ±×³É ÀÏ¹Ý ¼ø¼­¸é:
+        // parent->Add_Child(img2);
+    }
+
+    // 4) »óÁ¡ ¿ÀÇÂ (Ä«µå 3Àå »ý¼º)
+    OpenShop();
+    
+}
+
 void CUIManager::SliderPhoneUI()
 {
-    AddSlideInY(m_pPhone, -160.f, 0.f, 600.f, 300.f, +600.f, 0.f, 1.f);
+    m_phonePullFinished = false;
+    m_changeScreenOnPullFinish = false;
+    m_nextPhoneScreenTexTag.clear();
+    // ½½¶óÀÌµå ¡°½ÃÀÛµÊ¡± ÇÃ·¡±×/Å¸ÀÌ¸Ó ¸®¼Â
+    m_phoneSlideActive = true;
+    m_phonePullArmed = false;
+    m_phonePullStarted = false;
+    m_phonePullTimer = 0.f;
 
-    // ¿Þ¼Õ
-    if (m_pLeftHand)
-        AddSlideInY(m_pLeftHand, 180.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
-
-    // ¿À¸¥¼Õ
-    if (m_pRightHand)
-        AddSlideInY(m_pRightHand, -425.f, 40.f, 300.f, 450.f, +600.f, 0.f, 1.f);
-
-    // È­¸é ½ºÅ©¸°
+    // º»Ã¼ / ¼Õ / ½ºÅ©¸° °¢°¢ À§·Î ½½¶óÀÌµå ÀÎ
+    AddSlideInY(m_pPhone, -160.f, 50.f, 600.f, 300.f, +400.f, 0.f, 1.f);
+    if (m_pLeftHand)  AddSlideInY(m_pLeftHand, 190.f, 80.f, 350.f, 410.f, +600.f, 0.f, 1.f);
+    if (m_pRightHand) AddSlideInY(m_pRightHand, -450.f, 80.f, 350.f, 410.f, +600.f, 0.f, 1.f);
     if (m_pPhoneScreen)
-        AddSlideInY(m_pPhoneScreen, -120.f, 0.f, 410.f, 250.f, +600.f, 0.f, 1.f);
+        AddSlideInY(m_pPhoneScreen, -120.f, 50.f, 410.f, 250.f, +600.f, 0.f, 0.85f);
+}
+
+void CUIManager::StartPhonePullAnim()
+{
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+// ÇÁ·¹ÀÓ ±¸¸Û(center, size)  ¡Ø CreateClearUI()¿Í µ¿ÀÏÇØ¾ß ÇÔ
+//   Black/Hole & Frame : (-130, -70) Áß½É, 1080 x 600 Å©±â
+// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    const float FRAME_CX = -130.f;
+    const float FRAME_CY = -70.f;
+    const float HOLE_W = 1080.f;
+    const float HOLE_H = 600.f;
+
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // ½ºÅ©¸°À» ÇÁ·¹ÀÓ ±¸¸Ûº¸´Ù »ìÂ¦ ÀÛ°Ô (¿©¹é È®º¸)
+    // ºñÀ²Àº ÅØ½ºÃ³(410x250 ? 1.64) À¯Áö
+    //   - ´õ ÀÛ°Ô º¸ÀÌ°Ô ÇÏ°í ½ÍÀ¸¸é RATIO¸¦ ³·Ãç(¿¹: 0.70f)
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    const float SCREEN_RATIO = 0.74f;                 // 0.80f ¡æ 0.74f ·Î ÁÙÀÓ(´ú ²Ë Â÷°Ô)
+    const float TARGET_SCR_W = SCREEN_RATIO * HOLE_W; // ? 799
+    const float TARGET_SCR_H = TARGET_SCR_W * (250.f / 410.f); // ? 487
+
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // Æù(º£Á©) Å©±â = ½ºÅ©¸° + ÆÐµù(ÁÂ¿ì/»óÇÏ ¿©¹é)
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    const float PHONE_PAD_W = 140.f;     // ÁÂ+¿ì ¿©¹é ÇÕ
+    const float PHONE_PAD_H = 70.f;      // »ó+ÇÏ ¿©¹é ÇÕ
+    const float TARGET_PHN_W = TARGET_SCR_W + PHONE_PAD_W; // ? 939
+    const float TARGET_PHN_H = TARGET_SCR_H + PHONE_PAD_H; // ? 557
+
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // ÃÖÁ¾ Áß½É À§Ä¡(Y¸¸ ¾Æ·¡·Î ³»¸²)
+    //   - ±âÁ¸ centerY(-70)¿¡¼­ +100 ³»·Á¼­ »ó´Ü HUD¿Í °ãÄ¡Áö ¾Ê°Ô
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    const float SHIFT_DOWN = 60.f;   // ¡ç 100.f ¿¡¼­ 60.f ·Î º¯°æ
+    const float screenEndX = FRAME_CX;
+    const float screenEndY = FRAME_CY + SHIFT_DOWN;      // -70 ¡æ +30
+    const float phoneEndX = screenEndX - 40.f;          // Æù°ú ½ºÅ©¸° »ó´ë ¿ÀÇÁ¼Â X(ÆùÀÌ ¾à°£ ¿ÞÂÊ)
+    const float phoneEndY = screenEndY + 0.f;
+
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // ¼Õ À§Ä¡/Å©±â (Æù ¹Ù±ùÀ¸·Î »ìÂ¦ ³ª°¡°Ô ÇØ¼­ È­¸é °¡¸®Áö ¾Êµµ·Ï)
+    //  - OUTSIDE_X : °¡ÀåÀÚ¸® ¹ÛÀ¸·Î ³»º¸³»´Â °Å¸®
+    //  - HAND_Y    : ¼ÕÀÇ Y (½ºÅ©¸°º¸´Ù »ìÂ¦ ¾Æ·¡·Î)
+    // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    const float HAND_W = 400.f;    // 420 ¡æ 400 (Á¶±Ý ÁÙÀÓ)
+    const float HAND_H = 600.f;    // 630 ¡æ 600
+    const float HAND_Y = screenEndY + 10.f;
+
+    // Æù ÁÂ¿ì ¿¡Áö(¼¾ÅÍ ¡¾ Æø/2)
+    const float leftEdge = phoneEndX - TARGET_PHN_W * 0.5f;
+    const float rightEdge = phoneEndX + TARGET_PHN_W * 0.5f;
+
+    // ÇÁ·ÎÁ§Æ® ³×ÀÌ¹Ö: m_pLeftHand == ¿À¸¥ÂÊ ¼Õ, m_pRightHand == ¿ÞÂÊ ¼Õ
+    const float rightHandEndX = leftEdge + 60.f;   // ¿ÞÂÊ ¼Õ(º¯¼ö RightHand)Àº ¿ÞÂÊ ¹ÛÀ¸·Î
+    const float leftHandEndX = rightEdge + 40.f;   // ¿À¸¥ÂÊ ¼Õ(º¯¼ö LeftHand)Àº ¿À¸¥ÂÊ ¹ÛÀ¸·Î
+
+    // ¾Ö´Ï ±æÀÌ
+    const float DUR = 0.60f;
+    const float DELAY = 0.00f;
+
+    // ¦¡¦¡¦¡¦¡¦¡ ½ÇÁ¦ Å¥ µî·Ï: (ÇöÀç À§Ä¡/Å©±â) ¡æ (¸ñÇ¥ À§Ä¡/Å©±â)
+    // PHONE(º£Á©)
+    AddScaleIn(m_pPhone,
+        -160.f, 50.f, 600.f, 300.f,       // ÇöÀç(½½¶óÀÌµå ÈÄ) °ª°ú ¸ÂÃß¸é ´õ ÀÚ¿¬½º·¯¿ò
+        phoneEndX, phoneEndY, TARGET_PHN_W, TARGET_PHN_H,
+        DELAY, DUR);
+
+    // SCREEN(Æù ³»ºÎ)
+    if (m_pPhoneScreen) {
+        AddScaleIn(m_pPhoneScreen,
+            -120.f, 50.f, 410.f, 250.f,
+            screenEndX, screenEndY, TARGET_SCR_W, TARGET_SCR_H,
+            DELAY, DUR);
+    }
+
+    // ¿À¸¥ÂÊ ¼Õ(º¯¼ö m_pLeftHand)
+    if (m_pLeftHand) {
+        AddScaleIn(m_pLeftHand,
+            190.f, 80.f, 350.f, 410.f,
+            leftHandEndX, HAND_Y, HAND_W, HAND_H,
+            DELAY, DUR);
+    }
+
+    // ¿ÞÂÊ ¼Õ(º¯¼ö m_pRightHand)
+    if (m_pRightHand) {
+        AddScaleIn(m_pRightHand,
+            -450.f, 80.f, 350.f, 410.f,
+            rightHandEndX, HAND_Y, HAND_W, HAND_H,
+            DELAY, DUR);
+    }
 }
 
 
-void CUIManager::CreatePhoneScreen()
+bool CUIManager::PhoneScaleDone() const
 {
+    auto done = [&](CUI* ui) {
+        return std::none_of(m_scaleTasks.begin(), m_scaleTasks.end(),
+            [&](const ScaleTask& t) { return t.ui == ui; });
+        };
+    return done(m_pPhone) && done(m_pPhoneScreen) && done(m_pLeftHand) && done(m_pRightHand);
+}
 
+void CUIManager::ChangePhoneScreenAfterPull(const std::wstring& texTag)
+{
+    m_nextPhoneScreenTexTag = texTag;
+    m_changeScreenOnPullFinish = true;
 }
 
 void CUIManager::Free()
 {
     m_slideTasks.clear();
+    m_scaleTasks.clear();
     Safe_Release(m_pEnterUI);
 }

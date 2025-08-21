@@ -26,6 +26,7 @@ public:
 	_bool Get_Dead() { return m_bDead; }
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void Set_Radius(_float fRadius) { m_fRadius = fRadius; }
+	_float  Get_CamDistance() { return m_fCamDistance; }
 	void Set_Active(bool bActive) { m_bActive = bActive; }
 	bool Is_Active() const { return m_bActive; }
 	_bool Get_RenderOn() { return m_bRenderOn; }
@@ -37,6 +38,8 @@ protected:
 public:
 	virtual _bool Picking(_vec3* PickingPoint) { return false; }
 	virtual void PickingTrue() {};
+	void Compute_CamDistance(_vec3 WorldPos);
+
 	virtual void HitAt(const _vec3& hitPosWorld) {} // 맞은 지점 전달
 	virtual void ExportData(void *pData) {};
 public:
@@ -50,6 +53,7 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	bool m_bActive;
 	_bool   m_bRenderOn;
+	_float												m_fCamDistance;
 
 protected:
 	CTransform* m_pTransformCom;

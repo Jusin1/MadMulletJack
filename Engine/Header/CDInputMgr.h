@@ -54,6 +54,7 @@ public:
 
 	bool GetMouseButton(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::PRESS; }
 	bool GetMouseButtonDown(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::DOWN; }
+
 	bool GetMouseButtonUp(_ubyte byKeyID) const { return m_MouseStates[byKeyID] == KeyState::UP; }
 private:
 	LPDIRECTINPUT8			m_pInputSDK = nullptr;

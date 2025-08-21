@@ -70,9 +70,9 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	SetUp_BillBoard();
+	Compute_CamDistance(Get_Position());
 	CPickingManager::GetInstance()->Add_PickingGroup(this); // picking 그룹에 넣어줌
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
-
 }
 
 void CMonster::Render_GameObject()

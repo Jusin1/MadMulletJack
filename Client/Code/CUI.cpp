@@ -65,8 +65,6 @@ void CUI::Render_GameObject()
 	// 2. UI 렌더링 끝난 후 Z-buffer 원래 상태로 되돌리기
 	m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-	
 }
 
 
