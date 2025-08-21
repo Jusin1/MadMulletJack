@@ -19,6 +19,9 @@ public:
 	void SetColor(const D3DXCOLOR& color) { m_color = color; }
 	D3DXCOLOR GetColor() const { return m_color; }
 
+	void Set_IsPosFix(_bool _bMoveFix) { m_bPosFix = _bMoveFix; }
+	_bool Get_IsPosFix() const { return m_bPosFix; }
+
 public: // ±¸¸Û ¶Õ±â
 	void SetHoleRect(_float x, _float y, _float w, _float h);
 	void ClearHole() { m_useHole = false; }
@@ -48,5 +51,8 @@ private: // ±¸¸Û
 	_float m_holeY;
 	_float m_holeW;
 	_float m_holeH;
+
+private:
+	_bool m_bPosFix; // À§Ä¡ °íÁ¤ ÇÒ·¡¸»·¡
 };
 

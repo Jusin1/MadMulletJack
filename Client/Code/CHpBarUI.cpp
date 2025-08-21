@@ -3,8 +3,9 @@
 #include "CObjectManager.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
+#include "CBlackGackGround.h"
+#include "CTextUI.h"
 #include "CManagement.h"
-#include "CColRect_HpBarUI.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CUI(pGraphicDev), m_iHitCount(0), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false)
@@ -40,7 +41,7 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 
 	HitCount_Reset(); // hitcount <- 0 (scene 전환시 0으로 맞추기 위함)
 
-	m_fRange = 10.f;
+	m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
 	
 	Set_New_TransInfo(5.f, 0.f);
 
@@ -59,25 +60,20 @@ _int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 		CUI* pCUI = dynamic_cast<CUI*>(pChild);
 		if (pCUI)
 		{
+			pCUI->Set_UIMoveInfo(m_tMoveInfo);
 			pCUI->Move_UI(fTimeDelta);
 		}
-	}
 
-	if (!m_bRenderOn)
-	{
-		for (auto& pChild : m_vecChildren)
-		{
-			pChild->Set_RenderOn(false);
-		}
-	}
-	else
-	{
-		for (auto& pChild : m_vecChildren)
-		{
+		// 만약 chpbarui의 m_brenderon 값에 따라 자식들 그릴지 말지
+		if (m_bRenderOn)
 			pChild->Set_RenderOn(true);
-		}
+		else
+			pChild->Set_RenderOn(false);
 	}
 
+	//CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
+	//txt1->GetTransform()->Move_YUpDown(fTimeDelta,10.f,false, m_tMoveInfo.fSumRange);
+		
 	return NO_EVENT;
 }
 
@@ -103,7 +99,7 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void	CHpBarUI::Render_GameObject()
 {
-	__super::Render_GameObject();
+	//__super::Render_GameObject();
 }
 
 CHpBarUI* CHpBarUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -158,12 +154,42 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		Add_Child(pManUI); // 루트 UI에 등록
 	}
 
-	//CColRect_HpBarUI* pColRectUI = dynamic_cast<CColRect_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_ColRect", SCENE_STAGE_1, L"UI_Layer"));
-	//if (pColRectUI)
-	//{
-	//	pColRectUI->Set_ObjTag(L"ColRectUI");
-	//	Add_Child(pColRectUI); // 루트 UI에 등록
-	//}
+	if (auto* pRect = dynamic_cast<CBlackGackGround*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_BlackBackground", SCENE_STATIC, L"UI_Layer"))) {
+		pRect->Set_UISizeAndPos(128.f,100.f,264.f, 638.f);
+		m_fRectY = 100.f;
+		pRect->SetColor(D3DXCOLOR{0.f,1.f,0.f,1.f});
+		pRect->SetAlpha(1.f);
+		pRect->FadeTo(190,0.f,0.2f);
+		
+		pRect->Set_IsPosFix(false);
+
+		pRect->Set_New_TransInfo(50.f, 7.2f);
+		pRect->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
+
+		pRect->Set_ObjTag(L"RectUI");
+		Add_Child(pRect);
+	}
+
+	if (auto* txt1 = dynamic_cast<CTextUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_TextUI", SCENE_STATIC, L"UI_Layer"))) {
+		txt1->SetFontTag(L"UIFont");
+		txt1->SetText(L"");
+		txt1->SetColor(g_Color_White);
+		txt1->SetScale(2.f);
+		txt1->SetCentered(true);
+		txt1->SetLetterSpacing(1.f);
+
+		txt1->Set_UISizeAndPos(1.f, 1.f, 940.f, -200.f);
+		txt1->Set_New_TransInfo(45.f, 10.f);
+		txt1->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
+		txt1->Set_RotSum(D3DXToRadian(20.f));
+
+		txt1->Set_ObjTag(L"Text");
+		Add_Child(txt1);
+	}
 
 	return S_OK;
 }
@@ -184,16 +210,35 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 {
 	// 내가 그리는 y값의 percent 만큼 그리기
 
-	m_fHpPercent = _fCurHp / _fMaxHp;
+	m_fHpPercent = _fCurHp / _fMaxHp; // 지금은 여기 함수 안에서만 쓰여서 local 변수로 바꿔도 될듯.. 일단 남겨둠
+
+	if (_fCurHp < -1)
+		return;
 
 	// percent 에 따라 색깔 (R:1-percent, G : percent , B =0)
-	CColRect_HpBarUI* pColRectUI = dynamic_cast<CColRect_HpBarUI*>(this->Find_Child_ByTag(TEXT("ColRectUI")));
-	if (pColRectUI)
+	CBlackGackGround* pRect = dynamic_cast<CBlackGackGround*>(this->Find_Child_ByTag(TEXT("RectUI")));
+	if (pRect)
 	{
-		pColRectUI->Set_HpBarColor(m_fHpPercent);
+		pRect->SetColor(D3DXCOLOR{ 1.f- m_fHpPercent, m_fHpPercent, 0.f, 1.f });
+		_float fSizeX, fSizeY;
+		_float fSpeed = pRect->GetTransform()->GetTransformInfo().fSpeed;
+		pRect->Get_UISize(fSizeX, fSizeY);
+		pRect->Set_UISize(fSizeX, m_fRectY * m_fHpPercent);// rect 사이즈 줄어들게 .. 위치 변경은 아직
 	}
 
 	// curhp에 따라 출력 글씨 셋팅
+	CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
+	if (txt1)
+	{
+		if(_fCurHp < 0)
+			txt1->SetText(L"0");
+		else
+		{
+			int iHp = static_cast<int>(std::ceil(_fCurHp));
+			txt1->SetText(std::to_wstring(iHp).c_str());
+		}
+		
+	}
 }
 
 void CHpBarUI::Free()

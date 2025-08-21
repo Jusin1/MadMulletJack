@@ -18,16 +18,17 @@
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
-	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END), m_fMaxHp(10.f),
-	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false)
+	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
+	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
+	m_fHitTime(0.f)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
-	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove), m_fMaxHp(rhs.m_fMaxHp),
+	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
-	, m_bIsCountHp(rhs.m_bIsCountHp)
+	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime)
 {
 }
 
@@ -94,7 +95,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
-	Set_Collider();
+	Set_Collider(fTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -185,8 +186,6 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 		ATTACK_INSTANT_Begin();break;
 	case RELOAD:
 		RELOAD_Begin();break;
-	case HIT:
-		HIT_Begin();break;
 	case DOPING:
 		DOPING_Begin();break;
 	case WALL:
@@ -226,8 +225,6 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 		ATTACK_INSTANT_End();break;
 	case RELOAD:
 		RELOAD_End();break;
-	case HIT:
-		HIT_End();break;
 	case DOPING:
 		DOPING_End();break;
 	case WALL:
@@ -262,8 +259,6 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 		ATTACK_INSTANT_On(fTimeDelta);break;
 	case RELOAD:
 		RELOAD_On(fTimeDelta);break;
-	case HIT:
-		HIT_On(fTimeDelta);break;
 	case DOPING:
 		DOPING_On(fTimeDelta);break;
 	case WALL:
@@ -276,7 +271,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	if (m_bIsCountHp)
 	{
-		//CountHp(fTimeDelta);
+		CountHp(fTimeDelta);
 	}
 	
 	KeyInput(fTimeDelta);
@@ -299,6 +294,9 @@ void CPlayer::StateNormalSet()
 
 	m_pHpBarUI->Set_Active(true);
 	m_pHpBarUI->Set_RenderOn(true);
+
+	m_pPlayerUI->Set_Active(true);
+	m_pPlayerUI->Set_RenderOn(true);
 }
 
 // idle
@@ -342,20 +340,20 @@ void CPlayer::JUMP_End()
 void CPlayer::DASH_ATTACK_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
 }
 
 void CPlayer::DASH_ATTACK_On(const _float& fTimeDelta)
 {
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
-	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
 		Set_State_Idle();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
 }
 
 void CPlayer::DASH_ATTACK_End()
@@ -367,20 +365,21 @@ void CPlayer::DASH_ATTACK_End()
 void CPlayer::DASH_Begin()
 {
 	m_eMove = MOVE_STOP;
-	m_pTransformCom->GetTransformInfo().fSpeed = 20.f;
+	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
+
 }
 
 void CPlayer::DASH_On(const _float& fTimeDelta)
 {
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
-	if (m_pTransformCom->GetTransformInfo().fSpeed <= 10.f)
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
 		Set_State_Idle();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 8.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 5.f;
 }
 
 void CPlayer::DASH_End()
@@ -411,7 +410,8 @@ void CPlayer::SLIED_End()
 // kick
 void CPlayer::KICK_Begin()
 {
-	m_fStateTime = 0.25f;
+	m_fStateTime = 0.5f;
+	m_bIsInvincible = true;
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
@@ -443,6 +443,8 @@ void CPlayer::ATTACK_End()
 // attack instant
 void CPlayer::ATTACK_INSTANT_Begin()
 {
+	m_bIsInvincible = true;
+
 	m_eMove = MOVE_NON;
 	m_fStateTime = 0.5f;
 
@@ -462,6 +464,7 @@ void CPlayer::ATTACK_INSTANT_End()
 
 void CPlayer::ZOOMING_Begin()
 {
+	m_bIsInvincible = true;
 }
 
 void CPlayer::ZOOMING_On(const _float& fTimeDelta)
@@ -488,7 +491,7 @@ void CPlayer::ZOOM_End()
 void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
-	m_fStateTime = 1.f;
+	m_fStateTime = 0.5f; // origin 0.5 debug 2.f
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -496,31 +499,12 @@ void CPlayer::RELOAD_Begin()
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	if (StateTime_IsEnd(fTimeDelta, 1.5f))
+	if (StateTime_IsEnd(fTimeDelta, 1.f))
 		Set_State_Idle();
 }
 
 void CPlayer::RELOAD_End()
 {
-}
-
-// hit
-void CPlayer::HIT_Begin()
-{
-	m_bIsKeyInput = true;
-	m_bIsAttack = true;
-}
-
-void CPlayer::HIT_On(const _float& fTimeDelta)
-{
-	// hp-
-	if (m_fHp <= 0)
-		m_tPlayerInfo.ePlayerState = PLAYERDEAD;
-}
-
-void CPlayer::HIT_End()
-{
-
 }
 
 // doping
@@ -532,6 +516,9 @@ void CPlayer::DOPING_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	// hit count reset
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -556,6 +543,8 @@ void CPlayer::WALL_On(const _float& fTimeDelta)
 {
 	// state가 끝나면
 	// jump로 변신
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		m_tPlayerInfo.ePlayerState = JUMP;
 }
 
 void CPlayer::WALL_End()
@@ -567,9 +556,12 @@ void CPlayer::OPENING_Begin()
 {
 	m_eMove = MOVE_NON;
 	m_bIsCountHp = false;
+	m_bIsInvincible = true;
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	m_pPlayerUI->Set_RenderOn(false);
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
@@ -612,32 +604,32 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	// 움직임 키
 	switch (m_eMove) {
 	case MOVE_NORMAL: // 상하좌우
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_W))
 		{
 			m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_S))
 		{
 			m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
 		}
 		// break 있으면 안됨
 	case MOVE_LR: // 좌우
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_A))
 		{
 			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
 			// camera state -> left
 		}
 
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D) & 0x80)
+		if (KEY_BUTTON_HOLD(DIK_D))
 		{
 			m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
 			// camera state -> right
 		}
 		break;
 	case MOVE_STOP: // idle로 바뀜
-		if ((CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W) & 0x80) ||
-			(CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S) & 0x80))
+		if ((KEY_BUTTON_DOWN(DIK_W)) ||
+			(KEY_BUTTON_DOWN(DIK_S)))
 		{
 			Set_State_Idle();
 		}
@@ -646,29 +638,31 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 	// 상태 전환 키
 	if (m_bIsKeyInput) {
-		if (KEY_BUTTON_DOWN(DIK_SPACE))
+		//DIK_LSHIFT
+		if (KEY_BUTTON_DOWN(DIK_LSHIFT))
 		{
 			m_tPlayerInfo.ePlayerState = DASH;
 		}
 
+		//DIK_SPACE
 		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
 			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
-		if (m_bIsAttack && KEY_BUTTON_DOWN(DIK_Q)) // 좌클릭
+		if (m_bIsAttack && IS_LBUTTON_DOWN) // 좌클릭
 		{
 			m_tPlayerInfo.ePlayerState = ATTACK;
 		}
 
-		if (KEY_BUTTON_DOWN(DIK_E)) // 우클릭
+		if (IS_RBUTTON_DOWN) // 우클릭
 		{
 			m_tPlayerInfo.ePlayerState = DASH_ATTACK;
 		}
 
 		if (m_tPlayerInfo.eWeapon != WP_NON)
 		{
-			if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_R) & 0x80)
+			if (KEY_BUTTON_DOWN(DIK_R))
 			{
 				m_tPlayerInfo.ePlayerState = RELOAD;
 			}
@@ -684,6 +678,8 @@ void CPlayer::Set_State_Idle()
 void CPlayer::CountHp(const _float& fTimeDelta)
 {
 	Add_Hp(-1.f * fTimeDelta);
+
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
 
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
@@ -723,7 +719,7 @@ HRESULT CPlayer::Set_Component()
 	// Collider_Sphere
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;                    // 반지름 1
+	CollSphereInfo.fRadius = 0.8f;                    // 반지름 1 -> 0.8 eunbi
 	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
 
 	// Colider_Sphere
@@ -734,7 +730,7 @@ HRESULT CPlayer::Set_Component()
 	return S_OK;
 }
 
-void CPlayer::Set_Collider(void)
+void CPlayer::Set_Collider(const _float& fTimeDelta)
 {
 	//m_pColliderCom->Update_ColliderBox();
 	m_pColiderSphere->Update_ColliderSphere();
@@ -747,34 +743,86 @@ void CPlayer::Set_Collider(void)
 	}
 	*/
 	// 구 충돌
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+	CGameObject* pColiObj;
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr, pColiObj))
 	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 
-		// Dash_attack 중일때 몬스터와 충돌하면 
-		if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
+		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
+		if ( !m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
-			// wap2에 따라 state 변경
-			switch (m_tPlayerInfo.eWeapon2)
-			{
-			case WP_KICK:
-				m_tPlayerInfo.ePlayerState = KICK;
-				//m_pTransformCom->Move_PosDown(0.5);
-				break;
+			// 내가 몬스터를 바라보는 방향벡터
+			_vec3 vDir = pColiObj->GetTransform()->Get_Info(INFO_POS) - Get_Pos();
+			// 정규화 후 내적
+			_float fDot = CosRadian(vDir, Get_Look());
 
-			case WP_KNIFE:
-			case WP_BOOK:
-				m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
-				break;
+			// 내적 결과가 0 ~90도 이면 -> 앞에
+			// 만약 앞에 있다면
+			if (fDot >= 0)
+			{
+				// Dash_attack 중일때 몬스터와 충돌하면 
+				if (m_tPlayerInfo.ePlayerState == DASH_ATTACK)
+				{
+					// wap2에 따라 state 변경
+					switch (m_tPlayerInfo.eWeapon2)
+					{
+					case WP_KICK:
+						m_tPlayerInfo.ePlayerState = KICK;
+						//m_pTransformCom->Move_PosDown(0.5);
+						break;
+
+					case WP_KNIFE:
+					case WP_BOOK:
+						m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
+						break;
+					}
+				}
+
+				// Dash attack이 아니면 hit
+				else
+				{
+					// 부딫힌 obj의 attack을 가져옴
+					//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
+					HitFromObject(fTimeDelta,1.f);
+				}
+			}
+
+			// 앞에 없다면 hit
+			else
+			{
+				// 부딫힌 obj의 attack을 가져옴
+				//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
+				HitFromObject(fTimeDelta,1.f);
 			}
 		}
+	}
+}
 
-		// Dash attack이 아니면 hit
-		/*else
-		{
-			m_tPlayerInfo.ePlayerState = HIT;
-		}*/
-			
+_float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
+{
+	D3DXVec3Normalize(&v1, &v1);
+	D3DXVec3Normalize(&v2, &v2);
+	return D3DXVec3Dot(&v1, &v2); //cos세타
+}
+
+void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
+{
+	// hit누적 time이 0일때만
+	if (m_fHitTime == 0)
+	{
+		// hp 깎기
+		Add_Hp(fHit * -1.f);
+		// hit count 증가
+		dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Up();
+	}
+
+	// hit 시간 누적
+	m_fHitTime += fTimeDelta;
+
+	// 누적 시간이 5초 이상이면
+	if (m_fHitTime >= 5.f)
+	{
+		// 0초로 초기화
+		m_fHitTime = 0.f;
 	}
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
 	{
@@ -940,7 +988,6 @@ const TCHAR* CPlayer::StateToString(PLAYERSTATE eState)
 	case ATTACK: return TEXT("State: ATTACK\n");
 	case ATTACK_INSTANT: return TEXT("State: ATTACK_INSTANT\n");
 	case RELOAD: return TEXT("State: RELOAD\n");
-	case HIT: return TEXT("State: HIT\n");
 	case DOPING: return TEXT("State: DOPING\n");
 	case WALL: return TEXT("State: WALL\n");
 	case OPENING: return TEXT("State: OPENING\n");

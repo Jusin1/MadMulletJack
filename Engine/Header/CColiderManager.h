@@ -31,9 +31,13 @@ public:
     HRESULT Clear_Colider_Group();
 
     // 특정 오브젝트가 그룹 내 오브젝트와 충돌하는지 검사
-    _bool CollisionGroup(COLLISION_GROUP _collisionGroup, class CGameObject* pGameObject, COLLISION_TYPE _collisionType, _vec3* pOutDistance);
+    _bool CollisionGroup(COLLISION_GROUP eGroup, class CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _vec3* pOutDistance);
 
     _bool Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, COLLISION_TYPE eCollisionType);
+
+    // 특정 오브젝트가 그룹 내 오브젝트와 충돌하는지 검사하고 충돌한 객체 전해줌
+    _bool CollisionGroupWho(COLLISION_GROUP eGroup, class CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _vec3* pOutDistance, class CGameObject*& pWho);
+
 private:
     // 각 그룹 별 오브젝트 리스트
     list<CGameObject*> m_GameObjects[COLLISION_END];

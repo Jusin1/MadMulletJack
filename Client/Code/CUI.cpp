@@ -2,12 +2,13 @@
 #include "CUI.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUIBase(pGraphicDev), m_eMove(MV_END), m_fRange(0.f)
+	: CUIBase(pGraphicDev)
 {
+	ZeroMemory(&m_tMoveInfo, sizeof(UIMoveInfo));
 }
 
 CUI::CUI(const CUI& rhs)
-	: CUIBase(rhs), m_eMove(rhs.m_eMove), m_fRange(rhs.m_fRange)
+	: CUIBase(rhs), m_tMoveInfo(rhs.m_tMoveInfo)
 {
 }
 
@@ -29,6 +30,8 @@ HRESULT CUI::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 	D3DXMatrixOrthoLH(&m_ProjMatrix, WINCX, WINCY, 0.f, 1.f);
+
+	m_tMoveInfo = {MV_END, false, 0.f, 0.f};
 
 	return S_OK;
 }
@@ -103,25 +106,31 @@ void CUI::Set_UISize(_float _fSizeX, _float _fSizeY)
 
 void CUI::Move_UI(const _float& fTimeDelta)
 {
-	switch (m_eMove) {
+	if (m_tMoveInfo.IsRangeEnd())
+	{
+		m_bRenderOn = false;
+		return;
+	}
+
+	switch (m_tMoveInfo.eUIMove) {
 	case MV_RIGHT:
-		m_pTransformCom ->Move_PosRight(fTimeDelta);
+		m_pTransformCom ->Move_PosRight(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
 	case MV_LEFT:
-		m_pTransformCom->Move_PosLeft(fTimeDelta);
+		m_pTransformCom->Move_PosLeft(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
 	case MV_RL: // range 만큼 좌우로 움직임
-		m_pTransformCom->Move_RL(fTimeDelta, m_fRange);
+		m_pTransformCom->Move_RL(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
 	case MV_UP: // y기준으로 위 아래로 움직임
-		m_pTransformCom->Move_YUp(fTimeDelta);
+		m_pTransformCom->Move_YUp(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
 	case MV_DOWN: 
-		m_pTransformCom->Move_YDown(fTimeDelta);
+		m_pTransformCom->Move_YDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
 	case MV_ROTATIONZ: // z축 기준으로 회전
@@ -130,7 +139,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 		break;
 
 	case MV_UpDown:
-		m_pTransformCom->Move_YUpDown(fTimeDelta, m_fRange);
+		m_pTransformCom->Move_YUpDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 	}
 }

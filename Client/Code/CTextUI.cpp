@@ -19,6 +19,7 @@ CTextUI::CTextUI(LPDIRECT3DDEVICE9 dev)
 	, m_letterSpacing(0.f)
 	, m_autoSize(false)
 	, m_dirtyMeasure(true)
+	, m_bPosFix(true)
 {
 }
 CTextUI::CTextUI(const CTextUI& rhs)
@@ -32,6 +33,7 @@ CTextUI::CTextUI(const CTextUI& rhs)
 	, m_letterSpacing(rhs.m_letterSpacing)
 	, m_autoSize(rhs.m_autoSize)
 	, m_dirtyMeasure(true)
+	, m_bPosFix(rhs.m_bPosFix)
 {
 }
 CTextUI::~CTextUI() {}
@@ -64,6 +66,12 @@ void CTextUI::Render_GameObject()
 
 	const float currScale = CurrentRenderScale();
 	_vec2 pos{ SXi(m_fX), SYi(m_fY) };
+	if (m_bPosFix)
+	{
+		pos.x = m_pTransformCom->Get_Info(INFO_POS).x;
+		pos.y = m_pTransformCom->Get_Info(INFO_POS).y;
+	}
+	
 
 	// 총 폭 계산 (문자 폭 + letterSpacing, 마지막 문자 뒤 spacing 제외)
 	auto measureTotalWidth = [&](float scale) -> float {
@@ -102,15 +110,41 @@ void CTextUI::Render_GameObject()
 		wchar_t buf[2] = { ch, 0 };
 		_vec2 charPos{ x, pos.y };
 
-		// per-char 회전 API 없으므로 스케일만 적용
-		Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
-			m_fontTag.c_str(), buf, &charPos, m_color, currScale);
 
-		_vec2 sz{};
-		Engine::CFontMgr::GetInstance()->Measure_Scaled(
-			m_fontTag.c_str(), buf, &sz, currScale);
+		// 회전 적용을 위해서
+		//if (m_bPosFix)
+		//{
+		//	// 회전 중심: 문장 전체의 중앙
+		//	float totalWidth = measureTotalWidth(currScale);
+		//	_vec2 center = { pos.x + totalWidth * 0.5f, pos.y };
 
-		x += sz.x + m_letterSpacing;
+		//	_vec2 rotated;
+		//	rotated.x = center.x + (charPos.x - center.x) * cosf(m_fRotSum) - (charPos.y - center.y) * sinf(m_fRotSum);
+		//	rotated.y = center.y + (charPos.x - center.x) * sinf(m_fRotSum) + (charPos.y - center.y) * cosf(m_fRotSum);
+
+
+		//	Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
+		//		m_fontTag.c_str(), buf, &rotated, m_color, currScale);
+
+		//	_vec2 sz{};
+		//	Engine::CFontMgr::GetInstance()->Measure_Scaled(
+		//		m_fontTag.c_str(), buf, &sz, currScale);
+
+		//	x += sz.x + m_letterSpacing;
+		//	return;
+		//}
+		//else
+		{
+			// per-char 회전 API 없으므로 스케일만 적용
+			Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
+				m_fontTag.c_str(), buf, &charPos, m_color, currScale);
+
+			_vec2 sz{};
+			Engine::CFontMgr::GetInstance()->Measure_Scaled(
+				m_fontTag.c_str(), buf, &sz, currScale);
+
+			x += sz.x + m_letterSpacing;
+		}
 	}
 }
 

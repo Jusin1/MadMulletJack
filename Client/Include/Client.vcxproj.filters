@@ -587,9 +587,6 @@
     <ClCompile Include="..\Code\CPhone_HpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI\01. Phone</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CColRect_HpBarUI.cpp">
-      <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CHpBarUI.cpp">
       <Filter>02. GameObject\06. UI\HpBar_UI</Filter>
     </ClCompile>

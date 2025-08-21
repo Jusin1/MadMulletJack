@@ -152,7 +152,9 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 430.f, WINCY * 0.5f + 160.f);
 		Set_New_TransInfo(50.f, 7.f);
 		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
-		m_fRotSum += D3DXToRadian(15.f) * 1;
+		m_fRotSum += D3DXToRadian(7.f) * 1;
+
+		//m_tMoveInfo.fRange = 8.f;
 
 		break;
 

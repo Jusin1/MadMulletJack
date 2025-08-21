@@ -27,7 +27,7 @@
 #include "CHpbarUI.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
-#include "CColRect_HpBarUI.h"
+
 
 // Effect UI
 #include "CEffectUI.h"
@@ -219,6 +219,15 @@ HRESULT CLoader::Loading_Dev()
 	// DEATH
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/fb_death%02d.png", 21))))
+		return E_FAIL;
+
+	// Blocking -> Kicked
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Blocking",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/blocking/blocking%03d.png", 4))))
+		return E_FAIL;
+	// InstanceKill
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
 		return E_FAIL;
 
 #pragma endregion ½´Æ® ¸ó½ºÅÍ
@@ -574,7 +583,7 @@ HRESULT CLoader::Loading_UI()
 	// foot
 	// foot - kick
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIFootKick",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/foot000.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/foot/kick/kick%03d.png", 3))))
 		return E_FAIL;
 	// foot - slide
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIFootSlide",
@@ -944,10 +953,6 @@ HRESULT CLoader::Loading_UI()
 	// HpBar - Phone
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
 		CPhone_HpBarUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// HpBar - ColorRect
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_ColRect",
-		CColRect_HpBarUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 #pragma endregion HpBar UI

@@ -163,6 +163,132 @@ void CTransform::Move_PosDir(_float fTimeDelta, _vec3 _vDir)
 	Set_Info(INFO_POS, vPos);
 }
 
+void CTransform::Move_PosLeft(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)
+			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
+	}
+
+	vPos.x -= fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_PosRight(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)
+			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
+	}
+
+	vPos.x += fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_YUp(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)
+			return;
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed;
+	}
+
+	vPos += _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_YDown(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
+	}
+
+	vPos -= _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_RL(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
+	}
+
+	// 방향에 맞춰 이동
+	vPos += m_fDir * _vec3({ 1.f,0.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
+
+	// 범위 체크 후 반전
+	if (vPos.x > m_TransformInfo.vStartPos.x + fRange)
+	{
+		vPos.x = m_TransformInfo.vStartPos.x + fRange;
+		m_fDir = -1.f;
+	}
+	else if (vPos.x < m_TransformInfo.vStartPos.x - fRange)
+	{
+		vPos.x = m_TransformInfo.vStartPos.x - fRange;
+		m_fDir = 1.f;
+	}
+
+	Set_Info(INFO_POS, vPos);
+}
+
+void CTransform::Move_YUpDown(_float fTimeDelta, _float fRange, _bool bStop, _float& fSumRange)
+{
+	_vec3 vPos = Get_Info(INFO_POS);
+
+	if (bStop) // 멈춰야 한다면
+	{
+		if (fRange <= fSumRange)	// 만약 range 보다 더 움직이는 거라면
+			return;					// 위치 갱신하지 않음
+
+		fSumRange += fTimeDelta * m_TransformInfo.fSpeed; // SumRange 값 갱신
+	}
+
+	// 방향에 맞춰 이동
+	vPos += m_fDir * _vec3({ 0.f,1.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
+
+	// 범위 체크 후 반전
+	if (vPos.y > m_TransformInfo.vStartPos.y + fRange)
+	{
+		vPos.y = m_TransformInfo.vStartPos.y + fRange;
+		m_fDir = -1.f;
+	}
+	else if (vPos.y < m_TransformInfo.vStartPos.y - fRange)
+	{
+		vPos.y = m_TransformInfo.vStartPos.y - fRange;
+		m_fDir = 1.f;
+	}
+
+	Set_Info(INFO_POS, vPos);
+}
+
 void CTransform::LookAt(_vec3 TargetPos)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
@@ -265,67 +391,6 @@ void CTransform::SetDegreeForEditor(const _vec3 &axis, float degrees)
 	Set_Info(INFO_UP, up * fY);
 	Set_Info(INFO_LOOK, look * fZ);
 	degrees = m_fAngle;
-}
-
-
-void CTransform::Move_YUp(_float fTimeDelta)
-{
-	_vec3 vPos = Get_Info(INFO_POS);
-	vPos += _vec3({0.f,1.f,0.f}) *fTimeDelta* m_TransformInfo.fSpeed;
-
-	Set_Info(INFO_POS, vPos);
-}
-
-void CTransform::Move_YDown(_float fTimeDelta)
-{
-	_vec3 vPos = Get_Info(INFO_POS);
-	vPos -= _vec3({ 0.f,1.f,0.f }) * fTimeDelta * m_TransformInfo.fSpeed;
-
-	Set_Info(INFO_POS, vPos);
-}
-
-void CTransform::Move_RL(_float fTimeDelta, _float fRange)
-{
-	_vec3 vPos = Get_Info(INFO_POS);
-
-	// 방향에 맞춰 이동
-	vPos += m_fDir * _vec3({ 1.f,0.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
-
-	// 범위 체크 후 반전
-	if (vPos.x > m_TransformInfo.vStartPos.x + fRange)
-	{
-		vPos.x = m_TransformInfo.vStartPos.x + fRange;
-		m_fDir = -1.f;
-	}
-	else if (vPos.x < m_TransformInfo.vStartPos.x - fRange)
-	{
-		vPos.x = m_TransformInfo.vStartPos.x - fRange;
-		m_fDir = 1.f;
-	}
-
-	Set_Info(INFO_POS, vPos);
-}
-
-void CTransform::Move_YUpDown(_float fTimeDelta, _float fRange)
-{
-	_vec3 vPos = Get_Info(INFO_POS);
-
-	// 방향에 맞춰 이동
-	vPos += m_fDir * _vec3({ 0.f,1.f,0.f }) * m_TransformInfo.fSpeed * fTimeDelta;
-
-	// 범위 체크 후 반전
-	if (vPos.y > m_TransformInfo.vStartPos.y + fRange)
-	{
-		vPos.y = m_TransformInfo.vStartPos.y + fRange;
-		m_fDir = -1.f;
-	}
-	else if (vPos.y < m_TransformInfo.vStartPos.y - fRange)
-	{
-		vPos.y = m_TransformInfo.vStartPos.y - fRange;
-		m_fDir = 1.f;
-	}
-
-	Set_Info(INFO_POS, vPos);
 }
 
 void CTransform::ChaseTarget(_vec3 TargetPos, _vec3 distance)
