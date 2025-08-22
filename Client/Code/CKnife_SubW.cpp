@@ -102,7 +102,7 @@ HRESULT CKnife_SubW::Texture_Clone()
 	// Attack
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 2;
-	texInfo.m_fSpeed = 1.f;
+	texInfo.m_fSpeed = 0.5f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Knife_Att", SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Att", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -144,7 +144,7 @@ HRESULT CKnife_SubW::Set_Texture()
 		if (FAILED(Change_Texture(TEXT("Com_Texture_Knife_Att"))))
 			return E_FAIL;
 
-		Set_UISize(180.f, 383.f);
+		Set_UISize(216.f, 460.f);
 
 		Set_New_TransInfo(380.f, 20.f);
 		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture

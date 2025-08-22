@@ -2,7 +2,6 @@
 #include "CPlayer_Foot.h"
 #include "CTimerMgr.h"
 
-
 CPlayer_Foot::CPlayer_Foot(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
 {
@@ -107,6 +106,16 @@ HRESULT CPlayer_Foot::Texture_Clone()
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Foots_Slide"), m_pTextureCom });
 
+    // Attack_Ins
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 13;
+    texInfo.m_fSpeed = 5.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_Monster_InsKill_UI", SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+
+    m_mapTextures.insert({ TEXT("Com_Texture_Monster_InsKill_UI"), m_pTextureCom });
+
     return S_OK;
 }
 
@@ -140,6 +149,17 @@ HRESULT CPlayer_Foot::Set_Texture()
         Set_New_TransInfo(80.f, 0.f);
 
         m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
+    }
+        break;
+
+    case ATTACK_INSTANT:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Monster_InsKill_UI"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(1024.f, 1024.f, WINCX * 0.5f, WINCY * 0.5f - 100.f);
+
+        m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
     }
         break;
 

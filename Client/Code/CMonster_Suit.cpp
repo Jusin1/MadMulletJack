@@ -98,7 +98,10 @@ void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMonster_Suit::Render_GameObject()
 {
-    __super::Render_GameObject();
+    if (m_eMonState != INSKILL)
+    {
+        __super::Render_GameObject();
+    }
 
 #ifdef _DEBUG
     if (g_ColiderRender)
@@ -113,21 +116,28 @@ void CMonster_Suit::Set_Collider()
     if (m_pColiderCom)
         m_pColiderCom->Update_ColliderSphere();
 
-    if (CColiderManager::GetInstance()->CollisionGroup(
-        CColiderManager::COLLISION_PLAYER, this,
-        CColiderManager::COLLISION_SPHERE, nullptr))
+    if (m_eMonState != INSKILL) // inskill일때는 colli를 하지 않음
     {
-        _vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-        (void)vPosition;
-
-        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
+        if (CColiderManager::GetInstance()->CollisionGroup(
+            CColiderManager::COLLISION_PLAYER, this,
+            CColiderManager::COLLISION_SPHERE, nullptr))
         {
-            // 임시방편 -> 살짝 뒤로 보내기
-            //m_pTransformCom->Move_PosDown(-0.1f);
-            SetState(KICKED);
-            m_bKillAfterHit = false;
+            _vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
+            (void)vPosition;
+
+            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
+            {
+                SetState(KICKED);
+                m_bKillAfterHit = false;
+            }
+
+            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_INSTANT)
+            {
+                SetState(INSKILL);
+            }
         }
     }
+    
 
     Set_Collider_With_Wall();
 }
@@ -246,8 +256,7 @@ HRESULT CMonster_Suit::Texture_Clone()
         { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 13.f, true },
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 13.f, true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 13.f, true },
-        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,13.f,false},
-        {L"Com_Texture_Instance_Kill",   L"Prototype_Component_Texture_Monster_Suit_InstanceKill",   0,13,13.f,false}
+        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,13.f,false}
     };
 
     for (auto& a : anims)
@@ -301,7 +310,6 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         break;
 
     case INSKILL:
-        tag = L"Com_Texture_Instance_Kill";
         break;
 
     case DEATH:
@@ -379,6 +387,17 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
             // 뒤로 날아가
             m_pTransformCom->Move_PosDir(dt, (m_pTransformCom->Get_Info(INFO_LOOK)));
         }
+        break;
+
+    case INSKILL:
+    {
+        // 만약 attack instant 가 끝나면
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_INSTANT)
+            // 죽음 처리
+        {
+            m_bDead = true;
+        } 
+    }
         break;
 
     case JUMP:
@@ -517,7 +536,9 @@ bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) cons
     return (out.z >= 0.f && out.z <= 1.f);
 }
 
+
 #ifdef _DEBUG
+
 void CMonster_Suit::DebugRender_HitSpheres() const
 {
     if (!m_pGraphicDev || m_hitSpheres.empty()) return;

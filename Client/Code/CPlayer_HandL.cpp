@@ -171,13 +171,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 180.f, WINCY * 0.5f + 220.f); //idle pos
+            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 220.f); //idle pos
 
             Set_New_TransInfo(450.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, true, 400.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 200.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -205,13 +205,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(600.f, 480.f, 100.f, WINCY * 0.5f + 200); //idle pos
+            Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 600.f, WINCY * 0.5f + 250); //idle pos
 
-            Set_New_TransInfo(500.f, -20.f);
+            Set_New_TransInfo(400.f, -20.f);
             m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian (-20.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 200.f, 0.f };
         }
 
         else {

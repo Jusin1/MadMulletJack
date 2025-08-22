@@ -9,13 +9,15 @@
 CCameraFPS::CCameraFPS(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CCamera(pGraphicDev),
     m_bFix(false), m_bShaking(true),
-    m_bRecoil(false), m_bZoom(false), m_eCamMode(CAM_NORMAL)
+    m_bRecoil(false), m_bZoom(false), m_eCamMode(CAM_NORMAL),
+    m_fOffset(0.f)
 {
 }
 
 CCameraFPS::CCameraFPS(const CCameraFPS& rhs) : CCamera(rhs),
 m_bFix(rhs.m_bFix), m_bShaking(rhs.m_bShaking),
-m_bRecoil(rhs.m_bRecoil), m_bZoom(rhs.m_bZoom), m_eCamMode(rhs.m_eCamMode)
+m_bRecoil(rhs.m_bRecoil), m_bZoom(rhs.m_bZoom), m_eCamMode(rhs.m_eCamMode),
+m_fOffset(rhs.m_fOffset)
 {
 
 }
@@ -39,6 +41,9 @@ HRESULT CCameraFPS::Initialize(void* pArg)
 {
     if (FAILED(CCamera::Initialize(pArg)))
         return E_FAIL;
+
+    m_fOffset = 0.2f;
+
     return S_OK;
 }
 
@@ -54,7 +59,8 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         return -1;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-    m_pTransformCom->Set_Info(INFO_POS, vPlayerPos);
+    vPlayerPos.y += m_fOffset;
+    m_pTransformCom->Set_Info(INFO_POS, vPlayerPos );
 
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;

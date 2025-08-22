@@ -183,6 +183,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		txt1->SetScale(2.f);
 		txt1->SetCentered(true);
 		txt1->SetLetterSpacing(1.f);
+		txt1->SetPosFix(true);
 
 		txt1->Set_UISizeAndPos(1.f, 1.f, 940.f, -200.f);
 		txt1->Set_New_TransInfo(45.f, 10.f);

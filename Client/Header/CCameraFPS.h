@@ -45,6 +45,7 @@ private:
     _bool      m_bRecoil;      // ÃÑ ¹Ýµ¿À» À§ÇÔ -> »¬Áöµµ
     _bool      m_bZoom;
     FPSCAMMODE   m_eCamMode;
+    _float m_fOffset;
 
 public:
     static CCameraFPS* Create(LPDIRECT3DDEVICE9 pGraphicDev);
