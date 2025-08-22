@@ -249,6 +249,7 @@ void CUIManager::CreateClearUI()
 {
     DestroyItemUI();
     DestroyEffectUI();
+    CreateEffectUI(L"VICTORY");
     if (m_pEnterUI || m_exitingEnter) return;
 
     constexpr float SLIDE_OFFSET_X = +220.f;
@@ -513,15 +514,15 @@ void CUIManager::CreateItemUI()
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIItem", sceneIdx, L"UI_Layer")))
     {
-        weapon->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUI",
-            0, 0, 0.f, false);
+        weapon->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUI", 0, 0, 0.f, false);
         weapon->ChangeTexture(L"Com_Texture_Text");
         weapon->SetAdditive(false);
 
         weapon->PlayAppear(0.f, 200.f, 40.f, 70.f, 1.f);
+
+        weapon->StartBlink(1.0f, 0.5f, true, 255, 0);
         m_pItemUI->Add_Child(weapon);
     }
-
     if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
