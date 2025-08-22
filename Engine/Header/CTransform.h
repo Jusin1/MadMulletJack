@@ -38,6 +38,14 @@ public:
 	void Set_Dir(_float _fDir) { m_fDir = _fDir; }
 	_float Get_Dir() { return m_fDir; }
 
+	// Local
+	_vec3		Get_LocalInfo(INFO eType) { return *(_vec3 *)&m_matLocal.m[eType][0]; }
+	void		Set_LocalInfo(INFO eType, const _vec3 &vState) { memcpy(&m_matLocal.m[eType][0], &vState, sizeof(_vec3)); }
+	_vec3		Get_LocalScale();
+	void		Set_LocalScale(_float x, _float y, _float z);
+
+	const	_matrix *Get_Local() const { return &m_matLocal; }
+	void	Get_Local(_matrix *pWorld) const { *pWorld = m_matLocal; }
 public:
 	// 로컬 방향 기준 이동 함수
 	void Move_Forward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
@@ -75,6 +83,7 @@ public:
 	void SetTarget(_vec3 target) { m_vTarget = target; }
 private:
 	_matrix			m_matWorld;
+	_matrix			m_matLocal;
 	TRANSFORMINFO	m_TransformInfo;
 	_vec3			m_vTarget;
 	_float			m_fDir; // Move_RL 시 필요

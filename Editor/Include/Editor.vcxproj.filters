@@ -124,6 +124,9 @@
     <Filter Include="01. Scene\Tutorial">
       <UniqueIdentifier>{aac83e20-f943-4e0c-b18f-daa6a95ca0d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\CPrefab">
+      <UniqueIdentifier>{f007f814-edb2-4450-88a7-92c008fb4b37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -267,6 +270,9 @@
     <ClInclude Include="..\Header\CScene_Tutorial.h">
       <Filter>01. Scene\Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPrefab.h">
+      <Filter>04. GameObject\CPrefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -391,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CScene_Tutorial.cpp">
       <Filter>01. Scene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPrefab.cpp">
+      <Filter>04. GameObject\CPrefab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

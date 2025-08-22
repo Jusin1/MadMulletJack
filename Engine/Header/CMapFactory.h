@@ -8,7 +8,7 @@ class CGameObject;
 class ENGINE_DLL CMapFactory : public CBase
 {
 	DECLARE_SINGLETON(CMapFactory)
-	using CreateFunction = std::function<HRESULT (void *)>;
+	using CreateFunction = std::function<CGameObject* (void *)>;
 private:
 	explicit CMapFactory();
 	virtual ~CMapFactory();
@@ -16,7 +16,7 @@ private:
 	virtual void Free() override;
 public:
 	void Register(ObjectCategory _eCategory, _uint _iType, CreateFunction _func);
-	HRESULT Create(ObjectCategory _eCategory, _uint _iType, void* _pData);
+	CGameObject *Create(ObjectCategory _eCategory, _uint _iType, void* _pData);
 
 	_uint GetTargetSceneIndex() const { return m_iTargetSceneIndex; }
 	void SetTargetSceneIndex(_uint _i) { m_iTargetSceneIndex = _i; }

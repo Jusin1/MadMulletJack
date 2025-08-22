@@ -5,6 +5,7 @@ CTransform::CTransform()
 { 
 	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matLocal);
 }
 
 CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -12,10 +13,11 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	ZeroMemory(&m_TransformInfo, sizeof(m_TransformInfo));
 	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matLocal);
 }
 
 CTransform::CTransform(const CTransform& rhs)
-	: CComponent(rhs), m_matWorld(rhs.m_matWorld), m_TransformInfo(rhs.m_TransformInfo)
+	: CComponent(rhs), m_matLocal(rhs.m_matLocal), m_matWorld(rhs.m_matWorld), m_TransformInfo(rhs.m_TransformInfo)
 	,m_fDir(rhs.m_fDir), m_fAngle(rhs.m_fAngle)
 {
 }
@@ -59,6 +61,26 @@ void CTransform::Set_Scale(_float x, _float y, _float z)
 	Set_Info(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * x);
 	Set_Info(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * y);
 	Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * z);
+}
+
+_vec3 CTransform::Get_LocalScale()
+{
+	_vec3		vRight = Get_LocalInfo(INFO_RIGHT);
+	_vec3		vUp = Get_LocalInfo(INFO_UP);
+	_vec3		vLook = Get_LocalInfo(INFO_LOOK);
+
+	return _vec3(D3DXVec3Length(&vRight), D3DXVec3Length(&vUp), D3DXVec3Length(&vLook));
+}
+
+void CTransform::Set_LocalScale(_float x, _float y, _float z)
+{
+	_vec3		vRight = Get_LocalInfo(INFO_RIGHT);
+	_vec3		vUp = Get_LocalInfo(INFO_UP);
+	_vec3		vLook = Get_LocalInfo(INFO_LOOK);
+
+	Set_LocalInfo(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * x);
+	Set_LocalInfo(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * y);
+	Set_LocalInfo(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * z);
 }
 
 void CTransform::Move_Forward(_float fTimeDelta, _float fHeight)

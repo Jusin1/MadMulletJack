@@ -2,6 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include <locale>
+#include <vector>
 #include <codecvt>
 #include <string>
 #include "CDataManager.h"
@@ -143,10 +144,20 @@ HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
     json jArray;
     ifs >> jArray;
 
-    for (const auto &jObj : jArray)
+    if (szLayerTag != L"Prefab_Layer")
     {
-        MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
-        CDataManager::GetInstance()->AddData(szLayerTag, objData);
+        for (const auto &jObj : jArray)
+        {
+            MAPOBJECTDATA objData = jObj.get<MAPOBJECTDATA>();
+            CDataManager::GetInstance()->AddData(szLayerTag, objData);
+        }
+    }
+    else
+    {
+        for (const auto &jObj : jArray)
+        {
+            PREFABDATA PrefabData = jObj.get<PREFABDATA>();
+        }
     }
 
     ifs.close();
@@ -179,6 +190,25 @@ wstring CFileManager::SceneIdToWstring(_uint iSceneID)
 }
 
 BEGIN(Engine)
+
+void to_json(json &_j, const PREFABDATA &_tData)
+{
+    _j = json
+    {
+        {"ProtoName", WStringToUTF8(_tData.ProtoName)},
+        {"Childrens", _tData.vecChildrensData},
+        {"TransformData", _tData.ParentTransform}
+    };
+}
+
+void from_json(const json &_j, PREFABDATA &_tData)
+{
+    std::string srcString{ "" };
+    _j.at("ProtoName").get_to(srcString);
+    _tData.ProtoName = UTF8ToWString(srcString);
+    _tData.vecChildrensData = _j.at("Childrens").get<std::vector<MAPOBJECTDATA>>();
+    _j.at("TransformData").get_to(_tData.ParentTransform);
+}
 
 void to_json(json &_j, const TRANSFORMDATA &_tData)
 {

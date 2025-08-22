@@ -45,4 +45,8 @@ void from_json(const json &_j, PANELDATA &_tData);
 void to_json(json &_j, const MAPOBJECTDATA &_tData);
 void from_json(const json &_j, MAPOBJECTDATA &_tData);
 
+//Prefab
+void to_json(json &_j, const PREFABDATA &_tData);
+void from_json(const json &_j, PREFABDATA &_tData);
+
 END
