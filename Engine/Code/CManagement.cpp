@@ -1,6 +1,7 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CComponentMgr.h"
+#include "CDataManager.h"
 #include "CObjectManager.h"
 #include "CTimerMgr.h"
 

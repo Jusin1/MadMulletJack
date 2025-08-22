@@ -83,6 +83,7 @@ CCamera *CEditorCamera::Clone(void *pArg)
 
 void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 {
+	_float f;
 	m_vPosition = m_pTransformCom->Get_Info(INFO_POS);
 
 	/*_long iWheel = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z);
@@ -92,7 +93,7 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 		m_pTransformCom->Move_Forward(fTimeDelta * m_lMouseWheel * 0.01f);
 	}*/
 
-	if(KEY_BUTTON_HOLD(DIK_Q))
+	if (KEY_BUTTON_HOLD(DIK_Q))
 		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), -fTimeDelta);
 	if (KEY_BUTTON_HOLD(DIK_E))
 		m_pTransformCom->Rotation(_vec3(0.f, 1.f, 0.f), fTimeDelta);
@@ -114,10 +115,10 @@ void CEditorCamera::DefaultCamera(const _float &fTimeDelta)
 
 	if (KEY_BUTTON_HOLD(DIK_SPACE))
 	{
-		m_pTransformCom->Move_YUp(fTimeDelta);
+		m_pTransformCom->Move_YUp(fTimeDelta, 0.f, false, f);
 	}
 	if (KEY_BUTTON_HOLD(DIK_LCONTROL))
 	{
-		m_pTransformCom->Move_YDown(fTimeDelta);
+		m_pTransformCom->Move_YDown(fTimeDelta, 0.f, false, f);
 	}
 }

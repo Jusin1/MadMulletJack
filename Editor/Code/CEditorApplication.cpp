@@ -455,6 +455,8 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_NormalDoor_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 3.png");
 	AddTextureForThumbnail(L"Proto_NormalDoor_3", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4.png");
 	AddTextureForThumbnail(L"Proto_OpeningDoor", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR.png");
+	AddTextureForThumbnail(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png");
+	AddTextureForThumbnail(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png");
 
 	// display
 	AddTextureForThumbnail(L"Proto_Bandit_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/BANDIT.png");

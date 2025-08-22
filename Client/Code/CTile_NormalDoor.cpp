@@ -98,8 +98,8 @@ void CTile_NormalDoor::LateUpdate_GameObject(const _float &fTimeDelta)
 	{
 		if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 		{
-			if (m_fTargetAngle < 90.f)
-				m_fTargetAngle = 90.f;
+			if (m_fTargetAngle < 89.99f)
+				m_fTargetAngle = 89.99f;
 
 			m_bOpend = true;
 		}
@@ -160,8 +160,10 @@ HRESULT CTile_NormalDoor::Set_Component(void *pArg)
 				return E_FAIL;
 
 			m_pDoors.push_back(static_cast<CTile_Deco *>(CObjectManager::GetInstance()->Get_ObjectList(CMapFactory::GetInstance()->GetTargetSceneIndex(), L"Tile_Layer")->back()));
-			m_pDoors[0]->GetTransform()->Set_Scale(0.5f, 1.f, 1.f);
-			m_pDoors[1]->GetTransform()->Set_Scale(0.5f, 1.f, 1.f);
+			m_pDoors[0]->GetTransform()->Set_Scale(1.f, 2.f, 1.f);
+			m_matInitDoors[0] = *m_pDoors[0]->GetTransform()->Get_World();
+			m_pDoors[1]->GetTransform()->Set_Scale(1.f, 2.f, 1.f);
+			m_matInitDoors[1] = *m_pDoors[1]->GetTransform()->Get_World();
 
 			CColider_Sphere::COLLINFO CollSphereInfo;
 			ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
@@ -193,29 +195,29 @@ HRESULT CTile_NormalDoor::Set_Component(void *pArg)
 void CTile_NormalDoor::PivotRotate()
 {
 	auto lambda_rotation =
-	[&](CTransform *pDoorTransform, const _matrix &matParentWorld, _vec3 vDoorPivotLocal, _float fAngle)->void
+	[&](CTransform *pDoorTransform, const _matrix &matWorld, _vec3 vDoorPivotLocal, _float fAngle)->void
 	{
-		_matrix matLocalPivot_negative, matScale, matRotation, matLocalPivot, matParentWorldPos;
+		_matrix matLocalPivot_negative, matScale, matRotation, matLocalPivot, matWorldPos;
 
 		::D3DXMatrixTranslation(&matLocalPivot_negative, -vDoorPivotLocal.x, -vDoorPivotLocal.y, -vDoorPivotLocal.z);
 		::D3DXMatrixScaling(&matScale, pDoorTransform->Get_Scale().x, pDoorTransform->Get_Scale().y, pDoorTransform->Get_Scale().z);
 		::D3DXMatrixRotationY(&matRotation, D3DXToRadian(fAngle));
 		::D3DXMatrixTranslation(&matLocalPivot, vDoorPivotLocal.x, vDoorPivotLocal.y, vDoorPivotLocal.z);
-		::D3DXMatrixTranslation(&matParentWorldPos, matParentWorld._41, matParentWorld._42, matParentWorld._43);
+		::D3DXMatrixTranslation(&matWorldPos, matWorld._41, matWorld._42, matWorld._43);
 
 		// 현재 Tile의 Local 중심 좌표는 Cetner (0.5, 0.5, 0)
 		// matLocalPivot_negative => 문의 회전축을 로컬 원점(0,0,0)으로 옮김
 		// matScale => 원점 기준 스케일
 		// matRotation => 원점 기준 Y축 회전
-		// matLocalPivot => 원래 좌표계로 돌림
-		// matParentWorldPos = > 부모의 월드위치로 옮김
-		_matrix matResult = matLocalPivot_negative * matScale * matRotation * matLocalPivot * matParentWorldPos;
+		// matLocalPivot => 원래 중점으로 돌림 ( 뺀만큼 더하기 )
+		// matWorldPos = > 월드위치로 옮김
+		_matrix matResult = matLocalPivot_negative * matScale * matRotation * matLocalPivot * matWorldPos;
 
 		_vec3 vRight, vUp, vLook, vPos;
-		::memcpy(&vRight, matResult.m[0], sizeof(_vec3));
-		::memcpy(&vUp, matResult.m[1], sizeof(_vec3));
-		::memcpy(&vLook, matResult.m[2], sizeof(_vec3));
-		::memcpy(&vPos, matResult.m[3], sizeof(_vec3));
+		::memcpy(&vRight, &matResult.m[0][0], sizeof(_vec3));
+		::memcpy(&vUp, &matResult.m[1][0], sizeof(_vec3));
+		::memcpy(&vLook, &matResult.m[2][0], sizeof(_vec3));
+		::memcpy(&vPos, &matResult.m[3][0], sizeof(_vec3));
 
 		pDoorTransform->Set_Info(INFO_RIGHT, vRight);
 		pDoorTransform->Set_Info(INFO_UP, vUp);
@@ -223,6 +225,6 @@ void CTile_NormalDoor::PivotRotate()
 		pDoorTransform->Set_Info(INFO_POS, vPos);
 	};
 	
-	lambda_rotation(m_pDoors[0]->GetTransform(), (*GetTransform()->Get_World()), _vec3{ -0.5f, 0.f, 0.f }, m_fAngle * -1.f);
-	lambda_rotation(m_pDoors[1]->GetTransform(), (*GetTransform()->Get_World()), _vec3{ 0.5f, 0.f, 0.f }, m_fAngle);
+	lambda_rotation(m_pDoors[0]->GetTransform(), m_matInitDoors[0], _vec3{-0.5f, 0.f, 0.f}, m_fAngle * -1.f);
+	lambda_rotation(m_pDoors[1]->GetTransform(), m_matInitDoors[1], _vec3{ 0.5f, 0.f, 0.f }, m_fAngle);
 }

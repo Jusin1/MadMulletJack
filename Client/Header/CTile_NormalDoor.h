@@ -32,6 +32,7 @@ private:
 	void PivotRotate();
 private:
 	bool m_bOpend{ false };
+	_matrix m_matInitDoors[2];
 	_float m_fTargetAngle{ 0.f };
 	_float m_fAngle{ 0.f };
 	Engine::CColider_Sphere *m_pColiderSphere;

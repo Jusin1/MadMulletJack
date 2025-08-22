@@ -464,6 +464,8 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Wall_Transparent_4", L"../Bin/Resource/MapObject/Wall/WALL TRANSPARENT 4.png", 1);
 	AddTexture(L"Proto_Vent", L"../Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER.png", 1);
 	AddTexture(L"Proto_Vent_Prop", L"../Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER_%02d.png", 2);
+	AddTexture(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png", 1);
+	AddTexture(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png", 1);
 
 	// door
 	AddTexture(L"Proto_NormalDoor_1_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2_1.png", 1);

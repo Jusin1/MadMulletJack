@@ -150,43 +150,6 @@
     {
         "Color": 3435973836,
         "ObjectCategory": 0,
-        "ObjectType": 4,
-        "PanelData": {
-            "Count_X": 23,
-            "Count_Y": 2,
-            "Count_Z": 17,
-            "Interval": 1,
-            "Type": 4
-        },
-        "TextureData": {
-            "FilePath": "Proto_Floor_Elevator"
-        },
-        "TransformData": {
-            "Look": [
-                0.0,
-                -2.235172757991677e-07,
-                -0.9999992847442627
-            ],
-            "Pos": [
-                0.0,
-                2.0,
-                16.0
-            ],
-            "Right": [
-                0.9999998807907104,
-                0.0,
-                0.0
-            ],
-            "Up": [
-                0.0,
-                -0.9999992847442627,
-                2.235172757991677e-07
-            ]
-        }
-    },
-    {
-        "Color": 3435973836,
-        "ObjectCategory": 0,
         "ObjectType": 1,
         "PanelData": {
             "Count_X": 2,
@@ -366,6 +329,43 @@
                 -2.220445784552517e-16,
                 0.9999998807907104,
                 -1.490115053570662e-08
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 0,
+        "ObjectType": 4,
+        "PanelData": {
+            "Count_X": 23,
+            "Count_Y": 2,
+            "Count_Z": 17,
+            "Interval": 1,
+            "Type": 4
+        },
+        "TextureData": {
+            "FilePath": "Proto_Floor_5"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "Pos": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "Right": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                1.0,
+                0.0
             ]
         }
     }
