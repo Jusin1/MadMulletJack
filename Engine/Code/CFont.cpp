@@ -15,27 +15,40 @@ HRESULT CFont::Ready_Font(const _tchar* pFontType,
 	const _uint& iHeight,
 	const _uint& iWeight)
 {
-	D3DXFONT_DESC			tFont_Desc;
-	ZeroMemory(&tFont_Desc, sizeof(D3DXFONT_DESC));
+	D3DXFONT_DESC fd{};
 
-	tFont_Desc.CharSet = HANGEUL_CHARSET;
-	tFont_Desc.Width = iWidth;
-	tFont_Desc.Height = iHeight;
-	tFont_Desc.Weight = iWeight;
-	lstrcpy(tFont_Desc.FaceName, pFontType);
+	fd.CharSet = DEFAULT_CHARSET;     
+	fd.OutputPrecision = OUT_TT_PRECIS;
+	fd.Quality = ANTIALIASED_QUALITY;
+	fd.PitchAndFamily = FF_DONTCARE;
 
-	if (FAILED(D3DXCreateFontIndirect(m_pGraphicDev, &tFont_Desc, &m_pFont)))
-	{
+
+	fd.Height = -static_cast<INT>(iHeight > 0 ? iHeight : 32);
+
+	fd.Width = 0;
+	fd.Weight = (iWeight == 0 ? FW_DONTCARE : iWeight);
+	fd.Italic = FALSE;
+
+
+	lstrcpynW(fd.FaceName, pFontType, LF_FACESIZE);
+
+	if (FAILED(D3DXCreateFontIndirect(m_pGraphicDev, &fd, &m_pFont))) {
 		MSG_BOX("Font Create Failed");
 		return E_FAIL;
 	}
-
-	if (FAILED(D3DXCreateSprite(m_pGraphicDev, &m_pSprite)))
-	{
+	if (FAILED(D3DXCreateSprite(m_pGraphicDev, &m_pSprite))) {
 		MSG_BOX("Sprite Create Failed");
 		return E_FAIL;
 	}
 
+
+	D3DXFONT_DESC got{};
+	if (SUCCEEDED(m_pFont->GetDesc(&got))) {
+		wchar_t buf[256];
+		swprintf(buf, 256, L"[Font] Face='%s' Height=%d Weight=%d Italic=%d\n",
+			got.FaceName, got.Height, got.Weight, got.Italic);
+		OutputDebugStringW(buf);
+	}
 	return S_OK;
 }
 

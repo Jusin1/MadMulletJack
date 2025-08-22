@@ -153,6 +153,16 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev) = CGraphicDev::GetInstance()->Get_GraphicDev();
 	(*ppGraphicDev)->AddRef();
 
+
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/DS-DIGIB.ttf");
+
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_Time",       
+		L"DS-Digital",       
+		20, 48, FW_THIN)))
+		return E_FAIL;
+
 	// 폰트 추가
 	if(FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"바탕", 20, 15, FW_HEAVY)))
 		return E_FAIL;

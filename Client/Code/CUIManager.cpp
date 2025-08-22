@@ -1102,7 +1102,7 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
-        timeTxt->SetFontTag(L"UIFont");
+        timeTxt->SetFontTag(L"Font_Time");
         timeTxt->SetText(timeStr);
         timeTxt->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
         timeTxt->SetScale(2.0f);
