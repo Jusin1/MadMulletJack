@@ -399,9 +399,6 @@
     <ClInclude Include="..\Header\CPhone_HpBarUI.h">
       <Filter>02. GameObject\06. UI\HpBar_UI\01. Phone</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CColRect_HpBarUI.h">
-      <Filter>02. GameObject\06. UI\HpBar_UI\02. ColorRect</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CGameDataManager.h">
       <Filter>03. Manager\GameDataManager</Filter>
     </ClInclude>

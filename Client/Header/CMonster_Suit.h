@@ -1,7 +1,6 @@
 #pragma once
 #include "CMonster.h"
 
-
 class CMonster_Suit : public CMonster
 {
     enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, KICKED, INSKILL, DEATH, };

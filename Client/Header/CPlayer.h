@@ -141,6 +141,8 @@ private:
 	void			HitFromObject(const _float& fTimeDelta,_float fHit);
 	void			Set_Collider_With_Wall();
 	void			Set_Collider_With_Door();
+	void			Set_Colllider_With_Monster(const _float& fTimeDelta);
+
 private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* componentTag);
@@ -169,6 +171,8 @@ private:
 	_float m_fAddTime; // state 누적 시간
 	_float m_fStateTime; // state 지속할 시간
 	_float m_fHitTime; // hit 시간
+	
+	_float m_fNormalSpeed;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;

@@ -146,7 +146,7 @@ void CGameDataManager::Sort_List_ByZValue(vector<PANELENTRY> &_veclist)
 				return a.fMin_Z < b.fMin_Z;
 
 			// Z값이 동일할 경우를 대비
-			return a.fMin_X != b.fMin_X;
+			return a.fMin_X < b.fMin_X;
 		});
 }
 
