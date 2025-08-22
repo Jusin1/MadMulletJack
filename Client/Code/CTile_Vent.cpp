@@ -161,6 +161,7 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
             pData)))
             return E_FAIL;
         m_pProp = static_cast<CTile_Deco*>(CObjectManager::GetInstance()->Get_ObjectList(CMapFactory::GetInstance()->GetTargetSceneIndex(), L"Tile_Layer")->back());
+        m_pProp->GetTransform()->Set_Scale(1.5f, 1.5f, 1.f);
     }
     
 
@@ -171,5 +172,5 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
 
 void CTile_Vent::RotateProp(const _float &fTimeDelta)
 {
-    m_pProp->GetTransform()->RotationDegree(_vec3{ 0.f,0.f,1.f }, 180.f * fTimeDelta);
+    m_pProp->GetTransform()->RotationDegree(_vec3{ 0.f,0.f,1.f }, 240.f * fTimeDelta);
 }

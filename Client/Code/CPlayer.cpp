@@ -721,7 +721,7 @@ HRESULT CPlayer::Set_Component()
 	//m_pColliderCom->Set_Transform(m_pTransformCom);
 
 	// Collider_Sphere
-	CColider_Sphere::COLLINFO CollSphereInfo;
+ 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
 	CollSphereInfo.fRadius = 0.4f;                    // 반지름 1 -> 0.8 eunbi
 	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
@@ -859,7 +859,7 @@ void CPlayer::Set_Collider_With_Wall()
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
 	{
 		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-		m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance + _vec3{ 0.f, 0.01f, 0.f }));
+		m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance - _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
 	}
 }

@@ -124,7 +124,7 @@ HRESULT CTile_VendingMachine::Set_Component(void *pArg)
 
 	m_pColliderSphere->Set_Transform(m_pTransformCom);
 	m_pColliderSphere->Update_ColliderSphere();
-
+	m_pTransformCom->Set_Info(INFO::INFO_POS, m_pTransformCom->Get_Info(INFO::INFO_POS) + _vec3{ 0.f, 0.25f, 0.f });
 	m_pTransformCom->Set_Scale(1.f, 1.5f, 1.f);
 
 	return S_OK;

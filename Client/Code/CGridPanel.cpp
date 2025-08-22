@@ -224,7 +224,7 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				tDesc.fRadiusX = fWidth * 0.5f;
 				tDesc.fRadiusZ = fHeight * 0.5f;
 				tDesc.fOffSetX = fWidth * 0.5f ;
-				tDesc.fOffSetY = -0.5f;
+				tDesc.fOffSetY = 0.5f;
 				tDesc.fOffsetZ = fHeight * 0.5f;
 
 				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))

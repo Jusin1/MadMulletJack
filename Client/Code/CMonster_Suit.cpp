@@ -68,7 +68,7 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
     TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
 
     m_pTransformCom->SetTransformInfo(TransformInfo);
-    m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+    m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 
     GetPlayerTransform();
 
