@@ -488,10 +488,41 @@ void CUIManager::CreateWeaponGetUI()
     if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
-        pBlack->Set_UIPosition(0.f, 300.f, 170.f, 50.f);
+        pBlack->Set_UIPosition(0.f, 290.f, 170.f, 50.f);
         pBlack->SetAlpha(255);
         pBlack->SetColor(D3DCOLOR_ARGB(255, 255, 165, 0));
     }
+
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(0.f, 280.f, 165.f, 25.f);
+        pBlack->SetAlpha(255);
+    }
+
+
+    if (auto* txt1 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt1->SetFontTag(L"UIFont");
+        txt1->SetText(L"[MOUSE 2]");
+        txt1->Set_UIPosition(0.f, -267.f, 165.f, 25.f);
+        txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt1->SetScale(0.6f);
+        txt1->SetCentered(true);
+    }
+
+    if (auto* txt2 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt2->SetFontTag(L"UIFont");
+        txt2->SetText(L"FINISH");
+        txt2->Set_UIPosition(0.f, -290.F, 165.f, 25.f);
+        txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt2->SetScale(0.6f);
+        txt2->SetCentered(true);
+    }
+
 
 }
 
