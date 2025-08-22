@@ -9,7 +9,7 @@ class CUIBase;
 class CPlayer : public CCharacter
 {
 public:
-	enum MOVEKEY { MOVE_NORMAL, MOVE_LR, MOVE_NON, MOVE_STOP, MOVE_END };
+	enum MOVEKEY { MVKEY_NON, MVKEY_NORMAL, MVKEY_LR, MVKEY_STOP, MVKEY_END };
 
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -99,12 +99,21 @@ private:
 	void Clear_Begin();
 
 	void KeyInput(const _float& fTimeDelta);
-	void Set_State_Idle(); // state를 idle로 바꿈
+	void Set_State_Normal(); // state를 idle로 바꿈
 
 	const TCHAR* StateToString(PLAYERSTATE eState); //debug
 	void CountHp(const _float& fTimeDelta);
 
 	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f);
+
+	void Move(const _float& fTimeDelta);
+
+	void Move_Normal(const _float& fTimeDelta);
+	void Move_Dash(const _float& fTimeDelta);
+	void Move_Slide(const _float& fTimeDelta);
+	void Move_Wall(const _float& fTimeDelta);
+
+	void Change_Move(PLAYERMOVE ePlayerMove , _bool bYFix); // 속도 셋팅을 여기서 해줌.
 
 	// getter setter func
 public:
@@ -117,13 +126,15 @@ public:
 	void Set_State(PlayerStateInfo _tInfo) { m_tPlayerInfo = _tInfo; }
 	PlayerStateInfo Get_PrevState()const { return m_tPrePlayerInfo; }
 	void Set_PrevState(PlayerStateInfo _tInfo) { m_tPrePlayerInfo = _tInfo; }
-	MOVEKEY Get_MoveKey() const { return m_eMove; }
-	void Set_MoveKey(MOVEKEY _e) { m_eMove = _e; }
+	MOVEKEY Get_MoveKey() const { return m_eMoveKey; }
+	void Set_MoveKey(MOVEKEY _e) { m_eMoveKey = _e; }
 
 	_float Get_GroundHeight()const { return m_fGround_Height; }
 	void Set_GroundHeight(_float _fGroundHeight) {m_fGround_Height = _fGroundHeight;}
 	_float Get_MaxHp() const { return m_fMaxHp; }
 	void Set_MaxHp(_float _fMaxHp) { m_fMaxHp = _fMaxHp; }
+	_float Get_FixY() const { return m_fFixY; }
+	void Set_FixY(_float _fFixY) { m_fFixY = _fFixY; }
 
 	_bool	Get_IsKeyInput()const { return m_bIsKeyInput; }
 	void	Set_IsKeyInput(_bool _bKeyInput) { m_bIsKeyInput = _bKeyInput; }
@@ -158,7 +169,7 @@ private:
 private:
 	PlayerStateInfo m_tPlayerInfo;
 	PlayerStateInfo m_tPrePlayerInfo;
-	MOVEKEY m_eMove;
+	MOVEKEY m_eMoveKey;
 
 	const _tchar* m_TimerTag;
 	_float m_fGround_Height;
@@ -167,10 +178,13 @@ private:
 	_bool m_bIsInvincible; // 무적 상태일래 말래
 	_bool m_bIsAttack;		// 공격 할래 말래
 	_bool m_bIsCountHp; // hp 깎을래 말래
+	_bool m_bIsFixY; // Y고정 할래말래
+	
 
 	_float m_fAddTime; // state 누적 시간
 	_float m_fStateTime; // state 지속할 시간
 	_float m_fHitTime; // hit 시간
+	_float m_fFixY; // 고정 y값
 	
 	_float m_fNormalSpeed;
 

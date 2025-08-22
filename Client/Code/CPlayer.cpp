@@ -22,18 +22,19 @@
 #include "CManagement.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,WP_END,WP2_END }),
-	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMove(MOVE_END),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
+	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
-	m_fHitTime(0.f), m_fNormalSpeed(0.f)
+	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CCharacter(rhs), m_tPlayerInfo(rhs.m_tPlayerInfo), m_tPrePlayerInfo(rhs.m_tPrePlayerInfo),
-	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMove(rhs.m_eMove),
+	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMoveKey(rhs.m_eMoveKey),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
-	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(0.f)
+	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
+	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY)
 {
 }
 
@@ -64,16 +65,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	// StartPosition 설정
-	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+	if (MAPOBJECTDATA* p = reinterpret_cast<MAPOBJECTDATA*>(pArg))
 	{
 		GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
 		GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
 		GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
 		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+	}
+
 	if (FAILED(Set_HpBarUI()))
 		return E_FAIL;
 
-	}
+	GetTransform()->Set_Scale(1.f, 100.f, 1.f);
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 
@@ -86,32 +89,36 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	/*if (m_bDead)
 		return DEAD;*/
-
+	_float fY = m_pTransformCom->Get_Info(INFO_POS).y;
 	CGameObject::Update_GameObject(fTimeDelta);
-	
+
 	// state change & update
-	ChangeState(m_tPlayerInfo.ePlayerState);
-	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta);
+	ChangeState(m_tPlayerInfo.ePlayerState); // preEnd -> setNormal -> curBegin
+	Move(m_tPlayerInfo.ePlayerMove); // move : speed 와 현재 y, bFixY 결정
+	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta); // curOn -> keyInput
 
 	// collider group 해줌
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_PLAYER, this);
-	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+
+	// render group에 추가
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
+	
 	return S_OK;
 }
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+
 	Set_OnTerrain(fTimeDelta);
+
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
 	Set_Collider(fTimeDelta);
 
-	// render group에 추가
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
-
 	__super::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CPlayer::Render_GameObject()
@@ -300,7 +307,7 @@ void CPlayer::StateNormalSet()
 	m_fAddTime = 0.f;
 	m_fStateTime = 0.f;
 
-	m_eMove = MOVE_NORMAL;
+	m_eMoveKey = MVKEY_NORMAL;
 
 	m_pTransformCom->GetTransformInfo().fSpeed = m_fNormalSpeed;
 
@@ -337,13 +344,14 @@ void CPlayer::JUMP_Begin()
 void CPlayer::JUMP_On(const _float& fTimeDelta)
 {
 	if (!m_bJumping)
-		Set_State_Idle();
+		Set_State_Normal();
 
 	Gravity(fTimeDelta);
 }
 
 void CPlayer::JUMP_End()
 {
+	m_bIsKeyInput = true;
 	Set_Velocity(0.f);
 	Set_Jumping(false);
 }
@@ -351,19 +359,21 @@ void CPlayer::JUMP_End()
 // dash attack
 void CPlayer::DASH_ATTACK_Begin()
 {
-	m_eMove = MOVE_STOP;
+	m_eMoveKey = MVKEY_STOP;
+	m_bIsKeyInput = true;
+	m_bIsAttack = true;
 	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
 }
 
 void CPlayer::DASH_ATTACK_On(const _float& fTimeDelta)
 {
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::WALL_SLIDE)
+	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::INCLINE)
 	{
 		m_tPlayerInfo.ePlayerState = SLIED;
 	}
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
 	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
-		Set_State_Idle();
+		Set_State_Normal();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
@@ -380,9 +390,10 @@ void CPlayer::DASH_ATTACK_End()
 // dash
 void CPlayer::DASH_Begin()
 {
-	m_eMove = MOVE_STOP;
+	m_eMoveKey = MVKEY_STOP;
+	m_bIsKeyInput = true;
+	m_bIsAttack = true;
 	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
-
 }
 
 void CPlayer::DASH_On(const _float& fTimeDelta)
@@ -393,7 +404,7 @@ void CPlayer::DASH_On(const _float& fTimeDelta)
 	}
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
 	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
-		Set_State_Idle();
+		Set_State_Normal();
 
 	// 앞으로 움직여라
 	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
@@ -410,15 +421,15 @@ void CPlayer::DASH_End()
 // slide
 void CPlayer::SLIED_Begin()
 {
-	m_eMove = MOVE_LR;
+	m_eMoveKey = MVKEY_LR;
 	m_bIsAttack = true;
 }
 
 void CPlayer::SLIED_On(const _float& fTimeDelta)
 {
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::WALL_SLIDE)
+	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::INCLINE)
 	{
-		Set_State_Idle();
+		Set_State_Normal();
 	}
 
 	// 앞으로 움직여라
@@ -443,7 +454,7 @@ void CPlayer::KICK_Begin()
 void CPlayer::KICK_On(const _float& fTimeDelta)
 {
 	if (StateTime_IsEnd(fTimeDelta, 1.f))
-		Set_State_Idle();
+		Set_State_Normal();
 }
 
 void CPlayer::KICK_End()
@@ -459,7 +470,7 @@ void CPlayer::ATTACK_Begin()
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Set_State_Idle();
+		Set_State_Normal();
 }
 
 void CPlayer::ATTACK_End()
@@ -471,8 +482,8 @@ void CPlayer::ATTACK_INSTANT_Begin()
 {
 	m_bIsInvincible = true;
 
-	m_eMove = MOVE_NON;
-	m_fStateTime = 1.8f;
+	m_eMoveKey = MVKEY_NON;
+	m_fStateTime = 1.2f;
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -481,7 +492,7 @@ void CPlayer::ATTACK_INSTANT_Begin()
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 {
 	if (StateTime_IsEnd(fTimeDelta, 1.f))
-		Set_State_Idle();
+		Set_State_Normal();
 }
 
 void CPlayer::ATTACK_INSTANT_End()
@@ -517,7 +528,7 @@ void CPlayer::ZOOM_End()
 void CPlayer::RELOAD_Begin()
 {
 	m_bIsKeyInput = true;
-	m_fStateTime = 0.5f; // origin 0.5 debug 2.f
+	//m_fStateTime = 0.5f; // origin 0.5 debug 2.f
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -525,8 +536,8 @@ void CPlayer::RELOAD_Begin()
 
 void CPlayer::RELOAD_On(const _float& fTimeDelta)
 {
-	if (StateTime_IsEnd(fTimeDelta, 1.f))
-		Set_State_Idle();
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Set_State_Normal();
 }
 
 void CPlayer::RELOAD_End()
@@ -550,7 +561,7 @@ void CPlayer::DOPING_Begin()
 void CPlayer::DOPING_On(const _float& fTimeDelta)
 {
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Set_State_Idle();
+		Set_State_Normal();
 }
 
 void CPlayer::DOPING_End()
@@ -561,7 +572,7 @@ void CPlayer::DOPING_End()
 // wall
 void CPlayer::WALL_Begin()
 {
-	m_eMove = MOVE_NON;
+	m_eMoveKey = MVKEY_NON;
 	m_bIsAttack = true;
 }
 
@@ -580,7 +591,7 @@ void CPlayer::WALL_End()
 // opening
 void CPlayer::OPENING_Begin()
 {
-	m_eMove = MOVE_NON;
+	m_eMoveKey = MVKEY_NON;
 	m_bIsCountHp = false;
 	m_bIsInvincible = true;
 
@@ -591,7 +602,7 @@ void CPlayer::OPENING_Begin()
 void CPlayer::OPENING_On(const _float& fTimeDelta)
 {
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Set_State_Idle();
+		Set_State_Normal();
 }
 
 void CPlayer::OPENING_End()
@@ -601,7 +612,7 @@ void CPlayer::OPENING_End()
 // dead
 void CPlayer::PLAYERDEAD_Begin()
 {
-	m_eMove = MOVE_NON;
+	m_eMoveKey = MVKEY_NON;
 }
 
 void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
@@ -616,7 +627,7 @@ void CPlayer::PLAYERDEAD_End()
 
 void CPlayer::Clear_Begin()
 {
-	m_eMove = MOVE_NON;
+	m_eMoveKey = MVKEY_NON;
 	m_pPlayerUI->Set_RenderOn(false);
 	m_pPlayerUI->Set_Active(false);
 	m_pHpBarUI->Set_RenderOn(false);
@@ -626,8 +637,8 @@ void CPlayer::Clear_Begin()
 void CPlayer::KeyInput(const _float& fTimeDelta)
 {
 	// 움직임 키
-	switch (m_eMove) {
-	case MOVE_NORMAL: // 상하좌우
+	switch (m_eMoveKey) {
+	case MVKEY_NORMAL: // 상하좌우
 		if (KEY_BUTTON_HOLD(DIK_W))
 		{
 			m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
@@ -638,7 +649,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
 		}
 		// break 있으면 안됨
-	case MOVE_LR: // 좌우
+	case MVKEY_LR: // 좌우
 		if (KEY_BUTTON_HOLD(DIK_A))
 		{
 			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
@@ -651,11 +662,11 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			// camera state -> right
 		}
 		break;
-	case MOVE_STOP: // idle로 바뀜
+	case MVKEY_STOP: // idle로 바뀜
 		if ((KEY_BUTTON_DOWN(DIK_W)) ||
 			(KEY_BUTTON_DOWN(DIK_S)))
 		{
-			Set_State_Idle();
+			Set_State_Normal();
 		}
 		break;
 	}
@@ -674,10 +685,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			m_tPlayerInfo.ePlayerState = JUMP;
 		}
 
-		if (m_bIsAttack && IS_LBUTTON_DOWN) // 좌클릭
-		{
-			m_tPlayerInfo.ePlayerState = ATTACK;
-		}
+		
 
 		if (IS_RBUTTON_DOWN) // 우클릭
 		{
@@ -692,11 +700,24 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			}
 		}
 	}
+
+	if (m_bIsAttack)
+	{
+		if (IS_LBUTTON_DOWN) // 좌클릭
+		{
+			m_tPlayerInfo.ePlayerState = ATTACK;
+		}
+	}
+
+	//debug
+	if (KEY_BUTTON_DOWN(DIK_E))
+		m_tPlayerInfo.ePlayerState = ATTACK_INSTANT;
 }
 
-void CPlayer::Set_State_Idle()
+void CPlayer::Set_State_Normal()
 {
 	m_tPlayerInfo.ePlayerState = IDLE;
+	m_tPlayerInfo.ePlayerMove = PMV_NORMAL;
 }
 
 void CPlayer::CountHp(const _float& fTimeDelta)
@@ -717,10 +738,93 @@ _bool CPlayer::StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime)
 	return (m_fAddTime >= m_fStateTime);
 }
 
+//PMV_NORMAL, PMV_DASH,PMV_DASHATT, PMV_SLIDE, PMV_END
+void CPlayer::Move(const _float& fTimeDelta)
+{
+	switch (m_tPlayerInfo.ePlayerMove)
+	{
+	case PMV_NORMAL:
+		break;
+
+	case PMV_DASH:
+	case PMV_DASHATT:
+	{
+		m_bIsAttack = true;
+		m_eMoveKey = MVKEY_NON;
+		Move_Dash(fTimeDelta);
+	}
+		break;
+	case PMV_SLIDE:
+	{
+		m_bIsAttack = true;
+		m_eMoveKey = MVKEY_LR;
+		Move_Slide(fTimeDelta);
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayer::Move_Normal(const _float& fTimeDelta)
+{
+}
+
+void CPlayer::Move_Dash(const _float& fTimeDelta)
+{
+	// 만약 일정 속도 이하가 되면 -> state: IDLE
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
+		Set_State_Normal();
+
+	// 앞으로 움직여라
+	if(m_bIsFixY)
+		m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY);
+	else
+	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
+	// speed 깎음 (like 마찰력)
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 9.f;
+}
+
+void CPlayer::Move_Slide(const _float& fTimeDelta)
+{
+	// 앞으로 움직여라
+	m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
+	if (KEY_BUTTON_HOLD(DIK_W))
+		m_pTransformCom->GetTransformInfo().fSpeed += fTimeDelta * 2.f;
+}
+
+void CPlayer::Move_Wall(const _float& fTimeDelta)
+{
+}
+
+void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
+{
+	// 바뀔때 y값 저장해옴 m_bYFix의 값에 따라 쓸래말래 결정
+	m_fFixY = GetTransform()->Get_Info(INFO_POS).y;
+	m_bIsFixY = bYFix;
+
+	switch (ePlayerMove)
+	{
+	case PMV_NORMAL:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+		break;
+
+	case PMV_DASH:
+	case PMV_DASHATT:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+	break;
+	case PMV_SLIDE:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 2.f;
+	break;
+	}
+
+	m_tPlayerInfo.ePlayerMove = ePlayerMove;
+}
+
 HRESULT CPlayer::Set_Component()
 {
-
-
 	//// Texture
 	//if (Texture_Clone())
 	//	return E_FAIL;
@@ -838,7 +942,7 @@ void CPlayer::Set_Collider_With_Door()
 {
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DOOR, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
-		//MSG_BOX("Yeah");
+		// kick 모션 나오게
 		m_tPlayerInfo.ePlayerState = KICK;
 	}
 }
