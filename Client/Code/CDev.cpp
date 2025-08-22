@@ -196,8 +196,6 @@ HRESULT CDev::Ready_UI_Layer(const _tchar *pLayerTag)
 void CDev::SetData(_uint _iSceneIndex)
 {
     CDataManager::GetInstance()->Clear();
-    CGameDataManager::GetInstance()->AllClear();
-
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");

@@ -22,12 +22,15 @@ class CUIManager :
         UpgradeId           id;
         std::wstring        title;          // 카드 상단/중앙 제목
         std::wstring        desc;           // 설명(여러 줄 \n 가능)
+        std::wstring        backTag;        // 배경화면 텍스쳐 태그
+        std::wstring        backProto;      // 배경화면 프로토타입
         std::wstring        artTag;         // 아이콘/아트 텍스처 태그
         std::wstring        artProto;       // 아이콘/아트 프로토타입
     };
 
     struct ShopCardUI {
         CButtonUI* btn = nullptr;  // 카드 전체 클릭 영역(프레임 텍스처)
+        CImageUI* pBack = nullptr;
         CImageUI* icon = nullptr;  // 가운데 이미지
         CTextUI* title = nullptr;  // 제목
         CTextUI* desc = nullptr;  // 설명
@@ -40,10 +43,13 @@ class CUIManager :
 
     inline static const std::vector<ShopItemDef> kShopPool = {
     { UpgradeId::SlowMo,     L"슬로우 옵션", L"슬로우 모션을\n활성화합니다.",
+      L"Com_Tex_BackGround", L"NONE",
       L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_SlowMo_Art" },
     { UpgradeId::UZI, L"UZI",   L"우지 총입니다.",
+    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
       L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art"},
     { UpgradeId::Sniper,     L"저격총",     L"저격총입니다.",
+    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
       L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art" },
     };
 

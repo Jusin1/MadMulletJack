@@ -42,7 +42,6 @@ HRESULT CCameraFPS::Initialize(void* pArg)
     if (FAILED(CCamera::Initialize(pArg)))
         return E_FAIL;
 
-    m_fOffset = 0.2f;
 
     return S_OK;
 }
@@ -78,7 +77,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     if (false == m_bFix)
     {
         Mouse_Move();
-        Mouse_Fix();
+        //Mouse_Fix();
     }
 
 }

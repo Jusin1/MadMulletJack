@@ -818,7 +818,7 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_BoardFrameUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/UPGRADE BORDER.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/UPGRADE BORDER BK.png", 1))))
 		return E_FAIL;
 
 	// 상점 이미지 UI
@@ -833,6 +833,11 @@ HRESULT CLoader::Loading_UI()
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Sniper_Art",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 2.png", 1))))
+		return E_FAIL;
+
+	// 상점 배경 이미지 UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Back_Slow",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 1 BACK.png", 1))))
 		return E_FAIL;
 
 	

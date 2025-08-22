@@ -160,10 +160,12 @@ void CTalkUI::NextDialogue()
 
 	const int last = size - 1;
 
+	// 아직 마지막 대사 전이면
 	if (m_iCurrentIndex < last)
 	{
 		++m_iCurrentIndex;
 		m_CurrentText = m_vecDialogues[m_iCurrentIndex];
+
 		if (m_iCurrentIndex == last) {
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
 		}
@@ -171,11 +173,17 @@ void CTalkUI::NextDialogue()
 			CUIManager::GetInstance()->SliderPhoneUI();
 			m_pLisa->SetState(CLisaUI::AnimState::WINK);
 		}
+
 		m_fAccTime = 0.f;
 		m_bTypingDone = false;
 		return;
 	}
 
+	// 이미 마지막 대사면 Enter 눌러도 종료하지 않음
+	if (m_iCurrentIndex == last)
+		return;
+
+	// (필요하면 완전 종료 로직은 여기 둬도 됨)
 	if (m_pFrame) m_pFrame->Set_Active(false);
 	Set_Active(false);
 	CUIManager::GetInstance()->DestroyEnterUI();

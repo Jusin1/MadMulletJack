@@ -581,6 +581,7 @@ void CUIManager::CloseShop()
 
 void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& outCard)
 {
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (poolIdx < 0 || poolIdx >= (int)kShopPool.size()) return;
     const ShopItemDef& def = kShopPool[poolIdx];
 
@@ -594,10 +595,10 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
             parent->Add_Child(ui);
         };
 
+
     // ── 1) 카드 버튼(프레임)
     const float CARD_W = 200.f;
     const float CARD_H = 300.f;
-    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     auto* btn = dynamic_cast<CButtonUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIButton", sceneIdx, L"UI_Layer"));
@@ -628,6 +629,21 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     attach(btn);
     outCard.btn = btn;
     outCard.id = def.id;
+
+    // - 2) 배경화면
+    if (auto* back = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
+    {
+        const float ICON_W = 140.f, ICON_H = 260.f;
+        const float ICON_Y = cy - 30.f;
+        back->RegisterTexture(def.backTag.c_str(), def.backProto.c_str(), 0, 1, 0.f, false);
+        back->ChangeTexture(def.backTag.c_str());
+        back->SetAdditive(false);
+        back->Set_UIPosition(cx, ICON_Y, ICON_W, ICON_H);
+        attach(back);
+        outCard.pBack = back;
+    }
 
 
     CTextUI* buyLabel = dynamic_cast<CTextUI*>(
@@ -660,6 +676,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
             if (buyLabel) { buyLabel->Set_RenderOn(false); buyLabel->Set_Active(false); }
             });
     }
+
 
     // ── 2) 아이콘
     if (auto* icon = dynamic_cast<CImageUI*>(
