@@ -450,7 +450,50 @@ void CUIManager::CreateClearUI()
 
 }  // 게임 클리어 UI 생성
 
+void CUIManager::CreateEffectUI(const std::wstring& str)
+{
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    if (auto* effect = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
+        effect->Set_UIPosition(0.f, -300.f, 80.f,70.f);
+        effect->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_PickUpRefill", 0, 0, 0.f, false);
+        effect->ChangeTexture(L"Com_Texture_Text");
+        effect->SetTintRGBA(255, 0, 0, 255);
+        effect->SetColorMode(CImageUI::ColorMode::TintMultiply);
+        effect->SetAdditive(false);
+    }
+}
 
+void CUIManager::CreateWeaponGetUI()
+{
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    if (auto* effect = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
+        effect->Set_UIPosition(0.f, 200.f, 130.f, 130.f);
+        effect->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUIBack", 0, 0, 0.f, false);
+        effect->ChangeTexture(L"Com_Texture_Text");
+        effect->SetAdditive(false);
+    }
+    if (auto* weapon = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
+        weapon->Set_UIPosition(0.f, 200.f, 40.f, 70.f);
+        weapon->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUI", 0, 0, 0.f, false);
+        weapon->ChangeTexture(L"Com_Texture_Text");
+        weapon->SetAdditive(false);
+    }
+
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(0.f, 300.f, 170.f, 50.f);
+        pBlack->SetAlpha(255);
+        pBlack->SetColor(D3DCOLOR_ARGB(255, 255, 165, 0));
+    }
+
+}
 
 void CUIManager::DestroyEnterUI()
 {
@@ -607,7 +650,6 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
     btn->SetSolidMode(false);
 
-
     btn->SetHoverScale(1.14f);   
     btn->SetPressScale(1.04f);  
     btn->SetLerpSpeeds(22.f, 14.f);
@@ -635,8 +677,8 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
-        const float ICON_W = 140.f, ICON_H = 260.f;
-        const float ICON_Y = cy - 30.f;
+        const float ICON_W = 160.f, ICON_H = 300.f;
+        const float ICON_Y = cy;
         back->RegisterTexture(def.backTag.c_str(), def.backProto.c_str(), 0, 1, 0.f, false);
         back->ChangeTexture(def.backTag.c_str());
         back->SetAdditive(false);
@@ -669,11 +711,20 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
 
 
         btn->SetOnHoverEnter([buyLabel]() {
-            if (buyLabel) { buyLabel->Set_Active(true); buyLabel->Set_RenderOn(true); }
+            if (buyLabel) {
+                buyLabel->Set_Active(true);
+                buyLabel->Set_RenderOn(true);
+                buyLabel->m_bHovering = true;   // ← Hover 시작
+            }
             });
 
         btn->SetOnHoverExit([buyLabel]() {
-            if (buyLabel) { buyLabel->Set_RenderOn(false); buyLabel->Set_Active(false); }
+            if (buyLabel) {
+                buyLabel->m_bHovering = false;  // ← Hover 끝
+                buyLabel->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f)); // 기본색 복원
+                buyLabel->Set_RenderOn(false);
+                buyLabel->Set_Active(false);
+            }
             });
     }
 

@@ -179,11 +179,9 @@ void CTalkUI::NextDialogue()
 		return;
 	}
 
-	// 이미 마지막 대사면 Enter 눌러도 종료하지 않음
 	if (m_iCurrentIndex == last)
 		return;
 
-	// (필요하면 완전 종료 로직은 여기 둬도 됨)
 	if (m_pFrame) m_pFrame->Set_Active(false);
 	Set_Active(false);
 	CUIManager::GetInstance()->DestroyEnterUI();

@@ -74,6 +74,10 @@ public:
     void CreatePhoneUI();
     void CreatePhoneScreen();
 
+    // 작은 이펙트 생성
+    void CreateEffectUI(const std::wstring& str);
+    void CreateWeaponGetUI();
+
     void DestroyEnterUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
@@ -189,7 +193,7 @@ private:
     // 딜레이 후 PhoneScreen 생성 타이머
     bool  m_createPhoneScreenPending = false;
     float m_createPhoneScreenTimer = 0.f;
-    float m_createPhoneScreenDelay = 0.2f; // ← 1초
+    float m_createPhoneScreenDelay = 0.2f; 
 
     std::vector<SlideTask> m_slideTasks;
     std::vector<ScaleTask> m_scaleTasks;

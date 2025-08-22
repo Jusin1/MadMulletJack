@@ -37,7 +37,8 @@ protected:
 
 protected: 
     AnimState m_state;                      
-    CImageUI* m_pHair;                         
+    CImageUI* m_pHair;  
+    CImageUI* m_pFrame;
 
     map<const _tchar*, CTexture*> m_mapTextures; 
     wstring m_CurrentAnimTag;              

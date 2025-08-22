@@ -7,7 +7,7 @@
 
 CLisaUI::CLisaUI(LPDIRECT3DDEVICE9 dev) : CUI(dev) {}
 CLisaUI::CLisaUI(const CLisaUI& rhs)
-    : CUI(rhs), m_state(rhs.m_state), m_pHair(nullptr) {
+    : CUI(rhs), m_state(rhs.m_state), m_pHair(nullptr), m_pFrame(nullptr){
 }
 CLisaUI::~CLisaUI() {}
 
@@ -22,6 +22,7 @@ HRESULT CLisaUI::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
+
 
     // ----- 본체 텍스처 준비 -----
     if (FAILED(Texture_Clone()))
@@ -110,6 +111,19 @@ HRESULT CLisaUI::Change_Texture(const _tchar* pTextureTag)
 HRESULT CLisaUI::Create_HairPart()
 {
     auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+    // 프레임 생성
+    if (auto* img2 = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
+    {
+        img2->Set_UIPosition(550.f, -400.f, 220.f, 500.f); // 화면 프레임
+        img2->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Phone_FrameUI", 0, 4, 10.f, true);
+        img2->ChangeTexture(L"Com_Texture_Logo");
+        img2->Play(true);
+        Add_Child(img2);
+    }
+
     m_pHair = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
@@ -131,9 +145,10 @@ HRESULT CLisaUI::Create_HairPart()
     m_pHair->RegisterTexture(
         L"Lisa_Hair_Wink",
         L"Prototype_Component_Texture_LisaHair_WINK",
-        0, 6, 8.f, true);
+        0, 6, 4.f, true);
 
     m_pHair->ChangeTexture(L"Lisa_Hair_Default");
+
     return S_OK;
 }
 

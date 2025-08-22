@@ -48,7 +48,12 @@ private: // 텍스트 관련 멤버 변수
 
 	float m_letterSpacing;       // 글자 간격(px)
 	bool  m_autoSize;            // 자동 크기 맞춤 여부
-	bool  m_dirtyMeasure;        // 사이즈 재계산 필요 여부
+	bool  m_dirtyMeasure;        // 사이즈 재계산 필요 여부\
+
+private:
+	// 버튼 관련 - 색변화
+	bool m_bHovering = false;
+	float m_fHoverTime = 0.f;
 
 private:
 	// 등장 애니메이션 상태
@@ -65,5 +70,7 @@ public: // 생성/복제/해제
 	static CTextUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	friend class CUIManager;
 };
 

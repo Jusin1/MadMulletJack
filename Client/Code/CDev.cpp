@@ -102,6 +102,11 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
 void CDev::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+    if (GetAsyncKeyState('P'))
+    {
+        //CUIManager::GetInstance()->CreateEffectUI(L"DD");
+        CUIManager::GetInstance()->CreateWeaponGetUI();
+    }
 }
 
 void CDev::Render_Scene()

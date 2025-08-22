@@ -684,6 +684,24 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 #pragma endregion 일반UI
 
+#pragma region 작은 이펙트 UI
+	// 여러 상호작용 이펙트 UI
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PickUpRefill",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PICKUP_REFILL L I.png", 1))))
+		return E_FAIL;
+
+	// 무기 획득 UI - BackGround
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WeaponUIBack",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PICKUP_REFILL L.png", 1))))
+		return E_FAIL;
+
+	// 무기 획득 UI - Weapon
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WeaponUI",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/HUD/HUD GUN ITEM CLEAVER.png", 1))))
+		return E_FAIL;
+	
+#pragma endregion 효과 UI
+
 #pragma region 패널 UI
 
 	// GridUI
@@ -820,12 +838,6 @@ HRESULT CLoader::Loading_UI()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_BoardFrameUI",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/UPGRADE BORDER BK.png", 1))))
 		return E_FAIL;
-
-	// 상점 이미지 UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SlowMo_Art",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/TOXIC MASCULINITY.png", 1))))
-		return E_FAIL;
-
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_BossKiller_Art",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 3.png", 1))))

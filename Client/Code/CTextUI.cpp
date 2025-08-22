@@ -7,6 +7,25 @@ static inline float SXi(float x) { return WINCX * 0.5f + x; }
 static inline float SYi(float y) { return WINCY * 0.5f - y; }
 static inline float Lerp(float a, float b, float t) { return a + (b - a) * t; }
 static inline float EaseOutCubic(float t) { float u = 1.f - t; return 1.f - u * u * u; }
+static D3DXCOLOR HSVtoRGB(float h, float s, float v)
+{
+	float r, g, b;
+	int i = int(h * 6);
+	float f = h * 6 - i;
+	float p = v * (1 - s);
+	float q = v * (1 - f * s);
+	float t = v * (1 - (1 - f) * s);
+
+	switch (i % 6) {
+	case 0: r = v, g = t, b = p; break;
+	case 1: r = q, g = v, b = p; break;
+	case 2: r = p, g = v, b = t; break;
+	case 3: r = p, g = q, b = v; break;
+	case 4: r = t, g = p, b = v; break;
+	case 5: r = v, g = p, b = q; break;
+	}
+	return D3DXCOLOR(r, g, b, 1.f);
+}
 
 CTextUI::CTextUI(LPDIRECT3DDEVICE9 dev)
 	: CUI(dev)
@@ -50,6 +69,16 @@ _int CTextUI::Update_GameObject(const _float& fTimeDelta)
 			m_appearT = m_appearDur;
 			m_appearPlaying = false;
 		}
+	}
+
+	if (m_bHovering) {
+		m_fHoverTime += fTimeDelta;
+
+		// 예시: 무지개 색 변화 (HSV 기반)
+		float h = fmod(m_fHoverTime * 0.5f, 1.f); // 0~1 범위
+		float s = 1.f;
+		float v = 1.f;
+		m_color = HSVtoRGB(h, s, v);
 	}
 
 	return __super::Update_GameObject(fTimeDelta), NO_EVENT;
