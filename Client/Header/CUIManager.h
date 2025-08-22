@@ -118,8 +118,7 @@ private:
     void CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& outCard);
     void OnShopCardClicked(int slot); // 0,1,2 Áß ÇÏ³ª
     void LayoutShopCard(ShopCardUI& card);
-
-    public:
+public:
         void ClearAllUI();
 
 public:

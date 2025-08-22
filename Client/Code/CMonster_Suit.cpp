@@ -6,6 +6,7 @@
 #include "CEffectUI.h"
 #include "CPicking.h"
 #include "CGlobal_Info.h"
+#include "CManagement.h"
 
 #ifdef _DEBUG
 namespace {
@@ -408,10 +409,12 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 
 CTransform* CMonster_Suit::GetPlayerTransform()
 {
+
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (!m_pPlayerTr)
     {
         m_pPlayerTr = dynamic_cast<CTransform*>(
-            CObjectManager::GetInstance()->Get_Component(SCENE_DEV, L"Player_Layer", L"Com_Transform", 0));
+            CObjectManager::GetInstance()->Get_Component(sceneIdx, L"Player_Layer", L"Com_Transform", 0));
     }
     return m_pPlayerTr;
 }

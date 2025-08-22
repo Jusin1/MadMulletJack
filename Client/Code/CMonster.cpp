@@ -104,7 +104,7 @@ HRESULT CMonster::Set_Component()
 	// Collider
 	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 1.f;
+	CollSphereInfo.fRadius = 0.5f;
 	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
 
 	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderCom, &CollSphereInfo)))

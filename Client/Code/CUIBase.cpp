@@ -41,7 +41,7 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
             pChild->Update_GameObject(fTimeDelta);
     }
 
-    //// 부모 위치 가져오기
+    ////// 부모 위치 가져오기
     //_vec3 vParentPos = m_pTransformCom->Get_Info(INFO_POS);
 
     //// 자식들 위치 갱신
