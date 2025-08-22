@@ -46,6 +46,9 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	if(m_pTextureCom->Is_AnimFinished())
+
+
 	return NO_EVENT;
 }
 
@@ -146,9 +149,9 @@ HRESULT CKnife_SubW::Set_Texture()
 
 		Set_UISize(216.f, 460.f);
 
-		Set_New_TransInfo(380.f, 20.f);
+		Set_New_TransInfo(380.f, 40.f);
 		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
-		m_fRotSum += D3DXToRadian(20.f) * 1;
+		m_fRotSum += D3DXToRadian(40.f) * 1;
 
 		break;
 

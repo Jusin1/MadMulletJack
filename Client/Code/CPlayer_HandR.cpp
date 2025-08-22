@@ -8,7 +8,7 @@
 #include "CMapFactory.h"
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev),m_tInfo({ PLAYER_END, WP_END, WP2_END })
+    : CUI(pGraphicDev),m_tInfo({ PLAYER_END, PMV_END,WP_END, WP2_END })
 {
 }
 
@@ -37,11 +37,10 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-
-    if (FAILED(Texture_Clone()))
+    if (FAILED(Set_WeaponUI()))
         return E_FAIL;
 
-    if (FAILED(Set_WeaponUI()))
+    if (FAILED(Texture_Clone()))
         return E_FAIL;
 
     return S_OK;
@@ -215,13 +214,15 @@ HRESULT CPlayer_HandR::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(300.f, 540.f, WINCX * 0.5f + 500.f, WINCY * 0.5f  + 150.f); // pos를 정하고
+            Set_UISizeAndPos(300.f, 540.f, 2500.f, -800.f); // pos를 정하고
+            //Set_UISizeAndPos(300.f, 540.f, WINCX * 0.5, WINCY *0.5); // pos를 정하고
 
-            Set_New_TransInfo(200.f, 20.f);
+            Set_New_TransInfo(1200.f, 50.f);
+            //Set_New_TransInfo(0.f, 50.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
-            m_fRotSum += D3DXToRadian(20.f) * 1;
+            m_fRotSum += D3DXToRadian(50.f) * 1;
 
-            m_tMoveInfo = { MV_LEFT, false, 10.f, 0.f };
+            m_tMoveInfo = { MV_LDOWN, true, 2850.f, 0.f};
         }
 
         else {
@@ -345,7 +346,7 @@ void CPlayer_HandR::Update_Weapon_Pistol()
             if (m_CurrentAnimTag == TEXT("Com_Texture_HandR_Idle"))
             {
                 // pos를 갱신
-                pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 280.f);
+                pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 300.f);
                 return;
             }
 
@@ -365,9 +366,20 @@ void CPlayer_HandR::Update_Weapon2_Knife()
 
     if (pKnife && m_tInfo.ePlayerState == ATTACK_INSTANT)
     {
-        pKnife->Set_Active(true);
-        pKnife->Set_RenderOn(true);
-        pKnife->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -200.f, 340.f);
+        if (m_bRenderOn)
+        {
+            if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
+            {
+                dynamic_cast<CKnife_SubW*>(pKnife)->Set_Texture();
+            }
+
+            pKnife->Set_Active(true);
+            pKnife->Set_RenderOn(true);
+            pKnife->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -250.f, 320.f);
+
+        }
+        else
+            pKnife->Set_RenderOn(false);
     }
     else
     {

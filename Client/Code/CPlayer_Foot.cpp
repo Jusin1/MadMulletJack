@@ -3,7 +3,7 @@
 #include "CTimerMgr.h"
 
 CPlayer_Foot::CPlayer_Foot(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, PMV_END, WP_END, WP2_END })
 {
 }
 
@@ -109,7 +109,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     // Attack_Ins
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 13;
-    texInfo.m_fSpeed = 5.f;
+    texInfo.m_fSpeed = 4.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Monster_InsKill_UI", SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;

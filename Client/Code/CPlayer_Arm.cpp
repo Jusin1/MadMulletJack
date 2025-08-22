@@ -4,7 +4,7 @@
 
 
 CPlayer_Arm::CPlayer_Arm(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, PMV_END, WP_END, WP2_END })
 {
 }
 

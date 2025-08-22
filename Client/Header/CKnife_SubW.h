@@ -14,14 +14,18 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-private:
+public:
 	virtual HRESULT Set_Texture() override; // subW는 필요 없을지도
+
+private:
 	virtual HRESULT Texture_Clone()	override;
 	virtual HRESULT Change_Texture(const _tchar* pTextureTag) override;
 
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
+
+	PLAYERSTATE m_ePlayerState;
 
 public:
 	static CKnife_SubW* Create(LPDIRECT3DDEVICE9 pGraphicDev);

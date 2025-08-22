@@ -67,6 +67,7 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CPistol_Gun::Render_GameObject()
@@ -126,7 +127,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Reload
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 13;
-	texInfo.m_fSpeed = 6.5f;
+	texInfo.m_fSpeed = 3.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
