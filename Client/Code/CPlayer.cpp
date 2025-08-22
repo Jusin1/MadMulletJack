@@ -63,17 +63,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Set_PlayerUI()))
 		return E_FAIL;
 
-	// StartPosition 설정
-	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
-	{
-		GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-		GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-		GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
 	if (FAILED(Set_HpBarUI()))
 		return E_FAIL;
 
+	// StartPosition 설정
+	if (MAPOBJECTDATA *p = reinterpret_cast<MAPOBJECTDATA *>(pArg))
+	{
+		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
 	}
+
+	GetTransform()->Set_Scale(1.f, 2.f, 1.f);
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 
@@ -86,7 +85,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	/*if (m_bDead)
 		return DEAD;*/
-
+	_float f = GetTransform()->Get_Scale().y;
 	CGameObject::Update_GameObject(fTimeDelta);
 	
 	// state change & update
@@ -95,7 +94,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	// collider group 해줌
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_PLAYER, this);
-	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+	//m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	return S_OK;
 }
 
@@ -382,12 +381,11 @@ void CPlayer::DASH_Begin()
 {
 	m_eMove = MOVE_STOP;
 	m_pTransformCom->GetTransformInfo().fSpeed = 15.f;
-
 }
 
 void CPlayer::DASH_On(const _float& fTimeDelta)
 {
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::WALL_SLIDE)
+	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::INCLINE)
 	{
 		m_tPlayerInfo.ePlayerState = SLIED;
 	}
@@ -743,7 +741,7 @@ HRESULT CPlayer::Set_Component()
  	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
 	CollSphereInfo.fRadius = 0.4f;                    // 반지름 1 -> 0.8 eunbi
-	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
+	CollSphereInfo.vOffset = _vec3(0.f, -0.3f, 0.f);    // 중심 오프셋 없음
 
 	// Colider_Sphere
 	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent**)&m_pColiderSphere, &CollSphereInfo)))

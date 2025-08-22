@@ -64,8 +64,10 @@ HRESULT CCamera::Apply_ViewPorjection()
 {
 	_matrix matWorld = *m_pTransformCom->Get_World();
 
-	_matrix matView = *D3DXMatrixInverse(&matView, nullptr, &matWorld);
-	_matrix matProj = *D3DXMatrixPerspectiveFovLH(&matProj, m_camInfo.fFov, m_camInfo.fAspect, m_camInfo.fNear, m_camInfo.fFar);
+	_matrix matView;
+	D3DXMatrixInverse(&matView, nullptr, &matWorld);
+	_matrix matProj;
+	D3DXMatrixPerspectiveFovLH(&matProj, m_camInfo.fFov, m_camInfo.fAspect, m_camInfo.fNear, m_camInfo.fFar);
 
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);

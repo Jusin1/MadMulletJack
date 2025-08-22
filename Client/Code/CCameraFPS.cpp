@@ -42,8 +42,6 @@ HRESULT CCameraFPS::Initialize(void* pArg)
     if (FAILED(CCamera::Initialize(pArg)))
         return E_FAIL;
 
-    m_fOffset = 0.2f;
-
     return S_OK;
 }
 
@@ -59,7 +57,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         return -1;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-    vPlayerPos.y += m_fOffset;
+    //vPlayerPos.y += m_fOffset;
     m_pTransformCom->Set_Info(INFO_POS, vPlayerPos );
 
     if (FAILED(Apply_ViewPorjection()))
@@ -115,9 +113,9 @@ void CCameraFPS::Mouse_Move()
         return;
 
     // 행렬에서 벡터 추출 -> 플레이어에게 적용
-    _vec3 vRight = { matCamWorld._11, matCamWorld._12, matCamWorld._13 };
-    _vec3 vUp = { matCamWorld._21, matCamWorld._22, matCamWorld._23 };
-    _vec3 vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33 };
+    _vec3 vRight = { matCamWorld._11 * 1.f, matCamWorld._12, matCamWorld._13 };
+    _vec3 vUp = { matCamWorld._21, matCamWorld._22 * 2.f, matCamWorld._23 };
+    _vec3 vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33 * 1.f };
 
     pPlayerTransformCom->Set_Info(INFO_RIGHT, vRight);
     pPlayerTransformCom->Set_Info(INFO_UP, vUp);
@@ -139,7 +137,7 @@ void CCameraFPS::Mouse_Move()
     // 행렬에서 벡터 추출
     vRight = { matCamWorld._11, matCamWorld._12, matCamWorld._13 };
     vUp = { matCamWorld._21, matCamWorld._22, matCamWorld._23 };
-    vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33 };
+    vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33};
 
     m_pTransformCom->Set_Info(INFO_RIGHT, vRight);
     m_pTransformCom->Set_Info(INFO_UP, vUp);
