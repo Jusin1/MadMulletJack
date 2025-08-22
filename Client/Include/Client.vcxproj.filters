@@ -223,6 +223,12 @@
     <Filter Include="01. Scene\04. Tutorial">
       <UniqueIdentifier>{20714cf0-2295-4e74-a49d-ac22b1d671e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\ImageUI\ItemUI">
+      <UniqueIdentifier>{3efbc2e5-7d02-4f62-99c9-6cb0ac89f2f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\TextEffectUI">
+      <UniqueIdentifier>{abbe10d1-da4c-4d96-a51f-79b861834986}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -423,6 +429,12 @@
     <ClInclude Include="..\Header\CTutorial.h">
       <Filter>01. Scene\04. Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CItemUI.h">
+      <Filter>02. GameObject\06. UI\ImageUI\ItemUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTextEffectUI.h">
+      <Filter>02. GameObject\06. UI\TextEffectUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -613,6 +625,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTutorial.cpp">
       <Filter>01. Scene\04. Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItemUI.cpp">
+      <Filter>02. GameObject\06. UI\ImageUI\ItemUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTextEffectUI.cpp">
+      <Filter>02. GameObject\06. UI\TextEffectUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

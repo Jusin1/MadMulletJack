@@ -168,6 +168,7 @@
     <ClInclude Include="..\Header\CGameDataManager.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
+    <ClInclude Include="..\Header\CItemUI.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -185,6 +186,7 @@
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CTextEffectUI.h" />
     <ClInclude Include="..\Header\CTile_Bottle.h" />
     <ClInclude Include="..\Header\CTile_NormalDoor.h" />
     <ClInclude Include="..\Header\CPhone_HpBarUI.h" />
@@ -239,6 +241,7 @@
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
+    <ClCompile Include="..\Code\CItemUI.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -254,6 +257,7 @@
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CTextEffectUI.cpp" />
     <ClCompile Include="..\Code\CTile_Bottle.cpp" />
     <ClCompile Include="..\Code\CTile_NormalDoor.cpp" />
     <ClCompile Include="..\Code\CPhone_HpBarUI.cpp" />

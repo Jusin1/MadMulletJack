@@ -102,10 +102,16 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
 void CDev::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    if (GetAsyncKeyState('P'))
+    // 테스트용 UI 띄우기
+    if (GetAsyncKeyState('P')) 
     {
-        //CUIManager::GetInstance()->CreateEffectUI(L"DD");
-        CUIManager::GetInstance()->CreateWeaponGetUI();
+        CUIManager::GetInstance()->CreateEffectUI(L"DASH FINISH"); // 상호작용 UI
+        //CUIManager::GetInstance()->CreateItemUI(); // ItemUI
+    }
+    if (GetAsyncKeyState('F')) // 삭제
+    {
+        //CUIManager::GetInstance()->CreateEffectUI(L"DASH FINISH");
+        CUIManager::GetInstance()->DestroyEffectUI();
     }
 }
 

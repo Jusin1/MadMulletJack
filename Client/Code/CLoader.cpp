@@ -44,6 +44,8 @@
 #include "CTalkUI.h"
 #include "CPhoneUI.h"
 #include "CButtonUI.h"
+#include "CItemUI.h"
+#include "CTextEffectUI.h"
 #pragma endregion 게임 진입 UI들
 
  
@@ -686,7 +688,7 @@ HRESULT CLoader::Loading_UI()
 
 #pragma region 작은 이펙트 UI
 	// 여러 상호작용 이펙트 UI
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PickUpRefill",
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIDiamondWhite",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PICKUP_REFILL L I.png", 1))))
 		return E_FAIL;
 
@@ -697,7 +699,7 @@ HRESULT CLoader::Loading_UI()
 
 	// 무기 획득 UI - Weapon
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WeaponUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/HUD/HUD GUN ITEM CLEAVER.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/HUD/CLEAVER ITEM.png", 1))))
 		return E_FAIL;
 	
 #pragma endregion 효과 UI
@@ -886,6 +888,11 @@ HRESULT CLoader::Loading_UI()
 		CButtonUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	// ItemUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIItem",
+		CItemUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 	// TextUI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
 		CTextUI::Create(m_pGraphicDev))))
@@ -905,6 +912,11 @@ HRESULT CLoader::Loading_UI()
 	// 몬스터 피격 이펙트
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
 		CEffectUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// 텍스쳐 상호작용 이펙트
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextEffectUI",
+		CTextEffectUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 #pragma region 게임 진입 UI들 생성

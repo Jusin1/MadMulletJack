@@ -76,9 +76,11 @@ public:
 
     // 작은 이펙트 생성
     void CreateEffectUI(const std::wstring& str);
-    void CreateWeaponGetUI();
+    void CreateItemUI();
 
     void DestroyEnterUI();
+    void DestroyItemUI();
+    void DestroyEffectUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
     void Update(const _float& dt);
@@ -157,6 +159,8 @@ private:
 private:
     CUIBase* m_pEnterUI = nullptr;
     CUIBase* m_pMonsterDieEffect = nullptr;
+    CUIBase* m_pItemUI = nullptr;
+    CUIBase* m_pEffectUI = nullptr;
 
     // Clear text
     CTextUI* m_pVictoryText = nullptr;
