@@ -91,12 +91,24 @@ void CScene_Prefab::Render_Scene()
 {
 }
 
+HRESULT CScene_Prefab::LoadData()
+{
+	if (FAILED(__super::LoadData()))
+		return E_FAIL;
+
+	_uint i = CGuiManager::GetInstance()->GetObjectType();
+	CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(i));
+	
+	return S_OK;
+}
+
 HRESULT CScene_Prefab::SaveData()
 {
 	if (FAILED(__super::SaveData()))
 		return E_FAIL;
 
-	CFileManager::GetInstance()->SavePrefabDataFile();
+	_uint i = CGuiManager::GetInstance()->GetObjectType();
+	CFileManager::GetInstance()->SavePrefabDataFile(static_cast<PrefabType>(i));
 
 	return S_OK;
 }

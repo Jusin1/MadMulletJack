@@ -29,6 +29,7 @@ private:
 	{
 		INSPECTOR,
 		CONSOLE,
+		PREFAB_INSPECTOR,
 		NONE
 	};
 private:
@@ -58,6 +59,12 @@ public:
 	_uint GetObjectType() { return m_iObjectType; }
 	void SetObjectType(_uint _i) { m_iObjectType = _i; }
 
+	ObjectCategory GetLocalCategory() { return m_eLocalCategory; }
+	void SetLocalCategory(ObjectCategory _e) { m_eLocalCategory = _e; }
+
+	_uint GetLocalObjectType() { return m_iLocalObjectType; }
+	void SetLocalObjectType(_uint _i) { m_iLocalObjectType = _i; }
+
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> *GetPanelList() { return &m_pPanels; }
 	CGui_Panel *GetConsole() { return m_pPanels[CONSOLE]; }
 	CGui_Panel *GetInspector() { return m_pPanels[INSPECTOR]; }
@@ -76,6 +83,9 @@ private:
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;
 	std::array<PANELINFO, (_ulong)(PANEL::NONE)> m_pPanelInfos;
+	ObjectCategory m_eLocalCategory;
+	_uint m_iLocalObjectType;
+	
 	ObjectCategory m_eCategory;
 	_uint m_iObjectType;
 };

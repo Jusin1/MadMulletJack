@@ -24,6 +24,7 @@ enum class MapEditorGuiType : unsigned int
 	MONSTER_TYPE_DROPBOX,
 	LIGHT_TYPE_DROPBOX,
 	SCENE_TYPE_DROPBOX,
+	PREFAB_TYPE_DROPBOX,
 	CREATEMODE_CHECKBOX,
 	SNAPMODE_CHECKBOX,
 	CREATE_BUTTONS,
@@ -49,6 +50,7 @@ enum class MapEditorSceneType : unsigned int
 	SNIPE,
 	ROOFTOP,
 	ROAD,
+	PREFAB,
 	NONE
 };
 constexpr size_t g_MapEditorSceneTypeCount{ static_cast<size_t>(MapEditorSceneType::NONE) };

@@ -42,6 +42,7 @@
 #include "CVIBuffer_GridPanel_Editor.h"
 #include "CDummyTile.h"
 #include "CTile.h"
+#include "CPrefab.h"
 #include "CDummyPlacementObject.h"
 #include "CPlacementObject.h"
 //=========================
@@ -237,6 +238,11 @@ HRESULT CEditorApplication::Ready_Prototype_Component()
 		CPlacementObject::Create(m_pGraphicDevice))))
 		return E_FAIL;
 
+	// Default Prefab
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_GameObject_DefaultPrefab",
+		CPrefab::Create(m_pGraphicDevice))))
+		return E_FAIL;
+
 	// Buffer_PanelDefault
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Component_Buffer_PanelDefault",
 		CVIBuffer_GridPanel_Editor::Create(m_pGraphicDevice))))
@@ -338,6 +344,17 @@ void CEditorApplication::Ready_MapFactorFunc()
 	for (int i = 0; i < g_MonsterTypeCount; ++i)
 	{
 		pMapFactory->Register(ObjectCategory::MONSTER, i, _func);
+	}
+
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPrefab", iTargetScene, L"Prefab_Layer", pData);
+	};
+	for (int i = 0; i < g_PrefabTypeCount; ++i)
+	{
+		pMapFactory->Register(ObjectCategory::PREFAB, i, _func);
 	}
 }
 

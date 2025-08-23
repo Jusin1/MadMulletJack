@@ -6,6 +6,7 @@
 #include "CDInputMgr.h"
 #include "CGameObject.h"
 #include "CTransform.h"
+#include "CGui_PrefabEditorPanel.h"
 #include "CObjectManager.h"
 #include "CManagement.h"
 #include "CGui_Log.h"
@@ -43,6 +44,8 @@ HRESULT CGuiManager::Ready_CGuiManager(LPDIRECT3DDEVICE9 pGraphicDevce)
         return E_FAIL;
     if (!(m_pPanels[CONSOLE] = CGui_Console::Create()))
         return E_FAIL;
+    if (!(m_pPanels[PREFAB_INSPECTOR] = CGui_PrefabEditorPanel::Create()))
+        return E_FAIL;
 
     m_pGraphicDevice = pGraphicDevce;
     pGraphicDevce->AddRef();
@@ -78,6 +81,11 @@ HRESULT CGuiManager::Initialize()
 
 void CGuiManager::ShowEditorDockspace()
 {
+    _uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    _uint iKey{ INSPECTOR };
+    if (iCurSceneID == SCENE_PREFAB) iKey = PREFAB_INSPECTOR;       
+
+
     const ImGuiViewport *vp = ImGui::GetMainViewport();
     const ImVec2 screenPos = vp->Pos;
     const ImVec2 screenSize = vp->Size;
@@ -96,22 +104,26 @@ void CGuiManager::ShowEditorDockspace()
     const float leftColW = VIEW_W;
     const float consoleH = (std::max)(0.0f, areaSize.y - VIEW_H);
 
-    m_pPanelInfos[INSPECTOR].Position = ImVec2(areaPos.x + leftColW, areaPos.y);
-    m_pPanelInfos[INSPECTOR].Size = ImVec2(fFull_W - VIEW_W, fFull_H);
+    m_pPanelInfos[iKey].Position = ImVec2(areaPos.x + leftColW, areaPos.y);
+    m_pPanelInfos[iKey].Size = ImVec2(fFull_W - VIEW_W, fFull_H);
 
     m_pPanelInfos[CONSOLE].Position = ImVec2(areaPos.x, areaPos.y + VIEW_H);
-    m_pPanelInfos[CONSOLE].Size = ImVec2(fFull_W - m_pPanelInfos[INSPECTOR].Size.x - fMargin, fFull_H - VIEW_H);
+    m_pPanelInfos[CONSOLE].Size = ImVec2(fFull_W - m_pPanelInfos[iKey].Size.x - fMargin, fFull_H - VIEW_H);
 }
 
 void CGuiManager::ShowInspector()
 {
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
-    ImGui::SetNextWindowPos(m_pPanelInfos[INSPECTOR].Position, ImGuiCond_Once);
-    ImGui::SetNextWindowSize(m_pPanelInfos[INSPECTOR].Size, ImGuiCond_Once);
+    _uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    _uint iKey{ INSPECTOR };
+    if (iCurSceneID == SCENE_PREFAB) iKey = PREFAB_INSPECTOR;
 
-    if (ImGui::Begin(m_pPanels[INSPECTOR]->GetTitle().c_str(), nullptr, flags))
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+    ImGui::SetNextWindowPos(m_pPanelInfos[iKey].Position, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(m_pPanelInfos[iKey].Size, ImGuiCond_Once);
+
+    if (ImGui::Begin(m_pPanels[iKey]->GetTitle().c_str(), nullptr, flags))
     {
-        m_pPanels[INSPECTOR]->Render();
+        m_pPanels[iKey]->Render();
     }
 
     ImGui::End();
@@ -251,5 +263,11 @@ void CGuiManager::SetCreateMode(_bool _b, ObjectCategory _e)
 
 const _tchar *CGuiManager::GetSelectedThumnailTexture()
 {
+    switch (CManagement::GetInstance()->Get_CurrentSceneIdx())
+    {
+    case SCENE_PREFAB:
+        return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::PREFAB_INSPECTOR])->GetSelectedThumbnailTexture();
+    }
+
     return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::INSPECTOR])->GetSelectedThumbnailTexture();
 }

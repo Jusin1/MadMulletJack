@@ -16,6 +16,7 @@ public:
 	virtual			void		LateUpdate_Scene(const _float &fTimeDelta) override;
 	virtual			void		Render_Scene();
 
+	virtual HRESULT LoadData();
 	virtual HRESULT SaveData() override;
 private:
 	HRESULT			Ready_Camera_Layer(const _tchar *pLayerTag);

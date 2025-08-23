@@ -22,9 +22,11 @@ public:
 	HRESULT			Loading_Snipe();
 	HRESULT			Loading_Rooftop();
 	HRESULT			Loading_Road();
+	HRESULT			Loading_Prefab();
 
 private:
 	void SetData(_uint _iSceneIndex);
+	void InitPrefab(_uint _iSceneIndex);
 	void InstancingObjects(const wstring &_Layer);
 public:
 	CRITICAL_SECTION *Get_Crt() { return &m_Crt; }

@@ -25,10 +25,11 @@ public:
 
 	HRESULT SaveDataFile(_uint iSceneID, const _tchar *szLayerTag);
 	HRESULT LoadDataFile(_uint iSceneID, const _tchar *szLayerTag);
-	HRESULT	SavePrefabDataFile();
-	HRESULT	LoadPrefabDataFile();
+	HRESULT	SavePrefabDataFile(PrefabType _e);
+	HRESULT	LoadPrefabDataFile(PrefabType _e);
 private:
 	wstring SceneIdToWstring(_uint iSceneID);
+	wstring PrefabTypeToWstring(PrefabType _e);
 };
 
 //Transform

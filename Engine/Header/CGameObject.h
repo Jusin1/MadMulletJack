@@ -33,7 +33,7 @@ public:
 	void Set_RenderOn(_bool _bRenderOn) { m_bRenderOn = _bRenderOn; }
 	
 	_bool				HasParent() const { return m_pParent; }
-	const CGameObject*	GetParent() const { return m_pParent; }
+	CGameObject*		GetParent() const { return m_pParent; }
 	void				SetParent(CGameObject *_p) { m_pParent = _p; }
 protected:
 	HRESULT	Set_Component();

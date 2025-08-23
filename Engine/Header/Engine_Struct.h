@@ -88,6 +88,7 @@ namespace Engine
 	typedef struct tagMapObjectData
 	{
 		ObjectCategory eCategory = ObjectCategory::NONE;
+		bool bChild = false;
 		_uint iType = 0;
 		unsigned long dwColor;
 		TEXTUREDATA texture;

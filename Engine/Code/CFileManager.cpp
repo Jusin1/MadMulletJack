@@ -162,9 +162,9 @@ HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
     return S_OK;
 }
 
-HRESULT CFileManager::SavePrefabDataFile()
+HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
 {
-    std::vector<MAPOBJECTDATA> objectDatas = CObjectManager::GetInstance()->ExportObjectData(SCENE_PREFAB, L"Prefab_Layer");
+    std::vector<PREFABDATA> objectDatas = CObjectManager::GetInstance()->ExportPrefabData();
 
     if (objectDatas.size() <= 0)
     {
@@ -178,8 +178,8 @@ HRESULT CFileManager::SavePrefabDataFile()
         jArray.push_back(data);
     }
 
-    // " / " 연산자 오버로딩을 통해서 파일 경로 만들기
-    filesystem::path dir = GameDataPath / "Prefab_Laye/data.json";
+    wstring FileName{PrefabTypeToWstring(static_cast<PrefabType>(_e))};
+    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"/data.json";
 
     if (!dir.parent_path().empty())
     {
@@ -198,17 +198,17 @@ HRESULT CFileManager::SavePrefabDataFile()
         return E_FAIL;
     }
 
-    // setw(i) 출력될 값의 최소폭을 i 만큼 지정
-    // Json 이므로 4칸 들여쓰기로 출력
     ofs << std::setw(4) << jArray << std::endl;
     ofs.close();
 
     return S_OK;
 }
 
-HRESULT CFileManager::LoadPrefabDataFile()
+HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
 {
-    filesystem::path dir = GameDataPath / "Prefab_Layer/data.json";
+    wstring FileName{ PrefabTypeToWstring(static_cast<PrefabType>(_e)) };
+    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"/data.json";
+
     if (dir.parent_path().empty())
     {
         MSG_BOX("CFileManager::LoadPrefabDataFile, path is invalid");
@@ -225,9 +225,18 @@ HRESULT CFileManager::LoadPrefabDataFile()
     json jArray;
     ifs >> jArray;
 
+    int iIndex{ 0 };
     for (const auto &jObj : jArray)
     {
+        if (iIndex > 0)
+        {
+            MSG_BOX("CFileManager::LoadPrefabDataFile, it can't happen, over data!");
+            return S_OK;
+        }
+
         PREFABDATA PrefabData = jObj.get<PREFABDATA>();
+        CDataManager::GetInstance()->AddPrefabData(_e, PrefabData);
+        ++iIndex;
     }
 
     ifs.close();
@@ -254,6 +263,21 @@ wstring CFileManager::SceneIdToWstring(_uint iSceneID)
     case SCENE_BOSS:
         return L"Rooftop";
     case SCENE_CAR:
+        return L"Road";
+    case SCENE_PREFAB:
+        return L"Prefab";
+    }
+
+    return wstring{};
+}
+
+wstring CFileManager::PrefabTypeToWstring(PrefabType _e)
+{
+    switch (_e)
+    {
+    case PrefabType::SIGN_PILLAR:
+        return L"Sign_Pillar";
+    case PrefabType::ROAD:
         return L"Road";
     }
 

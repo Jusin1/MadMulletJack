@@ -230,6 +230,7 @@ HRESULT CPrefab::Set_Data(PREFABDATA *_pData)
 	// 데이터에 저장된 TransformData는 Local 정보
 	for (int i = 0; i < _pData->vecChildrensData.size(); ++i)
 	{
+		_pData->vecChildrensData[i].bChild = true;
 		if (CGameObject *pGo = CMapFactory::GetInstance()->Create(
 			_pData->vecChildrensData[i].eCategory,
 			_pData->vecChildrensData[i].iType,

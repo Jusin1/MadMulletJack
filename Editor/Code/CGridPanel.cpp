@@ -152,7 +152,7 @@ void CGridPanel::ExportData(void *pData)
 		// type
 		p->eCategory = ObjectCategory::WALL;
 		p->iType = GetType();
-
+		p->bChild = (GetParent() != nullptr);
 		// buffer
 		::memcpy(&(p->panelBuffer), GetBuffer()->Get_Data(), sizeof(PANELDATA));
 
@@ -235,10 +235,20 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 					return E_FAIL;
 			}
 
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			if (p->bChild)
+			{
+				GetTransform()->Set_LocalInfo(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_LocalInfo(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_LocalInfo(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_LocalInfo(INFO::INFO_POS, p->transform.Pos);
+			}
+			else
+			{
+				GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			}
 		}
 		else
 		{

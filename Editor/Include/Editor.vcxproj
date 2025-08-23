@@ -173,6 +173,7 @@
     <ClInclude Include="..\Header\CGui_Panel.h" />
     <ClInclude Include="..\Header\CGridPanel.h" />
     <ClInclude Include="..\Header\CGuiBase.h" />
+    <ClInclude Include="..\Header\CGui_PrefabEditorPanel.h" />
     <ClInclude Include="..\Header\CGui_Thumbnail.h" />
     <ClInclude Include="..\Header\CGui_Transform.h" />
     <ClInclude Include="..\Header\CEditorPickingManager.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="..\Code\CGui_Panel.cpp" />
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGuiBase.cpp" />
+    <ClCompile Include="..\Code\CGui_PrefabEditorPanel.cpp" />
     <ClCompile Include="..\Code\CGui_Thumbnail.cpp" />
     <ClCompile Include="..\Code\CGui_Transform.cpp" />
     <ClCompile Include="..\Code\CEditorPickingManager.cpp" />

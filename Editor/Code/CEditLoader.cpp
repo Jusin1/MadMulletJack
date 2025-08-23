@@ -66,6 +66,10 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 	{
 		// TODO
 	} break;
+	case SCENE_PREFAB:
+	{
+		pLoader->Loading_Prefab();
+	}
 	}
 	LeaveCriticalSection(pLoader->Get_Crt());
 	return 0;
@@ -180,34 +184,51 @@ HRESULT CEditLoader::Loading_Stage_1()
 HRESULT CEditLoader::Loading_Stage_2()
 {
 	SetData(SCENE_STAGE_2);
-
+	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Stage_3()
 {
 	SetData(SCENE_STAGE_3);
-
+	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Snipe()
 {
 	SetData(SCENE_SNIPE);
-
+	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Rooftop()
 {
 	SetData(SCENE_BOSS);
-
+	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Road()
 {
 	SetData(SCENE_CAR);
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CEditLoader::Loading_Prefab()
+{
+	InitPrefab(SCENE_PREFAB);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
+	m_isFinished = true;
 
 	return S_OK;
 }
@@ -221,6 +242,25 @@ void CEditLoader::SetData(_uint _iSceneIndex)
 	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
 
 	CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
+}
+
+void CEditLoader::InitPrefab(_uint _iSceneIndex)
+{
+	CDataManager::GetInstance()->Clear();
+	CFileManager::GetInstance()->LoadPrefabDataFile(PrefabType::SIGN_PILLAR);
+
+	CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
+
+	if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetPrefabDataList())
+	{
+		if ((*pVecData)[0].eType != PrefabType::NONE)
+		{
+			CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>((*pVecData)[0].eType), &(*pVecData)[0]);
+			return;
+		}
+	}
+
+	CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, 0, nullptr);
 }
 
 void CEditLoader::InstancingObjects(const wstring &_Layer)

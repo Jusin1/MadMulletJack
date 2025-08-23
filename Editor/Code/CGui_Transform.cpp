@@ -2,6 +2,7 @@
 #include "CGui_Transform.h"
 #include "CGui_Button.h"
 #include "CGui_InputFloat.h"
+#include "CPrefab.h"
 #include "CGameObject.h"
 #include "CGuiManager.h"
 
@@ -104,31 +105,62 @@ void CGui_Transform::PositionInit()
 	m_vecInfos[0]->SetOnEvent(
 		[](CGameObject *pGo)->_float
 		{
-			return pGo->GetTransform()->Get_Info(INFO_POS).x;
+			if (pGo->GetParent())
+			{
+				return pGo->GetTransform()->Get_LocalInfo(INFO_POS).x;
+			}
+			else
+			{
+				return pGo->GetTransform()->Get_Info(INFO_POS).x;
+			}
 		});
 	m_vecInfos[1]->SetOnEvent(
 		[](CGameObject *pGo)->_float
 		{
-			return pGo->GetTransform()->Get_Info(INFO_POS).y;
+			if (pGo->GetParent())
+			{
+				return pGo->GetTransform()->Get_LocalInfo(INFO_POS).y;
+			}
+			else
+			{
+				return pGo->GetTransform()->Get_Info(INFO_POS).y;
+			}
 		});
 	m_vecInfos[2]->SetOnEvent(
 		[](CGameObject *pGo)->_float
 		{
-			return pGo->GetTransform()->Get_Info(INFO_POS).z;
+			if(pGo->GetParent())
+			{
+				return pGo->GetTransform()->Get_LocalInfo(INFO_POS).z;
+			}
+			else
+			{
+				return pGo->GetTransform()->Get_Info(INFO_POS).z;
+			}
 		});
 
 	m_vecInfos[0]->SetEndEvent(
 		[&](_float _f)->void
 		{
-			if (CGameObject* pGo = m_vecInfos[0]->GetTarget())
+			if (CGameObject *pGo = m_vecInfos[2]->GetTarget())
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					_vec3 pos = pTransform->Get_Info(INFO_POS);
-					pos.x = _f;
-					pTransform->Set_Info(INFO_POS, pos);
+					if (pGo->GetParent())
+					{
+						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+						pos.x = _f;
+						pTransform->Set_LocalInfo(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+					}
+					else
+					{
+						_vec3 pos = pTransform->Get_Info(INFO_POS);
+						pos.x = _f;
+						pTransform->Set_Info(INFO_POS, pos);
+					}
 				}
-			}			
+			}
 		});
 	m_vecInfos[1]->SetEndEvent(
 		[&](_float _f)->void
@@ -137,9 +169,19 @@ void CGui_Transform::PositionInit()
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					_vec3 pos = pTransform->Get_Info(INFO_POS);
-					pos.y = _f;
-					pTransform->Set_Info(INFO_POS, pos);
+					if (pGo->GetParent())
+					{
+						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+						pos.y = _f;
+						pTransform->Set_LocalInfo(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+					}
+					else
+					{
+						_vec3 pos = pTransform->Get_Info(INFO_POS);
+						pos.y = _f;
+						pTransform->Set_Info(INFO_POS, pos);
+					}
 				}
 			}
 		});
@@ -150,9 +192,19 @@ void CGui_Transform::PositionInit()
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					_vec3 pos = pTransform->Get_Info(INFO_POS);
-					pos.z = _f;
-					pTransform->Set_Info(INFO_POS, pos);
+					if (pGo->GetParent())
+					{
+						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+						pos.z = _f;
+						pTransform->Set_LocalInfo(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+					}
+					else
+					{
+						_vec3 pos = pTransform->Get_Info(INFO_POS);
+						pos.z = _f;
+						pTransform->Set_Info(INFO_POS, pos);
+					}
 				}
 			}
 		});

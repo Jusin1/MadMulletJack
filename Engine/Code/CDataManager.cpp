@@ -7,6 +7,8 @@ IMPLEMENT_SINGLETON(CDataManager)
 CDataManager::CDataManager()
 {
 	m_PrefabData = vector<PREFABDATA>{ g_PrefabTypeCount };
+	m_PrefabData[0].eType = PrefabType::SIGN_PILLAR;
+	m_PrefabData[1].eType = PrefabType::ROAD;
 }
 
 CDataManager::~CDataManager()
@@ -43,21 +45,13 @@ void CDataManager::AddPrefabData(PrefabType _e, const PREFABDATA &tData)
 		return;
 	}
 
-	PREFABDATA PrefabData = m_PrefabData[static_cast<_uint>(_e)];
-
-	if (PrefabData.eType != _e)
+	if (m_PrefabData[static_cast<_uint>(_e)].eType != _e)
 	{
 		MSG_BOX("CDataManager::AddPrefabData, PrefabType isnt Matched");
 		return;
 	}
 
-	if (PrefabData.eType == _e)
-	{
-		MSG_BOX("CDataManager::AddPrefabData, PrefabData is already in");
-		return;
-	}
-
-	PrefabData = tData;
+	m_PrefabData[static_cast<_uint>(_e)] = tData;
 }
 
 void CDataManager::Clear()

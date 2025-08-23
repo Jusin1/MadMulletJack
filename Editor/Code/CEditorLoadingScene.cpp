@@ -6,6 +6,7 @@
 #include "CEditorScene.h"
 #include "CScene_Tutorial.h"
 #include "CScene_Stage_1.h"
+#include "CScene_Prefab.h"
 
 CEditorLoadingScene::CEditorLoadingScene(LPDIRECT3DDEVICE9 pGrahpicDev)
 	: CScene(pGrahpicDev)
@@ -71,6 +72,10 @@ _int CEditorLoadingScene::Update_Scene(const _float &fTimeDelta)
 		case SCENE_CAR:
 		{
 			// TODO
+		} break;
+		case SCENE_PREFAB:
+		{
+			pNewScene = CScene_Prefab::Create(m_pGraphicDev);
 		} break;
 		default:
 		{

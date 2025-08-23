@@ -1,17 +1,20 @@
 #pragma once
 #include "CGui_Panel.h"
 
-class CGui_MapEditorPanel : public CGui_Panel
+// 에디터에서 PrefabLayer에 Child를 저장하지않으면
+// 클라이언트에서 인스턴싱 할 때 중복 생성하게 된다.
+//
+
+class CGui_PrefabEditorPanel : public CGui_Panel
 {
 private:
-	explicit CGui_MapEditorPanel();
-	virtual ~CGui_MapEditorPanel();
+	explicit CGui_PrefabEditorPanel();
+	virtual ~CGui_PrefabEditorPanel();
 
 	virtual void Free() override;
 public:
-	static CGui_MapEditorPanel *Create();
+	static CGui_PrefabEditorPanel *Create();
 	virtual void Render() override;
-
 private:
 	virtual HRESULT Ready_Panel() override;
 
@@ -53,11 +56,17 @@ private:
 
 	void AllCheckBox_SetFalse();
 	void AllThumbnailTexture_SetClear();
+
+	void ChangeType(_uint _iType);
+
+	void ClearScene();
+	void SetScene();
 public:
-	const _tchar *GetSelectedThumbnailTexture();
+		const _tchar *GetSelectedThumbnailTexture();
 private:
-	ObjectCategory m_eCategory;
-	_uint m_iObjectType;
-	_uint m_iSceneType;
+	_uint m_iPrefabType{0};
+	ObjectCategory m_eChildrenObjectCategory{ ObjectCategory::WALL};
+	_uint m_iChildrenObjectType{0};
+	_uint m_iSceneType{ SCENE_PREFAB };
 };
 

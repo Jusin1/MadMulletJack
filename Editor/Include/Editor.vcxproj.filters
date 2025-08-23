@@ -127,6 +127,9 @@
     <Filter Include="04. GameObject\CPrefab">
       <UniqueIdentifier>{f007f814-edb2-4450-88a7-92c008fb4b37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. GUI\Panel\Inspector\Prefab">
+      <UniqueIdentifier>{8a2e7b21-d5ce-42eb-82ef-82b22a93977f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -276,6 +279,9 @@
     <ClInclude Include="..\Header\CScene_Prefab.h">
       <Filter>01. Scene\Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGui_PrefabEditorPanel.h">
+      <Filter>06. GUI\Panel\Inspector\Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -406,6 +412,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CScene_Prefab.cpp">
       <Filter>01. Scene\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGui_PrefabEditorPanel.cpp">
+      <Filter>06. GUI\Panel\Inspector\Prefab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

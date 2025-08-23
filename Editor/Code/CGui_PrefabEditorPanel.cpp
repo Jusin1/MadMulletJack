@@ -7,35 +7,36 @@
 #include "CGui_Transform.h"
 #include "CGui_Checkbox.h"
 #include "CGui_Thumbnail.h"
+#include "CPrefab.h"
 #include "CVIBuffer_GridPanel_Editor.h"
 #include "CGraphicDev.h"
 #include "CEditorLoadingScene.h"
 #include "CObjectManager.h"
 #include "CGridPanel.h"
 #include "CManagement.h"
-#include "CGui_MapEditorPanel.h"
+#include "CGui_PrefabEditorPanel.h"
 
-CGui_MapEditorPanel::CGui_MapEditorPanel()
-	: CGui_Panel("Insepctor"), m_eCategory(ObjectCategory::WALL), m_iObjectType(0)
+CGui_PrefabEditorPanel::CGui_PrefabEditorPanel()
+	: CGui_Panel("Prefab_Insepctor")
 {
 	m_pElements = std::vector<CGuiBase *>{ g_MapEditorGuiTypeCount };
 }
 
-CGui_MapEditorPanel::~CGui_MapEditorPanel()
+CGui_PrefabEditorPanel::~CGui_PrefabEditorPanel()
 {
 }
 
-void CGui_MapEditorPanel::Free()
+void CGui_PrefabEditorPanel::Free()
 {
 	CGui_Panel::Free();
 }
 
-CGui_MapEditorPanel *CGui_MapEditorPanel::Create()
+CGui_PrefabEditorPanel *CGui_PrefabEditorPanel::Create()
 {
-	CGui_MapEditorPanel *pNew = new CGui_MapEditorPanel();
+	CGui_PrefabEditorPanel *pNew = new CGui_PrefabEditorPanel();
 	if (FAILED(pNew->Ready_Panel()))
 	{
-		MSG_BOX("CGui_MapEditorPanel::Create, Failed");
+		MSG_BOX("CGui_PrefabEditorPanel::Create, Failed");
 		Safe_Release(pNew);
 		return nullptr;
 	}
@@ -43,13 +44,14 @@ CGui_MapEditorPanel *CGui_MapEditorPanel::Create()
 	return pNew;
 }
 
-void CGui_MapEditorPanel::Render()
+void CGui_PrefabEditorPanel::Render()
 {
 	ImGui::Begin(m_title.c_str());
 
+	PrefabRender();
 	CategoryDropbox_Render();
 
-	switch (m_eCategory)
+	switch (m_eChildrenObjectCategory)
 	{
 	case ObjectCategory::WALL:
 	{
@@ -71,16 +73,12 @@ void CGui_MapEditorPanel::Render()
 	{
 		LightRender();
 	} break;
-	case ObjectCategory::PREFAB:
-	{
-		PrefabRender();
-	} break;
 	}
 
 	ImGui::End();
 }
 
-HRESULT CGui_MapEditorPanel::Ready_Panel()
+HRESULT CGui_PrefabEditorPanel::Ready_Panel()
 {
 	m_pElements[static_cast<_uint>(MapEditorGuiType::CATEGORY_DROPBOX)] = CategoryDropbox_Create();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_TYPE_DROPBOX)] = WalltypeDropbox_Create();
@@ -105,76 +103,73 @@ HRESULT CGui_MapEditorPanel::Ready_Panel()
 	return S_OK;
 }
 
-void CGui_MapEditorPanel::WallRender()
+void CGui_PrefabEditorPanel::WallRender()
 {
 	WalltypeDropbox_Render();
 
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::PANEL_SIZE_BUTTONS)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::PANEL_SIZE_BUTTONS)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)]->Render(m_iChildrenObjectType);
 
 	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iChildrenObjectType);
 }
 
-void CGui_MapEditorPanel::TileRender()
+void CGui_PrefabEditorPanel::TileRender()
 {
 	TiletypeDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)]->Render(m_iChildrenObjectType);
 
 	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iChildrenObjectType);
 }
 
-void CGui_MapEditorPanel::EnvObjRender()
+void CGui_PrefabEditorPanel::EnvObjRender()
 {
 	EnvObjtypeDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)]->Render(m_iChildrenObjectType);
 
 	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iChildrenObjectType);
 }
 
-void CGui_MapEditorPanel::MonsterRender()
+void CGui_PrefabEditorPanel::MonsterRender()
 {
 	MonstertypeDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iObjectType);
-	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
-	
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)]->Render(m_iChildrenObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iChildrenObjectType);
+
 	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iChildrenObjectType);
 }
 
-void CGui_MapEditorPanel::LightRender()
+void CGui_PrefabEditorPanel::LightRender()
 {
 	LighttypeDropbox_Render();
 
 
 
 	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iChildrenObjectType);
 }
 
-void CGui_MapEditorPanel::PrefabRender()
+void CGui_PrefabEditorPanel::PrefabRender()
 {
 	PrefabtypeDropbox_Render();
-
-	SceneDropbox_Render();
-	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
 }
 
-CGuiBase *CGui_MapEditorPanel::CategoryDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::CategoryDropbox_Create()
 {
 	vector<string> Names{ g_ObjectCategoryCount };
 	Names[0] = "Wall";
@@ -187,7 +182,7 @@ CGuiBase *CGui_MapEditorPanel::CategoryDropbox_Create()
 	return CGui_Dropbox<ObjectCategory>::Create("Category", ObjectCategory::WALL, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::WalltypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::WalltypeDropbox_Create()
 {
 	vector<string> Names{ g_WallTypeCount };
 	Names[0] = "Wall_Hor";
@@ -200,7 +195,7 @@ CGuiBase *CGui_MapEditorPanel::WalltypeDropbox_Create()
 	return CGui_Dropbox<WallType>::Create("WallType", WallType::WALL_HOR, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::TiletypeDropbox_Create()
 {
 	vector<string> Names{ g_TileTypeCount };
 	Names[0] = "Deco";
@@ -217,7 +212,7 @@ CGuiBase *CGui_MapEditorPanel::TiletypeDropbox_Create()
 	return CGui_Dropbox<TileType>::Create("TileType", TileType::DECO, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::EnvObjtypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::EnvObjtypeDropbox_Create()
 {
 	vector<string> Names{ g_EnvTypeCount };
 	Names[0] = "SpawnPoint";
@@ -226,7 +221,7 @@ CGuiBase *CGui_MapEditorPanel::EnvObjtypeDropbox_Create()
 	return CGui_Dropbox<EnvType>::Create("EnvType", EnvType::SPAWNPOINT, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::MonstertypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::MonstertypeDropbox_Create()
 {
 	vector<string> Names{ g_MonsterTypeCount };
 	Names[0] = "Suit";
@@ -234,7 +229,7 @@ CGuiBase *CGui_MapEditorPanel::MonstertypeDropbox_Create()
 	return CGui_Dropbox<MonsterType>::Create("MonsterType", MonsterType::SUIT, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::LighttypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::LighttypeDropbox_Create()
 {
 	vector<string> Names{ g_LightTypeCount };
 	Names[0] = "NONE";
@@ -242,7 +237,7 @@ CGuiBase *CGui_MapEditorPanel::LighttypeDropbox_Create()
 	return CGui_Dropbox<LightType>::Create("LightType", LightType::tmp, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::SceneDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::SceneDropbox_Create()
 {
 	vector<string> Names{ g_MapEditorSceneTypeCount };
 	Names[0] = "DEV";
@@ -258,7 +253,7 @@ CGuiBase *CGui_MapEditorPanel::SceneDropbox_Create()
 	return CGui_Dropbox<MapEditorSceneType>::Create("SceneType", MapEditorSceneType::DEV, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::PrefabtypeDropbox_Create()
+CGuiBase *CGui_PrefabEditorPanel::PrefabtypeDropbox_Create()
 {
 	vector<string> Names{ g_PrefabTypeCount };
 	Names[0] = "SIGN_PILLAR";
@@ -267,7 +262,7 @@ CGuiBase *CGui_MapEditorPanel::PrefabtypeDropbox_Create()
 	return CGui_Dropbox<PrefabType>::Create("PrefabType", PrefabType::SIGN_PILLAR, Names);
 }
 
-CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
+CGuiBase *CGui_PrefabEditorPanel::CreateButton_Create()
 {
 	vector<string> _labels{ 2 };
 	vector<std::function<void()>> _funcs{ 2 };
@@ -283,28 +278,27 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 			// TODO : type에 따른 생성
 			MAPOBJECTDATA defaultData;
 			defaultData.eCategory = ObjectCategory::WALL;
-			defaultData.iType = m_iObjectType;
-			defaultData.panelBuffer.eType = static_cast<WallType>(m_iObjectType);
+			defaultData.iType = m_iChildrenObjectType;
+			defaultData.panelBuffer.eType = static_cast<WallType>(m_iChildrenObjectType);
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
-			_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iCurSceneID, L"Wall_Layer", &defaultData);
-			CGuiManager::GetInstance()->SetTarget(CObjectManager::GetInstance()->Get_ObjectList(iCurSceneID, L"Wall_Layer")->back());
+			CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_PREFAB, L"Wall_Layer", &defaultData);
+			CGuiManager::GetInstance()->SetTarget(pGo);
 		} break;
 		case ObjectCategory::TILE:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			MSG_BOX("CGui_PrefabEditorPanel::CreateButton_Create(), write function");
 		} break;
 		case ObjectCategory::ENV_OBJ:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			MSG_BOX("CGui_PrefabEditorPanel::CreateButton_Create(), write function");
 		} break;
 		case ObjectCategory::MONSTER:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			MSG_BOX("CGui_PrefabEditorPanel::CreateButton_Create(), write function");
 		} break;
 		case ObjectCategory::LIGHT:
 		{
-			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
+			MSG_BOX("CGui_PrefabEditorPanel::CreateButton_Create(), write function");
 		} break;
 		}
 	};
@@ -314,15 +308,22 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			pGo->Set_Dead(TRUE);
-			CGuiManager::GetInstance()->SetTarget(nullptr);
+			if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+			{
+				MSG_BOX("Cant delete Prefab");
+			}
+			else
+			{
+				pGo->Set_Dead(TRUE);
+				CGuiManager::GetInstance()->SetTarget(nullptr);
+			}
 		}
 	};
 
-	return CGui_ButtonList::Create("Wall Create", _labels, _funcs);
+	return CGui_ButtonList::Create("Buttons", _labels, _funcs);
 }
 
-CGuiBase *CGui_MapEditorPanel::GridPanelSizeButtons_Create()
+CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 {
 	vector<string> _labels{ 6 };
 	vector<std::function<void()>> _funcs{ 6 };
@@ -384,7 +385,7 @@ CGuiBase *CGui_MapEditorPanel::GridPanelSizeButtons_Create()
 	return CGui_ButtonList::Create("Grid Size", _labels, _funcs);
 }
 
-CGuiBase *CGui_MapEditorPanel::SaveDataButton_Create()
+CGuiBase *CGui_PrefabEditorPanel::SaveDataButton_Create()
 {
 	std::function func =
 		[]()->void {
@@ -394,12 +395,12 @@ CGuiBase *CGui_MapEditorPanel::SaveDataButton_Create()
 	return CGui_Button::Create("SaveJson", func);
 }
 
-CGuiBase *CGui_MapEditorPanel::PositionInputfield_Create()
+CGuiBase *CGui_PrefabEditorPanel::PositionInputfield_Create()
 {
 	return CGui_Transform::Create(TransformDataType::POSITION);;
 }
 
-CGuiBase *CGui_MapEditorPanel::RotationInputfield_Create()
+CGuiBase *CGui_PrefabEditorPanel::RotationInputfield_Create()
 {
 	return nullptr;
 }
@@ -409,7 +410,7 @@ CGuiManager::GetInstance()->AddThumbnail(ThumnailName, CompName, _pThumbnail, st
 
 
 #pragma region WallThumbnail
-CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
+CGuiBase *CGui_PrefabEditorPanel::WallThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_WallTypeCount);
 
@@ -606,7 +607,7 @@ CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
 }
 #pragma endregion
 
-CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
+CGuiBase *CGui_PrefabEditorPanel::TileThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_TileTypeCount);
 
@@ -711,7 +712,7 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 
 	// Vent
 	AddThumbnail("Vent", L"Proto_Vent", pThumbnail, TileType::VENT);
-	
+
 	// NormalDoor
 	AddThumbnail("Door_1", L"Proto_NormalDoor_1", pThumbnail, TileType::NORMALDOOR);
 	AddThumbnail("Door_2", L"Proto_NormalDoor_2", pThumbnail, TileType::NORMALDOOR);
@@ -748,7 +749,7 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	return pThumbnail;
 }
 
-CGuiBase *CGui_MapEditorPanel::EnvThumbnail_Create()
+CGuiBase *CGui_PrefabEditorPanel::EnvThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_EnvTypeCount);
 
@@ -766,30 +767,30 @@ CGuiBase *CGui_MapEditorPanel::EnvThumbnail_Create()
 	return pThumbnail;
 }
 
-CGuiBase *CGui_MapEditorPanel::MonsterThumbnail_Create()
+CGuiBase *CGui_PrefabEditorPanel::MonsterThumbnail_Create()
 {
 	CGui_Thumbnail *pThumbnail = CGui_Thumbnail::Create("Textures", g_MonsterTypeCount);
 
 	return pThumbnail;
 }
 
-CGuiBase *CGui_MapEditorPanel::CreateModeCheckBox_Create()
+CGuiBase *CGui_PrefabEditorPanel::CreateModeCheckBox_Create()
 {
 	CGui_Checkbox *pCheckbox = CGui_Checkbox::Create("CreateMode",
 		// TrueEvent
 		[this]()->void {
-			CGuiManager::GetInstance()->SetCreateMode(TRUE, m_eCategory);
+			CGuiManager::GetInstance()->SetCreateMode(TRUE, m_eChildrenObjectCategory);
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 		},
 		// FalseEvent
-		[this]()->void {
-			CGuiManager::GetInstance()->SetCreateMode(FALSE, m_eCategory);
+			[this]()->void {
+			CGuiManager::GetInstance()->SetCreateMode(FALSE, m_eChildrenObjectCategory);
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 		});
 	return pCheckbox;
 }
 
-CGuiBase *CGui_MapEditorPanel::SnapModeCheckBox_Create()
+CGuiBase *CGui_PrefabEditorPanel::SnapModeCheckBox_Create()
 {
 	CGui_Checkbox *pCheckbox = CGui_Checkbox::Create("SnapMode",
 		// TrueEvent
@@ -803,7 +804,7 @@ CGuiBase *CGui_MapEditorPanel::SnapModeCheckBox_Create()
 	return pCheckbox;
 }
 
-void CGui_MapEditorPanel::CategoryDropbox_Render()
+void CGui_PrefabEditorPanel::CategoryDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::CATEGORY_DROPBOX)]->Render())
 	{
@@ -817,15 +818,15 @@ void CGui_MapEditorPanel::CategoryDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetCategory(DropboxElement->GetConfirmedState());
-			m_eCategory = CGuiManager::GetInstance()->GetCategory();
-			m_iObjectType = 0;
-			CGuiManager::GetInstance()->SetObjectType(0);
+			CGuiManager::GetInstance()->SetLocalCategory(DropboxElement->GetConfirmedState());
+			m_eChildrenObjectCategory = CGuiManager::GetInstance()->GetLocalCategory();
+			m_iChildrenObjectType = 0;
+			CGuiManager::GetInstance()->SetLocalObjectType(0);
 		}
 	}
 }
 
-void CGui_MapEditorPanel::WalltypeDropbox_Render()
+void CGui_PrefabEditorPanel::WalltypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_TYPE_DROPBOX)]->Render())
 	{
@@ -839,13 +840,13 @@ void CGui_MapEditorPanel::WalltypeDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			CGuiManager::GetInstance()->SetLocalObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
+			m_iChildrenObjectType = CGuiManager::GetInstance()->GetLocalObjectType();
 		}
 	}
 }
 
-void CGui_MapEditorPanel::TiletypeDropbox_Render()
+void CGui_PrefabEditorPanel::TiletypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_TYPE_DROPBOX)]->Render())
 	{
@@ -859,13 +860,13 @@ void CGui_MapEditorPanel::TiletypeDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			CGuiManager::GetInstance()->SetLocalObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
+			m_iChildrenObjectType = CGuiManager::GetInstance()->GetLocalObjectType();
 		}
 	}
 }
 
-void CGui_MapEditorPanel::EnvObjtypeDropbox_Render()
+void CGui_PrefabEditorPanel::EnvObjtypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::ENVOBJ_TYPE_DROPBOX)]->Render())
 	{
@@ -879,13 +880,13 @@ void CGui_MapEditorPanel::EnvObjtypeDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			CGuiManager::GetInstance()->SetLocalObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
+			m_iChildrenObjectType = CGuiManager::GetInstance()->GetLocalObjectType();
 		}
 	}
 }
 
-void CGui_MapEditorPanel::MonstertypeDropbox_Render()
+void CGui_PrefabEditorPanel::MonstertypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_TYPE_DROPBOX)]->Render())
 	{
@@ -899,13 +900,13 @@ void CGui_MapEditorPanel::MonstertypeDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			CGuiManager::GetInstance()->SetLocalObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
+			m_iChildrenObjectType = CGuiManager::GetInstance()->GetLocalObjectType();
 		}
 	}
 }
 
-void CGui_MapEditorPanel::LighttypeDropbox_Render()
+void CGui_PrefabEditorPanel::LighttypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::LIGHT_TYPE_DROPBOX)]->Render())
 	{
@@ -919,13 +920,13 @@ void CGui_MapEditorPanel::LighttypeDropbox_Render()
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 
 			DropboxElement->Confirm();
-			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			CGuiManager::GetInstance()->SetLocalObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
+			m_iChildrenObjectType = CGuiManager::GetInstance()->GetLocalObjectType();
 		}
 	}
 }
 
-void CGui_MapEditorPanel::SceneDropbox_Render()
+void CGui_PrefabEditorPanel::SceneDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::SCENE_TYPE_DROPBOX)]->Render())
 	{
@@ -944,7 +945,7 @@ void CGui_MapEditorPanel::SceneDropbox_Render()
 	}
 }
 
-void CGui_MapEditorPanel::PrefabtypeDropbox_Render()
+void CGui_PrefabEditorPanel::PrefabtypeDropbox_Render()
 {
 	if (m_pElements[static_cast<_uint>(MapEditorGuiType::PREFAB_TYPE_DROPBOX)]->Render())
 	{
@@ -959,18 +960,18 @@ void CGui_MapEditorPanel::PrefabtypeDropbox_Render()
 
 			DropboxElement->Confirm();
 			CGuiManager::GetInstance()->SetObjectType(static_cast<_uint>(DropboxElement->GetConfirmedState()));
-			m_iObjectType = CGuiManager::GetInstance()->GetInstance()->GetObjectType();
+			ChangeType(CGuiManager::GetInstance()->GetObjectType());
 		}
 	}
 }
 
-void CGui_MapEditorPanel::AllCheckBox_SetFalse()
+void CGui_PrefabEditorPanel::AllCheckBox_SetFalse()
 {
 	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::CREATEMODE_CHECKBOX)])->OnFalse();
 	static_cast<CGui_Checkbox *>(m_pElements[static_cast<_uint>(MapEditorGuiType::SNAPMODE_CHECKBOX)])->OnFalse();
 }
 
-void CGui_MapEditorPanel::AllThumbnailTexture_SetClear()
+void CGui_PrefabEditorPanel::AllThumbnailTexture_SetClear()
 {
 	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)])->Set_Clear();
 	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)])->Set_Clear();
@@ -978,20 +979,39 @@ void CGui_MapEditorPanel::AllThumbnailTexture_SetClear()
 	static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)])->Set_Clear();
 }
 
-const _tchar *CGui_MapEditorPanel::GetSelectedThumbnailTexture()
+void CGui_PrefabEditorPanel::ChangeType(_uint _iType)
 {
-	switch (m_eCategory)
+	if (m_iPrefabType == _iType)
+		return;
+
+	// m_iPrefabType Clear 오브젝트
+	// _iType Set 오브젝트
+	m_iPrefabType = _iType;
+}
+
+void CGui_PrefabEditorPanel::ClearScene()
+{
+	
+}
+
+void CGui_PrefabEditorPanel::SetScene()
+{
+}
+
+const _tchar *CGui_PrefabEditorPanel::GetSelectedThumbnailTexture()
+{
+	switch (m_eChildrenObjectCategory)
 	{
 	case Engine::ObjectCategory::WALL:
-		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)])->GetSelectedCompName(m_iObjectType);
+		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::WALL_THUMBNAIL)])->GetSelectedCompName(m_iChildrenObjectType);
 	case Engine::ObjectCategory::TILE:
-		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)])->GetSelectedCompName(m_iObjectType);
+		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::TILE_THUMBNAIL)])->GetSelectedCompName(m_iChildrenObjectType);
 	case Engine::ObjectCategory::ENV_OBJ:
-		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)])->GetSelectedCompName(m_iObjectType);
+		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::ENV_THUMBNAIL)])->GetSelectedCompName(m_iChildrenObjectType);
 	case Engine::ObjectCategory::MONSTER:
-		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)])->GetSelectedCompName(m_iObjectType);
+		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)])->GetSelectedCompName(m_iChildrenObjectType);
 	}
 
-	MSG_BOX("CGui_MapEditorPanel::GetSelectedThumbnailTexture, Failed");
+	MSG_BOX("CGui_PrefabEditorPanel::GetSelectedThumbnailTexture, Failed");
 	return nullptr;
 }
