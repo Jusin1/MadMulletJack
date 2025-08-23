@@ -8,9 +8,14 @@
 #include "CFontMgr.h"
 #include "CLoading_Scene.h"
 #include "CObjectManager.h"
+#include "CImageUI.h"
+#include "CDynamicCamera.h"
+#include "CButtonUI.h"
+#include "CTextUI.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
-    : Engine::CScene(pGraphicDev)
+    : Engine::CScene(pGraphicDev),
+    m_bOpenScene(false)
 {
 }
 
@@ -26,19 +31,27 @@ HRESULT CLogo::Ready_Scene()
     if(FAILED(Ready_Environment_Layer(L"Layer_BackGround")))
         return E_FAIL;
 
+    if (FAILED(Ready_UI_Layer(L"UI_Layer")))
+        return E_FAIL;
+
 
     return S_OK;
 }
 
 _int CLogo::Update_Scene(const _float& fTimeDelta)
 {
-    CScene::Update_Scene(fTimeDelta);
-
-    if (GetAsyncKeyState(VK_SPACE) & 0X8000)
+    if (m_bOpenScene)
     {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
+        m_bOpenScene = false;
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
             return E_FAIL;
+
+        return 0;
     }
+    CScene::Update_Scene(fTimeDelta);
+    return 0;
 }
 
 void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
@@ -49,10 +62,6 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CLogo::Render_Scene()
 {
-    //// debug용 렌더
-    //_vec2       vPos{ 100.f, 100.f };
-
-    //CFontMgr::GetInstance()->Render_Font(L"Font_Default", m_pLoading->Get_String(), &vPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
 }
 
@@ -61,6 +70,61 @@ HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
     // BackGround
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_BackGround", SCENE_LOGO, pLayerTag, nullptr)))
         return E_FAIL;
+    return S_OK;
+}
+
+
+HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
+{
+    if (auto* img2 = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", SCENE_LOGO, pLayerTag)))
+    {
+        img2->Set_Active(true);
+        img2->Set_RenderOn(true);
+        img2->Set_UIPosition(0.f, -250.f, 400.f, 200.f); // 화면 프레임
+        img2->RegisterTexture(L"Com_Texture_Logo", L"Prototype_Component_Texture_Logo", 0, 20, 10.f, true);
+        img2->ChangeTexture(L"Com_Texture_Logo");
+        img2->Play(true);
+    }
+
+
+    auto* btnA = dynamic_cast<CButtonUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIButton", SCENE_LOGO, L"UI_Layer"));
+
+    btnA->Set_ButtonRect(-560.f, -100.f, 250.f, 100.f);
+    btnA->SetSolidMode(false);
+    btnA->SetHoverScale(1.14f);
+    btnA->SetPressScale(1.04f);
+    btnA->SetLerpSpeeds(22.f, 14.f);
+    btnA->RegisterTexture(L"Com_Btn_Idle", L"Prototype_Component_Texture_LogoButton", 0, 0, 0.f, false);
+    btnA->SetStateTextures(L"Com_Btn_Idle");
+
+    btnA->SetTextureTints(
+        D3DXCOLOR(1.f, 0.3f, 0.7f, 1.f), // Normal: 분홍
+        D3DXCOLOR(0.45f, 0.8f, 1.f, 1.f), // Hover : 하늘색
+        D3DXCOLOR(0.6f, 0.9f, 1.f, 1.f), // Pressed
+        D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f)  // Disabled
+    );
+    btnA->ChangeTexture(L"Com_Btn_Idle");
+
+    CTextUI* text = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", SCENE_LOGO, L"UI_Layer"));
+    if (text)
+    {
+        text->SetFontTag(L"Font_UI_Bold");
+        text->SetText(L"게임 시작");
+        text->SetScale(0.75f);
+        text->SetCentered(true);
+        text->SetLetterSpacing(1.f);
+        text->Set_UIPosition(-560.f, 120.f, 120.f, 26.f);
+        btnA->Add_Child(text);
+    }
+    btnA->SetOnClick([this, btnA, text]() {
+        m_bOpenScene = true;
+        });
 
     return S_OK;
 }

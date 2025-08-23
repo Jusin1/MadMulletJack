@@ -249,7 +249,7 @@ void CUIManager::CreateClearUI()
 {
     DestroyItemUI();
     DestroyEffectUI();
-    CreateEffectUI(L"VICTORY");
+
     if (m_pEnterUI || m_exitingEnter) return;
 
     constexpr float SLIDE_OFFSET_X = +220.f;
@@ -330,10 +330,10 @@ void CUIManager::CreateClearUI()
         pBanner->SetAccentColor(D3DCOLOR_ARGB(255, 60, 255, 60));
         pBanner->SetTextColorCycle(true, 120.f);
         pBanner->SetPadding(10, 12, 6, 6);
-        pBanner->SetFontHeight(40);
+        pBanner->SetFontHeight(32);
         pBanner->SetTextOffset(13.f, -20.f);
         pBanner->SetArrowSizePx(26.f);
-        pBanner->SetArrowOffset(-2.f, 0.f);
+        pBanner->SetArrowOffset(-2.f, 2.f);
         pBanner->SetStripeBarAnchor(CBannerUI::StripeAnchor::Bottom);
         pBanner->SetStripeYOffsetPx(3.f);
         pBanner->SetStripeBarHeightPx(18.f);
@@ -419,7 +419,7 @@ void CUIManager::CreateClearUI()
     if (auto* txt = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt->SetFontTag(L"UIFont");
+        txt->SetFontTag(L"Font_UI_Regular");
         txt->SetText(L"LIVESTREAM");
         txt->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f));
         txt->SetScale(1.f);
@@ -442,13 +442,13 @@ void CUIManager::CreateClearUI()
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt1->SetFontTag(L"UIFont");
+        txt1->SetFontTag(L"Font_UI_Regular");
         txt1->SetText(L"PEACE CROP CODEC");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-        txt1->SetScale(0.4f);
+        txt1->SetScale(0.35f);
         txt1->SetCentered(false);
         txt1->SetLetterSpacing(1.f);
-        attachAndSlide(txt1, 485.f, 350.f, 17.f, 17.f);
+        attachAndSlide(txt1, 485.f, 348.f, 17.f, 17.f);
     }
 
     CreateClearTextUI();
@@ -544,11 +544,11 @@ void CUIManager::CreateItemUI()
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt1->SetFontTag(L"UIFont");
+        txt1->SetFontTag(L"Font_UI_Bold");
         txt1->SetText(L"[MOUSE 2]");
         txt1->Set_UIPosition(0.f, -267.f, 165.f, 25.f);
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-        txt1->SetScale(0.6f);
+        txt1->SetScale(0.5f);
         txt1->SetCentered(true);
         m_pItemUI->Add_Child(txt1);
     }
@@ -556,11 +556,11 @@ void CUIManager::CreateItemUI()
     if (auto* txt2 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt2->SetFontTag(L"UIFont");
+        txt2->SetFontTag(L"Font_UI_Bold");
         txt2->SetText(L"FINISH");
         txt2->Set_UIPosition(0.f, -290.F, 165.f, 25.f);
         txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-        txt2->SetScale(0.6f);
+        txt2->SetScale(0.5f);
         txt2->SetCentered(true);
         m_pItemUI->Add_Child(txt2);
     }
@@ -778,7 +778,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
     if (buyLabel)
     {
-        buyLabel->SetFontTag(L"UIFont");
+        buyLabel->SetFontTag(L"Font_UI_Bold");
         buyLabel->SetText(L"±¸¸Å");
         buyLabel->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f)); 
         buyLabel->SetScale(0.75f);
@@ -834,7 +834,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
-        t->SetFontTag(L"UIFont");
+        t->SetFontTag(L"Font_UI_Bold");
         t->SetText(def.title);
         t->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
         t->SetScale(0.6f);
@@ -880,7 +880,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
                     L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
             if (!line) continue;
 
-            line->SetFontTag(L"UIFont");
+            line->SetFontTag(L"Font_UI_Bold");
             line->SetText(lines[i]);
             line->SetColor(COLOR);
             line->SetScale(BASE_SCALE);
@@ -1054,7 +1054,7 @@ void CUIManager::CreateClearTextUI()
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
-        txt1->SetFontTag(L"UIFont");
+        txt1->SetFontTag(L"Font_UI_ROUGH");
         txt1->SetText(L"VICTORY");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
@@ -1073,7 +1073,7 @@ void CUIManager::CreateClearTextUI()
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
-        txt2->SetFontTag(L"UIFont");
+        txt2->SetFontTag(L"Font_UI_Bold");
         txt2->SetText(L"FLOOR TIME");
         txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 

@@ -16,7 +16,7 @@ class CUIManager :
     public CBase
 {
 #pragma region 카드
-    enum class UpgradeId { SlowMo, UZI, Sniper /* 필요 시 추가 */ };
+    enum class UpgradeId { SlowMo, UZI, Sniper,  };
 
     struct ShopItemDef {
         UpgradeId           id;
@@ -41,7 +41,7 @@ class CUIManager :
         UpgradeId id{};
     };
 
-    inline static const std::vector<ShopItemDef> kShopPool = {
+    inline static const std::vector<ShopItemDef> kShopPool = { // 총 9개 카드가 필요
     { UpgradeId::SlowMo,     L"슬로우 옵션", L"슬로우 모션을\n활성화합니다.",
       L"Com_Tex_BackGround", L"NONE",
       L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_SlowMo_Art" },

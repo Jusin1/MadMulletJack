@@ -169,7 +169,7 @@ void CTextEffectUI::SetupText(const std::wstring& text, float localX, float loca
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
     if (!m_label) return;
 
-    m_label->SetFontTag(L"UIFont");
+    m_label->SetFontTag(L"Font_UI_Bold");
     m_label->SetText(text.c_str());
     m_label->SetColor(D3DXCOLOR(1.f, 1.f, 0.f, 1.f));
     m_label->SetCentered(true);

@@ -125,10 +125,10 @@ void CTalkUI::Render_GameObject()
 
 	_vec2 pos = { m_fFrameX + m_vTextOffset.x, m_fFrameY + m_vTextOffset.y };
 	if (m_fTextScale != 1.f)
-		CFontMgr::GetInstance()->Render_Font_Scaled(L"TalkFont", m_DisplayText.c_str(), &pos,
+		CFontMgr::GetInstance()->Render_Font_Scaled(L"Font_UI_Bold", m_DisplayText.c_str(), &pos,
 			D3DXCOLOR(1, 1, 1, 1), m_fTextScale);
 	else
-		CFontMgr::GetInstance()->Render_Font(L"TalkFont", m_DisplayText.c_str(), &pos,
+		CFontMgr::GetInstance()->Render_Font(L"Font_UI_Bold", m_DisplayText.c_str(), &pos,
 			D3DXCOLOR(1, 1, 1, 1));
 
 	if (sb) { sb->Apply(); sb->Release(); }

@@ -10,7 +10,16 @@ HRESULT CButtonUI::Initialize(void* pArg)
     SetColorMode(CImageUI::ColorMode::TintMultiply);
     SetAdditive(false);
 
-    if (!m_useSolid) SetTintRGBA(255, 255, 255, 255);
+    // 텍스처 모드 초기 틴트 = 현재 설정(기본은 흰색 = 원본색 유지)
+    if (!m_useSolid) {
+        SetTintRGBA((BYTE)(m_curTint.r * 255.f),
+            (BYTE)(m_curTint.g * 255.f),
+            (BYTE)(m_curTint.b * 255.f),
+            (BYTE)(m_curTint.a * 255.f));
+    }
+    else {
+        SetTintRGBA(255, 255, 255, 255);
+    }
 
     m_curScale = m_targetScale = 1.f;
     m_curColor = m_targetColor = m_colNormal;
@@ -40,13 +49,24 @@ _int CButtonUI::Update_GameObject(const _float& dt)
         Set_UIPosition(m_baseX, m_baseY, w, h);
     }
 
-    // 색 보간: Solid 모드에서만 의미 있음
+    // 색 보간
+    const float kc = 1.f - expf(-m_colorLerpSpeed * dt);
     if (m_useSolid) {
-        const float kc = 1.f - expf(-m_colorLerpSpeed * dt);
         m_curColor.r += (m_targetColor.r - m_curColor.r) * kc;
         m_curColor.g += (m_targetColor.g - m_curColor.g) * kc;
         m_curColor.b += (m_targetColor.b - m_curColor.b) * kc;
         m_curColor.a += (m_targetColor.a - m_curColor.a) * kc;
+    }
+    else {
+        m_curTint.r += (m_targetTint.r - m_curTint.r) * kc;
+        m_curTint.g += (m_targetTint.g - m_curTint.g) * kc;
+        m_curTint.b += (m_targetTint.b - m_curTint.b) * kc;
+        m_curTint.a += (m_targetTint.a - m_curTint.a) * kc;
+
+        SetTintRGBA((BYTE)(m_curTint.r * 255.f),
+            (BYTE)(m_curTint.g * 255.f),
+            (BYTE)(m_curTint.b * 255.f),
+            (BYTE)(m_curTint.a * 255.f));
     }
 
     return __super::Update_GameObject(dt);
@@ -174,18 +194,57 @@ void CButtonUI::setState(State s)
     updateTextureByState();
 }
 
+void CButtonUI::SetSolidMode(bool on)
+{
+    m_useSolid = on;
+    if (m_useSolid) {
+        // Solid 색 세트
+        m_colNormal = D3DXCOLOR(0.f, 0.f, 0.f, 0.85f);
+        m_colHover = D3DXCOLOR(1.f, 1.f, 1.f, 0.90f);
+        m_colPressed = D3DXCOLOR(1.f, 1.f, 1.f, 0.95f);
+        m_colDisabled = D3DXCOLOR(0.3f, 0.3f, 0.3f, 0.70f);
+        m_targetColor = m_curColor = m_colNormal;
+        SetTintRGBA(255, 255, 255, 255); // Solid는 틴트 의미 없음
+    }
+    else {
+        // 텍스처 모드: 커스텀 틴트가 없으면 흰색 유지(다른 버튼 영향 X)
+        SetColorMode(CImageUI::ColorMode::TintMultiply);
+        const D3DXCOLOR base = m_hasCustomTints ? m_texTintNormal : D3DXCOLOR(1, 1, 1, 1);
+        m_curTint = m_targetTint = base;
+        SetTintRGBA((BYTE)(m_curTint.r * 255.f),
+            (BYTE)(m_curTint.g * 255.f),
+            (BYTE)(m_curTint.b * 255.f),
+            (BYTE)(m_curTint.a * 255.f));
+    }
+    updateTargetsByState();
+    updateTextureByState();
+}
+
+
 void CButtonUI::updateTargetsByState()
 {
     switch (m_state)
     {
     case State::Disabled:
-        m_targetScale = 1.f;         m_targetColor = m_colDisabled; break;
+        m_targetScale = 1.f;
+        if (m_useSolid) m_targetColor = m_colDisabled;
+        else            m_targetTint = m_hasCustomTints ? m_texTintDisabled : D3DXCOLOR(1, 1, 1, 1);
+        break;
     case State::Pressed:
-        m_targetScale = m_pressScale; m_targetColor = m_useSolid ? m_colPressed : D3DXCOLOR(1, 1, 1, 1); break;
+        m_targetScale = m_pressScale;
+        if (m_useSolid) m_targetColor = m_colPressed;
+        else            m_targetTint = m_hasCustomTints ? m_texTintPressed : D3DXCOLOR(1, 1, 1, 1);
+        break;
     case State::Hover:
-        m_targetScale = m_hoverScale; m_targetColor = m_useSolid ? m_colHover : D3DXCOLOR(1, 1, 1, 1); break;
+        m_targetScale = m_hoverScale;
+        if (m_useSolid) m_targetColor = m_colHover;
+        else            m_targetTint = m_hasCustomTints ? m_texTintHover : D3DXCOLOR(1, 1, 1, 1);
+        break;
     default: // Normal
-        m_targetScale = 1.f;          m_targetColor = m_useSolid ? m_colNormal : D3DXCOLOR(1, 1, 1, 1); break;
+        m_targetScale = 1.f;
+        if (m_useSolid) m_targetColor = m_colNormal;
+        else            m_targetTint = m_hasCustomTints ? m_texTintNormal : D3DXCOLOR(1, 1, 1, 1);
+        break;
     }
 }
 

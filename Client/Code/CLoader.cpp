@@ -147,7 +147,16 @@ HRESULT CLoader::Loading_Logo()
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 	// BackGround
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOGO, L"Prototype_Component_Texture_BackGround",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Test/BACK.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/BackGround.png", 1))))
+		return E_FAIL;
+
+	// Logo
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Logo",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/LOGO_%03d.png", 20))))
+		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LogoButton",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/MAIN MENU WHITE START.png", 1))))
 		return E_FAIL;
 
 	// 객체 생성 중
@@ -155,6 +164,21 @@ HRESULT CLoader::Loading_Logo()
 	// BackGround
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BackGround",
 		CBackGround::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ImageUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
+		CImageUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// TextUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
+		CTextUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ButtonUI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIButton",
+		CButtonUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
@@ -878,24 +902,9 @@ HRESULT CLoader::Loading_UI()
 		CUIBase::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	// ImageUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIImage",
-		CImageUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// ButtonUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIButton",
-		CButtonUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
 	// ItemUI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIItem",
 		CItemUI::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// TextUI
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TextUI",
-		CTextUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// Player UI

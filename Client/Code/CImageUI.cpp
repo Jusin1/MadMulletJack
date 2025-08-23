@@ -17,6 +17,7 @@ HRESULT CImageUI::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg))) return E_FAIL;
     ChangeTexture(TEXT("Com_Texture_Image"));
+
     return S_OK;
 }
 
@@ -109,7 +110,7 @@ HRESULT CImageUI::RegisterTexture(const _tchar* tag, const _tchar* proto,
     if (!tag || !proto) return E_FAIL;
     CTexture::TEXINFO ti{}; ti.m_iStart = start; ti.m_iEndTex = end; ti.m_fSpeed = fps; ti.m_bLoop = loop;
     CTexture* p = nullptr;
-    if (FAILED(Add_Components(tag, SCENE_STATIC, proto, (CComponent**)&p, &ti))) return E_FAIL;
+     if (FAILED(Add_Components(tag, SCENE_STATIC, proto, (CComponent**)&p, &ti))) return E_FAIL;
     return S_OK;
 }
 HRESULT CImageUI::ChangeTexture(const _tchar* tag)
