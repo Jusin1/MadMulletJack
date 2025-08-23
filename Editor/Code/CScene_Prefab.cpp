@@ -5,27 +5,29 @@
 #include "CEditorPickingManager.h"
 #include "CObjectManager.h"
 #include "CEditorCamera.h"
-#include "CScene_Tutorial.h"
+#include "CScene_Prefab.h"
 
-CScene_Tutorial::CScene_Tutorial(LPDIRECT3DDEVICE9 pGraphicDevice)
+CScene_Prefab::CScene_Prefab(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CScene(pGraphicDevice)
 {
 }
 
-CScene_Tutorial::~CScene_Tutorial()
+CScene_Prefab::~CScene_Prefab()
 {
+	
 }
 
-void CScene_Tutorial::Free()
+void CScene_Prefab::Free()
 {
+	Engine::CScene::Free();
 }
 
-CScene_Tutorial *CScene_Tutorial::Create(LPDIRECT3DDEVICE9 pGraphicDevice)
+CScene_Prefab *CScene_Prefab::Create(LPDIRECT3DDEVICE9 pGraphicDevice)
 {
-	CScene_Tutorial *pScene = new CScene_Tutorial(pGraphicDevice);
+	CScene_Prefab *pScene = new CScene_Prefab(pGraphicDevice);
 	if (FAILED(pScene->Ready_Scene()))
 	{
-		MSG_BOX("CScene_Tutorial::Create, Failed");
+		MSG_BOX("CScene_Prefab::Create, Failed");
 		Safe_Release(pScene);
 		return nullptr;
 	}
@@ -33,18 +35,12 @@ CScene_Tutorial *CScene_Tutorial::Create(LPDIRECT3DDEVICE9 pGraphicDevice)
 	return pScene;
 }
 
-HRESULT CScene_Tutorial::Ready_Scene()
+HRESULT CScene_Prefab::Ready_Scene()
 {
 	if (FAILED(Engine::CScene::Ready_Scene()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
-		return E_FAIL;
-
-	if (FAILED(Ready_Dummy_Layer(L"Dummy_Layer")))
-		return E_FAIL;
-
-	if (FAILED(Ready_EditLogic_Layer(L"EditLogic_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_Wall_Layer(L"Wall_Layer")))
@@ -62,13 +58,16 @@ HRESULT CScene_Tutorial::Ready_Scene()
 	if (FAILED(Ready_Light_Layer(L"Light_Layer")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Prefab_Layer(L"Prefab_Layer")))
+		return E_FAIL;
+
 	if (FAILED(CEditorPickingManager::GetInstance()->Ready_Picking()))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-_int CScene_Tutorial::Update_Scene(const _float &fTimeDelta)
+_int CScene_Prefab::Update_Scene(const _float &fTimeDelta)
 {
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 	if (CGuiManager::GetInstance()->IsCreateMode())
@@ -79,32 +78,30 @@ _int CScene_Tutorial::Update_Scene(const _float &fTimeDelta)
 	{
 		CEditorPickingManager::GetInstance()->Picking();
 	}
+
 	return iExit;
 }
 
-void CScene_Tutorial::LateUpdate_Scene(const _float &fTimeDelta)
+void CScene_Prefab::LateUpdate_Scene(const _float &fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-void CScene_Tutorial::Render_Scene()
+void CScene_Prefab::Render_Scene()
 {
 }
 
-HRESULT CScene_Tutorial::SaveData()
+HRESULT CScene_Prefab::SaveData()
 {
 	if (FAILED(__super::SaveData()))
 		return E_FAIL;
 
-	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Wall_Layer");
-	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Tile_Layer");
-	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Env_Layer");
-	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Monster_Layer");
+	CFileManager::GetInstance()->SavePrefabDataFile();
 
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_Camera_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Camera_Layer(const _tchar *pLayerTag)
 {
 	CEditorCamera::CAMINFO				CamInfo;
 	::ZeroMemory(&CamInfo, sizeof(CEditorCamera::CAMINFO));
@@ -126,37 +123,32 @@ HRESULT CScene_Tutorial::Ready_Camera_Layer(const _tchar *pLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_Dummy_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Wall_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_EditLogic_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Tile_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_Wall_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_EnvObj_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_Tile_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_EnvObj_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Light_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CScene_Tutorial::Ready_Monster_Layer(const _tchar *pLayerTag)
-{
-	return S_OK;
-}
-
-HRESULT CScene_Tutorial::Ready_Light_Layer(const _tchar *pLayerTag)
+HRESULT CScene_Prefab::Ready_Prefab_Layer(const _tchar *pLayerTag)
 {
 	return S_OK;
 }

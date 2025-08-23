@@ -20,7 +20,7 @@ namespace Engine
 
 	enum OBJID { OBJ_PLAYER, OBJ_MONSTER, OBJ_MAP, OBJ_FLOOR, OBJ_INCLINE, OBJ_CEILING, OBJ_END };
 
-	enum SCENE { SCENE_STATIC, SCENE_LOADING, SCENE_LOGO, SCENE_DEV, SCENE_TUTORIAL, SCENE_STAGE_1, SCENE_STAGE_2, SCENE_STAGE_3, SCENE_SNIPE, SCENE_BOSS, SCENE_CAR, SCENE_UPGRADE, SCENE_END };
+	enum SCENE { SCENE_STATIC, SCENE_LOADING, SCENE_LOGO, SCENE_DEV, SCENE_TUTORIAL, SCENE_STAGE_1, SCENE_STAGE_2, SCENE_STAGE_3, SCENE_SNIPE, SCENE_BOSS, SCENE_CAR, SCENE_UPGRADE, SCENE_PREFAB, SCENE_END };
 
 	enum class ObjectCategory : unsigned int
 	{
@@ -29,6 +29,7 @@ namespace Engine
 		ENV_OBJ,
 		MONSTER,
 		LIGHT,
+		PREFAB,
 		NONE
 	};
 	constexpr size_t g_ObjectCategoryCount{ static_cast<size_t>(ObjectCategory::NONE) };
@@ -89,5 +90,13 @@ namespace Engine
 		NONE
 	};
 	constexpr size_t g_EffectEditorGuiTypeCount{ static_cast<size_t>(EffectEditorGuiType::NONE) };
+
+	enum class PrefabType : unsigned int
+	{
+		SIGN_PILLAR,
+		ROAD,
+		NONE
+	};
+	constexpr size_t g_PrefabTypeCount{ static_cast<size_t>(PrefabType::NONE) };
 }
 #endif // Engine_Enum_h__

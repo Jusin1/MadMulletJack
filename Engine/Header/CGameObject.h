@@ -31,7 +31,10 @@ public:
 	bool Is_Active() const { return m_bActive; }
 	_bool Get_RenderOn() { return m_bRenderOn; }
 	void Set_RenderOn(_bool _bRenderOn) { m_bRenderOn = _bRenderOn; }
-
+	
+	_bool				HasParent() const { return m_pParent; }
+	const CGameObject*	GetParent() const { return m_pParent; }
+	void				SetParent(CGameObject *_p) { m_pParent = _p; }
 protected:
 	HRESULT	Set_Component();
 
@@ -58,7 +61,7 @@ protected:
 protected:
 	CTransform* m_pTransformCom;
 	CRenderer* m_pRendererCom;
-
+	CGameObject *m_pParent;
 protected:
 	// 컴포넌트 추가
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);

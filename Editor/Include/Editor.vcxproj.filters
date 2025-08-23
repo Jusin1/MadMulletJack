@@ -273,6 +273,9 @@
     <ClInclude Include="..\Header\CPrefab.h">
       <Filter>04. GameObject\CPrefab</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CScene_Prefab.h">
+      <Filter>01. Scene\Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -400,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPrefab.cpp">
       <Filter>04. GameObject\CPrefab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Prefab.cpp">
+      <Filter>01. Scene\Prefab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

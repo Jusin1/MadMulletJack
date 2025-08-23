@@ -302,7 +302,6 @@ void CDummyPlacementObject::PosUpdate()
 					} break;
 					}
 				}
-				
 
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 

@@ -97,9 +97,9 @@ namespace Engine
 
 	typedef struct tagPrefabData
 	{
-		std::wstring ProtoName = L"";
-		std::vector<MAPOBJECTDATA> vecChildrensData;
+		PrefabType eType = PrefabType::NONE;
 		TRANSFORMDATA ParentTransform;
+		std::vector<MAPOBJECTDATA> vecChildrensData;
 	}PREFABDATA;
 }
 
