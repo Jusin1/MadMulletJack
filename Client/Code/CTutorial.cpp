@@ -13,6 +13,8 @@
 #include "CPickingManager.h"
 #include "CUIManager.h"
 #include "CGlobal_Info.h"
+#include "CTutorialTracker.h"
+#include "CTutorialUI.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -186,6 +188,13 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 {
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_TUTORIAL, pLayerTag)))
         return E_FAIL;
+
+    // CLevel_Tutorial::Ready_Layer_UI()
+    if (CTutorialTracker::Get().HasPending()) {
+        auto* ui = dynamic_cast<CTutorialUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_TutorialUI", SCENE_TUTORIAL, L"UI_Layer"));
+    }
 
     return S_OK;
 }

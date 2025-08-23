@@ -229,6 +229,12 @@
     <Filter Include="02. GameObject\06. UI\TextEffectUI">
       <UniqueIdentifier>{abbe10d1-da4c-4d96-a51f-79b861834986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\TutorialTracker">
+      <UniqueIdentifier>{4b19302a-ae5a-4bef-a4f0-89a87f47334f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\TutorialUI">
+      <UniqueIdentifier>{a12349b7-0efd-4a02-b5e3-00cce0a24795}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -435,6 +441,12 @@
     <ClInclude Include="..\Header\CTextEffectUI.h">
       <Filter>02. GameObject\06. UI\TextEffectUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTutorialTracker.h">
+      <Filter>03. Manager\TutorialTracker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTutorialUI.h">
+      <Filter>02. GameObject\06. UI\TutorialUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -631,6 +643,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTextEffectUI.cpp">
       <Filter>02. GameObject\06. UI\TextEffectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTutorialTracker.cpp">
+      <Filter>03. Manager\TutorialTracker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTutorialUI.cpp">
+      <Filter>02. GameObject\06. UI\TutorialUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

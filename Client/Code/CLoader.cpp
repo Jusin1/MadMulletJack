@@ -48,6 +48,8 @@
 #include "CTextEffectUI.h"
 #pragma endregion 게임 진입 UI들
 
+// 튜토리얼 UI
+#include "CTutorialUI.h"
  
 // 몬스터
 #include "CMonster_Suit.h"
@@ -196,6 +198,49 @@ HRESULT CLoader::Loading_Dev()
 {
 	PhaseBegin(0.5f, 0.5f, L"게임 플레이 자원 로딩");
 
+#pragma region 튜토리얼 UI
+	// WASD Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Move",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WASD.png", 1))))
+		return E_FAIL;
+
+	// SHOT Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Shot",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SHOT.png", 1))))
+		return E_FAIL;
+
+	// JUMP Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Jump",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/Jump.png", 1))))
+		return E_FAIL;
+
+	// DASH Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Dash",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/DASH.png", 1))))
+		return E_FAIL;
+
+	// DOOR Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Door",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/DOOR.png", 1))))
+		return E_FAIL;
+
+	// Finish Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Finish",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/FINISH TUTORIAL.png", 1))))
+		return E_FAIL;
+
+	// Soda Tutorial
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Soda",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/GET A LIFE.png", 1))))
+		return E_FAIL;
+
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TutorialUI",
+		CTutorialUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+#pragma endregion 튜토리얼 UI
+
 #pragma region 맵오브젝트 임시
 	PhaseStep(0.15f, L"맵 오브젝트 텍스쳐");
 	if (FAILED(Loading_MapObjectTexture_Src()))
@@ -323,6 +368,21 @@ HRESULT CLoader::Loading_Dev()
 
 HRESULT CLoader::Loading_Tutorial()
 {
+
+	//// WASD Tutorial
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Move",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WASD.png", 1))))
+	//	return E_FAIL;
+
+	//// SHOT Tutorial
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Shot",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SHOT.png", 1))))
+	//	return E_FAIL;
+
+	//if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_TutorialUI",
+	//	CTutorialUI::Create(m_pGraphicDev))))
+	//	return E_FAIL;
+
 	m_isFinished = true;
 	lstrcpy(m_szLoading, TEXT("튜토리얼 로딩이 완료되었습니다."));
 	return S_OK;
