@@ -45,12 +45,6 @@ void CDataManager::AddPrefabData(PrefabType _e, const PREFABDATA &tData)
 		return;
 	}
 
-	if (m_PrefabData[static_cast<_uint>(_e)].eType != _e)
-	{
-		MSG_BOX("CDataManager::AddPrefabData, PrefabType isnt Matched");
-		return;
-	}
-
 	m_PrefabData[static_cast<_uint>(_e)] = tData;
 }
 

@@ -30,7 +30,7 @@ CPrefab *CPrefab::Create(LPDIRECT3DDEVICE9 pGraphicDev, void *pArg)
 {
 	CPrefab *pPrefab = new CPrefab(pGraphicDev);
 
-	if (FAILED(pPrefab->Initialize(pArg)))
+	if (FAILED(pPrefab->Ready_GameObject()))
 	{
 		Safe_Release(pPrefab);
 		MSG_BOX("CPrefab::Create, Failed");
@@ -221,15 +221,30 @@ HRESULT CPrefab::Set_Data(PREFABDATA *_pData)
 
 	SetPrefabType(_pData->eType);
 
+	// TODO 부모의 역행렬을 곱해서 로컬로 해야하나 ? 싶지만 생각해보니 무조건 로컬 고정인디 Prefab 툴에서는 ?
+
 	// 부모 월드
 	m_pTransformCom->Set_Info(INFO::INFO_RIGHT, _pData->ParentTransform.Right);
 	m_pTransformCom->Set_Info(INFO::INFO_UP, _pData->ParentTransform.Up);
 	m_pTransformCom->Set_Info(INFO::INFO_LOOK, _pData->ParentTransform.Look);
 	m_pTransformCom->Set_Info(INFO::INFO_POS, _pData->ParentTransform.Pos);
 
+	_matrix matChildWorld;
+	_matrix matInverse_ParentWorld;
+	_matrix matResult;
 	// 데이터에 저장된 TransformData는 Local 정보
 	for (int i = 0; i < _pData->vecChildrensData.size(); ++i)
 	{
+		::D3DXMatrixIdentity(&matChildWorld);		
+		::D3DXMatrixIdentity(&matInverse_ParentWorld);
+		::D3DXMatrixIdentity(&matResult);
+
+		::memcpy(&matChildWorld.m[0], &(_pData->vecChildrensData[i].transform.Right), sizeof(_vec3));
+		::memcpy(&matChildWorld.m[1], &(_pData->vecChildrensData[i].transform.Up), sizeof(_vec3));
+		::memcpy(&matChildWorld.m[2], &(_pData->vecChildrensData[i].transform.Look), sizeof(_vec3));
+		::memcpy(&matChildWorld.m[3], &(_pData->vecChildrensData[i].transform.Pos), sizeof(_vec3));
+
+
 		_pData->vecChildrensData[i].bChild = true;
 		if (CGameObject *pGo = CMapFactory::GetInstance()->Create(
 			_pData->vecChildrensData[i].eCategory,
@@ -268,10 +283,10 @@ void CPrefab::Set_ChildrensMatrix()
 			if (pTransform = m_pChildrens[i]->GetTransform())
 			{
 				matResult = (*pTransform->Get_Local()) * (*GetTransform()->Get_World());
-				pTransform->Set_Info(INFO::INFO_RIGHT, (*(_vec3*)&matResult[0]));
-				pTransform->Set_Info(INFO::INFO_UP, (*(_vec3 *)&matResult[1]));
-				pTransform->Set_Info(INFO::INFO_LOOK, (*(_vec3 *)&matResult[2]));
-				pTransform->Set_Info(INFO::INFO_POS, (*(_vec3 *)&matResult[3]));
+				pTransform->Set_Info(INFO::INFO_RIGHT, (*(_vec3*)&matResult.m[0]));
+				pTransform->Set_Info(INFO::INFO_UP, (*(_vec3 *)&matResult.m[1]));
+				pTransform->Set_Info(INFO::INFO_LOOK, (*(_vec3 *)&matResult.m[2]));
+				pTransform->Set_Info(INFO::INFO_POS, (*(_vec3 *)&matResult.m[3]));
 			}
 		}
 	}

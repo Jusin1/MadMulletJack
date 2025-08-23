@@ -260,7 +260,9 @@ void CEditLoader::InitPrefab(_uint _iSceneIndex)
 		}
 	}
 
-	CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, 0, nullptr);
+	PREFABDATA tData;
+	tData.eType = PrefabType::SIGN_PILLAR;
+	CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, 0, &tData);
 }
 
 void CEditLoader::InstancingObjects(const wstring &_Layer)

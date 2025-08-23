@@ -46,6 +46,7 @@ public:
 
 	const	_matrix *Get_Local() const { return &m_matLocal; }
 	void	Get_Local(_matrix *pWorld) const { *pWorld = m_matLocal; }
+	void RotationLocalDegree(const _vec3 &axis, float degrees);
 public:
 	// 로컬 방향 기준 이동 함수
 	void Move_Forward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);

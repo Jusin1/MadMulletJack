@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CCamera.h"
+#include "Engine_Define.h"
+#include "CDInputMgr.h"
 #include "CGameObject.h"
 #include "CGuiManager.h"
 #include "CEditorPickingManager.h"
@@ -47,7 +49,7 @@ void CEditorPickingManager::Remove_PickingGroup(CGameObject *pGameObject)
 
 _bool CEditorPickingManager::Picking()
 {
-	if (!(GetAsyncKeyState(VK_LBUTTON) & 0x8000)) return FALSE;
+	if (!IS_LBUTTON_DOWN) return FALSE;
 
 	IsOutOfScreen()
 		return FALSE;

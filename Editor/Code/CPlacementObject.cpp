@@ -3,6 +3,7 @@
 #include "CGuiManager.h"
 #include "Engine_Define.h"
 #include "CGridPanel.h"
+#include "CManagement.h"
 #include "CEditorPickingManager.h"
 #include "CDummyPlacementObject.h"
 #include "CVIBuffer_GridPanel_Editor.h"
@@ -130,16 +131,30 @@ _bool CPlacementObject::Picking(_vec3 *PickingPoint)
 
 void CPlacementObject::PickingTrue()
 {
-	if (!m_pParent)
+	if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_PREFAB)
 	{
-		CGuiManager::GetInstance()->SetTarget(this);
+		if (!m_pParent)
+		{
+			CGuiManager::GetInstance()->SetTarget(this);
+		}
+		else
+		{
+			if (CGuiManager::GetInstance()->GetTarget() == m_pParent)
+				CGuiManager::GetInstance()->SetTarget(this);
+			else
+				CGuiManager::GetInstance()->SetTarget(m_pParent);
+		}
 	}
 	else
 	{
-		if (CGuiManager::GetInstance()->GetTarget() == m_pParent)
+		if (!m_pParent)
+		{
 			CGuiManager::GetInstance()->SetTarget(this);
+		}
 		else
+		{
 			CGuiManager::GetInstance()->SetTarget(m_pParent);
+		}
 	}
 }
 

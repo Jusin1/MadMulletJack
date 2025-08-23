@@ -205,6 +205,7 @@ void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 		break;
 	}
 
+
 	_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
 	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Env_Layer", pData)))
 	{

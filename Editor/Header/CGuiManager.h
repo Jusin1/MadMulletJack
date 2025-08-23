@@ -45,6 +45,8 @@ public:
 	void ShowInspector();
 	void ShowConsole();
 
+	void RotationDegree(const _vec3 &vAxis, _float fDegree);
+
 	HRESULT AddThumbnail(const string &ThumnailName, const _tchar *CompName, CGui_Thumbnail *_pThumbnail, _uint iType);
 
 	void AddLog(const char *fmt, ...);

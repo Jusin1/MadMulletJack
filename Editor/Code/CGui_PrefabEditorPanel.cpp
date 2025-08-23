@@ -1,13 +1,16 @@
 #include "pch.h"
 #include "CGui_Dropbox.h"
+#include "CMapFactory.h"
 #include "CGuiManager.h"
 #include "CGameObject.h"
 #include "CGui_Button.h"
 #include "CGui_ButtonList.h"
+#include "CDataManager.h"
 #include "CGui_Transform.h"
 #include "CGui_Checkbox.h"
 #include "CGui_Thumbnail.h"
 #include "CPrefab.h"
+#include "CFileManager.h"
 #include "CVIBuffer_GridPanel_Editor.h"
 #include "CGraphicDev.h"
 #include "CEditorLoadingScene.h"
@@ -283,6 +286,8 @@ CGuiBase *CGui_PrefabEditorPanel::CreateButton_Create()
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
 			CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_PREFAB, L"Wall_Layer", &defaultData);
 			CGuiManager::GetInstance()->SetTarget(pGo);
+			pGo->SetParent(static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front()));
+			static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front())->Add_Children(pGo);
 		} break;
 		case ObjectCategory::TILE:
 		{
@@ -985,7 +990,22 @@ void CGui_PrefabEditorPanel::ChangeType(_uint _iType)
 		return;
 
 	// m_iPrefabType Clear 오브젝트
-	// _iType Set 오브젝트
+	CObjectManager::GetInstance()->Clear(SCENE_PREFAB);
+	CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(_iType));
+	CMapFactory::GetInstance()->SetTargetSceneIndex(SCENE_PREFAB);
+	if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetPrefabDataList())
+	{
+		if ((*pVecData)[0].eType != PrefabType::NONE)
+		{
+			CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>((*pVecData)[0].eType), &(*pVecData)[0]);
+			m_iPrefabType = _iType;
+			return;
+		}
+	}
+
+	PREFABDATA tData;
+	tData.eType = static_cast<PrefabType>(_iType);
+	CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, _iType, &tData);
 	m_iPrefabType = _iType;
 }
 

@@ -158,6 +158,7 @@ void CGui_Transform::PositionInit()
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.x = _f;
 						pTransform->Set_Info(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
 					}
 				}
 			}
@@ -181,6 +182,7 @@ void CGui_Transform::PositionInit()
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.y = _f;
 						pTransform->Set_Info(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
 					}
 				}
 			}
@@ -204,6 +206,7 @@ void CGui_Transform::PositionInit()
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.z = _f;
 						pTransform->Set_Info(INFO_POS, pos);
+						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
 					}
 				}
 			}

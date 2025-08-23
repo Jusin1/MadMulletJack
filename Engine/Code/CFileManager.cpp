@@ -179,7 +179,7 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
     }
 
     wstring FileName{PrefabTypeToWstring(static_cast<PrefabType>(_e))};
-    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"/data.json";
+    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"data.json";
 
     if (!dir.parent_path().empty())
     {
@@ -207,7 +207,7 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
 HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
 {
     wstring FileName{ PrefabTypeToWstring(static_cast<PrefabType>(_e)) };
-    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"/data.json";
+    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"data.json";
 
     if (dir.parent_path().empty())
     {

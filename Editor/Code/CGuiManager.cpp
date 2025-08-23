@@ -3,6 +3,7 @@
 #include "CGui_Thumbnail.h"
 #include "Engine_Define.h"
 #include "Editor_Define.h"
+#include "CPrefab.h"
 #include "CDInputMgr.h"
 #include "CGameObject.h"
 #include "CTransform.h"
@@ -143,6 +144,28 @@ void CGuiManager::ShowConsole()
     ImGui::End();
 }
 
+void CGuiManager::RotationDegree(const _vec3 &vAxis, _float fDegree)
+{
+    if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_PREFAB)
+    {
+        if (GetTarget()->GetParent())
+        {
+            GetTarget()->GetTransform()->RotationLocalDegree(vAxis, fDegree);
+            static_cast<CPrefab *>(GetTarget()->GetParent())->Set_ChildrensMatrix();
+        }
+        else
+        {
+            CPrefab *pPrefab = static_cast<CPrefab *>(GetTarget());
+            pPrefab->GetTransform()->RotationDegree(_vec3{ vAxis }, fDegree);
+            pPrefab->Set_ChildrensMatrix();
+        }
+    }
+    else
+    {
+        GetTarget()->GetTransform()->RotationDegree(_vec3{ vAxis }, fDegree);
+    }
+}
+
 HRESULT CGuiManager::AddThumbnail(const string &ThumnailName, const _tchar *CompName, CGui_Thumbnail *_pThumbnail, _uint iType)
 {
     IDirect3DBaseTexture9 *pTexture = static_cast<CTexture *>(CComponentMgr::GetInstance()->Find_Component(SCENE_STATIC, CompName))->Get_Texture();
@@ -171,37 +194,37 @@ void CGuiManager::Render()
     // z 축 -15도
     if (KEY_BUTTON_DOWN(DIK_SEMICOLON) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, -15.f);
+        RotationDegree(_vec3{ 0.f,0.f,1.f }, -15.f);
     }
     // '
     // z 축 15도
     else if (KEY_BUTTON_DOWN(DIK_APOSTROPHE) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 0.f, 1.f }, 15.f);
+        RotationDegree(_vec3{ 0.f,0.f,1.f }, 15.f);
     }
     // [
     // y 축 -15도
     else if (KEY_BUTTON_DOWN(DIK_LBRACKET) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, -15.f);
+        RotationDegree(_vec3{ 0.f,1.f,0.f }, -15.f);
     }
     // ]
     // y 축 15도
     else if (KEY_BUTTON_DOWN(DIK_RBRACKET) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 0.f, 1.f, 0.f }, 15.f);
+        RotationDegree(_vec3{ 0.f,1.f,0.f }, 15.f);
     }
     // -
     // x 축 -15도
     else if (KEY_BUTTON_DOWN(DIK_MINUS) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, -15.f);
+        RotationDegree(_vec3{ 1.f,0.f,0.f }, -15.f);
     }
     // =
     // x 축 15도
     else if (KEY_BUTTON_DOWN(DIK_EQUALS) && GetTarget())
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ 1.f, 0.f, 0.f }, 15.f);
+        RotationDegree(_vec3{ 1.f,0.f,0.f }, 15.f);
     }
     ShowEditorDockspace();
     ShowInspector();

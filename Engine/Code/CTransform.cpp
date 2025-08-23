@@ -83,6 +83,45 @@ void CTransform::Set_LocalScale(_float x, _float y, _float z)
 	Set_LocalInfo(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * z);
 }
 
+void CTransform::RotationLocalDegree(const _vec3 &axis, float degrees)
+{
+	if (degrees == 0.f) return;
+
+	// 현재 축/스케일 분리
+	_vec3 right = Get_LocalInfo(INFO_RIGHT);
+	_vec3 up = Get_LocalInfo(INFO_UP);
+	_vec3 look = Get_LocalInfo(INFO_LOOK);
+
+	float fX = D3DXVec3Length(&right);
+	float fY = D3DXVec3Length(&up);
+	float fZ = D3DXVec3Length(&look);
+
+	if (fX <= 0.f || fY <= 0.f || fZ <= 0.f) return;
+
+	D3DXVec3Normalize(&right, &right);
+	D3DXVec3Normalize(&up, &up);
+	D3DXVec3Normalize(&look, &look);
+
+	// 회전 축 정규화
+	_vec3 a = axis;
+	if (D3DXVec3LengthSq(&a) <= 0.f) return;
+	D3DXVec3Normalize(&a, &a);
+
+	// 회전 행렬(도 → 라디안 변환 내부에서 바로)
+	_matrix rad;
+	D3DXMatrixRotationAxis(&rad, &a, D3DXToRadian(degrees));
+
+	// 단위 축 회전
+	D3DXVec3TransformNormal(&right, &right, &rad);
+	D3DXVec3TransformNormal(&up, &up, &rad);
+	D3DXVec3TransformNormal(&look, &look, &rad);
+
+	// 원래 스케일 복원
+	Set_LocalInfo(INFO_RIGHT, right * fX);
+	Set_LocalInfo(INFO_UP, up * fY);
+	Set_LocalInfo(INFO_LOOK, look * fZ);
+}
+
 void CTransform::Move_Forward(_float fTimeDelta, _float fHeight)
 {
 	_vec3 vPos = Get_Info(INFO_POS);
