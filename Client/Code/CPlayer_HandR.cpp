@@ -214,15 +214,14 @@ HRESULT CPlayer_HandR::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(300.f, 540.f, 2500.f, -800.f); // pos를 정하고
-            //Set_UISizeAndPos(300.f, 540.f, WINCX * 0.5, WINCY *0.5); // pos를 정하고
+            Set_UISizeAndPos(380.f, 780.f, 2890.f, -1200.f); // pos를 정하고
 
-            Set_New_TransInfo(1200.f, 50.f);
-            //Set_New_TransInfo(0.f, 50.f);
+            Set_New_TransInfo(2000.f, 50.f);
+
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(50.f) * 1;
 
-            m_tMoveInfo = { MV_LDOWN, true, 2850.f, 0.f};
+            m_tMoveInfo = { MV_LDOWN, true,  3630.f, 0.f};
         }
 
         else {
@@ -253,7 +252,7 @@ HRESULT CPlayer_HandR::Set_Texture()
             return E_FAIL;
 
         // idle pos
-        Set_UISizeAndPos(400.f, 600.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 550.f); // pos를 정하고
+        Set_UISizeAndPos(400.f, 600.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 570.f); // pos를 정하고
 
         Set_New_TransInfo(50.f, 0.f);
 
@@ -346,7 +345,7 @@ void CPlayer_HandR::Update_Weapon_Pistol()
             if (m_CurrentAnimTag == TEXT("Com_Texture_HandR_Idle"))
             {
                 // pos를 갱신
-                pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 300.f);
+                pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
                 return;
             }
 

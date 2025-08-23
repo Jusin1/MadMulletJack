@@ -42,7 +42,7 @@ HRESULT CCameraFPS::Initialize(void* pArg)
     if (FAILED(CCamera::Initialize(pArg)))
         return E_FAIL;
 
-    m_fOffset = 0.2f;
+    m_fOffset = 0.f;
 
     return S_OK;
 }

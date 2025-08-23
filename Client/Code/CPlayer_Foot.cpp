@@ -59,6 +59,14 @@ void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
+
+    // kick 애니메이션 끝난거 알려주기
+    if (m_CurrentAnimTag == TEXT("Com_Texture_Foots_Kick") && 
+        m_pTextureCom->Is_AnimFinished())
+    {
+        CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+        m_bRenderOn = false;
+    }
 }
 
 void CPlayer_Foot::Render_GameObject()
@@ -109,7 +117,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     // Attack_Ins
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 13;
-    texInfo.m_fSpeed = 4.f;
+    texInfo.m_fSpeed = 5.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Monster_InsKill_UI", SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -121,7 +129,26 @@ HRESULT CPlayer_Foot::Texture_Clone()
 
 HRESULT CPlayer_Foot::Set_Texture()
 {
-    m_bRenderOn = true;
+    m_bRenderOn = false;
+
+    switch (m_tInfo.ePlayerMove)
+    {
+    case PMV_SLIDE:
+    {
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Slide"))))
+            return E_FAIL;
+
+        Set_UISizeAndPos(700.f, 480.f, WINCX * 0.5f, WINCY * 0.5f + 180);
+
+        Set_New_TransInfo(80.f, 0.f);
+
+        m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
+        m_bRenderOn = true;
+    }
+    break;
+    default:
+        m_bRenderOn = false;
+    }
 
     switch (m_tInfo.ePlayerState)
     {
@@ -134,21 +161,8 @@ HRESULT CPlayer_Foot::Set_Texture()
 
         Set_New_TransInfo(150.f, 0.f);
 
-
         m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
-    }
-        break;
-
-    case SLIED:
-    {
-        if (FAILED(Change_Texture(TEXT("Com_Texture_Foots_Slide"))))
-            return E_FAIL;
-
-        Set_UISizeAndPos(700.f, 480.f, WINCX * 0.5f, WINCY * 0.5f + 180);
-
-        Set_New_TransInfo(80.f, 0.f);
-
-        m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
+        m_bRenderOn = true;
     }
         break;
 
@@ -160,11 +174,9 @@ HRESULT CPlayer_Foot::Set_Texture()
         Set_UISizeAndPos(1024.f, 1024.f, WINCX * 0.5f, WINCY * 0.5f - 100.f);
 
         m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
+        m_bRenderOn = true;
     }
-        break;
-
-    default:
-        m_bRenderOn = false;
+    break;
     }
 
     return S_OK;

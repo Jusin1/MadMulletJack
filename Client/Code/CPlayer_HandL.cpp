@@ -207,7 +207,7 @@ HRESULT CPlayer_HandL::Set_Texture()
 
             Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 700.f, WINCY * 0.5f + 290); //idle pos
 
-            Set_New_TransInfo(1000.f, 0.f);
+            Set_New_TransInfo(1800.f, 0.f);
             //m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
             //m_fRotSum += D3DXToRadian (-20.f) * 1;
 

@@ -29,7 +29,7 @@ public:
 	// state func
 private:
 	// 이전state end -> statenormalset -> 현재 state begin
-	void ChangeState(PLAYERSTATE  _e);	//현재 state와 이전 state가 바뀌었으면 바꿔줌
+	void ChangeState(PLAYERSTATE _eState);	//현재 state와 이전 state가 바뀌었으면 바꿔줌
 	void StateNormalSet();				// state 변화전 변수들 초기화
 
 	void StateBegin(PLAYERSTATE _e); // state의 begin 함수를 실행
@@ -43,18 +43,6 @@ private:
 	void JUMP_Begin();
 	void JUMP_On(const _float& fTimeDelta);
 	void JUMP_End();
-
-	void DASH_ATTACK_Begin();
-	void DASH_ATTACK_On(const _float& fTimeDelta);
-	void DASH_ATTACK_End();
-
-	void DASH_Begin();
-	void DASH_On(const _float& fTimeDelta);
-	void DASH_End();
-
-	void SLIED_Begin();
-	void SLIED_On(const _float& fTimeDelta);
-	void SLIED_End();
 
 	void KICK_Begin();
 	void KICK_On(const _float& fTimeDelta);
@@ -84,10 +72,6 @@ private:
 	void DOPING_On(const _float& fTimeDelta);
 	void DOPING_End();
 
-	void WALL_Begin();
-	void WALL_On(const _float& fTimeDelta);
-	void WALL_End();
-
 	void OPENING_Begin();
 	void OPENING_On(const _float& fTimeDelta);
 	void OPENING_End();
@@ -101,7 +85,8 @@ private:
 	void KeyInput(const _float& fTimeDelta);
 	void Set_State_Normal(); // state를 idle로 바꿈
 
-	const TCHAR* StateToString(PLAYERSTATE eState); //debug
+	const TCHAR* StateToString(PLAYERSTATE eState ); //debug
+	const TCHAR* MoveToString(PLAYERMOVE eMove); // debug
 	void CountHp(const _float& fTimeDelta);
 
 	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f);
@@ -113,7 +98,7 @@ private:
 	void Move_Slide(const _float& fTimeDelta);
 	void Move_Wall(const _float& fTimeDelta);
 
-	void Change_Move(PLAYERMOVE ePlayerMove , _bool bYFix); // 속도 셋팅을 여기서 해줌.
+	void Change_Move(PLAYERMOVE ePlayerMove , _bool bYFix = false); // 속도 셋팅을 여기서 해줌.
 
 	// getter setter func
 public:
