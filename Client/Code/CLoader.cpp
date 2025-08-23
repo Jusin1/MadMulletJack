@@ -143,8 +143,13 @@ HRESULT CLoader::Ready_Loading(SCENE eNextScene)
 
 HRESULT CLoader::Loading_Logo()
 {
+	PhaseBegin(0.f, 1.f, L"로고 리소스 로딩");
 	// 텍스쳐 로딩
-	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+	PhaseStep(0.15f, L"텍스쳐 로딩 중");
+	// LogoBackGround
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_LoadingBG",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Loading/REJECT%03d.png", 3))))
+		return E_FAIL;
 	// BackGround
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_LOGO, L"Prototype_Component_Texture_BackGround",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/BackGround.png", 1))))
@@ -160,7 +165,7 @@ HRESULT CLoader::Loading_Logo()
 		return E_FAIL;
 
 	// 객체 생성 중
-	lstrcpy(m_szLoading, L"객체 생성 중.");
+	PhaseStep(0.55f, L"객체 프로토타입 생성 중");
 	// BackGround
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BackGround",
 		CBackGround::Create(m_pGraphicDev))))
@@ -180,20 +185,19 @@ HRESULT CLoader::Loading_Logo()
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_UIButton",
 		CButtonUI::Create(m_pGraphicDev))))
 		return E_FAIL;
-
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 
+	PhaseStep(1.f, L"객체 프로토타입 생성 중");
 	m_isFinished = true;
-
-
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_Dev()
 {
-	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+	PhaseBegin(0.5f, 0.5f, L"게임 플레이 자원 로딩");
 
 #pragma region 맵오브젝트 임시
+	PhaseStep(0.15f, L"맵 오브젝트 텍스쳐");
 	if (FAILED(Loading_MapObjectTexture_Src()))
 		return E_FAIL;
 #pragma endregion
@@ -203,6 +207,7 @@ HRESULT CLoader::Loading_Dev()
 
 #pragma region 슈트 몬스터
 	// Monster
+	PhaseStep(0.45f, L"몬스터 텍스쳐");
 	// IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/idle/sm_idle%03d.png", 12))))
@@ -261,6 +266,7 @@ HRESULT CLoader::Loading_Dev()
 
 
 #pragma region MapObject
+	PhaseStep(0.92f, L"최종 프로토타입 생성");
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DefaultPanel",
 		CGridPanel::Create(m_pGraphicDev))))
 		return E_FAIL;
@@ -303,14 +309,14 @@ HRESULT CLoader::Loading_Dev()
 #pragma endregion
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-
 	// CubeTex
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_CubeBuffer", Engine::VIBuffer_Cube::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-
+	PhaseStep(1.0f, L"DEV 로딩 완료");
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 
+	PhaseDone(L"DEV 로딩 완료");
 	m_isFinished = true;
 	return S_OK;
 }
@@ -534,12 +540,47 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Signs_7", L"../Bin/Resource/MapObject/Signs/SIGNS 8.png", 1);
 }
 
+float CLoader::Get_Progress() const
+{
+	EnterCriticalSection(const_cast<CRITICAL_SECTION*>(&m_Crt));
+	float p = m_progress;
+	LeaveCriticalSection(const_cast<CRITICAL_SECTION*>(&m_Crt));
+	return p;
+}
+
+void CLoader::PhaseBegin(float base, float weight, const wchar_t* name)
+{
+	EnterCriticalSection(&m_Crt);
+	m_phaseBase = std::clamp(base, 0.f, 1.f);
+	m_phaseWeight = std::clamp(weight, 0.f, 1.f - m_phaseBase);
+	m_progress = m_phaseBase;
+	if (name) lstrcpyn(m_szLoading, name, _countof(m_szLoading));
+	LeaveCriticalSection(&m_Crt);
+}
+
+void CLoader::PhaseStep(float local01, const wchar_t* msg)
+{
+	local01 = std::clamp(local01, 0.f, 1.f);
+	EnterCriticalSection(&m_Crt);
+	m_progress = m_phaseBase + m_phaseWeight * local01;
+	if (msg && msg[0]) lstrcpyn(m_szLoading, msg, _countof(m_szLoading));
+	LeaveCriticalSection(&m_Crt);
+}
+
+void CLoader::PhaseDone(const wchar_t* msgDone)
+{
+	EnterCriticalSection(&m_Crt);
+	m_progress = m_phaseBase + m_phaseWeight; // 구간 100%
+	if (msgDone) lstrcpyn(m_szLoading, msgDone, _countof(m_szLoading));
+	LeaveCriticalSection(&m_Crt);
+}
+
 HRESULT CLoader::Loading_UI()
 {
 	// 객체 생성
-	lstrcpy(m_szLoading, L"UI 생성 중.");
-
+	PhaseBegin(0.f, 0.5f, L"UI 자원 로딩");
 #pragma region Weapon texture
+	PhaseStep(0.10f, L"무기 텍스쳐");
 	// Pistol
 	// Pistol - Idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Idle",
@@ -599,7 +640,7 @@ HRESULT CLoader::Loading_UI()
 
 #pragma region UI Texture
 	// Player UI
-
+	PhaseStep(0.35f, L"플레이어/HP바/공용 UI 텍스쳐");
 	// Arm
 	// openig1 - weapon : non
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp1",
@@ -711,6 +752,7 @@ HRESULT CLoader::Loading_UI()
 #pragma endregion 일반UI
 
 #pragma region 작은 이펙트 UI
+	PhaseStep(0.65f, L"게임 진입 UI 텍스쳐");
 	// 여러 상호작용 이펙트 UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIDiamondWhite",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/PICKUP_REFILL L I.png", 1))))
@@ -880,7 +922,7 @@ HRESULT CLoader::Loading_UI()
 
 	
 #pragma endregion 게임 진입 UI
-
+	PhaseStep(0.80f, L"오브젝트 프로토타입 생성");
 	// Camera_FPS
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
 		CCameraFPS::Create(m_pGraphicDev))))
@@ -1009,4 +1051,7 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 #pragma endregion HpBar UI
+
+	PhaseStep(1.0f, L"UI 로딩 완료");
+	PhaseDone(L"UI 로딩 완료");
 }
