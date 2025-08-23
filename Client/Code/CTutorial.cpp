@@ -46,13 +46,16 @@ HRESULT CTutorial::Ready_Scene()
     if (FAILED(Ready_Ceiling_Layer(L"Ceiling_Layer")))
         return E_FAIL;
 
-    if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
-        return E_FAIL;
+    /*if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
+        return E_FAIL;*/
 
     if (FAILED(Ready_EnvObj_Layer(L"Env_Layer")))
         return E_FAIL;
 
     if (FAILED(Ready_Player_Layer(L"Player_Layer")))
+        return E_FAIL;
+
+    if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
         return E_FAIL;
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
