@@ -40,9 +40,6 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	if (MAPOBJECTDATA *pData = reinterpret_cast<MAPOBJECTDATA *>(pArg))
 	{
-		GetTransform()->Set_Info(INFO::INFO_RIGHT, pData->transform.Right);
-		GetTransform()->Set_Info(INFO::INFO_UP, pData->transform.Up);
-		GetTransform()->Set_Info(INFO::INFO_LOOK, pData->transform.Look);
 		GetTransform()->Set_Info(INFO::INFO_POS, pData->transform.Pos);
 
 		m_pTransformCom->Apply_WorldMatrix();

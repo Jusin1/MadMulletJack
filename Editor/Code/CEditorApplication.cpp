@@ -296,11 +296,11 @@ void CEditorApplication::Ready_MapFactorFunc()
 {
 	CMapFactory *pMapFactory = CMapFactory::GetInstance();
 
-	std::function<HRESULT(void *)> _func =
-	[](void *pData = nullptr)->HRESULT
+	std::function<CGameObject*(void *)> _func =
+	[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
 	};
 	for (int i = 0; i < g_WallTypeCount; ++i)
 	{
@@ -308,10 +308,10 @@ void CEditorApplication::Ready_MapFactorFunc()
 	}
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	for (int i = 0; i < g_TileTypeCount; ++i)
 	{
@@ -319,10 +319,10 @@ void CEditorApplication::Ready_MapFactorFunc()
 	}
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Env_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Env_Layer", pData);
 	};
 	for (int i = 0; i < g_EnvTypeCount; ++i)
 	{
@@ -330,10 +330,10 @@ void CEditorApplication::Ready_MapFactorFunc()
 	}
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Monster_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Monster_Layer", pData);
 	};
 	for (int i = 0; i < g_MonsterTypeCount; ++i)
 	{

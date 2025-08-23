@@ -163,7 +163,7 @@ void CGui_MapEditorPanel::LightRender()
 
 CGuiBase *CGui_MapEditorPanel::CategoryDropbox_Create()
 {
-	vector<string> Names{g_ObjectCategoryCount};
+	vector<string> Names{ g_ObjectCategoryCount - 1 };
 	Names[0] = "Wall";
 	Names[1] = "Tile";
 	Names[2] = "Env";
@@ -947,4 +947,7 @@ const _tchar *CGui_MapEditorPanel::GetSelectedThumbnailTexture()
 	case Engine::ObjectCategory::MONSTER:
 		return static_cast<CGui_Thumbnail *>(m_pElements[static_cast<_uint>(MapEditorGuiType::MONSTER_THUMBNAIL)])->GetSelectedCompName(m_iObjectType);
 	}
+
+	MSG_BOX("CGui_MapEditorPanel::GetSelectedThumbnailTexture, Failed");
+	return nullptr;
 }

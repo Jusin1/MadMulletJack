@@ -132,7 +132,17 @@ _bool CGridPanel::Picking(_vec3 *PickingPoint)
 
 void CGridPanel::PickingTrue()
 {
-	CGuiManager::GetInstance()->SetTarget(this);
+	if (!m_pParent)
+	{
+		CGuiManager::GetInstance()->SetTarget(this);
+	}
+	else
+	{
+		if (CGuiManager::GetInstance()->GetTarget() == m_pParent)
+			CGuiManager::GetInstance()->SetTarget(this);
+		else
+			CGuiManager::GetInstance()->SetTarget(m_pParent);
+	}
 }
 
 void CGridPanel::ExportData(void *pData)

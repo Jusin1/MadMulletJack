@@ -28,12 +28,12 @@ void CMapFactory::Register(ObjectCategory _eCategory, _uint _iType, CreateFuncti
 	m_Register[iCategory].insert(std::map<_uint, CreateFunction>::value_type(_iType, _func));
 }
 
-HRESULT CMapFactory::Create(ObjectCategory _eCategory, _uint _iType, void *_pData)
+CGameObject *CMapFactory::Create(ObjectCategory _eCategory, _uint _iType, void *_pData)
 {
 	if (_eCategory < ObjectCategory::WALL || _eCategory >= ObjectCategory::NONE || _iType < 0)
 	{
 		MSG_BOX("CMapFactory::Create, Category or type is invalid");
-		return E_FAIL;
+		return nullptr;
 	}
 
 	_uint iCategory = static_cast<_uint>(_eCategory);
@@ -41,7 +41,7 @@ HRESULT CMapFactory::Create(ObjectCategory _eCategory, _uint _iType, void *_pDat
 	if (itr == m_Register[iCategory].end())
 	{
 		MSG_BOX("CMapFactory::Create, std::function is invalid");
-		return E_FAIL;
+		return nullptr;
 	}
 
 	return (*itr).second(_pData);

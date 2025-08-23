@@ -266,131 +266,131 @@ void CMainApp::Ready_MapFactorFunc()
 	CMapFactory *pMapFactory = CMapFactory::GetInstance();
 
 #pragma region Wall
-	std::function<HRESULT(void *)> _func =
-		[](void *pData = nullptr)->HRESULT
+	std::function<CGameObject *(void *)> _func =
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_HOR), _func);
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_VER), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Floor_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Floor_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::FLOOR), _func);
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::INCLINE), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Ceiling_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"Ceiling_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::CEILING), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"SlideWall_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPanel", iTargetScene, L"SlideWall_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::WALL, static_cast<_uint>(WallType::WALL_SLIDE), _func);
 #pragma endregion
 
 #pragma region Tile
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_DecoTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DecoTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::DECO), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_GlassTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GlassTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::GLASS), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_AcidTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_AcidTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::ACID), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_ElectricTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_ElectricTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::ELECTRIC), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_VentTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_VentTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::VENT), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_NormalDoorTile", iTargetScene, L"Tile_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_NormalDoorTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::NORMALDOOR), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 		{
 			_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-			return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_VendingMachine", iTargetScene, L"Tile_Layer", pData);
+			return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_VendingMachine", iTargetScene, L"Tile_Layer", pData);
 		};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::VENDINGMACHINE), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 		{
 			_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-			return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Bottle", iTargetScene, L"Tile_Layer", pData);
+			return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Bottle", iTargetScene, L"Tile_Layer", pData);
 		};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::BOTTLE), _func);
 #pragma endregion
 
 #pragma region Env
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Player", iTargetScene, L"Player_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Player", iTargetScene, L"Player_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::ENV_OBJ, static_cast<_uint>(EnvType::SPAWNPOINT), _func);
 
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_EndPoint", iTargetScene, L"Env_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_EndPoint", iTargetScene, L"Env_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::ENV_OBJ, static_cast<_uint>(EnvType::ENDPOINT), _func);
 #pragma endregion
 
 #pragma region Monster
 	_func =
-		[](void *pData = nullptr)->HRESULT
+		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Suit", iTargetScene, L"Monster_Layer", pData);
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Suit", iTargetScene, L"Monster_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::SUIT), _func);
 #pragma endregion

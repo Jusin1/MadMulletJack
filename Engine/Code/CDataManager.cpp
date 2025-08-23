@@ -6,6 +6,7 @@ IMPLEMENT_SINGLETON(CDataManager)
 
 CDataManager::CDataManager()
 {
+	m_PrefabData = vector<PREFABDATA>{ g_PrefabTypeCount };
 }
 
 CDataManager::~CDataManager()
@@ -34,6 +35,31 @@ void CDataManager::AddData(const wstring &Layer, const MAPOBJECTDATA &objData)
 	}
 }
 
+void CDataManager::AddPrefabData(PrefabType _e, const PREFABDATA &tData)
+{
+	if (_e < PrefabType::SIGN_PILLAR || _e >= PrefabType::NONE)
+	{
+		MSG_BOX("CDataManager::AddPrefabData, PrefabType is Invalid");
+		return;
+	}
+
+	PREFABDATA PrefabData = m_PrefabData[static_cast<_uint>(_e)];
+
+	if (PrefabData.eType != _e)
+	{
+		MSG_BOX("CDataManager::AddPrefabData, PrefabType isnt Matched");
+		return;
+	}
+
+	if (PrefabData.eType == _e)
+	{
+		MSG_BOX("CDataManager::AddPrefabData, PrefabData is already in");
+		return;
+	}
+
+	PrefabData = tData;
+}
+
 void CDataManager::Clear()
 {
 	if (!m_LoadedData.empty())
@@ -45,6 +71,12 @@ void CDataManager::Clear()
 
 		m_LoadedData.clear();
 	}
+
+	// size를 유지하며 비우기
+	for (int i = 0; i < g_PrefabTypeCount; ++i)
+	{
+		m_PrefabData[i] = {};
+	}
 }
 
 vector<MAPOBJECTDATA> *CDataManager::FindData(const wstring &Layer)
@@ -54,4 +86,26 @@ vector<MAPOBJECTDATA> *CDataManager::FindData(const wstring &Layer)
 		return nullptr;
 
 	return &(itr->second);
+}
+
+vector<PREFABDATA> *CDataManager::GetPrefabDataList()
+{
+	if (IsEmpty_PrefabData())
+	{
+		MSG_BOX("CDataManager::GetPrefabData, PrefabData is empty");
+		return nullptr;
+	}
+
+	return &m_PrefabData;
+}
+
+const PREFABDATA &CDataManager::GetPrefabData(PrefabType _e)
+{
+	if (IsEmpty_PrefabData())
+	{
+		MSG_BOX("CDataManager::GetPrefabData, PrefabData is empty");
+		return {};
+	}
+
+	return m_PrefabData[static_cast<_uint>(_e)];
 }

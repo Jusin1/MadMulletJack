@@ -94,6 +94,13 @@ namespace Engine
 		TRANSFORMDATA transform;
 		PANELDATA panelBuffer;
 	} MAPOBJECTDATA;
+
+	typedef struct tagPrefabData
+	{
+		PrefabType eType = PrefabType::NONE;
+		TRANSFORMDATA ParentTransform;
+		std::vector<MAPOBJECTDATA> vecChildrensData;
+	}PREFABDATA;
 }
 
 #endif // Engine_Struct_h__

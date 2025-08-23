@@ -2,6 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include <locale>
+#include <vector>
 #include <codecvt>
 #include <string>
 #include "CDataManager.h"
@@ -16,7 +17,14 @@ NLOHMANN_JSON_SERIALIZE_ENUM(WallType, {
     {WallType::INCLINE, "INCLINE"},
     {WallType::FLOOR, "FLOOR"},
     {WallType::CEILING, "CEILING"},
+    {WallType::WALL_SLIDE, "WALLSLIDE"},
     {WallType::NONE, "NONE"}
+    })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(PrefabType, {
+    {PrefabType::SIGN_PILLAR, "SIGNPILLAR"},
+    {PrefabType::ROAD, "ROAD"},
+    {PrefabType::NONE, "NONE"}
     })
 
 NLOHMANN_JSON_SERIALIZE_ENUM(ObjectCategory, {
@@ -25,6 +33,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(ObjectCategory, {
     {ObjectCategory::ENV_OBJ, "ENV_OBJ"},
     {ObjectCategory::MONSTER, "MONSTER"},
     {ObjectCategory::LIGHT, "LIGHT"},
+    {ObjectCategory::PREFAB, "PREFAB"},
     {ObjectCategory::NONE, "NONE"}
     })
 
@@ -87,7 +96,7 @@ HRESULT CFileManager::SaveDataFile(_uint iSceneID, const _tchar *szLayerTag)
 
     if (objectDatas.size() <= 0)
     {
-        MSG_BOX("CFileManager::SaveObjectList, objlist is empty");
+        MSG_BOX("CFileManager::SaveDataFile, objlist is empty");
         return E_FAIL;
     }
 
@@ -105,14 +114,14 @@ HRESULT CFileManager::SaveDataFile(_uint iSceneID, const _tchar *szLayerTag)
     }
     else
     {
-        MSG_BOX("CFileManager::SaveObjectList, path is invalid");
+        MSG_BOX("CFileManager::SaveDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ofstream ofs(dir, std::ios::out | std::ios::binary);
     if (!ofs.is_open())
     {
-        MSG_BOX("CFileManager::SaveObjectList, Failed Save");
+        MSG_BOX("CFileManager::SaveDataFile, Failed Save");
         return E_FAIL;
     }
 
@@ -129,14 +138,14 @@ HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
     filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / szLayerTag / L"data.json";
     if (dir.parent_path().empty())
     { 
-        MSG_BOX("CFileManager::LoadObjectList, path is invalid");
+        MSG_BOX("CFileManager::LoadDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ifstream ifs(dir, std::ios::in | std::ios::binary);
     if (!ifs.is_open())
     {
-        MSG_BOX("CFileManager::LoadObjectList, open failed");
+        MSG_BOX("CFileManager::LoadDataFile, open failed");
         return E_FAIL;
     }
 
@@ -150,6 +159,79 @@ HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
     }
 
     ifs.close();
+    return S_OK;
+}
+
+HRESULT CFileManager::SavePrefabDataFile()
+{
+    std::vector<MAPOBJECTDATA> objectDatas = CObjectManager::GetInstance()->ExportObjectData(SCENE_PREFAB, L"Prefab_Layer");
+
+    if (objectDatas.size() <= 0)
+    {
+        MSG_BOX("CFileManager::SaveObjectList, objlist is empty");
+        return E_FAIL;
+    }
+
+    json jArray = json::array();
+    for (const auto &data : objectDatas)
+    {
+        jArray.push_back(data);
+    }
+
+    // " / " 연산자 오버로딩을 통해서 파일 경로 만들기
+    filesystem::path dir = GameDataPath / "Prefab_Laye/data.json";
+
+    if (!dir.parent_path().empty())
+    {
+        filesystem::create_directories(dir.parent_path());
+    }
+    else
+    {
+        MSG_BOX("CFileManager::SavePrefabDataFile, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ofstream ofs(dir, std::ios::out | std::ios::binary);
+    if (!ofs.is_open())
+    {
+        MSG_BOX("CFileManager::SavePrefabDataFile, Failed Save");
+        return E_FAIL;
+    }
+
+    // setw(i) 출력될 값의 최소폭을 i 만큼 지정
+    // Json 이므로 4칸 들여쓰기로 출력
+    ofs << std::setw(4) << jArray << std::endl;
+    ofs.close();
+
+    return S_OK;
+}
+
+HRESULT CFileManager::LoadPrefabDataFile()
+{
+    filesystem::path dir = GameDataPath / "Prefab_Layer/data.json";
+    if (dir.parent_path().empty())
+    {
+        MSG_BOX("CFileManager::LoadPrefabDataFile, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ifstream ifs(dir, std::ios::in | std::ios::binary);
+    if (!ifs.is_open())
+    {
+        MSG_BOX("CFileManager::LoadPrefabDataFile, open failed");
+        return E_FAIL;
+    }
+
+    json jArray;
+    ifs >> jArray;
+
+    for (const auto &jObj : jArray)
+    {
+        PREFABDATA PrefabData = jObj.get<PREFABDATA>();
+    }
+
+    ifs.close();
+
     return S_OK;
 }
 
@@ -179,6 +261,23 @@ wstring CFileManager::SceneIdToWstring(_uint iSceneID)
 }
 
 BEGIN(Engine)
+
+void to_json(json &_j, const PREFABDATA &_tData)
+{
+    _j = json
+    {
+        {"PrefabType", _tData.eType},
+        {"Childrens", _tData.vecChildrensData},
+        {"ParentTransformData", _tData.ParentTransform}
+    };
+}
+
+void from_json(const json &_j, PREFABDATA &_tData)
+{
+    _j.at("PrefabType").get_to(_tData.eType);
+    _tData.vecChildrensData = _j.at("Childrens").get<std::vector<MAPOBJECTDATA>>();
+    _j.at("ParentTransformData").get_to(_tData.ParentTransform);
+}
 
 void to_json(json &_j, const TRANSFORMDATA &_tData)
 {
