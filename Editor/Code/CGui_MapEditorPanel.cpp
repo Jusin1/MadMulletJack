@@ -163,7 +163,7 @@ void CGui_MapEditorPanel::LightRender()
 
 CGuiBase *CGui_MapEditorPanel::CategoryDropbox_Create()
 {
-	vector<string> Names{g_ObjectCategoryCount};
+	vector<string> Names{ g_ObjectCategoryCount - 1 };
 	Names[0] = "Wall";
 	Names[1] = "Tile";
 	Names[2] = "Env";

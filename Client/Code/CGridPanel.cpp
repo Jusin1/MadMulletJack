@@ -230,6 +230,19 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
 					return E_FAIL;
 			} break;
+			case WallType::WALL_SLIDE:
+			{
+				fWidth = (m_pBuffer->GetData()->dwCountZ - 1) * m_pBuffer->GetData()->dwInterval;
+				fHeight = (m_pBuffer->GetData()->dwCountY - 1) * m_pBuffer->GetData()->dwInterval;
+				tDesc.fRadiusZ = fWidth * 0.5f;
+				tDesc.fRadiusY = fHeight * 0.5f;
+				tDesc.fOffSetX = -0.5f;
+				tDesc.fOffSetY = fHeight * 0.5f;
+				tDesc.fOffsetZ = fWidth * 0.5f;
+
+				if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent **)&m_pColliderCube, &tDesc)))
+					return E_FAIL;
+			} break;
 			}
 
 			if (m_pColliderCube)
@@ -268,6 +281,10 @@ void CGridPanel::Update_CollisionGroup()
 	case WallType::CEILING:
 	{
 		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_CEILING, this);
+	} break;
+	case WallType::WALL_SLIDE:
+	{
+		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_WALL_SLIDE, this);
 	} break;
 	}
 }
