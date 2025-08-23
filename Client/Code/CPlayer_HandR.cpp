@@ -48,8 +48,6 @@ HRESULT CPlayer_HandR::Initialize(void* pArg)
 
 _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
 {   
-    __super::Update_GameObject(fTimeDelta);
-
     Move_UI(fTimeDelta); // ui 움직임 함수
   
     return NO_EVENT;
@@ -57,8 +55,6 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_HandR::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    __super::LateUpdate_GameObject(fTimeDelta);
-
     Update_Weapon_Pistol();
     Update_Weapon2_Knife();
 
@@ -117,7 +113,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     // Dead
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 4.f;
     texInfo.m_bLoop = true;
     if (FAILED(Add_Components(L"Com_Texture_HandR_Dead", SCENE_STATIC, L"Prototype_Component_Texture_UIHandRDead", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -164,7 +160,7 @@ HRESULT CPlayer_HandR::Set_Texture()
             if(FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 300.f); // pos를 정하고
+            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 500.f); // pos를 정하고
 
             //// info를 새로 맞춰줌
             Set_New_TransInfo(150.f, 0.f);
@@ -214,14 +210,14 @@ HRESULT CPlayer_HandR::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(380.f, 780.f, 2890.f, -1200.f); // pos를 정하고
+            Set_UISizeAndPos(380.f, 780.f, 2910.f, -1230.f); // pos를 정하고
 
             Set_New_TransInfo(2000.f, 50.f);
 
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(50.f) * 1;
 
-            m_tMoveInfo = { MV_LDOWN, true,  3630.f, 0.f};
+            m_tMoveInfo = { MV_LDOWN, true,  3680.f, 0.f};
         }
 
         else {
@@ -241,9 +237,6 @@ HRESULT CPlayer_HandR::Set_Texture()
 
         m_tMoveInfo = { MV_DOWN, false, 0.f, 0.f };
     }
-        break;
-    case CLEAR:
-        Set_RenderOn(false);
         break;
 
     default:
@@ -367,15 +360,9 @@ void CPlayer_HandR::Update_Weapon2_Knife()
     {
         if (m_bRenderOn)
         {
-            if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
-            {
-                dynamic_cast<CKnife_SubW*>(pKnife)->Set_Texture();
-            }
-
             pKnife->Set_Active(true);
             pKnife->Set_RenderOn(true);
             pKnife->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -250.f, 320.f);
-
         }
         else
             pKnife->Set_RenderOn(false);

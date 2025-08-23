@@ -39,14 +39,12 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 _int CWeapon::Update_GameObject(const _float& fTimeDelta)
 {
-	__super::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
 
 void CWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CWeapon::Render_GameObject()

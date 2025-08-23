@@ -51,7 +51,7 @@ void CSubWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		// playerÀÇ state°¡ attack instantÀÏ¶§¸¸ ¹Ù²ãÁà¶ó
 		if (m_tInfo.ePlayerState == ATTACK_INSTANT)
-			Set_Texture();	// texture¸¦ ¹Ù²ã¶ó
+			this->Set_Texture();	// texture¸¦ ¹Ù²ã¶ó
 
 		else
 			m_bRenderOn = false;

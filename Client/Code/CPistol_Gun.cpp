@@ -108,8 +108,8 @@ HRESULT CPistol_Gun::Texture_Clone()
 
 	// Opening
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 8;
-	texInfo.m_fSpeed = 4.f;
+	texInfo.m_iEndTex = 9;
+	texInfo.m_fSpeed = 25.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -118,7 +118,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Attack
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 6;
-	texInfo.m_fSpeed = 4.f;
+	texInfo.m_fSpeed = 20.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -127,7 +127,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Reload
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 13;
-	texInfo.m_fSpeed = 3.f;
+	texInfo.m_fSpeed = 20.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -208,7 +208,11 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case OPENING:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
-			Set_UISizeAndPos(396.f, 400.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 250.f);
+			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 250.f);
+
+			Set_New_TransInfo(200.f, 0.f);
+
+			Set_UIMoveInfo({MV_DOWN,false,0.f,0.f});
 			
 			break;
 

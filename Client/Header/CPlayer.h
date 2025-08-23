@@ -28,8 +28,7 @@ public:
 
 	// state func
 private:
-	// 이전state end -> statenormalset -> 현재 state begin
-	void ChangeState(PLAYERSTATE _eState);	//현재 state와 이전 state가 바뀌었으면 바꿔줌
+	void Change_State(PLAYERSTATE _eState); // 이전 state 정리 후 state 전환
 	void StateNormalSet();				// state 변화전 변수들 초기화
 
 	void StateBegin(PLAYERSTATE _e); // state의 begin 함수를 실행
@@ -83,22 +82,24 @@ private:
 	void Clear_Begin();
 
 	void KeyInput(const _float& fTimeDelta);
-	void Set_State_Normal(); // state를 idle로 바꿈
+	void Set_State_Normal(); // state를 idle로 move를 normal로 바꿈
 
-	const TCHAR* StateToString(PLAYERSTATE eState ); //debug
-	const TCHAR* MoveToString(PLAYERMOVE eMove); // debug
-	void CountHp(const _float& fTimeDelta);
+	const TCHAR* StateToString(PLAYERSTATE eState );	//debug
+	const TCHAR* MoveToString(PLAYERMOVE eMove);		// debug
 
-	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f);
+	void CountHp(const _float& fTimeDelta); // hp를 시간에 따라 깎아줌
 
-	void Move(const _float& fTimeDelta);
+	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f); // state 시간 누적하면서 끝났는지 bool값으로 반환
 
+	void Move(const _float& fTimeDelta); // move state를 이용해서 움직임 부여
+
+	void Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix = false); // move state 전환. : 속도 값 세팅
+
+	// playermove에 따라 어떻게 움직일지
 	void Move_Normal(const _float& fTimeDelta);
 	void Move_Dash(const _float& fTimeDelta);
 	void Move_Slide(const _float& fTimeDelta);
 	void Move_Wall(const _float& fTimeDelta);
-
-	void Change_Move(PLAYERMOVE ePlayerMove , _bool bYFix = false); // 속도 셋팅을 여기서 해줌.
 
 	// getter setter func
 public:
@@ -133,11 +134,17 @@ public:
 private:
 	HRESULT			Set_Component();
 	void			Set_Collider(const _float& fTimeDelta);
-	_float			CosRadian(_vec3 v1, _vec3 v2);
-	void			HitFromObject(const _float& fTimeDelta,_float fHit);
+
+	// collider func
+	void			Set_Collider_With_Clear();
 	void			Set_Collider_With_Wall();
 	void			Set_Collider_With_Door();
 	void			Set_Colllider_With_Monster(const _float& fTimeDelta);
+	_bool			Set_Collider_With_SlideWall();
+
+	void			HitFromObject(const _float& fTimeDelta, _float fHit);
+
+	_float			CosRadian(_vec3 v1, _vec3 v2); // 두 벡터를 정규화 후 내적값 반환
 
 private:
 	HRESULT Texture_Clone();
@@ -157,7 +164,7 @@ private:
 	MOVEKEY m_eMoveKey;
 
 	const _tchar* m_TimerTag;
-	_float m_fGround_Height;
+	_float m_fGround_Height; // 안쓰는데 일단은 살려는 드릴게
 
 	_bool m_bIsKeyInput; // 상태 변화를 위한 키 값 받을래 말래
 	_bool m_bIsInvincible; // 무적 상태일래 말래

@@ -43,8 +43,6 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
 
 _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 {
-    __super::Update_GameObject(fTimeDelta);
-
     Move_UI(fTimeDelta);
 
     return NO_EVENT;
@@ -52,8 +50,6 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    __super::LateUpdate_GameObject(fTimeDelta);
-
     // player의 상태가 달라졌을 때, texture를 새로 셋팅
     if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
     {
@@ -119,7 +115,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -171,13 +167,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 350.f); //idle pos
+            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 310.f); //idle pos
 
-            Set_New_TransInfo(500.f, -40.f);
+            Set_New_TransInfo(600.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, true, 380.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 450.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {

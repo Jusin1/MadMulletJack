@@ -33,8 +33,6 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    Set_UISizeAndPos(700.f, 600.f, WINCX * 0.5f, WINCY * 0.5f + 300);
-
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
@@ -46,13 +44,13 @@ HRESULT CPlayer_Arm::Initialize(void* pArg)
 
 _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 {
-    __super::Update_GameObject(fTimeDelta);
     if (m_pTextureCom->Is_AnimFinished())
     {
 
         if (m_CurrentAnimTag == TEXT("Com_Texture_Arm_Op1"))
         {
             Change_Texture(TEXT("Com_Texture_Arm_Op2"));
+            Set_UISizeAndPos(1000.f, 500.f, WINCX * 0.5f, WINCY * 0.5f + 300);
         }
 
         else
@@ -66,8 +64,6 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    __super::LateUpdate_GameObject(fTimeDelta);
-
     if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
@@ -105,7 +101,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     // Op1
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.5f;
+    texInfo.m_fSpeed = 5.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Arm_Op1", SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -114,7 +110,7 @@ HRESULT CPlayer_Arm::Texture_Clone()
     // Op2
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.5f;
+    texInfo.m_fSpeed = 5.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -127,7 +123,7 @@ HRESULT CPlayer_Arm::Set_Texture()
 {
     if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
         Change_Texture(TEXT("Com_Texture_Arm_Op1"));
-        Set_UISizeAndPos(700.f, 700.f, WINCX * 0.5f, WINCY * 0.5f + 300);
+        Set_UISizeAndPos(720.f, 680.f, WINCX * 0.5f, WINCY * 0.5f + 200);
         m_bRenderOn = true;
     }
 

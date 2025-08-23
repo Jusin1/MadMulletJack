@@ -43,8 +43,6 @@ HRESULT CPlayer_Foot::Initialize(void* pArg)
 
 _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 {
-    __super::Update_GameObject(fTimeDelta);
-  
     Move_UI(fTimeDelta);
 
     return NO_EVENT;
@@ -52,8 +50,6 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    __super::LateUpdate_GameObject(fTimeDelta);
-
     if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
@@ -99,7 +95,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     // Kick
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 5.f;
+    texInfo.m_fSpeed = 13.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Foots_Kick", SCENE_STATIC, L"Prototype_Component_Texture_UIFootKick", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -117,7 +113,7 @@ HRESULT CPlayer_Foot::Texture_Clone()
     // Attack_Ins
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 13;
-    texInfo.m_fSpeed = 5.f;
+    texInfo.m_fSpeed = 15.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Monster_InsKill_UI", SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;

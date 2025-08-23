@@ -77,9 +77,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 
-	m_fNormalSpeed = 1.f;
+	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
 
-	ChangeState(OPENING);
+	Change_State(OPENING);
 	Change_Move(PMV_NORMAL);
 
 	return S_OK;
@@ -167,7 +167,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	}
 }
 
-void CPlayer::ChangeState(PLAYERSTATE _eState)
+void CPlayer::Change_State(PLAYERSTATE _eState)
 {
 	// 이전 state 정리 및 업데이트
 	StateEnd(m_tPlayerInfo.ePlayerState);
@@ -323,13 +323,9 @@ void CPlayer::JUMP_Begin()
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
 {
-	// 만약 wall slide에 부딫히면
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::WALL_SLIDE)
-	{
-		Change_Move(PMV_WALL);
-		ChangeState(IDLE);
+	// 만약 wall slide에 부딫히면 -> state : idle, move : wall
+	if (Set_Collider_With_SlideWall())
 		return;
-	}
 
 	if (!m_bJumping)
 		Set_State_Normal();
@@ -370,7 +366,7 @@ void CPlayer::ATTACK_Begin()
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		ChangeState(IDLE);
+		Change_State(IDLE);
 }
 
 void CPlayer::ATTACK_End()
@@ -570,7 +566,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		//DIK_SPACE
 		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
-			ChangeState(JUMP);
+			Change_State(JUMP);
 		}
 
 		if (IS_RBUTTON_DOWN) // 우클릭
@@ -582,7 +578,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		{
 			if (KEY_BUTTON_DOWN(DIK_R))
 			{
-				ChangeState(RELOAD);
+				Change_State(RELOAD);
 			}
 		}
 	}
@@ -592,19 +588,19 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	{
 		if (IS_LBUTTON_DOWN) // 좌클릭
 		{
-			ChangeState(ATTACK);
+			Change_State(ATTACK);
 		}
 	}
 
 	//debug
 	if (KEY_BUTTON_DOWN(DIK_E))
-		ChangeState(ATTACK_INSTANT);
+		Change_State(ATTACK_INSTANT);
 
 }
 
 void CPlayer::Set_State_Normal()
 {
-	ChangeState(IDLE);
+	Change_State(IDLE);
 	Change_Move(PMV_NORMAL);
 }
 
@@ -634,11 +630,17 @@ void CPlayer::Move(const _float& fTimeDelta)
 	case PMV_NORMAL:
 		break;
 
-	case PMV_DASH:
 	case PMV_DASHATT:
+		// 만약 slide 벽을 만났다면
+		if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::INCLINE)
+		{
+			// move state : slide
+			Change_Move(PMV_SLIDE);
+		}
+	case PMV_DASH:
 	{
 		m_bIsAttack = true;
-		m_eMoveKey = MVKEY_NON;
+		m_eMoveKey = MVKEY_STOP;
 		Move_Dash(fTimeDelta);
 	}
 		break;
@@ -670,13 +672,7 @@ void CPlayer::Move_Normal(const _float& fTimeDelta)
 
 void CPlayer::Move_Dash(const _float& fTimeDelta)
 {
-	// 만약 slide 벽을 만났다면
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType == WallType::INCLINE)
-	{
-		// move state : slide
-		Change_Move(PMV_SLIDE);
-	}
-
+	
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
 	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
 	{
@@ -699,7 +695,14 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 	// 만약 slide에서 벗어나면
 	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::INCLINE)
 	{
-		Set_State_Normal();
+		Change_Move(PMV_DASHATT);
+		return;
+	}
+
+	// 만약 jump이면 normal로 전환
+	if (m_tPlayerInfo.ePlayerState == JUMP)
+	{
+		Change_Move(PMV_DASH);
 		return;
 	}
 
@@ -713,14 +716,19 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 
 void CPlayer::Move_Wall(const _float& fTimeDelta)
 {
-	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::WALL_SLIDE)
+	// slide wall이랑 충돌이면 :  전진 with fixY
+	if (Set_Collider_With_SlideWall())
 	{
-		Set_State_Normal();
+		m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY);
 		return;
 	}
-
-	// fixY값으로 앞으로 전진
-	m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY);
+		
+	// slide wall이랑 충돌이 아니면 : state->Jump, move->Normal
+	else
+	{
+		Change_Move(PMV_NORMAL);
+		Change_State(JUMP);
+	}
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
@@ -736,8 +744,8 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed;
 		break;
 
-	case PMV_DASH:
 	case PMV_DASHATT:
+	case PMV_DASH:
 		// 점프면 y 고정
 		if (m_tPlayerInfo.ePlayerState == JUMP)
 			m_bIsFixY = true;
@@ -797,8 +805,6 @@ HRESULT CPlayer::Set_Component()
 void CPlayer::Set_Collider(const _float& fTimeDelta)
 {
 	//m_pColliderCom->Update_ColliderBox();
-	m_pColiderSphere->Update_ColliderSphere();
-
 	//  큐브 충돌
 	/*
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE, nullptr))
@@ -806,17 +812,14 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
 	}
 	*/
-	// 구 충돌
 
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
-	{
-		CUIManager::GetInstance()->CreateClearUI();
-		m_pColiderSphere->Set_Active(false);
-		ChangeState(CLEAR);
-	}
-	Set_Colllider_With_Monster(fTimeDelta);
+	// 구 충돌
+	m_pColiderSphere->Update_ColliderSphere();
+	
+	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
+	Set_Colllider_With_Monster(fTimeDelta);
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -846,11 +849,16 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		// 0초로 초기화
 		m_fHitTime = 0.f;
 	}
+}
 
+void CPlayer::Set_Collider_With_Clear()
+{
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DUMMY, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr))
 	{
 		CUIManager::GetInstance()->CreateClearUI();
-		ChangeState(CLEAR);
+		m_pColiderSphere->Set_Active(false);
+		Change_State(CLEAR);
+		Change_Move(PMV_NORMAL);
 	}
 }
 
@@ -859,17 +867,17 @@ void CPlayer::Set_Collider_With_Wall()
 	_vec3 vDistance;
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_HORWALL, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
 	{
-		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		_vec3 vPos = Get_Pos();
 		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
 	}
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_VERWALL, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
 	{
-		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		_vec3 vPos = Get_Pos();
 		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
 	}
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
 	{
-		_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+		_vec3 vPos = Get_Pos();
 		m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance - _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
 	}
@@ -880,7 +888,7 @@ void CPlayer::Set_Collider_With_Door()
 	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_DOOR, this, CColiderManager::COLLISION_SPHERE, nullptr))
 	{
 		// kick 모션 나오게
-		ChangeState(KICK);
+		Change_State(KICK);
 	}
 }
 
@@ -910,7 +918,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 					switch (m_tPlayerInfo.eWeapon2)
 					{
 					case WP_KICK:
-						ChangeState(KICK);
+						Change_State(KICK);
 						break;
 
 					case WP_KNIFE:
@@ -926,7 +934,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 							while (Get_Pos().z > vMonPos.z) 
 								m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir); 
 						}
-						ChangeState(ATTACK_INSTANT);
+						Change_State(ATTACK_INSTANT);
 						break;
 					}
 				}
@@ -949,6 +957,25 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			}
 		}
 	}
+}
+
+_bool CPlayer::Set_Collider_With_SlideWall()
+{
+	_vec3 vDistance;
+	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
+	{
+		// 보정값으로 위치 바꿈
+		_vec3 vPos = Get_Pos();
+		m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+
+		// state, move 바꿈
+		Change_Move(PMV_WALL);
+		Change_State(IDLE);
+
+		return true;
+	}
+
+	return false;
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -981,6 +1008,7 @@ HRESULT CPlayer::Set_PlayerUI()
 		pFootUI->Set_ObjTag(L"FootUI");
 		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
 	}
+	
 	// habdR UI 생성
 	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", iSceneIndex, L"UI_Layer"));
 	if (pHandRUI)
@@ -989,6 +1017,7 @@ HRESULT CPlayer::Set_PlayerUI()
 		pHandRUI->Set_ObjTag(L"HandRUI");
 		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
 	}
+
 	// handL UI 생성
 	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", iSceneIndex, L"UI_Layer"));
 	if (pHandLUI)

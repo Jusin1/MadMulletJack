@@ -32,7 +32,6 @@ HRESULT CKnife_SubW::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
@@ -47,7 +46,6 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 	__super::Update_GameObject(fTimeDelta);
 
 	if(m_pTextureCom->Is_AnimFinished())
-
 
 	return NO_EVENT;
 }
@@ -104,8 +102,8 @@ HRESULT CKnife_SubW::Texture_Clone()
 
 	// Attack
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 2;
-	texInfo.m_fSpeed = 0.5f;
+	texInfo.m_iEndTex = 1;
+	texInfo.m_fSpeed = 1.8f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Knife_Att", SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Att", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
