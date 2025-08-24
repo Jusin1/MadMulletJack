@@ -5,7 +5,7 @@
 #include "CMapFactory.h"
 
 CPlayer_HandL::CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev), m_tInfo({ PLAYER_END, WP_END, WP2_END })
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END,PMV_END, WP_END, WP2_END })
 {
 }
 
@@ -43,8 +43,6 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
 
 _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 {
-    __super::Update_GameObject(fTimeDelta);
-
     Move_UI(fTimeDelta);
 
     return NO_EVENT;
@@ -52,8 +50,6 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    __super::LateUpdate_GameObject(fTimeDelta);
-
     // player의 상태가 달라졌을 때, texture를 새로 셋팅
     if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
     {
@@ -110,7 +106,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // Attack_Instance - knife
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_At2_Knife", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLAt2Knife", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -119,7 +115,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -171,13 +167,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 220.f); //idle pos
+            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 310.f); //idle pos
 
-            Set_New_TransInfo(450.f, -40.f);
+            Set_New_TransInfo(600.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, true, 200.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 450.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -205,13 +201,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 600.f, WINCY * 0.5f + 250); //idle pos
+            Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 700.f, WINCY * 0.5f + 290); //idle pos
 
-            Set_New_TransInfo(400.f, -20.f);
-            m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
-            m_fRotSum += D3DXToRadian (-20.f) * 1;
+            Set_New_TransInfo(1800.f, 0.f);
+            //m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
+            //m_fRotSum += D3DXToRadian (-20.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, true, 200.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
         }
 
         else {

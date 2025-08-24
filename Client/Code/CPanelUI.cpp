@@ -206,6 +206,23 @@ void CPanelUI::UseGreenFramePreset(float x, float y, float w, float h,
     SetOverlayUVRepeat(1.f, 1.f);
 }
 
+void CPanelUI::UseRedFramePreset(float x, float y, float w, float h, float borderOrThickness, bool useStroke)
+{
+    SetPanelPos(x, y);
+    SetPanelSize(w, h);
+
+    if (useStroke) {
+        EnableStroke(borderOrThickness, D3DCOLOR_ARGB(255, 255, 0, 0)); // 빨강색 테두리
+        return;
+    }
+
+    SetStyle(L"Com_Texture_Panel_UIFrame", D3DCOLOR_ARGB(255, 255, 0, 0), false); // 빨강색 스타일
+    SetUVRepeat(1.f, 1.f);
+    SetOverlay(nullptr, D3DCOLOR_ARGB(0, 0, 0, 0), true, 1.f);
+    SetOverlayUVRepeat(1.f, 1.f);
+}
+
+
 HRESULT CPanelUI::Texture_Clone()
 {
     auto addTex = [&](const _tchar* tag, const _tchar* proto)->HRESULT {

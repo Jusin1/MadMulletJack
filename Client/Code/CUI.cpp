@@ -106,13 +106,18 @@ void CUI::Set_UISize(_float _fSizeX, _float _fSizeY)
 
 void CUI::Move_UI(const _float& fTimeDelta)
 {
+	if (m_tMoveInfo.eUIMove == MV_NON )
+		return;
+
 	if (m_tMoveInfo.IsRangeEnd())
 	{
-		m_bRenderOn = false;
+		if(m_tMoveInfo.bRenderStop)
+			m_bRenderOn = false;
 		return;
 	}
 
 	switch (m_tMoveInfo.eUIMove) {
+		//////////////////////////  좌우
 	case MV_RIGHT:
 		m_pTransformCom ->Move_PosRight(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
@@ -125,6 +130,7 @@ void CUI::Move_UI(const _float& fTimeDelta)
 		m_pTransformCom->Move_RL(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
+		//////////////////////////  상하
 	case MV_UP: // y기준으로 위 아래로 움직임
 		m_pTransformCom->Move_YUp(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
@@ -133,13 +139,37 @@ void CUI::Move_UI(const _float& fTimeDelta)
 		m_pTransformCom->Move_YDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 
+	case MV_UpDown:
+		m_pTransformCom->Move_YUpDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		break;
+
+		//////////////////////////  좌우 + 하단
+	case MV_RDOWN: // range 만큼 좌우로 움직임
+		m_pTransformCom->Move_PosRight(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		m_pTransformCom->Move_YDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		break;
+
+	case MV_LDOWN: // y기준으로 위 아래로 움직임
+		m_pTransformCom->Move_PosLeft(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		m_pTransformCom->Move_YDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		break;
+
+		////////////////////////// 좌우 + 상단
+	case MV_RUP:
+		m_pTransformCom->Move_PosRight(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		m_pTransformCom->Move_YUp(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		break;
+
+	case MV_LUP:
+		m_pTransformCom->Move_PosLeft(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		m_pTransformCom->Move_YUp(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
+		break;
+
+
+
 	case MV_ROTATIONZ: // z축 기준으로 회전
 		m_pTransformCom->Rotation({0.f,0.f,1.f}, fTimeDelta);
 		m_fRotSum += m_pTransformCom->GetTransformInfo().fRotationSpeed * fTimeDelta;
-		break;
-
-	case MV_UpDown:
-		m_pTransformCom->Move_YUpDown(fTimeDelta, m_tMoveInfo.fRange, m_tMoveInfo.bStop, m_tMoveInfo.fSumRange);
 		break;
 	}
 }

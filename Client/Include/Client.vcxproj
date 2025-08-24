@@ -168,6 +168,7 @@
     <ClInclude Include="..\Header\CGameDataManager.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
+    <ClInclude Include="..\Header\CItemUI.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -186,6 +187,7 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
+    <ClInclude Include="..\Header\CTextEffectUI.h" />
     <ClInclude Include="..\Header\CTile_Bottle.h" />
     <ClInclude Include="..\Header\CTile_NormalDoor.h" />
     <ClInclude Include="..\Header\CPhone_HpBarUI.h" />
@@ -213,11 +215,14 @@
     <ClInclude Include="..\Header\CTile_Vent.h" />
     <ClInclude Include="..\Header\CTextUI.h" />
     <ClInclude Include="..\Header\CTutorial.h" />
+    <ClInclude Include="..\Header\CTutorialTracker.h" />
+    <ClInclude Include="..\Header\CTutorialUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CUIManager_Weapon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -240,6 +245,7 @@
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
+    <ClCompile Include="..\Code\CItemUI.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -256,6 +262,7 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
+    <ClCompile Include="..\Code\CTextEffectUI.cpp" />
     <ClCompile Include="..\Code\CTile_Bottle.cpp" />
     <ClCompile Include="..\Code\CTile_NormalDoor.cpp" />
     <ClCompile Include="..\Code\CPhone_HpBarUI.cpp" />
@@ -283,12 +290,15 @@
     <ClCompile Include="..\Code\CTile_Vent.cpp" />
     <ClCompile Include="..\Code\CTextUI.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
+    <ClCompile Include="..\Code\CTutorialTracker.cpp" />
+    <ClCompile Include="..\Code\CTutorialUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Header\Client_Global.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CUIManager_Weapon.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

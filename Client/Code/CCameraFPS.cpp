@@ -5,6 +5,7 @@
 #include "CObjectManager.h"
 #include "CDInputMgr.h"
 #include "Clinet_Define.h"
+#include "CGlobal_Info.h"
 
 CCameraFPS::CCameraFPS(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CCamera(pGraphicDev),
@@ -54,7 +55,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
             Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
-        return -1;
+        return NO_EVENT;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
     //vPlayerPos.y += m_fOffset;
@@ -73,7 +74,9 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     Move_Shaking();
 
     // 마우스로 바라보는 방향 조절
-    if (false == m_bFix)
+    // fix가 아니고 clear가 아닐때
+    if (false == m_bFix &&
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR)
     {
         Mouse_Move();
         Mouse_Fix();

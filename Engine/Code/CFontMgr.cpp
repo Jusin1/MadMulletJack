@@ -107,6 +107,43 @@ bool CFontMgr::Measure_Scaled(const wchar_t* tag,
 	return true;
 }
 
+bool CFontMgr::RegisterPrivateFontFromFile(const wchar_t* ttfPath)
+{
+	if (!ttfPath || !ttfPath[0]) return false;
+
+	int added = AddFontResourceExW(ttfPath, FR_PRIVATE, 0);
+	if (added <= 0) return false;
+
+	m_fontFiles.push_back(PrivateFontFile{ ttfPath });
+	return true;
+}
+
+bool CFontMgr::RegisterPrivateFontFromResource(HINSTANCE hInst, LPCWSTR resId, LPCWSTR resType)
+{
+	if (!hInst || !resId || !resType) return false;
+
+	HRSRC   hRes = FindResourceW(hInst, resId, resType);
+	if (!hRes) return false;
+	DWORD   size = SizeofResource(hInst, hRes);
+	HGLOBAL hMem = LoadResource(hInst, hRes);
+	if (!hMem) return false;
+	void* pData = LockResource(hMem);
+	if (!pData || size == 0) return false;
+
+	PrivateFontMem pfm;
+	pfm.buffer.resize(size);
+	memcpy(pfm.buffer.data(), pData, size);
+
+	DWORD num = 0;
+	HANDLE hFont = AddFontMemResourceEx(pfm.buffer.data(), size, 0, &num);
+	if (!hFont) return false;
+
+	pfm.handle = hFont;
+	pfm.numFaces = num;
+	m_fontMems.push_back(std::move(pfm));
+	return true;
+}
+
 CFont* CFontMgr::Find_Font(const _tchar* pFontTag)
 {
 	auto	iter = find_if(m_mapFont.begin(), m_mapFont.end(), CTag_Finder(pFontTag));
@@ -119,6 +156,19 @@ CFont* CFontMgr::Find_Font(const _tchar* pFontTag)
 
 void CFontMgr::Free()
 {
+	// 폰트 객체 정리
 	for_each(m_mapFont.begin(), m_mapFont.end(), CDeleteMap());
 	m_mapFont.clear();
+
+	// private font 해제 (메모리 기반)
+	for (auto& m : m_fontMems) {
+		if (m.handle) RemoveFontMemResourceEx(m.handle);
+	}
+	m_fontMems.clear();
+
+	// private font 해제 (파일 기반)
+	for (auto& f : m_fontFiles) {
+		if (!f.path.empty()) RemoveFontResourceExW(f.path.c_str(), FR_PRIVATE, 0);
+	}
+	m_fontFiles.clear();
 }

@@ -49,6 +49,8 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 	m_iMaxBullet = 3; //origin : 9 / debug 3
 	m_iBullet = m_iMaxBullet;
 
+	Set_Texture();
+
 	return S_OK;
 }
 
@@ -56,8 +58,38 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	if ((m_CurrentAnimTag != TEXT("Com_Texture_Pistol_Idle")) && m_pTextureCom->Is_AnimFinished())
+	// 만약 지금 idle texture 라면
+	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
+		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
+		Engine::CTransform* pHandRformCom = nullptr;
+
+		// handR의 위치 받아옴
+		switch (eCurScene)
+		{
+		case SCENE_DEV:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 4));
+			break;
+		case SCENE_TUTORIAL:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 8));
+			break;
+		}
+		
+		if (pHandRformCom)
+		{
+			// 위치를 통해 pos update
+			Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -120.f, 350.f);
+		}
+	}
+
+	// 만약 지금 idle texture가 아니고 ani가 끝났다면
+	else if (m_pTextureCom->Is_AnimFinished())
+	{
+		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
 	}
 
@@ -67,6 +99,7 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CPistol_Gun::Render_GameObject()
@@ -107,8 +140,8 @@ HRESULT CPistol_Gun::Texture_Clone()
 
 	// Opening
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 8;
-	texInfo.m_fSpeed = 4.f;
+	texInfo.m_iEndTex = 9;
+	texInfo.m_fSpeed = 25.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -117,7 +150,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Attack
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 6;
-	texInfo.m_fSpeed = 6.f;
+	texInfo.m_fSpeed = 20.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -126,7 +159,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	// Reload
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 13;
-	texInfo.m_fSpeed = 6.5f;
+	texInfo.m_fSpeed = 20.f;
 	texInfo.m_bLoop = false;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
@@ -181,7 +214,8 @@ HRESULT CPistol_Gun::Texture_Clone()
 }
 
 HRESULT CPistol_Gun::Set_Texture() {
-
+	//IDLE, JUMP, KICK, ATTACK,
+	//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, PLAYER_END
 	m_bRenderOn = true;
 
 	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
@@ -207,7 +241,9 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case OPENING:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
-			Set_UISizeAndPos(396.f, 400.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 250.f);
+			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f );
+
+			Set_New_TransInfo(500.f, 0.f);
 			
 			break;
 
@@ -218,6 +254,10 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 			m_iBullet--;
 
+			break;
+
+		case ATTACK_INSTANT:
+			m_bRenderOn = false;
 			break;
 
 		case RELOAD:
@@ -236,7 +276,9 @@ HRESULT CPistol_Gun::Set_Texture() {
 		default:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
 				return E_FAIL;
-			Set_UISize(165.f, 500.f);
+			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
+			//pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
+
 			break;
 		}
 	}

@@ -82,7 +82,7 @@ void CMainWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 		
 	if (Is_PlayerState_Change()) //player°¡ state¸¦ ¹Ù²åÀ» ¶§
 	{
-		Set_Texture();	// texture¸¦ ¹Ù²ã¶ó
+		this->Set_Texture();	// texture¸¦ ¹Ù²ã¶ó
 	}
 }
 

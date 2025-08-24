@@ -29,6 +29,7 @@ public:
 	}
 
 	void		Move_UI(const _float& fTimeDelta); // UIMOVE에 따라 움직임을 줌
+	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
 
 	// getter setter func
 public:
@@ -47,7 +48,7 @@ protected:
 
 protected:
 	virtual		HRESULT	Set_Component();
-	virtual		HRESULT	Set_Texture() { return S_OK; }; // texture 변경 로직 담는 함수
+	
 
 public:
 	void		Set_UISizeAndPos(_float _fSizeX, _float _fSizeY, _float _fX, _float _fY); // size부터 pos까지 셋팅

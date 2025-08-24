@@ -29,6 +29,14 @@ HRESULT CUIBase::Initialize(void* pArg)
 
 _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
 {
+    // 부모가 Dead면 자식도 Dead
+    if (m_bDead) {
+        for (auto& child : m_vecChildren)
+            if (child && !child->Get_Dead())
+                child->Set_DeadRecursive(true);
+        return NO_EVENT;
+    }
+
     if (!m_bActive || m_bDead)
         return NO_EVENT;                  
 
@@ -124,6 +132,13 @@ void CUIBase::Set_ActiveRecursive(bool bActive)
         if (pChild)
             pChild->Set_Active(bActive);
     }
+}
+
+void CUIBase::Set_DeadRecursive(bool bDead)
+{
+    __super::Set_Dead(bDead);        
+    for (auto& child : m_vecChildren)
+        if (child) child->Set_DeadRecursive(bDead);
 }
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가
