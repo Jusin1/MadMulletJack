@@ -64,6 +64,9 @@ HRESULT CDev::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
+    if (FAILED(Ready_Prefab_Layer(L"Prefab_Layer")))
+        return E_FAIL;
+
     // GameDataManager에 바닥을 z기준 정렬
     CGameDataManager::GetInstance()->Bind_FloorList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Floor_Layer"));
     auto pData = CGameDataManager::GetInstance()->Get_SortedFloorEntries();
@@ -136,6 +139,12 @@ HRESULT CDev::Ready_Tile_Layer(const _tchar *pLayerTag)
     return S_OK;
 }
 
+HRESULT CDev::Ready_Prefab_Layer(const _tchar *pLayerTag)
+{
+    InstancingPrefabs();
+    return S_OK;
+}
+
 HRESULT CDev::Ready_EnvObj_Layer(const _tchar *pLayerTag)
 {
     InstancingObjects(L"Env_Layer");
@@ -202,6 +211,11 @@ void CDev::SetData(_uint _iSceneIndex)
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
+    for (int i = 0; i < g_PrefabTypeCount; ++i)
+    {
+        CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(i));
+    }
+    CFileManager::GetInstance()->LoadInstancedPrefabDataFile(_iSceneIndex);
 
     CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
 }
@@ -213,6 +227,17 @@ void CDev::InstancingObjects(const wstring &_Layer)
         for (MAPOBJECTDATA &element : *pVecData)
         {
             CMapFactory::GetInstance()->Create(element.eCategory, element.iType, &element);
+        }
+    }
+}
+
+void CDev::InstancingPrefabs()
+{
+    if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetInstancedPrefabDataList())
+    {
+        for (PREFABDATA &element : *pVecData)
+        {
+            CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>(element.eType), &element);
         }
     }
 }

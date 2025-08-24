@@ -154,13 +154,6 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 			if (FAILED(Add_Components(L"Com_Texture", SCENE_STATIC, p->texture.OriginComponentName.c_str(), (CComponent **)&m_pTexture)))
 				return E_FAIL;
 
-			// Transform
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
-			m_pTransformCom->Apply_WorldMatrix();
-
 			// VIBuffer
 			switch (GetType())
 			{
@@ -182,6 +175,23 @@ HRESULT CGridPanel::Set_Component(void *pArg)
 				if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal", (CComponent **)&m_pBuffer, &(p->panelBuffer))))
 					return E_FAIL;
 			} break;
+			}
+
+			// Transform
+			if (p->bChild)
+			{
+				GetTransform()->Set_LocalInfo(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_LocalInfo(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_LocalInfo(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_LocalInfo(INFO::INFO_POS, p->transform.Pos);
+				return S_OK;
+			}
+			else
+			{
+				GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
 			}
 
 			_float fWidth{ 0.f };

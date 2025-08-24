@@ -100,11 +100,21 @@ HRESULT CTileBase::Set_Component(void *pArg)
 			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Rect_Buffer", (CComponent **)&m_pBuffer), pData))
 				return E_FAIL;
 
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, pData->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, pData->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, pData->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, pData->transform.Pos);
-			GetTransform()->Apply_WorldMatrix();
+			// Transform
+			if (pData->bChild)
+			{
+				GetTransform()->Set_LocalInfo(INFO::INFO_RIGHT, pData->transform.Right);
+				GetTransform()->Set_LocalInfo(INFO::INFO_UP, pData->transform.Up);
+				GetTransform()->Set_LocalInfo(INFO::INFO_LOOK, pData->transform.Look);
+				GetTransform()->Set_LocalInfo(INFO::INFO_POS, pData->transform.Pos);
+			}
+			else
+			{
+				GetTransform()->Set_Info(INFO::INFO_RIGHT, pData->transform.Right);
+				GetTransform()->Set_Info(INFO::INFO_UP, pData->transform.Up);
+				GetTransform()->Set_Info(INFO::INFO_LOOK, pData->transform.Look);
+				GetTransform()->Set_Info(INFO::INFO_POS, pData->transform.Pos);
+			}
 		}
 		else
 		{

@@ -62,6 +62,7 @@
 #include "CTile_OpeningDoor.h"
 #include "CTile_VendingMachine.h"
 #include "CTile_Bottle.h"
+#include "CPrefab.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
@@ -273,6 +274,10 @@ HRESULT CLoader::Loading_Dev()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_EndPoint",
 		CEndPoint::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DefaultPrefab",
+		CPrefab::Create(m_pGraphicDev))))
 		return E_FAIL;
 #pragma endregion
 

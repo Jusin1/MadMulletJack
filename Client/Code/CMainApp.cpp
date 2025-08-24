@@ -338,6 +338,14 @@ void CMainApp::Ready_MapFactorFunc()
 		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DecoTile", iTargetScene, L"Tile_Layer", pData);;
+	};
+	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::DISPLAY), _func);
+
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
 		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_VentTile", iTargetScene, L"Tile_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::TILE, static_cast<_uint>(TileType::VENT), _func);
@@ -393,6 +401,19 @@ void CMainApp::Ready_MapFactorFunc()
 		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Suit", iTargetScene, L"Monster_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::SUIT), _func);
+#pragma endregion
+
+#pragma region Prefab
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPrefab", iTargetScene, L"Prefab_Layer", pData);
+	};
+	for (int i = 0; i < g_PrefabTypeCount; ++i)
+	{
+		pMapFactory->Register(ObjectCategory::PREFAB, i, _func);
+	}
 #pragma endregion
 }
 

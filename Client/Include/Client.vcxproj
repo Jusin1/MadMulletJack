@@ -185,6 +185,7 @@
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CPrefab.h" />
     <ClInclude Include="..\Header\CTile_Bottle.h" />
     <ClInclude Include="..\Header\CTile_NormalDoor.h" />
     <ClInclude Include="..\Header\CPhone_HpBarUI.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CPrefab.cpp" />
     <ClCompile Include="..\Code\CTile_Bottle.cpp" />
     <ClCompile Include="..\Code\CTile_NormalDoor.cpp" />
     <ClCompile Include="..\Code\CPhone_HpBarUI.cpp" />

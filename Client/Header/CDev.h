@@ -20,7 +20,8 @@ private:
 	HRESULT			Ready_Floor_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_Wall_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_Ceiling_Layer(const _tchar *pLayerTag);
-
+	
+	HRESULT			Ready_Prefab_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_EnvObj_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_Tile_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_Camera_Layer(const _tchar *pLayerTag);
@@ -31,6 +32,7 @@ private:
 
 	void SetData(_uint _iSceneIndex);
 	void InstancingObjects(const wstring &_Layer);
+	void InstancingPrefabs();
 public:
 	static CDev *Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

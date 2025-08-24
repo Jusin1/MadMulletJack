@@ -223,6 +223,9 @@
     <Filter Include="01. Scene\04. Tutorial">
       <UniqueIdentifier>{20714cf0-2295-4e74-a49d-ac22b1d671e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. MapObject\04. Prefab">
+      <UniqueIdentifier>{adeded63-d707-4f1d-acab-85f137514f65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -423,6 +426,9 @@
     <ClInclude Include="..\Header\CTutorial.h">
       <Filter>01. Scene\04. Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPrefab.h">
+      <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -613,6 +619,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTutorial.cpp">
       <Filter>01. Scene\04. Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPrefab.cpp">
+      <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
