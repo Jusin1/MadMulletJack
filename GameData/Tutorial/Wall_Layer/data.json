@@ -1856,7 +1856,7 @@
         "PanelData": {
             "Count_X": 15,
             "Count_Y": 2,
-            "Count_Z": 42,
+            "Count_Z": 52,
             "Interval": 1,
             "Type": 3
         },
@@ -1919,6 +1919,43 @@
             "Up": [
                 0.0,
                 1.0,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 0,
+        "ObjectType": 1,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 5,
+            "Interval": 2,
+            "Type": 1
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_4A"
+        },
+        "TransformData": {
+            "Look": [
+                2.235172757991677e-07,
+                0.0,
+                -0.9999992847442627
+            ],
+            "Pos": [
+                10.0,
+                0.0,
+                116.0
+            ],
+            "Right": [
+                -0.9999992847442627,
+                0.0,
+                -2.235172757991677e-07
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
                 0.0
             ]
         }
