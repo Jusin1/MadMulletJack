@@ -5,141 +5,171 @@ class CEffectUI :
     public CUI
 {
 private:
-    explicit CEffectUI(LPDIRECT3DDEVICE9 pGraphicDev);  
-    explicit CEffectUI(const CEffectUI& rhs);            
-    virtual ~CEffectUI();                             
+    explicit CEffectUI(LPDIRECT3DDEVICE9 pGraphicDev);
+    explicit CEffectUI(const CEffectUI& rhs);
+    virtual ~CEffectUI();
 
 public:
-    virtual HRESULT Ready_GameObject() override;
-    virtual HRESULT Initialize(void* pArg) override;
-    virtual _int    Update_GameObject(const _float& fTimeDelta) override;
-    virtual void    LateUpdate_GameObject(const _float& fTimeDelta) override;
-    virtual void    Render_GameObject() override;
+    HRESULT Ready_GameObject() override;
+    HRESULT Initialize(void* pArg) override;
+    _int    Update_GameObject(const _float& fTimeDelta) override;
+    void    LateUpdate_GameObject(const _float& fTimeDelta) override;
+    void    Render_GameObject() override;
 
 public:
-    // 몬스터 위에서 생성되는 UI
     void Show(const wchar_t* text,
         const wchar_t* texTag,
         float seconds,
-        float centerX = WINCX * 0.5f,   // 기본 중앙 X
-        float centerY = WINCY * 0.33f,  // 기본 중앙 Y
+        float centerX = WINCX * 0.5f,
+        float centerY = WINCY * 0.33f,
         float angleDeg = 0.f,
         float bgAlpha = 0.85f,
-        const wchar_t* fontTag = L"DefaultFont",
+        const wchar_t* fontTag = L"Font_UI_ROUGH",
         D3DXCOLOR fontColor = D3DXCOLOR(1, 1, 1, 1));
 
 
-    // 좌측에 생성되는 배너 이펙트
     void ShowBanner(const wchar_t* text,
         float seconds,
         float x, float y,
         float scaleStart = 1.80f,
         float scaleEnd = 1.00f,
-        const wchar_t* fontTag = L"DefaultFont",
+        const wchar_t* fontTag = L"Font_UI_ROUGH",
         D3DXCOLOR fontColor = D3DXCOLOR(1, 1, 1, 1),
         float bgAlpha = 0.85f,
         float angleDeg = -10.f);
 
-    // UI 숨김
+
+    void ShowFollowTransform(const wchar_t* text,
+        const wchar_t* texTag,
+        float seconds,
+        CTransform* pAnchorTr,
+        float worldYOffset = 0.90f,
+        float risePixels = 160.f,
+        float followSpeed = 60.f,
+        float bgAlpha = 0.85f,
+        const wchar_t* fontTag = L"Font_UI_ROUGH",
+        D3DXCOLOR fontColor = D3DXCOLOR(1, 1, 1, 1));
+
     void Hide();
 
-    // ===== 옵션 설정 함수들 =====
-    void SetImageSize(float w, float h) { m_iconW = w; m_iconH = h; }     // 아이콘 크기
-    void SetImageOffset(float ox, float oy) { m_iconOff.x = ox; m_iconOff.y = oy; } // 아이콘 오프셋
-    void SetBoxSize(float w, float h = 30.f) { m_boxW = w; m_boxH = h; }  // 배경 박스 크기
 
-    // 플로팅 텍스트 전용 옵션
+    void SetImageSize(float w, float h) { m_iconW = w; m_iconH = h; }
+    void SetImageOffset(float ox, float oy) { m_iconOff.x = ox; m_iconOff.y = oy; }
+    void SetBoxSize(float w, float h = 30.f) { m_boxW = w; m_boxH = h; }
     void SetMoveSpeed(float pxPerSec, bool computeLifeBySpeed = false) { m_moveSpeed = pxPerSec; m_useSpeed = computeLifeBySpeed; }
     void SetTargetBounds(float leftX, float rightX) { m_targetLeftX = leftX; m_targetRightX = rightX; }
-
-    // 배너 전용 옵션
-    void SetBannerExtraWidth(float w) { m_bannerExtraW = w; }   // 텍스트 폭 + 추가 여유폭
-    void SetBannerAngle(float deg) { m_bannerAngleDeg = deg; }  // 배너 기울기 각도
-
-    // 텍스처 변경
+    void SetBannerExtraWidth(float w) { m_bannerExtraW = w; }
+    void SetBannerAngle(float deg) { m_bannerAngleDeg = deg; if (m_linkTextAngleToBanner) m_textAngleDeg = deg; }
     HRESULT Change_Texture(const _tchar* tag);
 
-    // 메인 UI 객체 반환 (싱글턴식 접근)
+    void SetNumberEmphasis(const wchar_t* digits, float scale);
+
+    void SetBannerRightText(const wchar_t* s) { m_RightText = s ? s : L""; }
+    void SetBannerTextAngle(float deg) { m_textAngleDeg = deg; m_linkTextAngleToBanner = false; }
+    void LinkBannerTextAngleToBanner(bool link) { m_linkTextAngleToBanner = link; if (link) m_textAngleDeg = m_bannerAngleDeg; }
+    void SetBannerTextOffset(float dx, float dy) { m_textOffX = dx; m_textOffY = dy; }
+    void SetBannerDownSpeed(float v) { m_bannerDownSpeed = v; }
+    void SetBannerShowIcon(bool on) { m_bannerShowIcon = on; }
+
+    void SetBannerLabelPop(float startScale = 1.35f, float duration = 0.22f)
+    {
+        m_labelPopStart = (startScale > 0.f ? startScale : 1.f); m_labelPopDur = max(0.01f, duration); m_labelPopEnabled = true;
+    }
+    void DisableBannerLabelPop() { m_labelPopEnabled = false; }
+
+    void SetBannerRightFixedScale(float s) { m_rightFixedScale = (s > 0.f ? s : 1.f); m_rightUseFixedScale = true; }
+
     static CEffectUI* GetMain() { return s_pMain; }
 
 private:
-    // 모드: 플로팅 or 배너
-    enum MODE { FLOAT_MOVE, BANNER_FIXED };
-    MODE   m_mode;
+    enum MODE { FLOAT_MOVE, BANNER_FIXED, SCREEN_FOLLOW };
+    MODE   m_mode = FLOAT_MOVE;
 
-    // 상태 및 타이밍
-    bool   m_bVisible;      // 보이는 상태 여부
-    float  m_time;          // UI가 살아있는 총 경과 시간
-    float  m_totalLife;     // UI 전체 생명 주기
-    float  m_fRemain;       // 남은 시간
-
-    // 현재 위치
-    float  m_cx, m_cy;
-    // 시작 / 종료 좌표
-    float  m_startX, m_startY;
-    float  m_endX, m_endY;
-
-    // 진행률 (0~1)
-    float  m_progress;
-    // 글자 스케일 애니메이션
-    float  m_scaleStart;
-    float  m_scaleEnd;
-
-    int    m_dirX;        
-    float  m_liftMin, m_liftMax;
-    float  m_targetLeftX, m_targetRightX; 
-    float  m_moveSpeed;   
-    bool   m_useSpeed;    
+    bool   m_bVisible = false;
+    float  m_time = 0.f;
+    float  m_totalLife = 0.f;
+    float  m_fRemain = 0.f;
+    float  m_cx = WINCX * 0.5f, m_cy = WINCY * 0.33f;
 
 
-    float  m_bgAlpha;    
+    float  m_startX = 0.f, m_startY = 0.f;
+    float  m_endX = 0.f, m_endY = 0.f;
 
+    float  m_progress = 0.f;
+    float  m_scaleStart = 0.70f, m_scaleEnd = 1.00f;
 
-    float  m_boxW, m_boxH;
-    float  m_padL, m_gap;
+    int    m_dirX = -1;
+    float  m_liftMin = 120.f, m_liftMax = 220.f;
+    float  m_targetLeftX = 100.f, m_targetRightX = 1200.f;
+    float  m_moveSpeed = 0.f;
+    bool   m_useSpeed = false;
 
-    wstring m_Text;
-    wstring m_FontTag;
-    D3DXCOLOR    m_FontColor;
+    float  m_bgAlpha = 0.85f;
 
-    // 아이콘 정보
-    float  m_iconW, m_iconH;
-    _vec2  m_iconOff;
-    bool   m_hasIcon;
+    float  m_boxW = 100.f, m_boxH = 30.f;
+    float  m_padL = 10.f, m_gap = 6.f;
 
-    // 페이드/깜빡임
-    float  m_fadeOutDur;
-    float  m_blinkSpeed;
+    std::wstring m_Text;
+    std::wstring m_FontTag;
+    D3DXCOLOR    m_FontColor = D3DXCOLOR(1, 1, 1, 1);
 
-    // 배너 관련
-    float  m_bannerExtraW;
-    float  m_bannerAngleDeg;
+    float  m_iconW = 42.f, m_iconH = 42.f;
+    _vec2  m_iconOff = { 0.f, 0.f };
+    bool   m_hasIcon = false;
+    float  m_fadeOutDur = 0.35f;
+    float  m_blinkSpeed = 18.f;
 
-    // 내부 컴포넌트
-    VIBuffer_Color* m_pBgBufferCom;                   // 배경 박스 버퍼
-    std::map<const _tchar*, CTexture*> m_mapTextures; // 사용 가능한 텍스처들
+    float  m_bannerExtraW = 120.f;
+    float  m_bannerAngleDeg = -10.f;
 
-    // 전역 접근용 메인 UI
+    VIBuffer_Color* m_pBgBufferCom = nullptr;
+    std::map<const _tchar*, CTexture*> m_mapTextures;
+
     static CEffectUI* s_pMain;
 
-private:
-    // 텍스처 미리 로드
-    HRESULT PreloadTexture(const _tchar* mapTag, const _tchar* protoTag);
+    CTransform* m_pAnchorTr = nullptr;
+    _vec3       m_lastWorld = { 0,0,0 };
+    float       m_worldYOffset = 0.90f;
+    float       m_risePixels = 160.f;
+    float       m_followSpeed = 60.f;
 
-    // 내부 렌더링 함수
+    float       m_screenStartY = WINCY * 0.33f;
+
+
+    std::wstring m_emDigits = L"";
+    float        m_emScale = 1.35f;
+
+    std::wstring m_RightText;     
+    float  m_textAngleDeg = +8.f; 
+    float  m_textOffX = 0.f, m_textOffY = 0.f;
+    float  m_bannerDownSpeed = 32.f; 
+    float  m_bannerLifeAdd = 0.40f;  
+    bool   m_bannerShowIcon = true;  
+
+    bool   m_labelPopEnabled = true;
+    float  m_labelPopStart = 1.35f; 
+    float  m_labelPopDur = 0.22f;
+
+    float  m_rightFixedScale = 1.00f;
+    bool   m_rightUseFixedScale = true;
+
+    bool   m_linkTextAngleToBanner = true;
+
+private:
+    HRESULT PreloadTexture(const _tchar* mapTag, const _tchar* protoTag);
     void RenderBox(float cx, float cy, float w, float h, float alpha, float angleDeg);
     void RenderIcon(float cx, float cy, float aMul, float scale);
     void RenderText(float leftX, float centerY, float aMul);
 
-    // Ease 함수 (부드러운 애니메이션 보간)
+    bool ProjectWorldToScreen(const _vec3& world, float& outSX, float& outSY) const;
+
     static float EaseExpoOut(float t) {
         return (t >= 1.f) ? 1.f : (t <= 0.f) ? 0.f : (1.f - powf(2.f, -10.f * t));
     }
 
 public:
-    // 객체 생성 / 복제 / 해제
     static CEffectUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-    virtual CGameObject* Clone(void* pArg = nullptr) override;
-    virtual void        Free() override;
+    CGameObject* Clone(void* pArg = nullptr) override;
+    void        Free() override;
 };
 

@@ -104,5 +104,10 @@ private:
 
     // 디버그용 플래그
     bool        m_bDebugShowPartSpheres = false;
+
+    private:
+    // 콤보 계산용 (모든 몬스터 공통)
+    static ULONGLONG s_lastKillTimeMs;
+    static int       s_comboCount;
 };
 

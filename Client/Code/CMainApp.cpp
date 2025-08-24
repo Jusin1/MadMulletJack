@@ -159,6 +159,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/VCR_OSD_MONO_1 - Japanese Ver s2.ttf");
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Righteous-Regular.ttf");
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Perfect DOS VGA 437 - Japanese ver.ttf");
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"Perfect DOS VGA 437 Win.ttf");
 
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
@@ -184,6 +185,13 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 		L"Perfect DOS VGA 437",
 		14, 40, FW_BOLD)))
 		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_UI_Effect", // 약간 두드러진 폰트
+		L"Perfect DOS VGA 437",
+		14, 40, FW_BOLD)))
+		return E_FAIL;
+
 
 	CFontMgr::GetInstance()->Ready_Font(
 		m_pGraphicDev,
