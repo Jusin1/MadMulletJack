@@ -186,7 +186,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		txt1->SetPosFix(true);
 
 		txt1->Set_UISizeAndPos(1.f, 1.f, 940.f, -200.f);
-		txt1->Set_New_TransInfo(45.f, 10.f);
+		txt1->Set_New_TransInfo(50.f, 10.f);
 		txt1->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
 		txt1->Set_RotSum(D3DXToRadian(20.f));
 

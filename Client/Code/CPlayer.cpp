@@ -1013,12 +1013,11 @@ HRESULT CPlayer::Set_PlayerUI()
 		pFootUI->Set_ObjTag(L"FootUI");
 		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
 	}
-	
+
 	// habdR UI 생성
 	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", iSceneIndex, L"UI_Layer"));
 	if (pHandRUI)
 	{
-		// pHandRUI -> Initailize()
 		pHandRUI->Set_ObjTag(L"HandRUI");
 		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
 	}
@@ -1028,9 +1027,10 @@ HRESULT CPlayer::Set_PlayerUI()
 	if (pHandLUI)
 	{
 		pHandLUI->Set_ObjTag(L"HandLUI");
+
 		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
 	}
-	
+
 	// arm UI 생성
 	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", iSceneIndex, L"UI_Layer"));
 	if (pArmUI)

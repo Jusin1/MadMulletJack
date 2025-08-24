@@ -34,10 +34,10 @@ HRESULT CPlayer_HandR::Ready_GameObject()
 
 HRESULT CPlayer_HandR::Initialize(void* pArg)
 {
-    if (FAILED(__super::Initialize(pArg)))
+    if (FAILED(Set_WeaponUI()))
         return E_FAIL;
 
-    if (FAILED(Set_WeaponUI()))
+    if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
     if (FAILED(Texture_Clone()))
