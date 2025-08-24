@@ -516,6 +516,7 @@ void CPlayer::Clear_Begin()
 	m_pPlayerUI->Set_Active(false);
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+	m_pWeaponUI->Set_Active(false);
 }
 
 void CPlayer::KeyInput(const _float& fTimeDelta)
@@ -598,11 +599,11 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	}
 
 	//debug
-	if (KEY_BUTTON_DOWN(DIK_E))
-		Change_State(ATTACK_INSTANT);
+	//if (KEY_BUTTON_DOWN(DIK_E))
+	//	Change_State(ATTACK_INSTANT);
 
-	if (KEY_BUTTON_DOWN(DIK_O))
-		Change_State(OPENING);
+	//if (KEY_BUTTON_DOWN(DIK_O))
+	//	Change_State(OPENING);
 
 }
 

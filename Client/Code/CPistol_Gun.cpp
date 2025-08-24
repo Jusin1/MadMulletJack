@@ -61,13 +61,29 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	// 만약 지금 idle texture 라면
 	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
-		// handR의 위치 받아옴
-		Engine::CTransform* pHandRformCom =
-			dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-				Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"UI_Layer", L"Com_Transform", 4));
+		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
+		Engine::CTransform* pHandRformCom = nullptr;
 
-		// 위치를 통해 pos update
-		Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -120.f, 350.f);
+		// handR의 위치 받아옴
+		switch (eCurScene)
+		{
+		case SCENE_DEV:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 4));
+			break;
+		case SCENE_TUTORIAL:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 8));
+			break;
+		}
+		
+		if (pHandRformCom)
+		{
+			// 위치를 통해 pos update
+			Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -120.f, 350.f);
+		}
 	}
 
 	// 만약 지금 idle texture가 아니고 ani가 끝났다면
