@@ -32,6 +32,10 @@ namespace {
 }
 #endif
 
+// 정적 콤보 변수 정의
+ULONGLONG CMonster_Suit::s_lastKillTimeMs = 0;
+int       CMonster_Suit::s_comboCount = 0;
+
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
@@ -468,44 +472,115 @@ void CMonster_Suit::TrySpawnDeathUI()
     if (!m_pendingDeathUI) return;
     m_pendingDeathUI = false;
 
-    _vec3 headW = GetHeadWorldPos();
-    float sx = 0.f, sy = 0.f;
-    WorldToScreen(headW, sx, sy);
-    sy -= 40.f;
-
-    const bool isHead = (m_lastFatalPart == HIT_HEAD || m_lastFatalPart == HIT_BALLS);
+    const bool  isHead = (m_lastFatalPart == HIT_HEAD || m_lastFatalPart == HIT_BALLS);
     const float secsAdd = isHead ? 3.0f : 2.0f;
 
     if (auto ui = dynamic_cast<CEffectUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
     {
-        ui->SetImageSize(36.f, 36.f);
-        ui->SetBoxSize(230.f, 50.f);
-        ui->SetTargetBounds(130.f, 1250.f);
-        ui->SetMoveSpeed(1000.f, false);
+        ui->SetImageSize(40.f, 40.f);
+        ui->SetBoxSize(200.f, 50.f);
+        ui->Change_Texture(L"Com_Tex_Heal");
 
-        ui->Show(isHead ? L"+ 3 SEC" : L"+ 2 SEC",
-            L"Com_Tex_Heal", secsAdd,
-            sx, sy, 0.f, 0.85f,
-            L"DefaultFont", D3DXCOLOR(1, 1, 1, 1));
+        ui->SetNumberEmphasis(L"23", 1.0f);
+
+        ui->ShowFollowTransform(
+            isHead ? L"3sec" : L"2sec",
+            L"Com_Tex_Heal",
+            secsAdd,
+            m_pTransformCom, 
+            0.5f,            
+            240.f,           
+            120.f,           
+            0.85f,
+            L"Font_UI_Effect",
+            D3DXCOLOR(1, 1, 1, 1));
     }
 
     if (auto banner = dynamic_cast<CEffectUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
     {
+        banner->Change_Texture(L"Com_Tex_Heal");
+        banner->SetImageSize(40.f, 40.f);
+        banner->SetBannerShowIcon(true);
+        banner->SetImageOffset(27.f, 5.f);
+        
+        banner->SetBannerRightText(isHead ? L"3sec" : L"2sec");
+        banner->SetNumberEmphasis(L"23", 1.35f);
+        banner->SetBannerRightFixedScale(1.0f); 
+        banner->SetBannerTextOffset(30.f, 5.f);
+
+
+
+        banner->SetBannerLabelPop(1.35f, 0.22f);
+
+        banner->SetBannerAngle(0.f);
+        banner->LinkBannerTextAngleToBanner(true); 
+        banner->SetBannerTextAngle(0.f);
+
+
+        banner->SetBannerDownSpeed(32.f);
+
         banner->SetBannerExtraWidth(80.f);
         banner->ShowBanner(
-            isHead ? L"HEADSHOT" : L"FINISHED",
-            1.10f,
-            175.f, 200.f,
-            4.f, 1.0f,
-            L"DefaultFont",
+            isHead ? L"헤드샷" : L"처치",
+            1.10f,           
+            175.f, 180.f,
+            1.4f, 1.0f,
+            L"Font_UI_Effect",
             D3DXCOLOR(1, 1, 1, 1),
             0.85f,
-            -5.f
-        );
+            4.f);
+    }
+
+
+    {
+        const ULONGLONG now = GetTickCount64();
+        if (now - s_lastKillTimeMs <= 1500) ++s_comboCount;
+        else                                s_comboCount = 1;
+        s_lastKillTimeMs = now;
+
+        if (s_comboCount >= 2)
+        {
+            if (auto left = dynamic_cast<CEffectUI*>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
+            {
+                left->SetBannerExtraWidth(20.f);
+                wchar_t buf[16]; swprintf(buf, 16, L"X%d", s_comboCount);
+                left->ShowBanner(
+                    buf,
+                    1.00f,
+                    60.f, 340.f,     
+                    3.f, 1.3f,
+                    L"Font_UI_Effect",        
+                    D3DXCOLOR(1, 1, 1, 1),
+                    0.85f,
+                    -8.f);
+                left->SetBannerTextAngle(10.f);
+            }
+
+            // 오른쪽 "COMBO +1 sec"
+            if (auto right = dynamic_cast<CEffectUI*>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
+            {
+                right->SetBannerExtraWidth(40.f);
+                right->ShowBanner(
+                    L"COMBO",
+                    1.00f,
+                    260.f, 370.f,  
+                    1.2f, 1.0f,
+                    L"Font_UI_Effect",
+                    D3DXCOLOR(1, 1, 1, 1),
+                    0.85f,
+                    -8.f);
+                right->SetBannerTextOffset(20.f, -10.f);
+                right->SetBannerTextAngle(3.f);
+            }
+        }
     }
 }
 
