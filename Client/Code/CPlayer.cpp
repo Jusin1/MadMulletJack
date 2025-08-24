@@ -339,7 +339,6 @@ void CPlayer::JUMP_On(const _float& fTimeDelta)
 
 void CPlayer::JUMP_End()
 {
-	m_bIsKeyInput = true;
 	Set_Velocity(0.f);
 	Set_Jumping(false);
 }
@@ -348,13 +347,14 @@ void CPlayer::JUMP_End()
 void CPlayer::KICK_Begin()
 {
 	m_bIsInvincible = true;
+	m_fStateTime = 0.5f;
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
 {
-	// kick texture가 시간 관리
-	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Set_State_Normal();
+	// player가 시간 관리
+	if (StateTime_IsEnd(fTimeDelta))
+		Change_State(IDLE);
 }
 
 void CPlayer::KICK_End()
@@ -443,6 +443,7 @@ void CPlayer::RELOAD_On(const _float& fTimeDelta)
 
 void CPlayer::RELOAD_End()
 {
+	return;
 }
 
 // doping
@@ -580,7 +581,10 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			Change_Move(PMV_DASHATT);
 		}
 
-		if (m_tPlayerInfo.eWeapon != WP_NON)
+		if (m_tPlayerInfo.eWeapon == WP_PISTOL ||
+			m_tPlayerInfo.eWeapon == WP_SHOTGUN ||
+			m_tPlayerInfo.eWeapon == WP_RIFLE ||
+			m_tPlayerInfo.eWeapon == WP_PISTOL)
 		{
 			if (KEY_BUTTON_DOWN(DIK_R))
 			{
@@ -769,6 +773,8 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	case PMV_WALL:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 		m_bIsFixY = true;
+
+	break;
 	}
 
 	// 상태 업데이트

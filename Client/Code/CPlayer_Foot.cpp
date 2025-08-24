@@ -55,14 +55,6 @@ void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }
-
-    // kick 애니메이션 끝난거 알려주기
-    if (m_CurrentAnimTag == TEXT("Com_Texture_Foots_Kick") && 
-        m_pTextureCom->Is_AnimFinished())
-    {
-        CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-        m_bRenderOn = false;
-    }
 }
 
 void CPlayer_Foot::Render_GameObject()
