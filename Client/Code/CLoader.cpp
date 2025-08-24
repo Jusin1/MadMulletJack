@@ -637,7 +637,7 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 	// handr - op - pistol
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpPistol",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/pistol/Pistol_OpR000.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/pistol/Pistol_OpR%03d.png", 3))))
 		return E_FAIL;
 	// handr - op - shotgun
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpShotgun",

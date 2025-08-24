@@ -596,6 +596,9 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	if (KEY_BUTTON_DOWN(DIK_E))
 		Change_State(ATTACK_INSTANT);
 
+	if (KEY_BUTTON_DOWN(DIK_O))
+		Change_State(OPENING);
+
 }
 
 void CPlayer::Set_State_Normal()

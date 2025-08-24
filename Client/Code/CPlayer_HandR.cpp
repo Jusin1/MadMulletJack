@@ -121,8 +121,8 @@ HRESULT CPlayer_HandR::Texture_Clone()
 
     // Opening - Pistol
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_iEndTex = 3;
+    texInfo.m_fSpeed = 5.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpPistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -160,12 +160,12 @@ HRESULT CPlayer_HandR::Set_Texture()
             if(FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Pistol"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 500.f); // pos를 정하고
+            Set_UISizeAndPos(710.f, 600.f, WINCX * 0.5f + 800.f, WINCY * 0.5f + 350.f); // pos를 정하고
 
             //// info를 새로 맞춰줌
-            Set_New_TransInfo(150.f, 0.f);
+            Set_New_TransInfo(500.f, 0.f);
 
-            m_tMoveInfo = { MV_UP, false, 10.f, 0.f };
+            m_tMoveInfo = { MV_LEFT, true, 300.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {

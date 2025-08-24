@@ -208,11 +208,11 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case OPENING:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
-			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 250.f);
+			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f );
 
-			Set_New_TransInfo(200.f, 0.f);
+			Set_New_TransInfo(500.f, 0.f);
 
-			Set_UIMoveInfo({MV_DOWN,false,0.f,0.f});
+			//Set_UIMoveInfo({MV_DOWN,false,0.f,0.f});
 			
 			break;
 
