@@ -22,8 +22,6 @@ private:
     virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
     HRESULT Texture_Clone();
     
-
-    void Update_Weapon_Pistol();
     void Update_Weapon2_Knife();
 
 private:

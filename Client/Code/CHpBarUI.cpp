@@ -71,9 +71,6 @@ _int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 		else
 			pChild->Set_RenderOn(false);
 	}
-
-	//CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
-	//txt1->GetTransform()->Move_YUpDown(fTimeDelta,10.f,false, m_tMoveInfo.fSumRange);
 		
 	return NO_EVENT;
 }
@@ -101,42 +98,6 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 void	CHpBarUI::Render_GameObject()
 {
 	//__super::Render_GameObject();
-}
-
-CHpBarUI* CHpBarUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CHpBarUI* pHpBar = new CHpBarUI(pGraphicDev);
-
-	if (FAILED(pHpBar->Ready_GameObject()))
-	{
-		Safe_Release(pHpBar);
-		MSG_BOX("CHpBarUI Create Failed");
-		return nullptr;
-	}
-
-	return pHpBar;
-}
-
-CGameObject* CHpBarUI::Clone(void* pArg)
-{
-	CHpBarUI* pInstance = new CHpBarUI(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		Safe_Release(pInstance);
-		MSG_BOX("CHpBarUI Clone Failed");
-		return nullptr;
-	}
-
-	return pInstance;
-}
-
-HRESULT CHpBarUI::Set_Component()
-{
-	if (FAILED(__super::Set_Component()))
-		return E_FAIL;
-
-	return S_OK;
 }
 
 HRESULT CHpBarUI::Set_HpBarUI()
@@ -242,6 +203,42 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 		}
 		
 	}
+}
+
+HRESULT CHpBarUI::Set_Component()
+{
+	if (FAILED(__super::Set_Component()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+CHpBarUI* CHpBarUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CHpBarUI* pHpBar = new CHpBarUI(pGraphicDev);
+
+	if (FAILED(pHpBar->Ready_GameObject()))
+	{
+		Safe_Release(pHpBar);
+		MSG_BOX("CHpBarUI Create Failed");
+		return nullptr;
+	}
+
+	return pHpBar;
+}
+
+CGameObject* CHpBarUI::Clone(void* pArg)
+{
+	CHpBarUI* pInstance = new CHpBarUI(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("CHpBarUI Clone Failed");
+		return nullptr;
+	}
+
+	return pInstance;
 }
 
 void CHpBarUI::Free()

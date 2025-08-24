@@ -221,6 +221,7 @@
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CUIManager_Weapon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Header\Client_Global.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CUIManager_Weapon.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -149,8 +149,10 @@ private:
 private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* componentTag);
+
 	HRESULT Set_PlayerUI();
 	HRESULT Set_HpBarUI();
+	HRESULT Set_WeaponUI();
 
 private:
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
@@ -183,6 +185,7 @@ private:
 private:
 	CUIBase* m_pPlayerUI = nullptr;
 	CUIBase* m_pHpBarUI = nullptr;
+	CUIBase* m_pWeaponUI = nullptr;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

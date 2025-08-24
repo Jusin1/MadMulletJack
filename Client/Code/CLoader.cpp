@@ -22,6 +22,7 @@
 // Weapon UI
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
+#include "CUIManager_Weapon.h"
 
 // Hpbar UI
 #include "CHpbarUI.h"
@@ -1111,6 +1112,13 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 #pragma endregion HpBar UI
+
+#pragma region weapon manager UI
+	//Weapon Manager UI
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_WeaponManagerUI",
+		CUIManager_Weapon::Create(m_pGraphicDev))))
+		return E_FAIL;
+#pragma endregion weapon manager UI
 
 	PhaseStep(1.0f, L"UI 로딩 완료");
 	PhaseDone(L"UI 로딩 완료");

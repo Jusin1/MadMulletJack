@@ -3,7 +3,7 @@
 
 class CHpBarUI : public CUI
 {
-protected:
+private:
     explicit CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CHpBarUI(const CHpBarUI& rhs);
     virtual ~CHpBarUI();
@@ -22,7 +22,7 @@ public:
 
 	void	Set_Hp(_float _fMaxHp, _float _fCurHp); // player에서 hp 전해줌
 
-protected:
+private:
 	virtual HRESULT			Set_Component();
 
 	_bool Is_Scene_Change(); // 플레이어의 상태가 바뀌었는지 + 변화값 받음
@@ -40,13 +40,13 @@ public:
 	void Set_HitCount(_int _iHitCount) { m_iHitCount = _iHitCount; }
 	_int Get_HitCount()const { return m_iHitCount; }
 	
-protected:
+private:
 	SCENE m_eScene;
 
     _float		m_fHpPercent; // 체력 비율 (0~1)
 	_int		m_iHitCount;
 	_bool		m_bHitChange;
-	_float m_fRectY; // rect 초기 사이즈 저장하기 위함
+	_float		m_fRectY; // rect 초기 사이즈 저장하기 위함
 
 public:
 	static  CHpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

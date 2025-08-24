@@ -49,6 +49,8 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 	m_iMaxBullet = 3; //origin : 9 / debug 3
 	m_iBullet = m_iMaxBullet;
 
+	Set_Texture();
+
 	return S_OK;
 }
 
@@ -56,8 +58,22 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	if ((m_CurrentAnimTag != TEXT("Com_Texture_Pistol_Idle")) && m_pTextureCom->Is_AnimFinished())
+	// 만약 지금 idle texture 라면
+	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
+		// handR의 위치 받아옴
+		Engine::CTransform* pHandRformCom =
+			dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+				Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"UI_Layer", L"Com_Transform", 4));
+
+		// 위치를 통해 pos update
+		Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -120.f, 350.f);
+	}
+
+	// 만약 지금 idle texture가 아니고 ani가 끝났다면
+	else if (m_pTextureCom->Is_AnimFinished())
+	{
+		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
 	}
 
@@ -182,7 +198,8 @@ HRESULT CPistol_Gun::Texture_Clone()
 }
 
 HRESULT CPistol_Gun::Set_Texture() {
-
+	//IDLE, JUMP, KICK, ATTACK,
+	//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, PLAYER_END
 	m_bRenderOn = true;
 
 	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
@@ -211,8 +228,6 @@ HRESULT CPistol_Gun::Set_Texture() {
 			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f );
 
 			Set_New_TransInfo(500.f, 0.f);
-
-			//Set_UIMoveInfo({MV_DOWN,false,0.f,0.f});
 			
 			break;
 
@@ -223,6 +238,10 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 			m_iBullet--;
 
+			break;
+
+		case ATTACK_INSTANT:
+			m_bRenderOn = false;
 			break;
 
 		case RELOAD:
@@ -241,7 +260,9 @@ HRESULT CPistol_Gun::Set_Texture() {
 		default:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
 				return E_FAIL;
-			Set_UISize(165.f, 500.f); //Set_UISize(165.f, 500.f);
+			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
+			//pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
+
 			break;
 		}
 	}

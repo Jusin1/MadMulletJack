@@ -21,6 +21,7 @@
 #include "CUIManager.h"
 #include "CManagement.h"
 #include "CTutorialTracker.h"
+#include "CUIManager_Weapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
@@ -62,24 +63,27 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
-	if (FAILED(Set_PlayerUI()))
+	// ui들 생성
+	if (FAILED(Set_WeaponUI()))
 		return E_FAIL;
 
-	// StartPosition 설정
-	if (MAPOBJECTDATA* p = reinterpret_cast<MAPOBJECTDATA*>(pArg))
-	{
-		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
-	}
+	if (FAILED(Set_PlayerUI()))
+		return E_FAIL;
 
 	if (FAILED(Set_HpBarUI()))
 		return E_FAIL;
 
+	// StartPosition 설정 -> scale 조정
+	if (MAPOBJECTDATA* p = reinterpret_cast<MAPOBJECTDATA*>(pArg))
+	{
+		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+	}
 	GetTransform()->Set_Scale(1.f, 2.f, 1.f);
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
-
 	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
 
+	// state 변경 해줌
 	Change_State(OPENING);
 	Change_Move(PMV_NORMAL);
 
@@ -90,7 +94,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	/*if (m_bDead)
 		return DEAD;*/
-	_float f = GetTransform()->Get_Scale().y;
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta); // curOn -> keyInput
@@ -163,8 +166,8 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	// 만약 체력이 0이 되면 state <- PLAYERDEAD
 	if (m_fHp <= 0)
 	{
-		// 죽음 끄기
-		//m_tPlayerInfo.ePlayerState = PLAYERDEAD;
+		// debug
+		// m_tPlayerInfo.ePlayerState = PLAYERDEAD;
 	}
 }
 
@@ -1050,6 +1053,19 @@ HRESULT CPlayer::Set_HpBarUI()
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", iSceneIndex, L"UI_Layer"));
 
 	if (m_pHpBarUI == nullptr)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Set_WeaponUI()
+{
+	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+
+	m_pWeaponUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_WeaponManagerUI", iSceneIndex, L"UI_Layer"));
+
+	if (m_pWeaponUI == nullptr)
 		return E_FAIL;
 
 	return S_OK;

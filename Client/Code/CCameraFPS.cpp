@@ -55,7 +55,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
             Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
     if (pPlayerTransformCom == nullptr)
-        return -1;
+        return NO_EVENT;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
     //vPlayerPos.y += m_fOffset;
