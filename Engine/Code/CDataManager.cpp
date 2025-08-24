@@ -6,6 +6,7 @@ IMPLEMENT_SINGLETON(CDataManager)
 
 CDataManager::CDataManager()
 {
+	m_InstancePrefabData = vector<PREFABDATA>{ 20 };
 	m_PrefabData = vector<PREFABDATA>{ g_PrefabTypeCount };
 	m_PrefabData[0].eType = PrefabType::SIGN_PILLAR;
 	m_PrefabData[1].eType = PrefabType::ROAD;
@@ -65,6 +66,8 @@ void CDataManager::Clear()
 	{
 		m_PrefabData[i] = {};
 	}
+
+	m_InstancePrefabData.clear();
 }
 
 vector<MAPOBJECTDATA> *CDataManager::FindData(const wstring &Layer)

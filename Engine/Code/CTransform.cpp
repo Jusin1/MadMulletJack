@@ -122,6 +122,52 @@ void CTransform::RotationLocalDegree(const _vec3 &axis, float degrees)
 	Set_LocalInfo(INFO_LOOK, look * fZ);
 }
 
+void CTransform::ClearRotation()
+{
+	// 현재 축/스케일 분리
+	_vec3 right = Get_Info(INFO_RIGHT);
+	_vec3 up = Get_Info(INFO_UP);
+	_vec3 look = Get_Info(INFO_LOOK);
+	_vec3 pos = Get_Info(INFO_POS);
+
+	float fX = D3DXVec3Length(&right);
+	float fY = D3DXVec3Length(&up);
+	float fZ = D3DXVec3Length(&look);
+
+	_matrix matResult;
+	::D3DXMatrixIdentity(&matResult);
+	::D3DXMatrixScaling(&matResult, fX, fY, fZ);
+	::memcpy(&matResult.m[3][0], &pos, sizeof(_vec3));
+
+	Set_Info(INFO_RIGHT, *((_vec3 *)&matResult.m[0][0]));
+	Set_Info(INFO_UP, *((_vec3 *)&matResult.m[1][0]));
+	Set_Info(INFO_LOOK, *((_vec3 *)&matResult.m[2][0]));
+	Set_Info(INFO_POS, *((_vec3 *)&matResult.m[3][0]));
+}
+
+void CTransform::ClearLocalRotation()
+{
+	// 현재 축/스케일 분리
+	_vec3 right = Get_LocalInfo(INFO_RIGHT);
+	_vec3 up = Get_LocalInfo(INFO_UP);
+	_vec3 look = Get_LocalInfo(INFO_LOOK);
+	_vec3 pos = Get_LocalInfo(INFO_POS);
+
+	float fX = D3DXVec3Length(&right);
+	float fY = D3DXVec3Length(&up);
+	float fZ = D3DXVec3Length(&look);
+
+	_matrix matResult;
+	::D3DXMatrixIdentity(&matResult);
+	::D3DXMatrixScaling(&matResult, fX, fY, fZ);
+	::memcpy(&matResult.m[3][0], &pos, sizeof(_vec3));
+
+	Set_LocalInfo(INFO_RIGHT, *((_vec3 *)&matResult.m[0][0]));
+	Set_LocalInfo(INFO_UP, *((_vec3 *)&matResult.m[1][0]));
+	Set_LocalInfo(INFO_LOOK, *((_vec3 *)&matResult.m[2][0]));
+	Set_LocalInfo(INFO_POS, *((_vec3 *)&matResult.m[3][0]));
+}
+
 void CTransform::Move_Forward(_float fTimeDelta, _float fHeight)
 {
 	_vec3 vPos = Get_Info(INFO_POS);

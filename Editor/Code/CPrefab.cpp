@@ -122,6 +122,7 @@ _bool CPrefab::Picking(_vec3 *PickingPoint)
 
 void CPrefab::PickingTrue()
 {
+
 }
 
 void CPrefab::ExportData(void *pData)
@@ -221,30 +222,14 @@ HRESULT CPrefab::Set_Data(PREFABDATA *_pData)
 
 	SetPrefabType(_pData->eType);
 
-	// TODO 부모의 역행렬을 곱해서 로컬로 해야하나 ? 싶지만 생각해보니 무조건 로컬 고정인디 Prefab 툴에서는 ?
-
 	// 부모 월드
 	m_pTransformCom->Set_Info(INFO::INFO_RIGHT, _pData->ParentTransform.Right);
 	m_pTransformCom->Set_Info(INFO::INFO_UP, _pData->ParentTransform.Up);
 	m_pTransformCom->Set_Info(INFO::INFO_LOOK, _pData->ParentTransform.Look);
 	m_pTransformCom->Set_Info(INFO::INFO_POS, _pData->ParentTransform.Pos);
-
-	_matrix matChildWorld;
-	_matrix matInverse_ParentWorld;
-	_matrix matResult;
 	// 데이터에 저장된 TransformData는 Local 정보
 	for (int i = 0; i < _pData->vecChildrensData.size(); ++i)
 	{
-		::D3DXMatrixIdentity(&matChildWorld);		
-		::D3DXMatrixIdentity(&matInverse_ParentWorld);
-		::D3DXMatrixIdentity(&matResult);
-
-		::memcpy(&matChildWorld.m[0], &(_pData->vecChildrensData[i].transform.Right), sizeof(_vec3));
-		::memcpy(&matChildWorld.m[1], &(_pData->vecChildrensData[i].transform.Up), sizeof(_vec3));
-		::memcpy(&matChildWorld.m[2], &(_pData->vecChildrensData[i].transform.Look), sizeof(_vec3));
-		::memcpy(&matChildWorld.m[3], &(_pData->vecChildrensData[i].transform.Pos), sizeof(_vec3));
-
-
 		_pData->vecChildrensData[i].bChild = true;
 		if (CGameObject *pGo = CMapFactory::GetInstance()->Create(
 			_pData->vecChildrensData[i].eCategory,
@@ -267,6 +252,16 @@ HRESULT CPrefab::Set_Data(PREFABDATA *_pData)
 	Set_ChildrensMatrix();
 
 	return S_OK;
+}
+
+void CPrefab::Set_Dead_All()
+{
+	for (int i = 0; i < m_pChildrens.size(); ++i)
+	{
+		m_pChildrens[i]->Set_Dead(TRUE);
+	}
+	Set_Dead(TRUE);
+	m_pChildrens.clear();
 }
 
 void CPrefab::Set_ChildrensMatrix()

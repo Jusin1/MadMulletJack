@@ -3,6 +3,7 @@
 #include "CGui_Button.h"
 #include "CGui_InputFloat.h"
 #include "CPrefab.h"
+#include "CManagement.h"
 #include "CGameObject.h"
 #include "CGuiManager.h"
 
@@ -142,23 +143,35 @@ void CGui_Transform::PositionInit()
 	m_vecInfos[0]->SetEndEvent(
 		[&](_float _f)->void
 		{
-			if (CGameObject *pGo = m_vecInfos[2]->GetTarget())
+			if (CGameObject *pGo = m_vecInfos[0]->GetTarget())
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					if (pGo->GetParent())
+					_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+					if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_PREFAB)
 					{
-						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
-						pos.x = _f;
-						pTransform->Set_LocalInfo(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						if (pGo->GetParent())
+						{
+							pos.x = _f;
+							pTransform->Set_LocalInfo(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						}
+						else
+						{
+							_vec3 pos = pTransform->Get_Info(INFO_POS);
+							pos.x = _f;
+							pTransform->Set_Info(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+						}
 					}
 					else
 					{
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.x = _f;
 						pTransform->Set_Info(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+
+						if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+							pPrefab->Set_ChildrensMatrix();
 					}
 				}
 			}
@@ -170,19 +183,31 @@ void CGui_Transform::PositionInit()
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					if (pGo->GetParent())
+					_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+					if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_PREFAB)
 					{
-						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
-						pos.y = _f;
-						pTransform->Set_LocalInfo(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						if (pGo->GetParent())
+						{
+							pos.y = _f;
+							pTransform->Set_LocalInfo(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						}
+						else
+						{
+							_vec3 pos = pTransform->Get_Info(INFO_POS);
+							pos.y = _f;
+							pTransform->Set_Info(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+						}
 					}
 					else
 					{
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.y = _f;
 						pTransform->Set_Info(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+
+						if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+							pPrefab->Set_ChildrensMatrix();
 					}
 				}
 			}
@@ -194,19 +219,31 @@ void CGui_Transform::PositionInit()
 			{
 				if (CTransform *pTransform = pGo->GetTransform())
 				{
-					if (pGo->GetParent())
+					_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
+					if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_PREFAB)
 					{
-						_vec3 pos = pTransform->Get_LocalInfo(INFO_POS);
-						pos.z = _f;
-						pTransform->Set_LocalInfo(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						if (pGo->GetParent())
+						{
+							pos.z = _f;
+							pTransform->Set_LocalInfo(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo->GetParent())->Set_ChildrensMatrix();
+						}
+						else
+						{
+							_vec3 pos = pTransform->Get_Info(INFO_POS);
+							pos.z = _f;
+							pTransform->Set_Info(INFO_POS, pos);
+							static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+						}
 					}
 					else
 					{
 						_vec3 pos = pTransform->Get_Info(INFO_POS);
 						pos.z = _f;
 						pTransform->Set_Info(INFO_POS, pos);
-						static_cast<CPrefab *>(pGo)->Set_ChildrensMatrix();
+
+						if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+							pPrefab->Set_ChildrensMatrix();
 					}
 				}
 			}

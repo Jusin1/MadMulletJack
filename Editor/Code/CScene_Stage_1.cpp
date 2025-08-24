@@ -101,6 +101,7 @@ HRESULT CScene_Stage_1::SaveData()
     CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Tile_Layer");
     CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Env_Layer");
     CFileManager::GetInstance()->SaveDataFile(SCENE_STAGE_1, L"Monster_Layer");
+    CFileManager::GetInstance()->SaveInstancedPrefabDataFile(SCENE_STAGE_1);
 
     return S_OK;
 }

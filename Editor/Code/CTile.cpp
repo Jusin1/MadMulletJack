@@ -166,10 +166,20 @@ void CTile::ExportData(void *pData)
 		p->texture.OriginComponentName = m_pTexture->GetOriginCompName();
 
 		// transform
-		::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_World()).m[0][0]), sizeof(_vec3));
-		::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_World()).m[1][0]), sizeof(_vec3));
-		::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_World()).m[2][0]), sizeof(_vec3));
-		::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_World()).m[3][0]), sizeof(_vec3));
+		if (p->bChild)
+		{
+			::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_Local()).m[0][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_Local()).m[1][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_Local()).m[2][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_Local()).m[3][0]), sizeof(_vec3));
+		}
+		else
+		{
+			::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_World()).m[0][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_World()).m[1][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_World()).m[2][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_World()).m[3][0]), sizeof(_vec3));
+		}
 	}
 	else
 	{

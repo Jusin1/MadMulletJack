@@ -33,6 +33,7 @@ public:
 	CComponent* Get_Component(_uint iSceneIdx, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIdx = 0); // 오브젝트 안에 있는 컴포넌트 반환
 	std::vector<MAPOBJECTDATA> ExportObjectData(_uint iSceneID, const _tchar* pLayerTag);
 	std::vector<PREFABDATA> ExportPrefabData();
+	std::vector<PREFABDATA> Export_InstancedPrefabData(_uint iSceneID);
 private:
 	CGameObject* Find_Prototype(const _tchar* pProtoTypeTag);  // 원본 찾기
 	CLayer* Find_Layer(_uint iSceneIdx, const _tchar* pLayerTag); // 레이어 찾기

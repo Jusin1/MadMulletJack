@@ -133,6 +133,8 @@ HRESULT CEditLoader::Loading_Editor()
 	InstancingObjects(L"Tile_Layer");
 	InstancingObjects(L"Env_Layer");
 	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
@@ -153,6 +155,8 @@ HRESULT CEditLoader::Loading_Tutorial()
 	InstancingObjects(L"Tile_Layer");
 	InstancingObjects(L"Env_Layer");
 	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
@@ -172,6 +176,7 @@ HRESULT CEditLoader::Loading_Stage_1()
 	InstancingObjects(L"Tile_Layer");
 	InstancingObjects(L"Env_Layer");
 	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
@@ -240,6 +245,11 @@ void CEditLoader::SetData(_uint _iSceneIndex)
 	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
 	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");
 	CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
+	for (int i = 0; i < g_PrefabTypeCount; ++i)
+	{
+		CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(i));
+	}
+	CFileManager::GetInstance()->LoadInstancedPrefabDataFile(_iSceneIndex);
 
 	CMapFactory::GetInstance()->SetTargetSceneIndex(_iSceneIndex);
 }
@@ -272,6 +282,17 @@ void CEditLoader::InstancingObjects(const wstring &_Layer)
 		for (MAPOBJECTDATA &element : *pVecData)
 		{
 			CMapFactory::GetInstance()->Create(element.eCategory, element.iType, &element);
+		}
+	}
+}
+
+void CEditLoader::InstancingPrefabs()
+{
+	if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetInstancedPrefabDataList())
+	{
+		for (PREFABDATA &element : *pVecData)
+		{
+			CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>(element.eType), &element);
 		}
 	}
 }

@@ -27,6 +27,8 @@ public:
 	HRESULT LoadDataFile(_uint iSceneID, const _tchar *szLayerTag);
 	HRESULT	SavePrefabDataFile(PrefabType _e);
 	HRESULT	LoadPrefabDataFile(PrefabType _e);
+	HRESULT	SaveInstancedPrefabDataFile(_uint iSceneID);
+	HRESULT	LoadInstancedPrefabDataFile(_uint iSceneID);
 private:
 	wstring SceneIdToWstring(_uint iSceneID);
 	wstring PrefabTypeToWstring(PrefabType _e);

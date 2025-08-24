@@ -37,7 +37,7 @@ public:
 
 	HRESULT Set_Component();
 public:
-	void Add_Children(CGameObject *_p) { if (!_p) return; _p->SetParent(this); m_pChildrens.push_back(_p); }
+	void Add_Children(CGameObject *_p) { if (!_p) return; _p->SetParent(this); m_pChildrens.push_back(_p); Set_ChildrensMatrix(); }
 	void Remove_Children(CGameObject *_p);
 	void Remove_Children(_uint _i);
 	CGameObject *Get_Children(_uint _i) { if (IsEmpty()) return nullptr; return m_pChildrens[_i]; }
@@ -48,6 +48,8 @@ public:
 
 	PrefabType GetType() const { return m_eType; }
 	void SetPrefabType(PrefabType _e) { m_eType = _e; }
+
+	void Set_Dead_All();
 
 	ObjectCategory GetCategory() const { return m_eCategory; }
 	bool IsClone() const { return m_bClone; }

@@ -267,13 +267,13 @@ CGuiBase *CGui_PrefabEditorPanel::PrefabtypeDropbox_Create()
 
 CGuiBase *CGui_PrefabEditorPanel::CreateButton_Create()
 {
-	vector<string> _labels{ 2 };
-	vector<std::function<void()>> _funcs{ 2 };
+	vector<string> _labels{ 3 };
+	vector<std::function<void()>> _funcs{ 3 };
 
 	_labels[0] = "Create";
 	_funcs[0] =
 		[this]()->void {
-		ObjectCategory eCategory = CGuiManager::GetInstance()->GetCategory();
+		ObjectCategory eCategory = CGuiManager::GetInstance()->GetLocalCategory();
 		switch (eCategory)
 		{
 		case ObjectCategory::WALL:
@@ -284,10 +284,12 @@ CGuiBase *CGui_PrefabEditorPanel::CreateButton_Create()
 			defaultData.iType = m_iChildrenObjectType;
 			defaultData.panelBuffer.eType = static_cast<WallType>(m_iChildrenObjectType);
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
+			defaultData.bChild = true;
 			CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", SCENE_PREFAB, L"Wall_Layer", &defaultData);
 			CGuiManager::GetInstance()->SetTarget(pGo);
-			pGo->SetParent(static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front()));
-			static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front())->Add_Children(pGo);
+			CPrefab *pParent = static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front());
+			pGo->SetParent(pParent);
+			pParent->Add_Children(pGo);
 		} break;
 		case ObjectCategory::TILE:
 		{
@@ -319,8 +321,34 @@ CGuiBase *CGui_PrefabEditorPanel::CreateButton_Create()
 			}
 			else
 			{
+				if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo->GetParent()))
+				{
+					pPrefab->Remove_Children(pGo);
+				}
 				pGo->Set_Dead(TRUE);
 				CGuiManager::GetInstance()->SetTarget(nullptr);
+			}
+		}
+	};
+
+	_labels[2] = "ClearRotation";
+	_funcs[2] =
+		[]()->void {
+		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
+		{
+			if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+			{
+				pPrefab->GetTransform()->ClearRotation();
+				pPrefab->Set_ChildrensMatrix();
+			}
+			else
+			{
+				pGo->GetTransform()->ClearLocalRotation();
+				if (CPrefab *pParent = dynamic_cast<CPrefab *>(pGo->GetParent()))
+				{
+					pParent->Set_ChildrensMatrix();
+				}
+					
 			}
 		}
 	};
@@ -991,13 +1019,14 @@ void CGui_PrefabEditorPanel::ChangeType(_uint _iType)
 
 	// m_iPrefabType Clear 오브젝트
 	CObjectManager::GetInstance()->Clear(SCENE_PREFAB);
+	CDataManager::GetInstance()->Clear();
 	CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(_iType));
 	CMapFactory::GetInstance()->SetTargetSceneIndex(SCENE_PREFAB);
 	if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetPrefabDataList())
 	{
-		if ((*pVecData)[0].eType != PrefabType::NONE)
+		if ((*pVecData)[_iType].eType != PrefabType::NONE)
 		{
-			CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>((*pVecData)[0].eType), &(*pVecData)[0]);
+			CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, static_cast<_uint>((*pVecData)[_iType].eType), &(*pVecData)[_iType]);
 			m_iPrefabType = _iType;
 			return;
 		}

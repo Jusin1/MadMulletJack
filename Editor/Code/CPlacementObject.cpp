@@ -172,17 +172,17 @@ void CPlacementObject::ExportData(void *pData)
 		// transform
 		if (p->bChild)
 		{
-			GetTransform()->Set_LocalInfo(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_LocalInfo(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_LocalInfo(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_LocalInfo(INFO::INFO_POS, p->transform.Pos);
+			::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_Local()).m[0][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_Local()).m[1][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_Local()).m[2][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_Local()).m[3][0]), sizeof(_vec3));
 		}
 		else
 		{
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			::memcpy(&p->transform.Right, &((*m_pTransformCom->Get_World()).m[0][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Up, &((*m_pTransformCom->Get_World()).m[1][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Look, &((*m_pTransformCom->Get_World()).m[2][0]), sizeof(_vec3));
+			::memcpy(&p->transform.Pos, &((*m_pTransformCom->Get_World()).m[3][0]), sizeof(_vec3));
 		}
 	}
 	else
@@ -200,10 +200,20 @@ HRESULT CPlacementObject::Set_Component(void *pArg)
 			SetCategory(p->eCategory);
 			SetType(p->iType);
 
-			GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
-			GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
-			GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
-			GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			if (p->bChild)
+			{
+				GetTransform()->Set_LocalInfo(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_LocalInfo(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_LocalInfo(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_LocalInfo(INFO::INFO_POS, p->transform.Pos);
+			}
+			else
+			{
+				GetTransform()->Set_Info(INFO::INFO_RIGHT, p->transform.Right);
+				GetTransform()->Set_Info(INFO::INFO_UP, p->transform.Up);
+				GetTransform()->Set_Info(INFO::INFO_LOOK, p->transform.Look);
+				GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
+			}
 
 			// VIBuffer
 			if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC, L"Proto_Component_Buffer_CubeColor", (CComponent **)&m_pBuffer, &p->dwColor)))

@@ -101,6 +101,7 @@ HRESULT CEditorScene::SaveData()
     CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Tile_Layer");
     CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Env_Layer");
     CFileManager::GetInstance()->SaveDataFile(SCENE_DEV, L"Monster_Layer");
+    CFileManager::GetInstance()->SaveInstancedPrefabDataFile(SCENE_DEV);
 
     return S_OK;
 }

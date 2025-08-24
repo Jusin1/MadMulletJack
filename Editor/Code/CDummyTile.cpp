@@ -6,7 +6,9 @@
 #include "CGuiManager.h"
 #include "Editor_Define.h"
 #include "CDInputMgr.h"
+#include "CPrefab.h"
 #include "Editor_Define.h"
+#include "CMapFactory.h"
 #include "CManagement.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
@@ -196,7 +198,7 @@ void CDummyTile::PosUpdate()
 					} break;
 					}
 				}
-				
+
 
 				pTransform->Set_Info(INFO::INFO_POS, pickPos);
 
@@ -213,14 +215,45 @@ void CDummyTile::PosUpdate()
 					::memcpy(&tTestData.transform.Look, &look, sizeof(_vec3));
 					::memcpy(&tTestData.transform.Pos, &pickPos, sizeof(_vec3));
 					tTestData.texture.OriginComponentName = CGuiManager::GetInstance()->GetSelectedThumnailTexture();
-					tTestData.eCategory = CGuiManager::GetInstance()->GetCategory();
-					tTestData.iType = CGuiManager::GetInstance()->GetObjectType();
+
 					_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
-					if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Tile_Layer", &tTestData)))
+					if (iCurSceneID == SCENE_PREFAB)
 					{
-						MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+						tTestData.eCategory = CGuiManager::GetInstance()->GetLocalCategory();
+						tTestData.iType = CGuiManager::GetInstance()->GetLocalObjectType();
+						tTestData.bChild = true;
+						/*if (CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Prefab_Tile_Layer", &tTestData))*/
+						if(CGameObject* pGo = CMapFactory::GetInstance()->Create(ObjectCategory::TILE, tTestData.iType, &tTestData))
+						{
+							if (CPrefab *pParent = static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front()))
+							{
+								if (pParent)
+								{
+									pGo->SetParent(pParent);
+									pParent->Add_Children(pGo);
+								}
+								else
+								{
+									MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+								}
+							}
+							else
+								MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+						}
 					}
-				}					
+					else
+					{
+						tTestData.eCategory = CGuiManager::GetInstance()->GetCategory();
+						tTestData.iType = CGuiManager::GetInstance()->GetObjectType();
+						/*if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultTile", iCurSceneID, L"Tile_Layer", &tTestData)))*/
+						if (CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::TILE, tTestData.iType, &tTestData))
+						{
+							
+						}
+						else
+							MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+					}
+				}
 			}
 		}
 	}

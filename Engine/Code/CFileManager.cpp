@@ -179,7 +179,7 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
     }
 
     wstring FileName{PrefabTypeToWstring(static_cast<PrefabType>(_e))};
-    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"data.json";
+    filesystem::path dir = GameDataPath / L"Prefab_Data" / FileName / L"data.json";
 
     if (!dir.parent_path().empty())
     {
@@ -207,7 +207,7 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
 HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
 {
     wstring FileName{ PrefabTypeToWstring(static_cast<PrefabType>(_e)) };
-    filesystem::path dir = GameDataPath / L"Prefab_Layer" / FileName / L"data.json";
+    filesystem::path dir = GameDataPath / L"Prefab_Data" / FileName / L"data.json";
 
     if (dir.parent_path().empty())
     {
@@ -241,6 +241,75 @@ HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
 
     ifs.close();
 
+    return S_OK;
+}
+
+HRESULT CFileManager::SaveInstancedPrefabDataFile(_uint iSceneID)
+{
+    std::vector<PREFABDATA> prefabDatas = CObjectManager::GetInstance()->Export_InstancedPrefabData(iSceneID);
+
+    if (prefabDatas.size() <= 0)
+    {
+        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, objlist is empty");
+        return E_FAIL;
+    }
+
+    json jArray = json::array();
+    for (const auto &data : prefabDatas)
+    {
+        jArray.push_back(data);
+    }
+
+    filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / L"Prefab_Layer/data.json";
+    if (!dir.parent_path().empty())
+    {
+        filesystem::create_directories(dir.parent_path());
+    }
+    else
+    {
+        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ofstream ofs(dir, std::ios::out | std::ios::binary);
+    if (!ofs.is_open())
+    {
+        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, Failed Save");
+        return E_FAIL;
+    }
+
+    ofs << std::setw(4) << jArray << std::endl;
+    ofs.close();
+
+    return S_OK;
+}
+
+HRESULT CFileManager::LoadInstancedPrefabDataFile(_uint iSceneID)
+{
+    filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / L"Prefab_Layer/data.json";
+    if (dir.parent_path().empty())
+    {
+        MSG_BOX("CFileManager::LoadInstancedPrefabDataFile, path is invalid");
+        return E_FAIL;
+    }
+
+    std::ifstream ifs(dir, std::ios::in | std::ios::binary);
+    if (!ifs.is_open())
+    {
+        MSG_BOX("CFileManager::LoadInstancedPrefabDataFile, open failed");
+        return E_FAIL;
+    }
+
+    json jArray;
+    ifs >> jArray;
+
+    for (const auto &jObj : jArray)
+    {
+        PREFABDATA objData = jObj.get<PREFABDATA>();
+        CDataManager::GetInstance()->AddInstancedPrefabData(objData);
+    }
+
+    ifs.close();
     return S_OK;
 }
 

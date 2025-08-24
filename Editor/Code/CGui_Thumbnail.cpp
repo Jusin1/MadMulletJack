@@ -2,6 +2,7 @@
 #include "Editor_Define.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
+#include "CTile.h"
 #include "CGui_Thumbnail.h"
 
 CGui_Thumbnail::CGui_Thumbnail(const string &_label, _uint _reserve)
@@ -91,9 +92,13 @@ void CGui_Thumbnail::Change_Texture(_uint _iType)
 {
 	if (m_iSelectedIndex >= 0)
 	{
-		if (CGridPanel *pTargetPanel = static_cast<CGridPanel *>(CGuiManager::GetInstance()->GetTarget()))
+		if (CGridPanel *pTargetPanel = dynamic_cast<CGridPanel *>(CGuiManager::GetInstance()->GetTarget()))
 		{
 			pTargetPanel->Change_Texture(SCENE_STATIC, m_vecThumbnails[_iType][m_iSelectedIndex].comp_name);
+		}
+		else if (CTile *pTargetTile = dynamic_cast<CTile *>(CGuiManager::GetInstance()->GetTarget()))
+		{
+			pTargetTile->Change_Texture(SCENE_STATIC, m_vecThumbnails[_iType][m_iSelectedIndex].comp_name);
 		}
 
 		//m_iSelectedIndex = -1;

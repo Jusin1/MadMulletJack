@@ -28,6 +28,7 @@ private:
 	void SetData(_uint _iSceneIndex);
 	void InitPrefab(_uint _iSceneIndex);
 	void InstancingObjects(const wstring &_Layer);
+	void InstancingPrefabs();
 public:
 	CRITICAL_SECTION *Get_Crt() { return &m_Crt; }
 	SCENE		Get_NextSceneID() const { return m_eNextScene; }

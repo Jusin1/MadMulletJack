@@ -306,7 +306,23 @@ void CEditorApplication::Ready_MapFactorFunc()
 	[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+		CGameObject *pGo{ nullptr };
+		if (MAPOBJECTDATA *pMapObjData = reinterpret_cast<MAPOBJECTDATA *>(pData))
+		{
+			if (pMapObjData->bChild)
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Prefab_Wall_Layer", pData);
+			}
+			else
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+			}
+		}
+		else
+		{
+			pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPanel", iTargetScene, L"Wall_Layer", pData);
+		}
+		return pGo;
 	};
 	for (int i = 0; i < g_WallTypeCount; ++i)
 	{
@@ -317,7 +333,23 @@ void CEditorApplication::Ready_MapFactorFunc()
 		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Tile_Layer", pData);
+		CGameObject *pGo{ nullptr };
+		if (MAPOBJECTDATA *pMapObjData = reinterpret_cast<MAPOBJECTDATA *>(pData))
+		{
+			if (pMapObjData->bChild)
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Prefab_Tile_Layer", pData);
+			}
+			else
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Tile_Layer", pData);
+			}
+		}
+		else
+		{
+			pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultTile", iTargetScene, L"Tile_Layer", pData);
+		}
+		return pGo;
 	};
 	for (int i = 0; i < g_TileTypeCount; ++i)
 	{
@@ -328,7 +360,23 @@ void CEditorApplication::Ready_MapFactorFunc()
 		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Env_Layer", pData);
+		CGameObject *pGo{ nullptr };
+		if (MAPOBJECTDATA *pMapObjData = reinterpret_cast<MAPOBJECTDATA *>(pData))
+		{
+			if (pMapObjData->bChild)
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Prefab_Env_Layer", pData);
+			}
+			else
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Env_Layer", pData);
+			}
+		}
+		else
+		{
+			pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Env_Layer", pData);
+		}
+		return pGo;
 	};
 	for (int i = 0; i < g_EnvTypeCount; ++i)
 	{
@@ -339,7 +387,23 @@ void CEditorApplication::Ready_MapFactorFunc()
 		[](void *pData = nullptr)->CGameObject *
 	{
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-		return CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Monster_Layer", pData);
+		CGameObject *pGo{ nullptr };
+		if (MAPOBJECTDATA *pMapObjData = reinterpret_cast<MAPOBJECTDATA *>(pData))
+		{
+			if (pMapObjData->bChild)
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Prefab_Monster_Layer", pData);
+			}
+			else
+			{
+				pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Monster_Layer", pData);
+			}
+		}
+		else
+		{
+			pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iTargetScene, L"Monster_Layer", pData);
+		}
+		return pGo;
 	};
 	for (int i = 0; i < g_MonsterTypeCount; ++i)
 	{

@@ -162,7 +162,15 @@ void CGuiManager::RotationDegree(const _vec3 &vAxis, _float fDegree)
     }
     else
     {
-        GetTarget()->GetTransform()->RotationDegree(_vec3{ vAxis }, fDegree);
+        if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(GetTarget()))
+        {
+            pPrefab->GetTransform()->RotationDegree(_vec3{ vAxis }, fDegree);
+            pPrefab->Set_ChildrensMatrix();
+        }
+        else
+        {
+            GetTarget()->GetTransform()->RotationDegree(_vec3{ vAxis }, fDegree);
+        }
     }
 }
 
@@ -289,7 +297,7 @@ const _tchar *CGuiManager::GetSelectedThumnailTexture()
     switch (CManagement::GetInstance()->Get_CurrentSceneIdx())
     {
     case SCENE_PREFAB:
-        return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::PREFAB_INSPECTOR])->GetSelectedThumbnailTexture();
+        return static_cast<CGui_PrefabEditorPanel *>(m_pPanels[PANEL::PREFAB_INSPECTOR])->GetSelectedThumbnailTexture();
     }
 
     return static_cast<CGui_MapEditorPanel *>(m_pPanels[PANEL::INSPECTOR])->GetSelectedThumbnailTexture();

@@ -1,12 +1,15 @@
 #include "pch.h"
 #include "CGui_Dropbox.h"
 #include "CGuiManager.h"
+#include "CPrefab.h"
 #include "CGameObject.h"
+#include "CDataManager.h"
 #include "CGui_Button.h"
 #include "CGui_ButtonList.h"
 #include "CGui_Transform.h"
 #include "CGui_Checkbox.h"
 #include "CGui_Thumbnail.h"
+#include "CMapFactory.h"
 #include "CVIBuffer_GridPanel_Editor.h"
 #include "CGraphicDev.h"
 #include "CEditorLoadingScene.h"
@@ -170,6 +173,9 @@ void CGui_MapEditorPanel::PrefabRender()
 {
 	PrefabtypeDropbox_Render();
 
+	m_pElements[static_cast<_uint>(MapEditorGuiType::CREATE_BUTTONS)]->Render(m_iObjectType);
+	m_pElements[static_cast<_uint>(MapEditorGuiType::POSITION)]->Render(m_iObjectType);
+
 	SceneDropbox_Render();
 	m_pElements[static_cast<_uint>(MapEditorGuiType::SAVE_DATA_BUTTON)]->Render(m_iObjectType);
 }
@@ -286,9 +292,8 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 			defaultData.iType = m_iObjectType;
 			defaultData.panelBuffer.eType = static_cast<WallType>(m_iObjectType);
 			defaultData.texture.OriginComponentName = GetSelectedThumbnailTexture();
-			_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
-			CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPanel", iCurSceneID, L"Wall_Layer", &defaultData);
-			CGuiManager::GetInstance()->SetTarget(CObjectManager::GetInstance()->Get_ObjectList(iCurSceneID, L"Wall_Layer")->back());
+			CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::WALL, m_iObjectType, &defaultData);
+			CGuiManager::GetInstance()->SetTarget(pGo);
 		} break;
 		case ObjectCategory::TILE:
 		{
@@ -306,6 +311,15 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		{
 			MSG_BOX("CGui_MapEditorPanel::CreateButton_Create(), write function");
 		} break;
+		case ObjectCategory::PREFAB:
+		{
+			if (vector<PREFABDATA> *pVecData = CDataManager::GetInstance()->GetPrefabDataList())
+			{
+				PREFABDATA *pData = &((*pVecData)[m_iObjectType]);
+				CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::PREFAB, m_iObjectType, pData);
+				CGuiManager::GetInstance()->SetTarget(pGo);
+			}
+		} break;
 		}
 	};
 
@@ -314,11 +328,18 @@ CGuiBase *CGui_MapEditorPanel::CreateButton_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			pGo->Set_Dead(TRUE);
+			if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
+			{
+				pPrefab->Set_Dead_All();
+			}
+			else
+			{
+				pGo->Set_Dead(TRUE);
+			}
 			CGuiManager::GetInstance()->SetTarget(nullptr);
 		}
 	};
-
+	
 	return CGui_ButtonList::Create("Wall Create", _labels, _funcs);
 }
 
@@ -396,7 +417,7 @@ CGuiBase *CGui_MapEditorPanel::SaveDataButton_Create()
 
 CGuiBase *CGui_MapEditorPanel::PositionInputfield_Create()
 {
-	return CGui_Transform::Create(TransformDataType::POSITION);;
+	return CGui_Transform::Create(TransformDataType::POSITION);
 }
 
 CGuiBase *CGui_MapEditorPanel::RotationInputfield_Create()

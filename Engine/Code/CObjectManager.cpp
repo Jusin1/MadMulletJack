@@ -207,6 +207,25 @@ std::vector<PREFABDATA> CObjectManager::ExportPrefabData()
 	return returnData;
 }
 
+std::vector<PREFABDATA> CObjectManager::Export_InstancedPrefabData(_uint iSceneID)
+{
+	list<CGameObject *> *pList = Get_ObjectList(iSceneID, L"Prefab_Layer");
+	if (!pList || (*pList).size() <= 0)
+		return {};
+
+	std::vector<PREFABDATA> returnData;
+	returnData.reserve((*pList).size());
+
+	for (CGameObject *element : (*pList))
+	{
+		PREFABDATA pSrc;
+		element->ExportData(&pSrc);
+		returnData.push_back(pSrc);
+	}
+
+	return returnData;
+}
+
 // 원본 검색
 CGameObject* CObjectManager::Find_Prototype(const _tchar* pProtoTypeTag)
 {

@@ -100,6 +100,7 @@ HRESULT CScene_Tutorial::SaveData()
 	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Tile_Layer");
 	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Env_Layer");
 	CFileManager::GetInstance()->SaveDataFile(SCENE_TUTORIAL, L"Monster_Layer");
+	CFileManager::GetInstance()->SaveInstancedPrefabDataFile(SCENE_TUTORIAL);
 
 	return S_OK;
 }

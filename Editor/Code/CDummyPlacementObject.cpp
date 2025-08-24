@@ -7,6 +7,7 @@
 #include "CManagement.h"
 #include "CMapFactory.h"
 #include "CRenderer.h"
+#include "CPrefab.h"
 #include "CGuiManager.h"
 #include "CGridPanel.h"
 #include "CEditorPickingManager.h"
@@ -182,9 +183,39 @@ void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pDa
 	}
 
 	_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData)))
+	if (iCurSceneID == SCENE_PREFAB)
 	{
-		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+		pData->eCategory = CGuiManager::GetInstance()->GetLocalCategory();
+		pData->iType = CGuiManager::GetInstance()->GetLocalObjectType();
+		pData->bChild = true;
+		/*if (CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData))*/
+		if(CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::MONSTER, pData->iType, pData))
+		{
+			if (CPrefab *pParent = static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front()))
+			{
+				if (pParent)
+				{
+					pGo->SetParent(pParent);
+					pParent->Add_Children(pGo);
+				}
+				else
+				{
+					MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+				}
+			}
+			else
+				MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+		}
+		else
+		{
+			/*if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData)))*/
+			if (CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::MONSTER, pData->iType, pData))
+			{
+				
+			}
+			else
+				MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+		}
 	}
 }
 
@@ -205,11 +236,41 @@ void CDummyPlacementObject::MakeEnvObject(EnvType _e, MAPOBJECTDATA *pData)
 		break;
 	}
 
-
 	_uint iCurSceneID = CManagement::GetInstance()->Get_CurrentSceneIdx();
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Env_Layer", pData)))
+	if (iCurSceneID == SCENE_PREFAB)
 	{
-		MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+		pData->eCategory = CGuiManager::GetInstance()->GetLocalCategory();
+		pData->iType = CGuiManager::GetInstance()->GetLocalObjectType();
+		pData->bChild = true;
+
+		/*if (CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Prefab_Env_Layer", pData))*/
+		if (CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::ENV_OBJ, pData->iType, pData))
+		{
+			if (CPrefab *pParent = static_cast<CPrefab *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_PREFAB, L"Prefab_Layer")->front()))
+			{
+				if (pParent)
+				{
+					pGo->SetParent(pParent);
+					pParent->Add_Children(pGo);
+				}
+				else
+				{
+					MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+				}
+			}
+			else
+				MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+		}
+	}
+	else
+	{
+		/*if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Env_Layer", pData)))*/
+		if (CGameObject* pGo = CMapFactory::GetInstance()->Create(ObjectCategory::ENV_OBJ, pData->iType, pData))
+		{
+			
+		}
+		else
+			MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}
 }
 
