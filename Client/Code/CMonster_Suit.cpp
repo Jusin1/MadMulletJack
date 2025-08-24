@@ -472,7 +472,8 @@ void CMonster_Suit::TrySpawnDeathUI()
     if (!m_pendingDeathUI) return;
     m_pendingDeathUI = false;
 
-    const bool  isHead = (m_lastFatalPart == HIT_HEAD || m_lastFatalPart == HIT_BALLS);
+    const bool  isHead = (m_lastFatalPart == HIT_HEAD);
+
     const float secsAdd = isHead ? 3.0f : 2.0f;
 
     if (auto ui = dynamic_cast<CEffectUI*>(
@@ -490,7 +491,7 @@ void CMonster_Suit::TrySpawnDeathUI()
             L"Com_Tex_Heal",
             secsAdd,
             m_pTransformCom, 
-            0.5f,            
+            0.9f,            
             240.f,           
             120.f,           
             0.85f,
@@ -512,8 +513,6 @@ void CMonster_Suit::TrySpawnDeathUI()
         banner->SetBannerRightFixedScale(1.0f); 
         banner->SetBannerTextOffset(30.f, 5.f);
 
-
-
         banner->SetBannerLabelPop(1.35f, 0.22f);
 
         banner->SetBannerAngle(0.f);
@@ -521,7 +520,7 @@ void CMonster_Suit::TrySpawnDeathUI()
         banner->SetBannerTextAngle(0.f);
 
 
-        banner->SetBannerDownSpeed(32.f);
+        banner->SetBannerDownSpeed(130.f);
 
         banner->SetBannerExtraWidth(80.f);
         banner->ShowBanner(
