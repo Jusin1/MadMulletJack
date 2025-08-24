@@ -1,9 +1,11 @@
 ﻿#include "pch.h"
 #include "CMonster_Suit.h"
+#include "CGameDataManager.h"
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
 #include "CObjectManager.h"
 #include "CEffectUI.h"
+#include "CGrounding.h"
 #include "CPicking.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
@@ -81,6 +83,13 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
     SetState(IDLE);
 
     SetupHitSpheres();
+
+    _float fOut{ 0.f };
+    m_pGroundingCom->Initialize_CurrentIndex(
+        CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
+        m_pTransformCom->Get_Info(INFO::INFO_POS).x,
+        m_pTransformCom->Get_Info(INFO::INFO_POS).z,
+        &fOut);
 
     return S_OK;
 }

@@ -25,6 +25,7 @@ public:
 public:
 	_bool GetHeight(const vector<PANELENTRY> *pPanelEntries, _float fX, _float fZ, _float *fOutY);
 	_uint GetCurrentIndex() const { return m_iCurrentIndex; }
+	_bool Initialize_CurrentIndex(const vector<PANELENTRY> *pPanelEntries, _float fX, _float fZ, _float *fOutY);
 private:
 	_bool IsInside(const PANELENTRY &tPanelEntry, _float fX, _float fZ);
 	_bool IsInside_Slope(const PANELENTRY &tPanelEntry, _float fX, _float fZ);

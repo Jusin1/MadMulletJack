@@ -107,6 +107,39 @@ _bool CGrounding::GetHeight(const vector<PANELENTRY> *pPanelEntries, _float fX, 
 	return false;
 }
 
+_bool CGrounding::Initialize_CurrentIndex(const vector<PANELENTRY> *pPanelEntries, _float fX, _float fZ, _float *fOutY)
+{
+	if (pPanelEntries->empty())
+		return false;
+
+	for (int i = 0; i < pPanelEntries->size(); ++i)
+	{
+		if ((*pPanelEntries)[i].eType == WallType::FLOOR)
+		{
+			if (IsInside((*pPanelEntries)[i], fX, fZ))
+			{
+				m_iCurrentIndex = i;
+				return true;
+			}
+		}
+		else if((*pPanelEntries)[i].eType == WallType::INCLINE)
+		{
+			if (IsInside_Slope((*pPanelEntries)[i], fX, fZ))
+			{
+				m_iCurrentIndex = i;
+				return true;
+			}
+		}
+		else
+		{
+			MSG_BOX("CGrounding::Initialize_CurrentIndex, Wrongtype");
+			return false;
+		}
+	}
+
+	return false;
+}
+
 _bool CGrounding::IsInside(const PANELENTRY &tPanelEntry, _float fX, _float fZ)
 {
 	_float fMinX = tPanelEntry.fMin_X;

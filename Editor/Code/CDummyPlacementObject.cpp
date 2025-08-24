@@ -206,16 +206,16 @@ void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pDa
 			else
 				MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 		}
-		else
+	}
+	else
+	{
+		/*if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData)))*/
+		if (CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::MONSTER, pData->iType, pData))
 		{
-			/*if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Proto_GameObject_DefaultPlacementObject", iCurSceneID, L"Monster_Layer", pData)))*/
-			if (CGameObject *pGo = CMapFactory::GetInstance()->Create(ObjectCategory::MONSTER, pData->iType, pData))
-			{
-				
-			}
-			else
-				MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
+
 		}
+		else
+			MSG_BOX("NOOOOOOOOOOOOOOOOOOOOOO");
 	}
 }
 

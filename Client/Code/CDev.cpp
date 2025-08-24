@@ -60,9 +60,6 @@ HRESULT CDev::Ready_Scene()
     if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
         return E_FAIL;
 
-    if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
-        return E_FAIL;
-
     if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
         return E_FAIL;
 
@@ -74,8 +71,10 @@ HRESULT CDev::Ready_Scene()
 
     // GameDataManager에 바닥을 z기준 정렬
     CGameDataManager::GetInstance()->Bind_FloorList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Floor_Layer"));
-    auto pData = CGameDataManager::GetInstance()->Get_SortedFloorEntries();
-    *pData;
+
+    if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
+        return E_FAIL;
+
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;
