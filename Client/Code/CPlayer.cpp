@@ -20,6 +20,7 @@
 #include "CPhone_HpBarUI.h"
 #include "CUIManager.h"
 #include "CManagement.h"
+#include "CTutorialTracker.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
@@ -530,6 +531,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		if (KEY_BUTTON_HOLD(DIK_S))
 		{
 			m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
+			//CTutorialTracker::Get().Notify_Move();
 		}
 		// break 있으면 안됨
 	case MVKEY_LR: // 좌우

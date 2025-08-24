@@ -24,24 +24,7 @@ public:
     }
 
     // 단색/텍스처 겸용
-    void SetSolidMode(bool on) {
-        m_useSolid = on;
-        if (m_useSolid) {
-            m_colNormal = D3DXCOLOR(0.f, 0.f, 0.f, 0.85f);
-            m_colHover = D3DXCOLOR(1.f, 1.f, 1.f, 0.90f);
-            m_colPressed = D3DXCOLOR(1.f, 1.f, 1.f, 0.95f);
-            m_colDisabled = D3DXCOLOR(0.3f, 0.3f, 0.3f, 0.70f);
-        }
-        else {
-            m_colNormal = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-            m_colHover = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-            m_colPressed = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-            m_colDisabled = D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.f);
-            SetTintRGBA(255, 255, 255, 255);
-        }
-        updateTargetsByState();
-        updateTextureByState();
-    }
+    void SetSolidMode(bool on);
 
     void SetSolidColors(D3DXCOLOR normal, D3DXCOLOR hover, D3DXCOLOR pressed, D3DXCOLOR disabled) {
         m_colNormal = normal; m_colHover = hover; m_colPressed = pressed; m_colDisabled = disabled;
@@ -68,6 +51,25 @@ public:
         case State::Disabled: m_texDisabled = tag; break;
         }
         updateTextureByState();
+    }
+
+    // 텍스처 모드 상태별 틴트 설정 (이걸 호출한 버튼만 색 적용)
+    void SetTextureTints(D3DXCOLOR normal, D3DXCOLOR hover, D3DXCOLOR pressed, D3DXCOLOR disabled) {
+        m_texTintNormal = normal;
+        m_texTintHover = hover;
+        m_texTintPressed = pressed;
+        m_texTintDisabled = disabled;
+        m_hasCustomTints = true;
+        m_targetTint = m_curTint = m_texTintNormal;
+    }
+    void SetTextureTint(State s, D3DXCOLOR c) {
+        m_hasCustomTints = true;
+        switch (s) {
+        case State::Normal:   m_texTintNormal = c;   break;
+        case State::Hover:    m_texTintHover = c;    break;
+        case State::Pressed:  m_texTintPressed = c;  break;
+        case State::Disabled: m_texTintDisabled = c; break;
+        }
     }
 
     void SetInteractable(bool on) { m_interactable = on; updateTargetsByState(); updateTextureByState(); }
@@ -131,6 +133,19 @@ private:
     std::function<void()> m_onHoverEnter;
     std::function<void()> m_onHoverExit;
     std::function<void()> m_onHoverStay;
+
+    private:
+        // 텍스처 모드용 상태별 틴트 (기본=흰색 → 텍스처 원본색 유지)
+        D3DXCOLOR  m_texTintNormal = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+        D3DXCOLOR  m_texTintHover = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+        D3DXCOLOR  m_texTintPressed = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+        D3DXCOLOR  m_texTintDisabled = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+        // 이 버튼이 커스텀 틴트를 갖는지?
+        bool       m_hasCustomTints = false;
+
+        D3DXCOLOR  m_curTint = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+        D3DXCOLOR  m_targetTint = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
     // 프레임 공유 마우스 좌표
     static inline float s_mouseX = 0.f, s_mouseY = 0.f;

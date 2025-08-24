@@ -14,6 +14,8 @@
 #include "CButtonUI.h"
 #include "CManagement.h"
 #include "CLoading_Scene.h"
+#include "CItemUI.h"
+#include "CTextEffectUI.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -245,6 +247,9 @@ void CUIManager::Update(const _float& dt)
 
 void CUIManager::CreateClearUI()
 {
+    DestroyItemUI();
+    DestroyEffectUI();
+
     if (m_pEnterUI || m_exitingEnter) return;
 
     constexpr float SLIDE_OFFSET_X = +220.f;
@@ -325,10 +330,10 @@ void CUIManager::CreateClearUI()
         pBanner->SetAccentColor(D3DCOLOR_ARGB(255, 60, 255, 60));
         pBanner->SetTextColorCycle(true, 120.f);
         pBanner->SetPadding(10, 12, 6, 6);
-        pBanner->SetFontHeight(40);
+        pBanner->SetFontHeight(32);
         pBanner->SetTextOffset(13.f, -20.f);
         pBanner->SetArrowSizePx(26.f);
-        pBanner->SetArrowOffset(-2.f, 0.f);
+        pBanner->SetArrowOffset(-2.f, 2.f);
         pBanner->SetStripeBarAnchor(CBannerUI::StripeAnchor::Bottom);
         pBanner->SetStripeYOffsetPx(3.f);
         pBanner->SetStripeBarHeightPx(18.f);
@@ -414,7 +419,7 @@ void CUIManager::CreateClearUI()
     if (auto* txt = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt->SetFontTag(L"UIFont");
+        txt->SetFontTag(L"Font_UI_Regular");
         txt->SetText(L"LIVESTREAM");
         txt->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f));
         txt->SetScale(1.f);
@@ -437,20 +442,129 @@ void CUIManager::CreateClearUI()
     if (auto* txt1 = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
-        txt1->SetFontTag(L"UIFont");
+        txt1->SetFontTag(L"Font_UI_Regular");
         txt1->SetText(L"PEACE CROP CODEC");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-        txt1->SetScale(0.4f);
+        txt1->SetScale(0.35f);
         txt1->SetCentered(false);
         txt1->SetLetterSpacing(1.f);
-        attachAndSlide(txt1, 485.f, 350.f, 17.f, 17.f);
+        attachAndSlide(txt1, 485.f, 348.f, 17.f, 17.f);
     }
 
     CreateClearTextUI();
 
 }  // 게임 클리어 UI 생성
 
+void CUIManager::CreateEffectUI(const std::wstring& str)
+{
+    if (m_pEffectUI && m_pEffectUI->Get_Dead())
+        m_pEffectUI = nullptr;
 
+    if (m_pEffectUI) return; // 중복 생성 방지
+
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    m_pEffectUI = dynamic_cast<CUIBase*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    if (!m_pEffectUI) return;
+
+    if (auto* eff = dynamic_cast<CTextEffectUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextEffectUI", sceneIdx, L"UI_Layer")))
+    {
+        const float W = 80.f, H = 64.f, PAD_X = 12.f;
+        const float SX = W + PAD_X, SY = H * 0.75f, cy = -260.f;
+        auto row = [&](int n, float y) {
+            float s = -((n - 1) * SX) * 0.5f;
+            for (int i = 0; i < n; ++i)
+                eff->AddImage(s + i * SX, y, D3DCOLOR_ARGB(255, 255, 255, 255), W, H);
+            };
+        row(4, cy - SY); row(5, cy); row(4, cy + SY);
+
+        const float textY = 300.f;
+        eff->SetTextBaseScale(2.f);
+        eff->SetupText(str, 0.f, textY);
+        eff->PlayTextOvershootMove(0.45f, 4.5f, 0.f, 50.f);
+        eff->StartRainbow(0.2f);
+
+        m_pEffectUI->Add_Child(eff);
+    }
+}
+
+void CUIManager::CreateItemUI()
+{
+
+    if (m_pItemUI) return; // 중복 방지
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    m_pItemUI = dynamic_cast<CUIBase*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    if (!m_pItemUI) return;
+
+    if (auto* effect = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"))) {
+        effect->Set_UIPosition(0.f, 200.f, 130.f, 130.f);
+        effect->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUIBack", 0, 0, 0.f, false);
+        effect->ChangeTexture(L"Com_Texture_Text");
+        effect->SetAdditive(false);
+        m_pItemUI->Add_Child(effect);
+    }
+    if (auto* weapon = dynamic_cast<CItemUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIItem", sceneIdx, L"UI_Layer")))
+    {
+        weapon->RegisterTexture(L"Com_Texture_Text", L"Prototype_Component_Texture_WeaponUI", 0, 0, 0.f, false);
+        weapon->ChangeTexture(L"Com_Texture_Text");
+        weapon->SetAdditive(false);
+
+        weapon->PlayAppear(0.f, 200.f, 40.f, 70.f, 1.f);
+
+        weapon->StartBlink(1.0f, 0.5f, true, 255, 0);
+        m_pItemUI->Add_Child(weapon);
+    }
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(0.f, 290.f, 170.f, 50.f);
+        pBlack->SetAlpha(255);
+        pBlack->SetColor(D3DCOLOR_ARGB(255, 255, 165, 0));
+        m_pItemUI->Add_Child(pBlack);
+    }
+
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(0.f, 280.f, 165.f, 25.f);
+        pBlack->SetAlpha(255);
+        m_pItemUI->Add_Child(pBlack);
+    }
+
+
+    if (auto* txt1 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt1->SetFontTag(L"Font_UI_Bold");
+        txt1->SetText(L"[MOUSE 2]");
+        txt1->Set_UIPosition(0.f, -267.f, 165.f, 25.f);
+        txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt1->SetScale(0.5f);
+        txt1->SetCentered(true);
+        m_pItemUI->Add_Child(txt1);
+    }
+
+    if (auto* txt2 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt2->SetFontTag(L"Font_UI_Bold");
+        txt2->SetText(L"FINISH");
+        txt2->Set_UIPosition(0.f, -290.F, 165.f, 25.f);
+        txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt2->SetScale(0.5f);
+        txt2->SetCentered(true);
+        m_pItemUI->Add_Child(txt2);
+    }
+}
 
 void CUIManager::DestroyEnterUI()
 {
@@ -490,6 +604,20 @@ void CUIManager::DestroyEnterUI()
     
 
     m_exitingEnter = true; 
+}
+
+void CUIManager::DestroyItemUI()
+{
+    if (!m_pItemUI) return;
+    m_pItemUI->Set_Dead(true);
+    m_pItemUI = nullptr; 
+}
+
+void CUIManager::DestroyEffectUI()
+{
+    if (!m_pEffectUI) return;
+    m_pEffectUI->Set_Dead(true);
+    m_pEffectUI = nullptr;
 }
 
 
@@ -581,6 +709,7 @@ void CUIManager::CloseShop()
 
 void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& outCard)
 {
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     if (poolIdx < 0 || poolIdx >= (int)kShopPool.size()) return;
     const ShopItemDef& def = kShopPool[poolIdx];
 
@@ -594,10 +723,10 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
             parent->Add_Child(ui);
         };
 
+
     // ── 1) 카드 버튼(프레임)
     const float CARD_W = 200.f;
     const float CARD_H = 300.f;
-    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     auto* btn = dynamic_cast<CButtonUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIButton", sceneIdx, L"UI_Layer"));
@@ -605,7 +734,6 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
 
     btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
     btn->SetSolidMode(false);
-
 
     btn->SetHoverScale(1.14f);   
     btn->SetPressScale(1.04f);  
@@ -629,13 +757,28 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     outCard.btn = btn;
     outCard.id = def.id;
 
+    // - 2) 배경화면
+    if (auto* back = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
+    {
+        const float ICON_W = 160.f, ICON_H = 300.f;
+        const float ICON_Y = cy;
+        back->RegisterTexture(def.backTag.c_str(), def.backProto.c_str(), 0, 1, 0.f, false);
+        back->ChangeTexture(def.backTag.c_str());
+        back->SetAdditive(false);
+        back->Set_UIPosition(cx, ICON_Y, ICON_W, ICON_H);
+        attach(back);
+        outCard.pBack = back;
+    }
+
 
     CTextUI* buyLabel = dynamic_cast<CTextUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
     if (buyLabel)
     {
-        buyLabel->SetFontTag(L"UIFont");
+        buyLabel->SetFontTag(L"Font_UI_Bold");
         buyLabel->SetText(L"구매");
         buyLabel->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f)); 
         buyLabel->SetScale(0.75f);
@@ -653,13 +796,23 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
 
 
         btn->SetOnHoverEnter([buyLabel]() {
-            if (buyLabel) { buyLabel->Set_Active(true); buyLabel->Set_RenderOn(true); }
+            if (buyLabel) {
+                buyLabel->Set_Active(true);
+                buyLabel->Set_RenderOn(true);
+                buyLabel->m_bHovering = true;   // ← Hover 시작
+            }
             });
 
         btn->SetOnHoverExit([buyLabel]() {
-            if (buyLabel) { buyLabel->Set_RenderOn(false); buyLabel->Set_Active(false); }
+            if (buyLabel) {
+                buyLabel->m_bHovering = false;  // ← Hover 끝
+                buyLabel->SetColor(D3DXCOLOR(0.22f, 1.f, 0.08f, 1.f)); // 기본색 복원
+                buyLabel->Set_RenderOn(false);
+                buyLabel->Set_Active(false);
+            }
             });
     }
+
 
     // ── 2) 아이콘
     if (auto* icon = dynamic_cast<CImageUI*>(
@@ -681,7 +834,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
-        t->SetFontTag(L"UIFont");
+        t->SetFontTag(L"Font_UI_Bold");
         t->SetText(def.title);
         t->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
         t->SetScale(0.6f);
@@ -727,7 +880,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
                     L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"));
             if (!line) continue;
 
-            line->SetFontTag(L"UIFont");
+            line->SetFontTag(L"Font_UI_Bold");
             line->SetText(lines[i]);
             line->SetColor(COLOR);
             line->SetScale(BASE_SCALE);
@@ -901,7 +1054,7 @@ void CUIManager::CreateClearTextUI()
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
-        txt1->SetFontTag(L"UIFont");
+        txt1->SetFontTag(L"Font_UI_ROUGH");
         txt1->SetText(L"VICTORY");
         txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
@@ -920,7 +1073,7 @@ void CUIManager::CreateClearTextUI()
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
 
-        txt2->SetFontTag(L"UIFont");
+        txt2->SetFontTag(L"Font_UI_Bold");
         txt2->SetText(L"FLOOR TIME");
         txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
@@ -949,7 +1102,7 @@ void CUIManager::CreateTimeTextUI(const std::wstring& timeStr)
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer")))
     {
-        timeTxt->SetFontTag(L"UIFont");
+        timeTxt->SetFontTag(L"Font_Time");
         timeTxt->SetText(timeStr);
         timeTxt->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
         timeTxt->SetScale(2.0f);

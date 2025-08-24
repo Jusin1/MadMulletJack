@@ -13,6 +13,8 @@
 #include "CPickingManager.h"
 #include "CUIManager.h"
 #include "CGlobal_Info.h"
+#include "CTutorialTracker.h"
+#include "CTutorialUI.h"
 
 CDev::CDev(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -105,6 +107,45 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
 void CDev::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+    // 테스트용 UI 띄우기
+    if (GetAsyncKeyState('P')) 
+    {
+        CUIManager::GetInstance()->CreateEffectUI(L"DASH FINISH"); // 상호작용 UI
+        //CUIManager::GetInstance()->CreateItemUI(); // ItemUI
+    }
+    if (GetAsyncKeyState('F')) // 삭제
+    {
+        CUIManager::GetInstance()->DestroyEffectUI();
+        //CUIManager::GetInstance()->DestroyItemUI();
+    }
+    if (GetAsyncKeyState('1') &0x8000 )
+    {
+        CTutorialTracker::Get().Notify_Move();
+    }
+    if (GetAsyncKeyState('2') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Fire();
+    }
+    if (GetAsyncKeyState('3') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Jump();
+    }
+    if (GetAsyncKeyState('4') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Dash();
+    }
+    if (GetAsyncKeyState('5') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Door();
+    }
+    if (GetAsyncKeyState('6') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Finish();
+    }
+    if (GetAsyncKeyState('7') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Soda();
+    }
 }
 
 void CDev::Render_Scene()
@@ -190,6 +231,11 @@ HRESULT CDev::Ready_UI_Layer(const _tchar *pLayerTag)
 {
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_DEV, pLayerTag)))
         return E_FAIL;
+    if (CTutorialTracker::Get().HasPending()) {
+        auto* ui = dynamic_cast<CTutorialUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_TutorialUI", SCENE_TUTORIAL, L"UI_Layer"));
+    }
 
     return S_OK;
 }
@@ -199,8 +245,6 @@ HRESULT CDev::Ready_UI_Layer(const _tchar *pLayerTag)
 void CDev::SetData(_uint _iSceneIndex)
 {
     CDataManager::GetInstance()->Clear();
-    CGameDataManager::GetInstance()->AllClear();
-
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");

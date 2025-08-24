@@ -153,14 +153,37 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev) = CGraphicDev::GetInstance()->Get_GraphicDev();
 	(*ppGraphicDev)->AddRef();
 
-	// 폰트 추가
-	if(FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"바탕", 20, 15, FW_HEAVY)))
+
+	//폰트 추가
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/DS-DIGIB.ttf");
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/VCR_OSD_MONO_1 - Japanese Ver s2.ttf");
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Righteous-Regular.ttf");
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Perfect DOS VGA 437 - Japanese ver.ttf");
+
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_Time",       
+		L"DS-Digital",       
+		20, 48, FW_THIN)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Jinji", L"궁서", 20, 10, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_UI_Regular",
+		L"VCR OSD Mono",
+		14, 40, FW_BOLD)))
 		return E_FAIL;
 
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_UI_Bold",
+		L"Righteous",
+		14, 40, FW_BOLD)))
+		return E_FAIL;
 
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,
+		L"Font_UI_ROUGH", // 약간 두드러진 폰트
+		L"Perfect DOS VGA 437",
+		14, 40, FW_BOLD)))
+		return E_FAIL;
 
 	CFontMgr::GetInstance()->Ready_Font(
 		m_pGraphicDev,

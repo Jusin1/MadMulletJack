@@ -33,6 +33,9 @@ public:
     void UseGreenFramePreset(float x, float y, float w, float h,
         float borderOrThickness = 24.f, bool useStroke = true);
 
+    void UseRedFramePreset(float x, float y, float w, float h,
+        float borderOrThickness = 24.f, bool useStroke = true);
+
     // È­¸é ÇÈ¼¿ ½º³À
     void SetPixelSnap(bool b) { m_pixelSnap = b; }
 

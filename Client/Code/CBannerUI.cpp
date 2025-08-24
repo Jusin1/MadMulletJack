@@ -119,8 +119,7 @@ void CBannerUI::EnsureFont()
 	D3DXFONT_DESC fd{};
 	fd.Height = m_fontHeight;
 	fd.Weight = FW_BOLD;
-	wcscpy_s(fd.FaceName, L"Consolas");
-
+	wcscpy_s(fd.FaceName, L"Font_UI_Bold");
 	D3DXCreateFontIndirect(m_pGraphicDev, &fd, &m_pFont);
 }
 

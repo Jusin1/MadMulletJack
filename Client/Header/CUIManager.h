@@ -16,18 +16,21 @@ class CUIManager :
     public CBase
 {
 #pragma region 카드
-    enum class UpgradeId { SlowMo, UZI, Sniper /* 필요 시 추가 */ };
+    enum class UpgradeId { SlowMo, UZI, Sniper,  };
 
     struct ShopItemDef {
         UpgradeId           id;
         std::wstring        title;          // 카드 상단/중앙 제목
         std::wstring        desc;           // 설명(여러 줄 \n 가능)
+        std::wstring        backTag;        // 배경화면 텍스쳐 태그
+        std::wstring        backProto;      // 배경화면 프로토타입
         std::wstring        artTag;         // 아이콘/아트 텍스처 태그
         std::wstring        artProto;       // 아이콘/아트 프로토타입
     };
 
     struct ShopCardUI {
         CButtonUI* btn = nullptr;  // 카드 전체 클릭 영역(프레임 텍스처)
+        CImageUI* pBack = nullptr;
         CImageUI* icon = nullptr;  // 가운데 이미지
         CTextUI* title = nullptr;  // 제목
         CTextUI* desc = nullptr;  // 설명
@@ -38,12 +41,15 @@ class CUIManager :
         UpgradeId id{};
     };
 
-    inline static const std::vector<ShopItemDef> kShopPool = {
+    inline static const std::vector<ShopItemDef> kShopPool = { // 총 9개 카드가 필요
     { UpgradeId::SlowMo,     L"슬로우 옵션", L"슬로우 모션을\n활성화합니다.",
+      L"Com_Tex_BackGround", L"NONE",
       L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_SlowMo_Art" },
     { UpgradeId::UZI, L"UZI",   L"우지 총입니다.",
+    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
       L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art"},
     { UpgradeId::Sniper,     L"저격총",     L"저격총입니다.",
+    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
       L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art" },
     };
 
@@ -68,7 +74,13 @@ public:
     void CreatePhoneUI();
     void CreatePhoneScreen();
 
+    // 작은 이펙트 생성
+    void CreateEffectUI(const std::wstring& str);
+    void CreateItemUI();
+
     void DestroyEnterUI();
+    void DestroyItemUI();
+    void DestroyEffectUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
     void Update(const _float& dt);
@@ -147,6 +159,8 @@ private:
 private:
     CUIBase* m_pEnterUI = nullptr;
     CUIBase* m_pMonsterDieEffect = nullptr;
+    CUIBase* m_pItemUI = nullptr;
+    CUIBase* m_pEffectUI = nullptr;
 
     // Clear text
     CTextUI* m_pVictoryText = nullptr;
@@ -183,7 +197,7 @@ private:
     // 딜레이 후 PhoneScreen 생성 타이머
     bool  m_createPhoneScreenPending = false;
     float m_createPhoneScreenTimer = 0.f;
-    float m_createPhoneScreenDelay = 0.2f; // ← 1초
+    float m_createPhoneScreenDelay = 0.2f; 
 
     std::vector<SlideTask> m_slideTasks;
     std::vector<ScaleTask> m_scaleTasks;

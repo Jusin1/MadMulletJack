@@ -25,6 +25,9 @@ public:
     void		Set_UIPos(_vec3 _vPos, _float _offsetX, _float _offesetY); // pos를 기준으로 offset을 줘서 pos를 셋팅
     void Set_New_TransInfo(_float _fSpeed, _float _fRotSpeed); // 현재 위치 + new speed, new rotSpeed 지정
     void Set_ActiveRecursive(bool bActive);
+public:
+    // 부모→자식 전체를 Dead
+    void Set_DeadRecursive(bool bDead = true);
 
 public:
     void Set_ObjTag(const _tchar* pTag) { m_pObjTag = pTag; } // 태그 세팅

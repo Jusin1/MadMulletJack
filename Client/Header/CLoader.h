@@ -16,6 +16,13 @@ public:
 	SCENE		Get_NextSceneID() const { return m_eNextScene; }
 	_bool			Get_Finish() const { return m_isFinished; }
 	const _tchar* Get_String() const { return m_szLoading; }
+
+public:
+	float Get_Progress() const;
+	void  PhaseBegin(float base, float weight, const wchar_t* name);
+	void  PhaseStep(float local01, const wchar_t* msg = nullptr); 
+	void  PhaseDone(const wchar_t* msgDone = L"로딩이 완료되었습니다.");
+
 public:
 	HRESULT			Ready_Loading(SCENE eNextScene); // 로딩 준비
 	HRESULT			Loading_UI();
@@ -38,6 +45,12 @@ private:
 private:
 	HANDLE					m_hThread = 0;
 	CRITICAL_SECTION		m_Crt;
+
+private:
+	// 진행률 상태
+	float m_progress = 0.f;      
+	float m_phaseBase = 0.f;        
+	float m_phaseWeight = 1.f;       
 
 public:
 	static CLoader* Create(LPDIRECT3DDEVICE9 pGrahpicDev, SCENE eNextScene);

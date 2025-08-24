@@ -17,6 +17,8 @@ HRESULT CImageUI::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg))) return E_FAIL;
     ChangeTexture(TEXT("Com_Texture_Image"));
+
+
     return S_OK;
 }
 

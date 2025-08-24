@@ -79,7 +79,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
         CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR)
     {
         Mouse_Move();
-        Mouse_Fix();
+        //Mouse_Fix();
     }
 
 }

@@ -125,10 +125,10 @@ void CTalkUI::Render_GameObject()
 
 	_vec2 pos = { m_fFrameX + m_vTextOffset.x, m_fFrameY + m_vTextOffset.y };
 	if (m_fTextScale != 1.f)
-		CFontMgr::GetInstance()->Render_Font_Scaled(L"TalkFont", m_DisplayText.c_str(), &pos,
+		CFontMgr::GetInstance()->Render_Font_Scaled(L"Font_UI_Bold", m_DisplayText.c_str(), &pos,
 			D3DXCOLOR(1, 1, 1, 1), m_fTextScale);
 	else
-		CFontMgr::GetInstance()->Render_Font(L"TalkFont", m_DisplayText.c_str(), &pos,
+		CFontMgr::GetInstance()->Render_Font(L"Font_UI_Bold", m_DisplayText.c_str(), &pos,
 			D3DXCOLOR(1, 1, 1, 1));
 
 	if (sb) { sb->Apply(); sb->Release(); }
@@ -160,10 +160,12 @@ void CTalkUI::NextDialogue()
 
 	const int last = size - 1;
 
+	// 아직 마지막 대사 전이면
 	if (m_iCurrentIndex < last)
 	{
 		++m_iCurrentIndex;
 		m_CurrentText = m_vecDialogues[m_iCurrentIndex];
+
 		if (m_iCurrentIndex == last) {
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
 		}
@@ -171,10 +173,14 @@ void CTalkUI::NextDialogue()
 			CUIManager::GetInstance()->SliderPhoneUI();
 			m_pLisa->SetState(CLisaUI::AnimState::WINK);
 		}
+
 		m_fAccTime = 0.f;
 		m_bTypingDone = false;
 		return;
 	}
+
+	if (m_iCurrentIndex == last)
+		return;
 
 	if (m_pFrame) m_pFrame->Set_Active(false);
 	Set_Active(false);
