@@ -38,6 +38,8 @@ public:
     // 특정 오브젝트가 그룹 내 오브젝트와 충돌하는지 검사하고 충돌한 객체 전해줌
     _bool CollisionGroupWho(COLLISION_GROUP eGroup, class CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _vec3* pOutDistance, class CGameObject*& pWho);
 
+    _bool CollisionGroupPush(COLLISION_GROUP eGroup, CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _float fOffset = 1.f);
+
 private:
     // 각 그룹 별 오브젝트 리스트
     list<CGameObject*> m_GameObjects[COLLISION_END];
