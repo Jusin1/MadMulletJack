@@ -32,6 +32,8 @@ HRESULT CMan_HpBarUI::Initialize(void* pArg)
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
+	Set_UISizeAndPos(96.f, 94.5f,0.f,0.f);
+
 	//timer 할래말래
 	
 	return S_OK;
@@ -160,23 +162,31 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:
 	case SCENE_STAGE_3:
-		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 430.f, WINCY * 0.5f + 160.f);
+		
+		m_vLocalOffset = { 22.f, -110.f,0.f };
+
 		Set_New_TransInfo(50.f, 7.f);
 		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
 		m_fRotSum += D3DXToRadian(7.f) * 1;
-
-		//m_tMoveInfo.fRange = 8.f;
 
 		break;
 
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
 	case SCENE_CAR:
-		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 435.f, WINCY * 0.5f + 160.f);
+		m_vLocalOffset = { 22.f, -110.f,0.f };
+
+		Set_New_TransInfo(50.f, 7.f);
+		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+		m_fRotSum += D3DXToRadian(7.f) * 1;
 		break;
 
 	case SCENE_END:
-		Set_UISizeAndPos(96.f, 94.5f, WINCX * 0.5f - 435.f, WINCY * 0.5f + 160.f);
+		m_vLocalOffset = { 22.f, -110.f,0.f };
+
+		Set_New_TransInfo(50.f, 7.f);
+		m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
+		m_fRotSum += D3DXToRadian(7.f) * 1;
 		break;
 
 	default:
