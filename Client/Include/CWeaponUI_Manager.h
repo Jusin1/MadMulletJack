@@ -3,12 +3,12 @@
 
 // player의 wepaon 상태에 따라 알맞게 객체 생성
 
-class CUIManager_Weapon : public CUI
+class CWeaponUI_Manager : public CUI
 {
 private:
-	explicit CUIManager_Weapon(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CUIManager_Weapon(const CUIManager_Weapon& rhs);
-	virtual ~CUIManager_Weapon();
+	explicit CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CWeaponUI_Manager(const CWeaponUI_Manager& rhs);
+	virtual ~CWeaponUI_Manager();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -35,7 +35,7 @@ private:
 	WEAPON2 m_eWeapon2;
 
 public:
-	static  CUIManager_Weapon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static  CWeaponUI_Manager* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

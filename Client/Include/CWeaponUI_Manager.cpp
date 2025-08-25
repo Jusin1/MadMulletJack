@@ -1,26 +1,26 @@
 #include "pch.h"
-#include "CUIManager_Weapon.h"
+#include "CWeaponUI_Manager.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
 #include "CObjectManager.h"
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
 
-CUIManager_Weapon::CUIManager_Weapon(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)
 {
 }
 
-CUIManager_Weapon::CUIManager_Weapon(const CUIManager_Weapon& rhs)
+CWeaponUI_Manager::CWeaponUI_Manager(const CWeaponUI_Manager& rhs)
 	: CUI(rhs), m_eWeapon(rhs.m_eWeapon), m_eWeapon2(rhs.m_eWeapon2)
 {
 }
 
-CUIManager_Weapon::~CUIManager_Weapon()
+CWeaponUI_Manager::~CWeaponUI_Manager()
 {
 }
 
-HRESULT	CUIManager_Weapon::Ready_GameObject()
+HRESULT	CWeaponUI_Manager::Ready_GameObject()
 {
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
@@ -28,7 +28,7 @@ HRESULT	CUIManager_Weapon::Ready_GameObject()
 	return S_OK;
 }
 
-HRESULT CUIManager_Weapon::Initialize(void* pArg)
+HRESULT CWeaponUI_Manager::Initialize(void* pArg)
 {
 	// 상위 객체들 initial(set compnent 까지 해줌)
 	if (FAILED(__super::Initialize(pArg)))
@@ -45,14 +45,14 @@ HRESULT CUIManager_Weapon::Initialize(void* pArg)
 	return S_OK;
 }
 
-_int CUIManager_Weapon::Update_GameObject(const _float& fTimeDelta)
+_int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT();
 }
 
-void CUIManager_Weapon::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 
@@ -79,12 +79,12 @@ void CUIManager_Weapon::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 }
 
-void CUIManager_Weapon::Render_GameObject()
+void CWeaponUI_Manager::Render_GameObject()
 {
 	CUIBase::Render_GameObject();
 }
 
-void CUIManager_Weapon::Weapon_Change()
+void CWeaponUI_Manager::Weapon_Change()
 {
 	// 이전 waepon은 active false
 	switch (m_eWeapon)
@@ -136,7 +136,7 @@ void CUIManager_Weapon::Weapon_Change()
 	}
 }
 
-void CUIManager_Weapon::Weapon2_On()
+void CWeaponUI_Manager::Weapon2_On()
 {
 	// weapon update
 	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
@@ -157,7 +157,7 @@ void CUIManager_Weapon::Weapon2_On()
 	
 }
 
-void CUIManager_Weapon::Weapon2_Off()
+void CWeaponUI_Manager::Weapon2_Off()
 {
 	// weapon update
 	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
@@ -177,12 +177,12 @@ void CUIManager_Weapon::Weapon2_Off()
 	}
 }
 
-void CUIManager_Weapon::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
+void CWeaponUI_Manager::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
 {
 	Find_Child_ByTag(pTag)->Set_Active(_bActive);
 }
 
-HRESULT CUIManager_Weapon::Set_WeaponUI()
+HRESULT CWeaponUI_Manager::Set_WeaponUI()
 {
 	_uint iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
@@ -198,7 +198,7 @@ HRESULT CUIManager_Weapon::Set_WeaponUI()
 	return S_OK;
 }
 
-HRESULT CUIManager_Weapon::Set_Weapon2UI()
+HRESULT CWeaponUI_Manager::Set_Weapon2UI()
 {
 	_uint iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
@@ -214,35 +214,35 @@ HRESULT CUIManager_Weapon::Set_Weapon2UI()
 	return S_OK;
 }
 
-CUIManager_Weapon* CUIManager_Weapon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponUI_Manager* CWeaponUI_Manager::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CUIManager_Weapon* pHpBar = new CUIManager_Weapon(pGraphicDev);
+	CWeaponUI_Manager* pHpBar = new CWeaponUI_Manager(pGraphicDev);
 
 	if (FAILED(pHpBar->Ready_GameObject()))
 	{
 		Safe_Release(pHpBar);
-		MSG_BOX("CUIManager_Weapon Create Failed");
+		MSG_BOX("CWeaponUI_Manager Create Failed");
 		return nullptr;
 	}
 
 	return pHpBar;
 }
 
-CGameObject* CUIManager_Weapon::Clone(void* pArg)
+CGameObject* CWeaponUI_Manager::Clone(void* pArg)
 {
-	CUIManager_Weapon* pInstance = new CUIManager_Weapon(*this);
+	CWeaponUI_Manager* pInstance = new CWeaponUI_Manager(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("CUIManager_Weapon Clone Failed");
+		MSG_BOX("CWeaponUI_Manager Clone Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CUIManager_Weapon::Free()
+void CWeaponUI_Manager::Free()
 {
 	__super::Free();
 }
