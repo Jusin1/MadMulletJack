@@ -23,7 +23,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
-	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false)
+	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f)
 {
 }
 
@@ -32,7 +32,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMoveKey(rhs.m_eMoveKey),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
-	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY)
+	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime)
 {
 }
 
@@ -72,7 +72,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	GetTransform()->Set_Scale(1.f, 2.f, 1.f);
 
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
-	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
+	m_fNormalSpeed = 8.f; // normal speed 값 -> 이값은 고정
 
 	// state 변경 해줌
 	Change_State(OPENING);
@@ -563,9 +563,16 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	// 상태 전환 키
 	if (m_bIsKeyInput) {
 		//DIK_LSHIFT
-		if (KEY_BUTTON_DOWN(DIK_LSHIFT))
+		if (KEY_BUTTON_HOLD(DIK_LSHIFT) && m_tPlayerInfo.ePlayerMove != PMV_DASH && m_fDashCoolTime == 0)
 		{
-			Change_Move(PMV_DASH);
+			if (m_tPlayerInfo.ePlayerState == JUMP)
+			{
+				Change_Move(PMV_JUMPDASH);
+				Change_State(IDLE);
+			}
+				
+			else
+				Change_Move(PMV_DASH);
 		}
 
 		//DIK_SPACE
@@ -574,7 +581,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			Change_State(JUMP);
 		}
 
-		if (IS_RBUTTON_DOWN) // 우클릭
+		if (IS_RBUTTON_HOLD && m_tPlayerInfo.ePlayerMove != PMV_DASHATT && m_fDashCoolTime == 0) // 우클릭
 		{
 			Change_Move(PMV_DASHATT);
 		}
@@ -607,8 +614,6 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
 		Change_State(DOPING);
-
-
 }
 
 void CPlayer::Set_State_Normal()
@@ -621,8 +626,16 @@ void CPlayer::CountHp(const _float& fTimeDelta)
 {
 	Add_Hp(-1.f * fTimeDelta);
 
+	// dashcooltime 이 0초가 아니라면 cooltime 깎아줌
+	if (m_fDashCoolTime != 0)
+	{
+		m_fDashCoolTime -= fTimeDelta;
+		if (m_fDashCoolTime <= 0.f)
+			m_fDashCoolTime = 0.f;
+	}
+		
+	// debug
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
-
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
 
@@ -652,14 +665,30 @@ void CPlayer::Move(const _float& fTimeDelta)
 			Change_Move(PMV_SLIDE);
 			return;
 		}
+		// 만약 좌클릭을 땠따면
+		if (IS_RBUTTON_UP)
+		{
+			// move state : normal
+			Set_State_Normal();
+			return;
+		}
 
-		//if (Set_Collider_With_SpecialTile())
-			//return;
-
-	case PMV_DASH:
-	{
 		m_bIsAttack = true;
 		m_eMoveKey = MVKEY_STOP;
+		Move_Dash(fTimeDelta);
+			
+	case PMV_DASH:
+	{
+		// 만약 L-shift 을 땠따면
+		if (KEY_BUTTON_UP(DIK_LSHIFT))
+		{
+			// move state : normal
+			Set_State_Normal();
+			return;
+		}
+
+		m_bIsAttack = true;
+		m_eMoveKey = MVKEY_NON;
 		Move_Dash(fTimeDelta);
 	}
 		break;
@@ -680,6 +709,21 @@ void CPlayer::Move(const _float& fTimeDelta)
 	}
 		break;
 
+	case PMV_JUMPDASH:
+	{
+		// 만약 L-shift 을 땠따면
+		if (KEY_BUTTON_UP(DIK_LSHIFT))
+		{
+			// move state : normal
+			Set_State_Normal();
+			return;
+		}
+
+		m_eMoveKey = MVKEY_NON;
+		Move_JumpDash(fTimeDelta);
+	}
+		break;
+
 	default:
 		break;
 	}
@@ -691,11 +735,11 @@ void CPlayer::Move_Normal(const _float& fTimeDelta)
 
 void CPlayer::Move_Dash(const _float& fTimeDelta)
 {
-	
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
-	if (m_pTransformCom->GetTransformInfo().fSpeed <= 1.f)
+	if (m_pTransformCom->GetTransformInfo().fSpeed <= m_fNormalSpeed)
 	{
 		Set_State_Normal();
+		m_fDashCoolTime = 0.5f;
 		return;
 	}
 
@@ -706,7 +750,7 @@ void CPlayer::Move_Dash(const _float& fTimeDelta)
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 9.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 10.f;
 }
 
 void CPlayer::Move_Slide(const _float& fTimeDelta)
@@ -718,7 +762,7 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 		return;
 	}
 
-	// 만약 jump이면 normal로 전환
+	// 만약 jump이면 dash로 전환
 	if (m_tPlayerInfo.ePlayerState == JUMP)
 	{
 		Change_Move(PMV_DASH);
@@ -750,6 +794,11 @@ void CPlayer::Move_Wall(const _float& fTimeDelta)
 	}
 }
 
+void CPlayer::Move_JumpDash(const _float& fTimeDelta)
+{
+	m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY + 2.f);
+}
+
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 {
 	// 바뀔때 y값 저장해옴 m_bYFix의 값에 따라 쓸래말래 결정
@@ -765,10 +814,6 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	case PMV_DASHATT:
 	case PMV_DASH:
-		// 점프면 y 고정
-		if (m_tPlayerInfo.ePlayerState == JUMP)
-			m_bIsFixY = true;
-
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
 	break;
 
@@ -779,6 +824,12 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	case PMV_WALL:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 		m_bIsFixY = true;
+		break;
+
+	case PMV_JUMPDASH:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
+		m_bIsFixY = true;
+		break;
 
 	break;
 	}

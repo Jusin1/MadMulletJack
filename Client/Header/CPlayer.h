@@ -100,6 +100,7 @@ private:
 	void Move_Dash(const _float& fTimeDelta);
 	void Move_Slide(const _float& fTimeDelta);
 	void Move_Wall(const _float& fTimeDelta);
+	void Move_JumpDash(const _float& fTimeDelta);
 
 	// getter setter func
 public:
@@ -187,6 +188,7 @@ private:
 	_float m_fFixY; // °íÁ¤ y°ª
 	
 	_float m_fNormalSpeed;
+	_float m_fDashCoolTime;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;
