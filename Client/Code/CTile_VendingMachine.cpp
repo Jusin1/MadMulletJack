@@ -8,6 +8,7 @@
 #include "CColider_Sphere.h"
 #include "CTexture.h"
 #include "CTile_VendingMachine.h"
+#include "CGlobal_Info.h"
 
 CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
@@ -90,7 +91,14 @@ void CTile_VendingMachine::LateUpdate_GameObject(const _float &fTimeDelta)
 		// 테스트용 추후에 몬스터로
 		if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 		{
-			m_bDestroyed = true;
+			// player가 kick 하거나 총으로 쏘면
+			if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
+			{
+				// 음료수를 생성
+
+				// destory
+				m_bDestroyed = true;
+			}
 		}
 	}
 

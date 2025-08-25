@@ -88,8 +88,8 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // Doping
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 7;
-    texInfo.m_fSpeed = 3.f;
-    texInfo.m_bLoop = false;
+    texInfo.m_fSpeed = 9.f;
+    texInfo.m_bLoop = true;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Doping", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLDoping", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Doping"), m_pTextureCom });
@@ -221,12 +221,12 @@ HRESULT CPlayer_HandL::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Doping"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(220.f, 220.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
+        Set_UISizeAndPos(330.f, 330.f, WINCX * 0.5f, WINCY * 0.5f + 400.f);
 
         //// info∏¶ ªı∑Œ ∏¬√Á¡‹
-        Set_New_TransInfo(140.f, 0.f);
+        Set_New_TransInfo(200.f, 0.f);
 
-        m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
+        m_tMoveInfo = { MV_UP, true, 100.f, 0.f };
     }
     break;
 
