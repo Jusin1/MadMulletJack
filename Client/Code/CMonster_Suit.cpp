@@ -148,6 +148,14 @@ void CMonster_Suit::Set_Collider()
             SetState(HIT_ELECTRIC);
             m_pColiderCom->Set_Active(false);
         }
+
+        if (CColiderManager::GetInstance()->CollisionGroup(
+            CColiderManager::COLLISION_DOOR, this,
+            CColiderManager::COLLISION_SPHERE, nullptr))
+        {
+            SetState(HIT_DOOR);
+            m_pColiderCom->Set_Active(false);
+        }
     }
     
 
@@ -268,8 +276,9 @@ HRESULT CMonster_Suit::Texture_Clone()
         { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 10.f, true },
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 10.f, true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 10.f, true },
-        { L"Com_Texture_Hit_Eletric",     L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC",   0, 15, 10.f, false },
-        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,10.f,false}
+        { L"Com_Texture_Hit_Eletric",     L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC",   0, 15, 7.f, false },
+        { L"Com_Texture_Hit_Door",     L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",   0, 14, 7.f, false },
+        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,6.f,false}
     };
 
     for (auto& a : anims)
@@ -308,6 +317,7 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case SHOT:  tag = L"Com_Texture_Shot";  break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
+    case HIT_DOOR: tag = L"Com_Texture_Hit_Door"; break;
 
     case HIT:
         if (m_bKillAfterHit) {
@@ -381,6 +391,9 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case SHOT:
+        if (m_pTextureCom->Is_AnimFinished()) {
+            SetState(IDLE);
+        }
         break;
 
     case HIT:
@@ -391,11 +404,13 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case HIT_ELECTRIC:
-        
         if (m_pTextureCom->Is_AnimFinished()) {
             m_bDead = true;
         }
         break;
+    case HIT_DOOR:
+        if (m_pTextureCom->Is_AnimFinished())
+            m_bDead = true;
     case KICKED:
         if (m_pTextureCom->Is_AnimFinished()) { // 애니메이션 끝나면
             if (m_bKillAfterHit) m_bDead = true;

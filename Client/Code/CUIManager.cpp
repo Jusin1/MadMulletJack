@@ -595,11 +595,11 @@ void CUIManager::DestroyEnterUI()
         }
     }  
 
-    
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
     // ¾À ±³Ã¼ (·Îµù¾ÀÀ¸·Î)
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_TUTORIAL));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
     ClearAllUI();
     
 

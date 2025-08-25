@@ -111,10 +111,6 @@ void CTutorial::LateUpdate_Scene(const _float& fTimeDelta)
     {
         CTutorialTracker::Get().Notify_Door();
     }
-    if (GetAsyncKeyState('6') & 0x8000)
-    {
-        CTutorialTracker::Get().Notify_Finish();
-    }
     if (GetAsyncKeyState('7') & 0x8000)
     {
         CTutorialTracker::Get().Notify_Soda();

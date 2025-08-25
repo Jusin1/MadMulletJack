@@ -301,6 +301,11 @@ HRESULT CLoader::Loading_Dev()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_environ/electric/SM_HIT_ELEC%03d.png", 15))))
 		return E_FAIL;
 
+	// DOOR - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_environ/wall/SM_HIT_WALL%03d.png", 14))))
+		return E_FAIL;
+
 	// DEATH
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/fb_death%02d.png", 21))))

@@ -2,7 +2,7 @@
 
 // 진행 단계
 enum class TStep : int {
-    Move = 0, Fire, Jump, Dash, Door, Finish, Soda,
+    Move = 0, Fire, Jump, Dash, Finish, Door, Soda,
     Count
 };
 
