@@ -295,10 +295,16 @@ HRESULT CLoader::Loading_Dev()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_gun/ball/SM_HIT_BALL%03d.png", 23))))
 		return E_FAIL;
 
+	// ELECTRIC - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_environ/electric/SM_HIT_ELEC%03d.png", 15))))
+		return E_FAIL;
+
 	// DEATH
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_DEATH1",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/fb_death%02d.png", 21))))
 		return E_FAIL;
+
 
 	// Blocking -> Kicked
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Blocking",
@@ -964,9 +970,11 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/PhoneUI/INT-sheet_%03d.png", 4))))
 		return E_FAIL;
 
+#pragma region 상점관련 UI들
+
 	// ShopFrame UI
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_FrameUI",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/HUD/HUD UPGRADES BUTTON.png", 1))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/UPGRADE BUTTON.png", 1))))
 		return E_FAIL;
 
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_PhoneShop_BoardFrameUI",
@@ -985,6 +993,17 @@ HRESULT CLoader::Loading_UI()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Back_Slow",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WEAPON 1 BACK.png", 1))))
 		return E_FAIL;
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/HERO BACK ROBOT.png", 1))))
+		return E_FAIL;
+
+
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Bullet_Slow_Bullet",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/SLOW BULLETS.png", 1))))
+		return E_FAIL;
+
+#pragma endregion 상점관련 UI들
 
 	
 #pragma endregion 게임 진입 UI

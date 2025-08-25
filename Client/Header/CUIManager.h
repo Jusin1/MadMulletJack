@@ -18,39 +18,80 @@ class CUIManager :
 #pragma region 카드
     enum class UpgradeId { SlowMo, UZI, Sniper,  };
 
+    struct FrameInfo {
+        std::wstring texTag;
+        std::wstring protoTag;
+        float w = 200.f;
+        float h = 300.f;
+        float xOffset = 0.f;
+        float yOffset = 0.f;
+    };
+
     struct ShopItemDef {
         UpgradeId           id;
-        std::wstring        title;          // 카드 상단/중앙 제목
-        std::wstring        desc;           // 설명(여러 줄 \n 가능)
-        std::wstring        backTag;        // 배경화면 텍스쳐 태그
-        std::wstring        backProto;      // 배경화면 프로토타입
-        std::wstring        artTag;         // 아이콘/아트 텍스처 태그
-        std::wstring        artProto;       // 아이콘/아트 프로토타입
+        std::wstring        title;
+        std::wstring        desc;
+        std::wstring        backTag;
+        std::wstring        backProto;
+        std::wstring        artTag;
+        std::wstring        artProto;
+
+
+        // ── 아이콘 옵션 ──
+        float               iconW = 140.f;
+        float               iconH = 140.f;
+        float               iconYOffset = -30.f;
+
+        // ── 서브배경 옵션 ──
+        D3DXCOLOR           subBackColor = D3DXCOLOR(0, 0, 0, 0);
+        float               subBackW = 0.f;     // 서브배경 가로 크기
+        float               subBackH = 0.f;     // 서브배경 세로 크기
+        float               subBackXOffset = 0.f; // X 오프셋
+        float               subBackYOffset = 0.f; // Y 오프셋
+
+        // 프레임옵션
+        std::vector<FrameInfo> frames;
     };
 
     struct ShopCardUI {
-        CButtonUI* btn = nullptr;  // 카드 전체 클릭 영역(프레임 텍스처)
         CImageUI* pBack = nullptr;
-        CImageUI* icon = nullptr;  // 가운데 이미지
-        CTextUI* title = nullptr;  // 제목
+        std::vector<CImageUI*> frames;   // 프레임 이미지들 (0~2개)
+        CButtonUI* btn = nullptr;   // 카드 전체 클릭 영역
+        CImageUI* icon = nullptr;  // 가운데 아이콘
+        CTextUI* title = nullptr; // 제목
         CTextUI* desc = nullptr;  // 설명
-        CTextUI* price = nullptr;  // 가격 텍스트
-        CImageUI* soldTag = nullptr;  // "구매" 배너(옵션)
-        bool bought = false;
-        int  priceValue = 0;
-        UpgradeId id{};
+        CImageUI* subImage = nullptr;
+        CBlackGackGround* subBack = nullptr; // 서브 배경 (색상만)
+        CImageUI* soldTag = nullptr; // "구매" 태그
+        bool                bought = false; // 구매 여부
+        UpgradeId           id{};
     };
 
     inline static const std::vector<ShopItemDef> kShopPool = { // 총 9개 카드가 필요
-    { UpgradeId::SlowMo,     L"슬로우 옵션", L"슬로우 모션을\n활성화합니다.",
-      L"Com_Tex_BackGround", L"NONE",
-      L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_SlowMo_Art" },
-    { UpgradeId::UZI, L"UZI",   L"우지 총입니다.",
-    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
-      L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art"},
-    { UpgradeId::Sniper,     L"저격총",     L"저격총입니다.",
-    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
-      L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art" },
+            { UpgradeId::SlowMo, L"느린 총알 확률", L"적의 총알을 늦출 확률 : 10%",
+      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+      L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_Monster_Bullet_Slow_Bullet",
+      100.f, 30.f, -30.f,
+      D3DXCOLOR(0.6f, 0.9f, 1.0f, 0.5f), 160.f, 100.f, 0.f, 0.f,
+      { { L"Com_Frame1", L"Prototype_Component_Texture_PhoneShop_FrameUI", 158.f, 100.f, 0.f, 0.f },
+        {L"Com_Frame2", L"Prototype_Component_Texture_PhoneShop_FrameUI", 158.f, 100.f, 0.f, 100.f}},
+    },
+
+    { UpgradeId::UZI, L"UZI", L"우지 총입니다.",
+      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
+      L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art",
+      120.f, 120.f, -20.f,
+      D3DXCOLOR(0.3f,0.1f,0.1f,0.6f), 200.f, 280.f, 10.f, 5.f,
+    },
+
+    { UpgradeId::Sniper, L"저격총", L"저격총입니다.",
+      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
+      L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art",
+      160.f, 160.f, -40.f,
+      D3DXCOLOR(0.2f,0.2f,0.2f,0.6f), 180.f, 260.f, -5.f, -10.f,
+      {   // 프레임 1개
+          { L"Com_FrameSniper", L"Prototype_Component_Texture_Frame_Sniper", 200.f, 300.f, 0.f, 0.f }},
+    }
     };
 
     static const ShopItemDef* FindShopDef(UpgradeId id) {
@@ -77,10 +118,12 @@ public:
     // 작은 이펙트 생성
     void CreateEffectUI(const std::wstring& str);
     void CreateItemUI();
+    void CreateReloadUI();
 
     void DestroyEnterUI();
     void DestroyItemUI();
     void DestroyEffectUI();
+    void DestroyReloadUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
     void Update(const _float& dt);
@@ -158,9 +201,10 @@ private:
 
 private:
     CUIBase* m_pEnterUI = nullptr;
-    CUIBase* m_pMonsterDieEffect = nullptr;
+    CUIBase* m_pFlooroUI = nullptr;
     CUIBase* m_pItemUI = nullptr;
     CUIBase* m_pEffectUI = nullptr;
+    CUIBase* m_pReloadUI = nullptr;
 
     // Clear text
     CTextUI* m_pVictoryText = nullptr;
