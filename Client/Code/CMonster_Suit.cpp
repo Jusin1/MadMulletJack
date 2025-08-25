@@ -145,8 +145,9 @@ void CMonster_Suit::Set_Collider()
             CColiderManager::COLLISION_TILE_ELECTRIC, this,
             CColiderManager::COLLISION_SPHERE, nullptr))
         {
-            SetState(HIT_ELECTRIC);
-            m_pColiderCom->Set_Active(false);
+            if  (m_eMonState!= HIT_ELECTRIC) { // 이미 전기 상태면 또 안 바꾸기
+                SetState(HIT_ELECTRIC);
+            }
         }
 
         if (CColiderManager::GetInstance()->CollisionGroup(

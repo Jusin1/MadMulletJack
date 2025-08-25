@@ -16,86 +16,66 @@ class CUIManager :
     public CBase
 {
 #pragma region 카드
-    enum class UpgradeId { SlowMo, UZI, Sniper,  };
-
-    struct FrameInfo {
-        std::wstring texTag;
-        std::wstring protoTag;
-        float w = 200.f;
-        float h = 300.f;
-        float xOffset = 0.f;
-        float yOffset = 0.f;
-    };
+    enum class UpgradeId { SlowMo, FIRE, SHOTGUN, HEADSHOT,};
 
     struct ShopItemDef {
         UpgradeId           id;
-        std::wstring        title;
-        std::wstring        desc;
         std::wstring        backTag;
         std::wstring        backProto;
         std::wstring        artTag;
         std::wstring        artProto;
 
-
         // ── 아이콘 옵션 ──
         float               iconW = 140.f;
-        float               iconH = 140.f;
+        float               iconH = 50.f;
         float               iconYOffset = -30.f;
-
-        // ── 서브배경 옵션 ──
-        D3DXCOLOR           subBackColor = D3DXCOLOR(0, 0, 0, 0);
-        float               subBackW = 0.f;     // 서브배경 가로 크기
-        float               subBackH = 0.f;     // 서브배경 세로 크기
-        float               subBackXOffset = 0.f; // X 오프셋
-        float               subBackYOffset = 0.f; // Y 오프셋
-
-        // 프레임옵션
-        std::vector<FrameInfo> frames;
     };
 
     struct ShopCardUI {
-        CImageUI* pBack = nullptr;
-        std::vector<CImageUI*> frames;   // 프레임 이미지들 (0~2개)
-        CButtonUI* btn = nullptr;   // 카드 전체 클릭 영역
-        CImageUI* icon = nullptr;  // 가운데 아이콘
-        CTextUI* title = nullptr; // 제목
-        CTextUI* desc = nullptr;  // 설명
-        CImageUI* subImage = nullptr;
-        CBlackGackGround* subBack = nullptr; // 서브 배경 (색상만)
-        CImageUI* soldTag = nullptr; // "구매" 태그
-        bool                bought = false; // 구매 여부
-        UpgradeId           id{};
+        CImageUI* pBack = nullptr;   // 배경 이미지
+        CButtonUI* btn = nullptr;     // 버튼 (클릭 영역)
+        CImageUI* icon = nullptr;    // 아이콘
+        bool        bought = false;    // 구매 여부
+        UpgradeId   id{};
     };
 
-    inline static const std::vector<ShopItemDef> kShopPool = { // 총 9개 카드가 필요
-            { UpgradeId::SlowMo, L"느린 총알 확률", L"적의 총알을 늦출 확률 : 10%",
-      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
-      L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_Monster_Bullet_Slow_Bullet",
-      100.f, 30.f, -30.f,
-      D3DXCOLOR(0.6f, 0.9f, 1.0f, 0.5f), 160.f, 100.f, 0.f, 0.f,
-      { { L"Com_Frame1", L"Prototype_Component_Texture_PhoneShop_FrameUI", 158.f, 100.f, 0.f, 0.f },
-        {L"Com_Frame2", L"Prototype_Component_Texture_PhoneShop_FrameUI", 158.f, 100.f, 0.f, 100.f}},
-    },
+    // 씬별로 어떤 카드들이 등장하는지 지정
+    std::unordered_map<int, std::vector<UpgradeId>> gSceneShopCards = {
+        { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_STAGE_1, { UpgradeId::SHOTGUN, UpgradeId::SlowMo } },
+        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_STAGE_3,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+    };
 
-    { UpgradeId::UZI, L"UZI", L"우지 총입니다.",
-      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
-      L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art",
-      120.f, 120.f, -20.f,
-      D3DXCOLOR(0.3f,0.1f,0.1f,0.6f), 200.f, 280.f, 10.f, 5.f,
-    },
+    // ── 카드 데이터 풀 ──
+    inline static const std::vector<ShopItemDef> kShopPool = {
+        { UpgradeId::SlowMo,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_Monster_Bullet_Slow_Bullet",
+          160.f, 210.f, 50.f },
 
-    { UpgradeId::Sniper, L"저격총", L"저격총입니다.",
-      L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
-      L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art",
-      160.f, 160.f, -40.f,
-      D3DXCOLOR(0.2f,0.2f,0.2f,0.6f), 180.f, 260.f, -5.f, -10.f,
-      {   // 프레임 1개
-          { L"Com_FrameSniper", L"Prototype_Component_Texture_Frame_Sniper", 200.f, 300.f, 0.f, 0.f }},
-    }
+        { UpgradeId::FIRE,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_FireArt",    L"Prototype_Component_Texture_Fire_Ex",
+          160.f, 210.f, 50.f },
+
+        { UpgradeId::SHOTGUN,
+          L"Com_Tex_BackGround", L"NONE",
+          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art",
+          160.f, 280.f, 10.f },
+
+        { UpgradeId::HEADSHOT,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_HeadSHOT",
+          160.f, 210.f, 50.f }
+
+
     };
 
     static const ShopItemDef* FindShopDef(UpgradeId id) {
-        for (auto& d : kShopPool) if (d.id == id) return &d;
+        for (auto& d : kShopPool)
+            if (d.id == id) return &d;
         return nullptr;
     }
 
