@@ -79,7 +79,7 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 		pPhone->Set_Texture(m_eScene); // texture를 바꿔라
 		pMan->Set_Texture(m_eScene); 
 
-		_vec3 vLocalOffset;
+		
 		switch (m_eScene)
 		{
 		case SCENE_DEV:
@@ -87,21 +87,20 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 		case SCENE_STAGE_1:
 		case SCENE_STAGE_2:
 		case SCENE_STAGE_3:
-			vLocalOffset = { 30.f, -200.f,0.f };
-			pRect->Set_LocalOffset(vLocalOffset);
+			m_vRectOriginOffset = { 33.5f, -200.f,0.f };
+			
 			break;
 
 		case SCENE_SNIPE:
 		case SCENE_BOSS:
 		case SCENE_CAR:
-			vLocalOffset = {};
-			pRect->Set_LocalOffset(vLocalOffset);
 			break;
-
+			m_vRectOriginOffset = { 0.f, 0.f,0.f };
 		case SCENE_END:
 
 			break;
 		}
+		pRect->Set_LocalOffset(m_vRectOriginOffset);
 	}
 
 	if (m_bHitChange) // hitcount가 바뀌면
@@ -113,7 +112,7 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void	CHpBarUI::Render_GameObject()
 {
-	//__super::Render_GameObject();
+	//CUIBase::Render_GameObject();
 }
 
 HRESULT CHpBarUI::Set_HpBarUI()
@@ -143,15 +142,15 @@ HRESULT CHpBarUI::Set_HpBarUI()
 	if (auto* pRect = dynamic_cast<CBlackGackGround*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_BlackBackground", iSceneIdx, L"UI_Layer"))) {
-		pRect->Set_UISizeAndPos(128.f,100.f,264.f, 638.f);
-		m_fRectY = 100.f;
+		pRect->Set_UISizeAndPos(128.f,98.f,264.f, 638.f);
+		m_fRectY = 98.f;
 		pRect->SetColor(D3DXCOLOR{0.f,1.f,0.f,1.f});
 		pRect->SetAlpha(1.f);
 		pRect->FadeTo(190,0.f,0.2f);
 		
 		pRect->Set_IsPosFix(false);
 
-		pRect->Set_New_TransInfo(50.f, 7.2f);
+		pRect->Set_New_TransInfo(0.f, 7.2f);
 		pRect->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
 
 		pRect->Set_ObjTag(L"RectUI");
@@ -171,15 +170,15 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		txt1->SetCentered(true);
 		txt1->SetLetterSpacing(1.f);
 		txt1->SetPosFix(true);
+		txt1->SetRotation(40.f);
 
-		txt1->Set_UISizeAndPos(1.f, 1.f, 940.f, -200.f);
-		txt1->Set_New_TransInfo(50.f, 10.f);
-		txt1->GetTransform()->Rotation({ 0.f,0.f,1.f }, 1);
-		txt1->Set_RotSum(D3DXToRadian(20.f));
+		txt1->Set_UISizeAndPos(10.f, 10.f, 100.f, 100.f);
+
 
 		txt1->Set_ObjTag(L"Text");
 		Add_Child(txt1);
 
+		vLocalOffset = { 700.f, 500.f,0.f };
 		txt1->Set_LocalOffset(vLocalOffset);
 	}
 
@@ -216,6 +215,14 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 		_float fSpeed = pRect->GetTransform()->GetTransformInfo().fSpeed;
 		pRect->Get_UISize(fSizeX, fSizeY);
 		pRect->Set_UISize(fSizeX, m_fRectY * m_fHpPercent);// rect 사이즈 줄어들게 .. 위치 변경은 아직
+
+		// 줄어든 사이즈
+		// 
+
+		_vec3 vNewOffset = {m_vRectOriginOffset.x ,
+							m_vRectOriginOffset.y - m_fRectY * (1 - m_fHpPercent) *0.5f,
+							0.f};
+		pRect->Set_LocalOffset(vNewOffset);
 	}
 
 	// curhp에 따라 출력 글씨 셋팅
