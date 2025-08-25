@@ -62,7 +62,7 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 			break;
 
 		case SCENE_TUTORIAL:
-			iPlayerUI_Idx = 5;
+			iPlayerUI_Idx = 1;
 			break;
 		}
 
