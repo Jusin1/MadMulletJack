@@ -75,7 +75,7 @@ HRESULT CDev::Ready_Scene()
     auto pData = CGameDataManager::GetInstance()->Get_SortedFloorEntries();
     *pData;
     CPickingManager::GetInstance()->Ready_Picking();
-    
+
     return S_OK;
 }
 

@@ -530,24 +530,27 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		if (KEY_BUTTON_HOLD(DIK_W))
 		{
 			m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+			CTutorialTracker::Get().Notify_Move();
 		}
 
 		if (KEY_BUTTON_HOLD(DIK_S))
 		{
 			m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
-			//CTutorialTracker::Get().Notify_Move();
+			CTutorialTracker::Get().Notify_Move();
 		}
 		// break 있으면 안됨
 	case MVKEY_LR: // 좌우
 		if (KEY_BUTTON_HOLD(DIK_A))
 		{
 			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
+			CTutorialTracker::Get().Notify_Move();
 			// camera state -> left
 		}
 
 		if (KEY_BUTTON_HOLD(DIK_D))
 		{
 			m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+			CTutorialTracker::Get().Notify_Move();
 			// camera state -> right
 		}
 		break;
@@ -566,6 +569,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		//DIK_LSHIFT
 		if (KEY_BUTTON_DOWN(DIK_LSHIFT))
 		{
+			CTutorialTracker::Get().Notify_Dash();
 			Change_Move(PMV_DASH);
 		}
 
@@ -573,6 +577,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		if (KEY_BUTTON_DOWN(DIK_SPACE))
 		{
 			Change_State(JUMP);
+			CTutorialTracker::Get().Notify_Jump();
 		}
 
 		if (IS_RBUTTON_DOWN) // 우클릭
@@ -594,6 +599,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	{
 		if (IS_LBUTTON_DOWN) // 좌클릭
 		{
+			CTutorialTracker::Get().Notify_Fire();
 			Change_State(ATTACK);
 		}
 	}
@@ -898,6 +904,7 @@ void CPlayer::Set_Collider_With_Door()
 	{
 		// kick 모션 나오게
 		Change_State(KICK);
+		CTutorialTracker::Get().Notify_Door();
 	}
 }
 
