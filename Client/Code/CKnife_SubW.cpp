@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CKnife_SubW.h"
 #include "CTimerMgr.h"
+#include "CObjectManager.h"
+#include "CManagement.h"
 
 CKnife_SubW::CKnife_SubW(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CSubWeapon(pGraphicDev)
@@ -45,7 +47,33 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	if(m_pTextureCom->Is_AnimFinished())
+	// 만약 지금 idle texture 라면
+	if (m_CurrentAnimTag == TEXT("Com_Texture_Knife_Att"))
+	{
+		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
+		Engine::CTransform* pHandRformCom = nullptr;
+
+		// handR의 위치 받아옴
+		switch (eCurScene)
+		{
+		case SCENE_DEV:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 2));
+			break;
+		case SCENE_TUTORIAL:
+			pHandRformCom =
+				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 5));
+			break;
+		}
+
+		if (pHandRformCom)
+		{
+			// 위치를 통해 pos update
+			Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -250.f, 320.f);
+		}
+	}
 
 	return NO_EVENT;
 }

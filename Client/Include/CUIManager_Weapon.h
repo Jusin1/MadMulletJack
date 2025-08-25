@@ -19,7 +19,10 @@ public:
 
 private:
 	HRESULT Set_WeaponUI();
+	HRESULT Set_Weapon2UI();
 	void	Weapon_Change();
+	void	Weapon2_On();
+	void	Weapon2_Off();
 	void	TagUI_SetActive(const _tchar* pTag, _bool _bActive);
 
 	//getter setter func
@@ -29,6 +32,7 @@ public:
 
 private:
 	WEAPON m_eWeapon;
+	WEAPON2 m_eWeapon2;
 
 public:
 	static  CUIManager_Weapon* Create(LPDIRECT3DDEVICE9 pGraphicDev);

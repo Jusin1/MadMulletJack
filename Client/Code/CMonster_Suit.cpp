@@ -389,7 +389,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         else
         {
             // 뒤로 날아가
-            m_pTransformCom->Move_PosDir(dt, (m_pTransformCom->Get_Info(INFO_LOOK)));
+            m_pTransformCom->Move_PosDir(dt * 2, (m_pTransformCom->Get_Info(INFO_LOOK)));
         }
         break;
 

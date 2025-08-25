@@ -70,12 +70,12 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 		case SCENE_DEV:
 			pHandRformCom =
 				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 4));
+					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 2));
 			break;
 		case SCENE_TUTORIAL:
 			pHandRformCom =
 				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 8));
+					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 5));
 			break;
 		}
 		

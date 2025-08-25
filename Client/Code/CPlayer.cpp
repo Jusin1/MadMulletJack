@@ -24,7 +24,7 @@
 #include "CUIManager_Weapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false)
@@ -609,11 +609,11 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	}
 
 	//debug
-	//if (KEY_BUTTON_DOWN(DIK_E))
-	//	Change_State(ATTACK_INSTANT);
+	if (KEY_BUTTON_DOWN(DIK_E))
+		Change_State(ATTACK_INSTANT);
 
-	//if (KEY_BUTTON_DOWN(DIK_O))
-	//	Change_State(OPENING);
+	if (KEY_BUTTON_DOWN(DIK_O))
+		Change_State(OPENING);
 
 }
 
@@ -673,7 +673,7 @@ void CPlayer::Move(const _float& fTimeDelta)
 	case PMV_SLIDE:
 	{
 		m_bIsAttack = true;
-		m_eMoveKey = MVKEY_LR;
+		m_eMoveKey = MVKEY_NON;
 		Move_Slide(fTimeDelta);
 	}
 		break;

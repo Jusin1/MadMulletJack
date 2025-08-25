@@ -3,7 +3,6 @@
 #include "CTimerMgr.h"
 #include "CGlobal_Info.h"
 #include "CObjectManager.h"
-#include "CKnife_SubW.h"
 #include "CMapFactory.h"
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -33,9 +32,6 @@ HRESULT CPlayer_HandR::Ready_GameObject()
 
 HRESULT CPlayer_HandR::Initialize(void* pArg)
 {
-    if (FAILED(Set_WeaponUI()))
-        return E_FAIL;
-
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -49,21 +45,6 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
 {   
     Move_UI(fTimeDelta); // ui 움직임 함수
 
-    // state가 instant일때만 weapon2를 업데이트
-    if (m_tInfo.ePlayerState == ATTACK_INSTANT)
-    {
-        // 무기에 따라 함수 호출
-        switch (m_tInfo.eWeapon2)
-        {
-        case WP_KNIFE:
-            Update_Weapon2_Knife();
-            break;
-        case WP_BOOK:
-            Update_Weapon2_Knife();
-            break;
-        }
-    }
-  
     return NO_EVENT;
 }
 
@@ -278,50 +259,6 @@ HRESULT CPlayer_HandR::Change_Texture(const _tchar* pTextureTag)
     m_pTextureCom->Set_Zero_Frame();
     m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
     return S_OK;
-}
-
-HRESULT CPlayer_HandR::Set_WeaponUI()
-{
-    _uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
-    m_pWeaponUI = dynamic_cast<CUIBase*>(
-        CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", iSceneIndex, L"UI_Layer"));
-    Add_Child(m_pWeaponUI);
-    if (m_pWeaponUI == nullptr)
-        return E_FAIL;
-
-    // knife 생성 및 list에 넣기
-    CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", iSceneIndex, L"UI_Layer"));
-    if (pKnifeUI)
-    {
-        pKnifeUI->Set_ObjTag(L"KnifeUI");
-        pKnifeUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
-        m_pWeaponUI->Add_Child(pKnifeUI); // 루트 UI에 등록
-    }
-
-    return S_OK;
-}
-
-void CPlayer_HandR::Update_Weapon2_Knife()
-{
-    // pistol을 가져옴
-    CUIBase* pKnife = m_pWeaponUI->Find_Child_ByTag(L"KnifeUI");
-
-    if (pKnife)
-    {
-        if (m_bRenderOn)
-        {
-            pKnife->Set_Active(true);
-            pKnife->Set_RenderOn(true);
-            pKnife->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -250.f, 320.f);
-        }
-        else
-            pKnife->Set_RenderOn(false);
-    }
-    else
-    {
-        pKnife->Set_Active(false);
-        pKnife->Set_RenderOn(false);
-    }
 }
 
 CPlayer_HandR* CPlayer_HandR::Create(LPDIRECT3DDEVICE9 pGraphicDev)
