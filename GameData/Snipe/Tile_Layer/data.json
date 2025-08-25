@@ -1,0 +1,1149 @@
+[
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999184608459473
+            ],
+            "Pos": [
+                8.499835014343262,
+                6.499876976013184,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3111974794810521e-07,
+                2.9996697902679443,
+                0.0
+            ],
+            "Up": [
+                -2.9997541904449463,
+                -1.3112342855947645e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9998474717140198
+            ],
+            "Pos": [
+                11.499787330627441,
+                6.4998297691345215,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3111559837852838e-07,
+                2.999575138092041,
+                0.0
+            ],
+            "Up": [
+                -2.999659538269043,
+                -1.3111929320075433e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9997732639312744
+            ],
+            "Pos": [
+                14.499737739562988,
+                6.499780178070068,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3111127827869495e-07,
+                2.999476194381714,
+                0.0
+            ],
+            "Up": [
+                -2.999560594558716,
+                -1.311149731009209e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.999732494354248
+            ],
+            "Pos": [
+                17.499710083007813,
+                6.499752998352051,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3110890506595752e-07,
+                2.9994218349456787,
+                0.0
+            ],
+            "Up": [
+                -2.9995062351226807,
+                -1.3111258567732875e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9996566772460938
+            ],
+            "Pos": [
+                20.49966049194336,
+                6.499702453613281,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.311044854901411e-07,
+                2.9993207454681396,
+                0.0
+            ],
+            "Up": [
+                -2.9994051456451416,
+                -1.3110818031236704e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9995948076248169
+            ],
+            "Pos": [
+                23.499618530273438,
+                6.499661445617676,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3110087593304343e-07,
+                2.9992382526397705,
+                0.0
+            ],
+            "Up": [
+                -2.9993226528167725,
+                -1.3110457075526938e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9990422129631042
+            ],
+            "Pos": [
+                26.499237060546875,
+                6.4992876052856445,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3106745200275327e-07,
+                2.998473644256592,
+                0.0
+            ],
+            "Up": [
+                -2.998574733734131,
+                -1.310718715785697e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9978302121162415
+            ],
+            "Pos": [
+                26.498424530029297,
+                16.498477935791016,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3099645457259612e-07,
+                2.996849298477173,
+                0.0
+            ],
+            "Up": [
+                -2.996955394744873,
+                -1.3100108731123328e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9977467060089111
+            ],
+            "Pos": [
+                23.498369216918945,
+                16.498422622680664,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.309915802494288e-07,
+                2.9967379570007324,
+                0.0
+            ],
+            "Up": [
+                -2.9968440532684326,
+                -1.3099622719892068e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9976876974105835
+            ],
+            "Pos": [
+                20.498329162597656,
+                16.498382568359375,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3098814122258773e-07,
+                2.996659278869629,
+                0.0
+            ],
+            "Up": [
+                -2.996765375137329,
+                -1.309927881720796e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9976127743721008
+            ],
+            "Pos": [
+                17.498279571533203,
+                16.498332977294922,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3098377849019016e-07,
+                2.9965593814849854,
+                0.0
+            ],
+            "Up": [
+                -2.9966654777526855,
+                -1.3098842543968203e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9975485801696777
+            ],
+            "Pos": [
+                14.498236656188965,
+                16.498289108276367,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.3098004103540006e-07,
+                2.996473789215088,
+                0.0
+            ],
+            "Up": [
+                -2.996579885482788,
+                -1.3098467377403722e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9974691867828369
+            ],
+            "Pos": [
+                11.498184204101563,
+                16.49823760986328,
+                26.979999542236328
+            ],
+            "Right": [
+                -1.309754082967629e-07,
+                2.996367931365967,
+                0.0
+            ],
+            "Up": [
+                -2.996474027633667,
+                -1.3098005524625478e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9997577667236328
+            ],
+            "Pos": [
+                8.499685287475586,
+                16.499723434448242,
+                26.98898696899414
+            ],
+            "Right": [
+                -1.3110661711834837e-07,
+                2.9993696212768555,
+                0.0
+            ],
+            "Up": [
+                -2.999448299407959,
+                -1.3111005614518945e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9992678165435791
+            ],
+            "Pos": [
+                43.499359130859375,
+                16.49939727783203,
+                26.988994598388672
+            ],
+            "Right": [
+                -1.3107806751122553e-07,
+                2.998716354370117,
+                0.0
+            ],
+            "Up": [
+                -2.9987950325012207,
+                -1.310815065380666e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9991834163665771
+            ],
+            "Pos": [
+                43.49930191040039,
+                6.499341011047363,
+                26.998994827270508
+            ],
+            "Right": [
+                -1.3107315055549407e-07,
+                2.9986038208007813,
+                0.0
+            ],
+            "Up": [
+                -2.9986824989318848,
+                -1.3107658958233515e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9991075992584229
+            ],
+            "Pos": [
+                46.49925231933594,
+                6.499290466308594,
+                26.998994827270508
+            ],
+            "Right": [
+                -1.3106873097967764e-07,
+                2.998502731323242,
+                0.0
+            ],
+            "Up": [
+                -2.9985814094543457,
+                -1.3107217000651872e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9990653991699219
+            ],
+            "Pos": [
+                49.49922180175781,
+                6.499262809753418,
+                26.998994827270508
+            ],
+            "Right": [
+                -1.310662725018119e-07,
+                2.998446464538574,
+                0.0
+            ],
+            "Up": [
+                -2.9985251426696777,
+                -1.31069711528653e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9990105032920837
+            ],
+            "Pos": [
+                52.49918746948242,
+                6.499226093292236,
+                26.99899673461914
+            ],
+            "Right": [
+                -1.31063075059501e-07,
+                2.99837327003479,
+                0.0
+            ],
+            "Up": [
+                -2.9984519481658936,
+                -1.3106651408634207e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9989477396011353
+            ],
+            "Pos": [
+                55.4991455078125,
+                6.4991841316223145,
+                26.99899673461914
+            ],
+            "Right": [
+                -1.3105940865898447e-07,
+                2.9982895851135254,
+                0.0
+            ],
+            "Up": [
+                -2.998368263244629,
+                -1.3106284768582555e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9988815784454346
+            ],
+            "Pos": [
+                58.49909973144531,
+                6.499139785766602,
+                26.99899673461914
+            ],
+            "Right": [
+                -1.3105555751735665e-07,
+                2.998201370239258,
+                0.0
+            ],
+            "Up": [
+                -2.9982800483703613,
+                -1.3105899654419773e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.998846709728241
+            ],
+            "Pos": [
+                61.49907684326172,
+                6.499116897583008,
+                26.998998641967773
+            ],
+            "Right": [
+                -1.3105352536513237e-07,
+                2.998154878616333,
+                0.0
+            ],
+            "Up": [
+                -2.9982335567474365,
+                -1.3105696439197345e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.998782217502594
+            ],
+            "Pos": [
+                61.49903106689453,
+                16.499065399169922,
+                26.988998413085938
+            ],
+            "Right": [
+                -1.3104947527153854e-07,
+                2.9980623722076416,
+                0.0
+            ],
+            "Up": [
+                -2.998131275177002,
+                -1.3105248797273816e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9986820816993713
+            ],
+            "Pos": [
+                58.498966217041016,
+                16.498998641967773,
+                26.988998413085938
+            ],
+            "Right": [
+                -1.310436488211053e-07,
+                2.9979288578033447,
+                0.0
+            ],
+            "Up": [
+                -2.997997760772705,
+                -1.3104666152230493e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9986194968223572
+            ],
+            "Pos": [
+                55.498924255371094,
+                16.49895668029785,
+                26.988996505737305
+            ],
+            "Right": [
+                -1.310399966314435e-07,
+                2.997845411300659,
+                0.0
+            ],
+            "Up": [
+                -2.9979143142700195,
+                -1.3104300933264312e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9984907507896423
+            ],
+            "Pos": [
+                52.498836517333984,
+                16.498870849609375,
+                26.988996505737305
+            ],
+            "Right": [
+                -1.3103249330015387e-07,
+                2.997673749923706,
+                0.0
+            ],
+            "Up": [
+                -2.9977426528930664,
+                -1.310355060013535e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9984501600265503
+            ],
+            "Pos": [
+                49.498809814453125,
+                16.498844146728516,
+                26.988994598388672
+            ],
+            "Right": [
+                -1.3103012008741644e-07,
+                2.99761962890625,
+                0.0
+            ],
+            "Up": [
+                -2.9976885318756104,
+                -1.3103313278861606e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 0,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Wall_Transparent_3"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.998415470123291
+            ],
+            "Pos": [
+                46.49878692626953,
+                16.498821258544922,
+                26.988994598388672
+            ],
+            "Right": [
+                -1.3102810214604688e-07,
+                2.9975733757019043,
+                0.0
+            ],
+            "Up": [
+                -2.9976422786712646,
+                -1.310311148472465e-07,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 7,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Bandit_Outdoor"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9995102882385254
+            ],
+            "Pos": [
+                17.0,
+                1.9989999532699585,
+                26.979999542236328
+            ],
+            "Right": [
+                13.994193077087402,
+                2.7108867470815312e-06,
+                0.0
+            ],
+            "Up": [
+                -1.6086206642285106e-06,
+                5.997372150421143,
+                -8.936782336377291e-08
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 7,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Bandit_Outdoor"
+        },
+        "TransformData": {
+            "Look": [
+                -3.576197968868655e-07,
+                0.0,
+                0.9999773502349854
+            ],
+            "Pos": [
+                53.0,
+                35.0,
+                26.0
+            ],
+            "Right": [
+                13.99501895904541,
+                0.0,
+                3.1281306291930377e-06
+            ],
+            "Up": [
+                0.0,
+                7.99757194519043,
+                0.0
+            ]
+        }
+    },
+    {
+        "Color": 3435973836,
+        "ObjectCategory": 1,
+        "ObjectType": 7,
+        "PanelData": {
+            "Count_X": 2,
+            "Count_Y": 2,
+            "Count_Z": 2,
+            "Interval": 1,
+            "Type": 0
+        },
+        "TextureData": {
+            "FilePath": "Proto_Beer_Outdoor"
+        },
+        "TransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999531507492065
+            ],
+            "Pos": [
+                21.0,
+                34.0,
+                26.0
+            ],
+            "Right": [
+                9.998954772949219,
+                1.6389564052587957e-06,
+                8.88085923702285e-15
+            ],
+            "Up": [
+                -1.1620899158515385e-06,
+                5.998963832855225,
+                0.0
+            ]
+        }
+    }
+]

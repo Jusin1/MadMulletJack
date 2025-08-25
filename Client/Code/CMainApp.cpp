@@ -155,11 +155,11 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 
 	//폰트 추가
-	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/DS-DIGIB.ttf");
+	/*CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/DS-DIGIB.ttf");
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/VCR_OSD_MONO_1 - Japanese Ver s2.ttf");
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Righteous-Regular.ttf");
 	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"../Bin/Resource/Font/Perfect DOS VGA 437 - Japanese ver.ttf");
-	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"Perfect DOS VGA 437 Win.ttf");
+	CFontMgr::GetInstance()->RegisterPrivateFontFromFile(L"Perfect DOS VGA 437 Win.ttf")*/;
 
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev,

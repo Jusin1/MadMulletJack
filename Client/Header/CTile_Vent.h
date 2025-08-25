@@ -40,5 +40,6 @@ private:
 	bool m_bKilled{ false };
 	Engine::CColider_Sphere *m_pColliderSphere;
 	CTile_Deco *m_pProp;
+	_vec3 m_vLook{};
 };
 

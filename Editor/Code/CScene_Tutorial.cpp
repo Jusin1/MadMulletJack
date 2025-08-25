@@ -18,6 +18,7 @@ CScene_Tutorial::~CScene_Tutorial()
 
 void CScene_Tutorial::Free()
 {
+	Engine::CScene::Free();
 }
 
 CScene_Tutorial *CScene_Tutorial::Create(LPDIRECT3DDEVICE9 pGraphicDevice)

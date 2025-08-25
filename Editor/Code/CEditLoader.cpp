@@ -40,7 +40,7 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 	} break;
 	case SCENE_TUTORIAL:
 	{
-		pLoader->Loading_Tutorial();
+		pLoader->Loading_Tutorial( );
 	} break;
 	case SCENE_STAGE_1:
 	{
@@ -48,7 +48,7 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 	} break;
 	case SCENE_STAGE_2:
 	{
-		// TODO
+		pLoader->Loading_Stage_2();
 	} break;
 	case SCENE_STAGE_3:
 	{
@@ -56,15 +56,15 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 	} break;
 	case SCENE_SNIPE:
 	{
-		// TODO
+		pLoader->Loading_Snipe();
 	} break;
 	case SCENE_BOSS:
 	{
-		// TODO
+		pLoader->Loading_Rooftop();
 	} break;
 	case SCENE_CAR:
 	{
-		// TODO
+		pLoader->Loading_Road();
 	} break;
 	case SCENE_PREFAB:
 	{
@@ -189,35 +189,110 @@ HRESULT CEditLoader::Loading_Stage_1()
 HRESULT CEditLoader::Loading_Stage_2()
 {
 	SetData(SCENE_STAGE_2);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Stage_3()
 {
 	SetData(SCENE_STAGE_3);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Snipe()
 {
 	SetData(SCENE_SNIPE);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Rooftop()
 {
 	SetData(SCENE_BOSS);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
 	return S_OK;
 }
 
 HRESULT CEditLoader::Loading_Road()
 {
 	SetData(SCENE_CAR);
+
+	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
+
+	// 객체 생성
+	lstrcpy(m_szLoading, L"객체 생성 중.");
+	InstancingObjects(L"Wall_Layer");
+	InstancingObjects(L"Tile_Layer");
+	InstancingObjects(L"Env_Layer");
+	InstancingObjects(L"Monster_Layer");
+	InstancingPrefabs();
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
+	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+
 	return S_OK;
 }
 

@@ -180,7 +180,11 @@
     <ClInclude Include="..\Header\CPlacementObject.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
     <ClInclude Include="..\Header\CScene_Prefab.h" />
+    <ClInclude Include="..\Header\CScene_Road.h" />
+    <ClInclude Include="..\Header\CScene_Rooftop.h" />
+    <ClInclude Include="..\Header\CScene_Snipe.h" />
     <ClInclude Include="..\Header\CScene_Stage_1.h" />
+    <ClInclude Include="..\Header\CScene_Stage_2.h" />
     <ClInclude Include="..\Header\CScene_Tutorial.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="Editor_Define.h" />
@@ -232,7 +236,11 @@
     <ClCompile Include="..\Code\CPlacementObject.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
     <ClCompile Include="..\Code\CScene_Prefab.cpp" />
+    <ClCompile Include="..\Code\CScene_Road.cpp" />
+    <ClCompile Include="..\Code\CScene_Rooftop.cpp" />
+    <ClCompile Include="..\Code\CScene_Snipe.cpp" />
     <ClCompile Include="..\Code\CScene_Stage_1.cpp" />
+    <ClCompile Include="..\Code\CScene_Stage_2.cpp" />
     <ClCompile Include="..\Code\CScene_Tutorial.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="GraphEditor.cpp" />

@@ -7,6 +7,7 @@
 #include "CLogo.h"
 #include "CDev.h"
 #include "CTutorial.h"
+#include "CStage.h"
 
 // UI
 #include "CObjectManager.h"
@@ -69,6 +70,7 @@ _int CLoading_Scene::Update_Scene(const _float& dt)
 			case SCENE_LOGO:     pNew = CLogo::Create(m_pGraphicDev);     break;
 			case SCENE_DEV:      pNew = CDev::Create(m_pGraphicDev);      break;
 			case SCENE_TUTORIAL: pNew = CTutorial::Create(m_pGraphicDev); break;
+			case SCENE_STAGE_1: pNew = CStage::Create(m_pGraphicDev); break;
 			default: break;
 			}
 			if (pNew) CManagement::GetInstance()->Open_Scene(m_eNextScene, pNew);
@@ -101,6 +103,7 @@ _int CLoading_Scene::Update_Scene(const _float& dt)
 		case SCENE_LOGO:     pNew = CLogo::Create(m_pGraphicDev);     break;
 		case SCENE_DEV:      pNew = CDev::Create(m_pGraphicDev);      break;
 		case SCENE_TUTORIAL: pNew = CTutorial::Create(m_pGraphicDev); break;
+		case SCENE_STAGE_1:  pNew = CStage::Create(m_pGraphicDev); break;
 		default: break;
 		}
 		if (pNew) CManagement::GetInstance()->Open_Scene(m_eNextScene, pNew);

@@ -282,6 +282,18 @@
     <ClInclude Include="..\Header\CGui_PrefabEditorPanel.h">
       <Filter>06. GUI\Panel\Inspector\Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CScene_Snipe.h">
+      <Filter>01. Scene\Snipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene_Stage_2.h">
+      <Filter>01. Scene\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene_Rooftop.h">
+      <Filter>01. Scene\Rooftop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene_Road.h">
+      <Filter>01. Scene\Road</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -415,6 +427,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGui_PrefabEditorPanel.cpp">
       <Filter>06. GUI\Panel\Inspector\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Snipe.cpp">
+      <Filter>01. Scene\Snipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Stage_2.cpp">
+      <Filter>01. Scene\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Rooftop.cpp">
+      <Filter>01. Scene\Rooftop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene_Road.cpp">
+      <Filter>01. Scene\Road</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

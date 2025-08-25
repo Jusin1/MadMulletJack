@@ -1,15 +1,15 @@
 #pragma once
 #include "CScene.h"
 
-class CScene_Stage_1 : public CScene
+class CScene_Rooftop : public CScene
 {
 private:
-	explicit CScene_Stage_1(LPDIRECT3DDEVICE9 pGraphicDevice);
-	virtual ~CScene_Stage_1();
+	explicit CScene_Rooftop(LPDIRECT3DDEVICE9 pGraphicDevice);
+	virtual ~CScene_Rooftop();
 
 	virtual void Free() override;
 public:
-	static CScene_Stage_1 *Create(LPDIRECT3DDEVICE9 pGraphicDevice);
+	static CScene_Rooftop *Create(LPDIRECT3DDEVICE9 pGraphicDevice);
 
 	virtual			HRESULT		Ready_Scene() override;
 	virtual			_int		Update_Scene(const _float &fTimeDelta) override;

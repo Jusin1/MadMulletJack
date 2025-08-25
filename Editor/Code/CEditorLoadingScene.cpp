@@ -7,6 +7,10 @@
 #include "CScene_Tutorial.h"
 #include "CScene_Stage_1.h"
 #include "CScene_Prefab.h"
+#include "CScene_Snipe.h"
+#include "CScene_Stage_2.h"
+#include "CScene_Rooftop.h"
+#include "CScene_Road.h"
 
 CEditorLoadingScene::CEditorLoadingScene(LPDIRECT3DDEVICE9 pGrahpicDev)
 	: CScene(pGrahpicDev)
@@ -55,23 +59,23 @@ _int CEditorLoadingScene::Update_Scene(const _float &fTimeDelta)
 		} break;
 		case SCENE_STAGE_2:
 		{
-			// TODO
+			pNewScene = CScene_Stage_2::Create(m_pGraphicDev);
 		} break;
 		case SCENE_STAGE_3:
 		{
-			// TODO
+			// Æó±â
 		} break;
 		case SCENE_SNIPE:
 		{
-			// TODO
+			pNewScene = CScene_Snipe::Create(m_pGraphicDev);
 		} break;
 		case SCENE_BOSS:
 		{
-			// TODO
+			pNewScene = CScene_Rooftop::Create(m_pGraphicDev);
 		} break;
 		case SCENE_CAR:
 		{
-			// TODO
+			pNewScene = CScene_Road::Create(m_pGraphicDev);
 		} break;
 		case SCENE_PREFAB:
 		{

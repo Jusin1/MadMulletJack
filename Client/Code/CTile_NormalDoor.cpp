@@ -98,8 +98,8 @@ void CTile_NormalDoor::LateUpdate_GameObject(const _float &fTimeDelta)
 	{
 		if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 		{
-			if (m_fTargetAngle < 89.99f)
-				m_fTargetAngle = 89.99f;
+			if (m_fTargetAngle < 84.99f)
+				m_fTargetAngle = 84.99f;
 
 			m_bOpend = true;
 		}
@@ -197,21 +197,31 @@ void CTile_NormalDoor::PivotRotate()
 	auto lambda_rotation =
 	[&](CTransform *pDoorTransform, const _matrix &matWorld, _vec3 vDoorPivotLocal, _float fAngle)->void
 	{
-		_matrix matLocalPivot_negative, matScale, matRotation, matLocalPivot, matWorldPos;
+		_matrix matLocalPivot_negative, matScale, matRotation, matLocalPivot, matWorldPos, matWorldRot;
+
+		// 월드 분해
+		_vec3 vWorldPos;
+		_vec3 vWorldScale;
+		D3DXQUATERNION qQuaternion;
+		::D3DXMatrixDecompose(&vWorldScale, &qQuaternion, &vWorldPos, &matWorld);
+		::D3DXMatrixRotationQuaternion(&matWorldRot, &qQuaternion);
 
 		::D3DXMatrixTranslation(&matLocalPivot_negative, -vDoorPivotLocal.x, -vDoorPivotLocal.y, -vDoorPivotLocal.z);
-		::D3DXMatrixScaling(&matScale, pDoorTransform->Get_Scale().x, pDoorTransform->Get_Scale().y, pDoorTransform->Get_Scale().z);
+		::D3DXMatrixScaling(&matScale, vWorldScale.x, vWorldScale.y, vWorldScale.z);
 		::D3DXMatrixRotationY(&matRotation, D3DXToRadian(fAngle));
 		::D3DXMatrixTranslation(&matLocalPivot, vDoorPivotLocal.x, vDoorPivotLocal.y, vDoorPivotLocal.z);
-		::D3DXMatrixTranslation(&matWorldPos, matWorld._41, matWorld._42, matWorld._43);
+		::D3DXMatrixTranslation(&matWorldPos, vWorldPos.x, vWorldPos.y, vWorldPos.z);
+
+		
 
 		// 현재 Tile의 Local 중심 좌표는 Cetner (0.5, 0.5, 0)
 		// matLocalPivot_negative => 문의 회전축을 로컬 원점(0,0,0)으로 옮김
 		// matScale => 원점 기준 스케일
 		// matRotation => 원점 기준 Y축 회전
 		// matLocalPivot => 원래 중점으로 돌림 ( 뺀만큼 더하기 )
+		// matWorldRot = > 월드 회전 적용
 		// matWorldPos = > 월드위치로 옮김
-		_matrix matResult = matLocalPivot_negative * matScale * matRotation * matLocalPivot * matWorldPos;
+		_matrix matResult = matLocalPivot_negative * matScale * matRotation * matLocalPivot * matWorldRot * matWorldPos;
 
 		_vec3 vRight, vUp, vLook, vPos;
 		::memcpy(&vRight, &matResult.m[0][0], sizeof(_vec3));

@@ -95,14 +95,17 @@ _bool CGrounding::GetHeight(const vector<PANELENTRY> *pPanelEntries, _float fX, 
 		}
 	};
 
-	if (lambda_Inside(m_iCurrentIndex))
-		return lambda_GetHeight(m_iCurrentIndex);
+	for (int i = 0; i < 3; ++i)
+	{
+		if (lambda_Inside(m_iCurrentIndex))
+			return lambda_GetHeight(m_iCurrentIndex);
 
-	if (m_iCurrentIndex + 1 < (*pPanelEntries).size() && lambda_Inside(m_iCurrentIndex + 1))
-		return lambda_GetHeight(m_iCurrentIndex + 1);
+		if (m_iCurrentIndex + i < (*pPanelEntries).size() && lambda_Inside(m_iCurrentIndex + i))
+			return lambda_GetHeight(m_iCurrentIndex + i);
 
-	if (((m_iCurrentIndex - 1) >= 0) && lambda_Inside(m_iCurrentIndex - 1))
-		return lambda_GetHeight(m_iCurrentIndex - 1);
+		if (((m_iCurrentIndex - i) >= 0) && lambda_Inside(m_iCurrentIndex - i))
+			return lambda_GetHeight(m_iCurrentIndex - i);
+	}
 
 	return false;
 }

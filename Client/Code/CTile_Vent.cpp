@@ -70,6 +70,9 @@ HRESULT CTile_Vent::Initialize(void *pArg)
     if (FAILED(Set_Component(pArg)))
         return E_FAIL;
 
+    m_vLook = GetTransform()->Get_Info(INFO_LOOK);
+    ::D3DXVec3Normalize(&m_vLook, &m_vLook);
+
     return S_OK;
 }
 
@@ -172,5 +175,5 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
 
 void CTile_Vent::RotateProp(const _float &fTimeDelta)
 {
-    m_pProp->GetTransform()->RotationDegree(_vec3{ 0.f,0.f,1.f }, 240.f * fTimeDelta);
+    m_pProp->GetTransform()->RotationDegree(m_vLook, 240.f * fTimeDelta);
 }

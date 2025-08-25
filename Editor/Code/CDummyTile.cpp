@@ -264,20 +264,35 @@ void CDummyTile::KeyUpdate()
 	if (KEY_BUTTON_DOWN(DIK_UP))
 	{
 		_vec3 src = m_pTransformCom->Get_Scale();
-		src.x += 1;
 		src.y += 1;
 		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
 	}
 	else if (KEY_BUTTON_DOWN(DIK_DOWN))
 	{
 		_vec3 src = m_pTransformCom->Get_Scale();
-		src.x -= 1;
-		src.y -= 1;
-		if (src.x <= 0 && src.y <= 0)
+		if (src.y < 1)
 		{
-			src.x = 1;
-			src.y = 1;
+			src.y -= 0.1f;
 		}
+		else
+			src.y -= 1;
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
+	}
+	if (KEY_BUTTON_DOWN(DIK_LEFT))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		if (src.x <= 1)
+		{
+			src.x -= 0.1f;
+		}
+		else
+			src.x -= 1;
+		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
+	}
+	else if (KEY_BUTTON_DOWN(DIK_RIGHT))
+	{
+		_vec3 src = m_pTransformCom->Get_Scale();
+		src.x += 1;
 		m_pTransformCom->Set_Scale(src.x, src.y, 1.f);
 	}
 }

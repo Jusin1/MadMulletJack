@@ -506,6 +506,7 @@ CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
 	AddThumbnail("Fence", L"Proto_Fence", pThumbnail, WallType::WALL_HOR);
 	AddThumbnail("JumpBorder", L"Proto_JumpBorder", pThumbnail, WallType::WALL_HOR);
 	AddThumbnail("Windows", L"Proto_Windows", pThumbnail, WallType::WALL_HOR);
+	AddThumbnail("LASER_BORDER", L"Proto_Laser_Border", pThumbnail, WallType::WALL_HOR);
 
 	// VER
 	AddThumbnail("Acid_Wall_1", L"Proto_Acid_Wall_1", pThumbnail, WallType::WALL_VER);
@@ -572,6 +573,7 @@ CGuiBase *CGui_MapEditorPanel::WallThumbnail_Create()
 	AddThumbnail("Fence", L"Proto_Fence", pThumbnail, WallType::WALL_VER);
 	AddThumbnail("JumpBorder", L"Proto_JumpBorder", pThumbnail, WallType::WALL_VER);
 	AddThumbnail("Windows", L"Proto_Windows", pThumbnail, WallType::WALL_VER);
+	AddThumbnail("LASER_BORDER", L"Proto_Laser_Border", pThumbnail, WallType::WALL_VER);
 
 	//==================
 	// FLOOR
@@ -719,6 +721,27 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	AddThumbnail("NoDraw", L"Proto_GridNoDraw", pThumbnail, TileType::DECO);
 	AddThumbnail("Cable_1", L"Proto_CABLES_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Cable_2", L"Proto_CABLES_2", pThumbnail, TileType::DECO);
+	AddThumbnail("LASER_BORDER", L"Proto_Laser_Border", pThumbnail, TileType::DECO);
+	
+	// Road
+	AddThumbnail("Road_1", L"Proto_Road_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_2", L"Proto_Road_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_3", L"Proto_Road_3", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_4", L"Proto_Road_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Corner", L"Proto_Road_Corner", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_StreetLights", L"Proto_Road_StreetLights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_TrafficLights", L"Proto_Road_TrafficLights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Plate_1", L"Proto_Road_Plate_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Plate_2", L"Proto_Road_Plate_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Pass_1", L"Proto_Road_Pass_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Pass_2", L"Proto_Road_Pass_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Lights", L"Proto_Road_Lights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_1", L"Proto_Road_Sign_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_2", L"Proto_Road_Sign_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_3", L"Proto_Road_Sign_3", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_4", L"Proto_Road_Sign_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_5", L"Proto_Road_Sign_5", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Tree", L"Proto_Road_Tree", pThumbnail, TileType::DECO);
 
 	// Acid
 	AddThumbnail("Acid_Floor_1", L"Proto_Acid_Floor_1", pThumbnail, TileType::ACID);

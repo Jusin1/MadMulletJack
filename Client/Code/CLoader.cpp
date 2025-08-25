@@ -98,7 +98,7 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	} break;
 	case SCENE_STAGE_1:
 	{
-
+		pLoader->Loading_Stage_1();
 	} break;
 	case SCENE_STAGE_2:
 	{
@@ -564,6 +564,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Vent_Prop", L"../Bin/Resource/MapObject/Ventilador/BIR AIR CONDITIONER_%02d.png", 2);
 	AddTexture(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png", 1);
 	AddTexture(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png", 1);
+	AddTexture(L"Proto_Laser_Border", L"../../Client/Bin/Resource/MapObject/LASER BORDER.png", 1);
 
 	// door
 	AddTexture(L"Proto_NormalDoor_1_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2_1.png", 1);
@@ -604,6 +605,26 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Signs_5", L"../Bin/Resource/MapObject/Signs/SIGNS 6.png", 1);
 	AddTexture(L"Proto_Signs_6", L"../Bin/Resource/MapObject/Signs/SIGNS 7.png", 1);
 	AddTexture(L"Proto_Signs_7", L"../Bin/Resource/MapObject/Signs/SIGNS 8.png", 1);
+
+	// road
+	AddTexture(L"Proto_Road_1", L"../../Client/Bin/Resource/MapObject/Road/ROAD 1.png", 1);
+	AddTexture(L"Proto_Road_2", L"../../Client/Bin/Resource/MapObject/Road/ROAD 2.png", 1);
+	AddTexture(L"Proto_Road_3", L"../../Client/Bin/Resource/MapObject/Road/ROAD 3.png", 1);
+	AddTexture(L"Proto_Road_4", L"../../Client/Bin/Resource/MapObject/Road/ROAD 4.png", 1);
+	AddTexture(L"Proto_Road_Corner", L"../../Client/Bin/Resource/MapObject/Road/ROAD CORNER.png",1);
+	AddTexture(L"Proto_Road_StreetLights", L"../../Client/Bin/Resource/MapObject/Road/STREET LIGHTS.png",1);
+	AddTexture(L"Proto_Road_TrafficLights", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC LIGHTS.png",1);
+	AddTexture(L"Proto_Road_Plate_1", L"../../Client/Bin/Resource/MapObject/Road/PLATE 1.png",1);
+	AddTexture(L"Proto_Road_Plate_2", L"../../Client/Bin/Resource/MapObject/Road/PLATE 2.png",1);
+	AddTexture(L"Proto_Road_Pass_1", L"../../Client/Bin/Resource/MapObject/Road/PASSARELA.png",1);
+	AddTexture(L"Proto_Road_Pass_2", L"../../Client/Bin/Resource/MapObject/Road/PASSTAIRS.png",1);
+	AddTexture(L"Proto_Road_Lights", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC LIGHTS.png",1);
+	AddTexture(L"Proto_Road_Sign_1", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 1.png",1);
+	AddTexture(L"Proto_Road_Sign_2", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 2.png",1);
+	AddTexture(L"Proto_Road_Sign_3", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 3.png",1);
+	AddTexture(L"Proto_Road_Sign_4", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 4.png",1);
+	AddTexture(L"Proto_Road_Sign_5", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 5.png",1);
+	AddTexture(L"Proto_Road_Tree", L"../../Client/Bin/Resource/MapObject/Road/ARVORE 2.png",1);
 }
 
 float CLoader::Get_Progress() const

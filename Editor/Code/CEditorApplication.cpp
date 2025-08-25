@@ -538,6 +538,7 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_OpeningDoor", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR.png");
 	AddTextureForThumbnail(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png");
 	AddTextureForThumbnail(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png");
+	AddTextureForThumbnail(L"Proto_Laser_Border", L"../../Client/Bin/Resource/MapObject/LASER BORDER.png");
 
 	// display
 	AddTextureForThumbnail(L"Proto_Bandit_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/BANDIT.png");
@@ -568,6 +569,27 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Signs_5", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 6.png");
 	AddTextureForThumbnail(L"Proto_Signs_6", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 7.png");
 	AddTextureForThumbnail(L"Proto_Signs_7", L"../../Client/Bin/Resource/MapObject/Signs/SIGNS 8.png");
+
+	// road
+	AddTextureForThumbnail(L"Proto_Road_1", L"../../Client/Bin/Resource/MapObject/Road/ROAD 1.png");
+	AddTextureForThumbnail(L"Proto_Road_2", L"../../Client/Bin/Resource/MapObject/Road/ROAD 2.png");
+	AddTextureForThumbnail(L"Proto_Road_3", L"../../Client/Bin/Resource/MapObject/Road/ROAD 3.png");
+	AddTextureForThumbnail(L"Proto_Road_4", L"../../Client/Bin/Resource/MapObject/Road/ROAD 4.png");
+	AddTextureForThumbnail(L"Proto_Road_Corner", L"../../Client/Bin/Resource/MapObject/Road/ROAD CORNER.png");
+	AddTextureForThumbnail(L"Proto_Road_StreetLights", L"../../Client/Bin/Resource/MapObject/Road/STREET LIGHTS.png");
+	AddTextureForThumbnail(L"Proto_Road_TrafficLights", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC LIGHTS.png");
+	AddTextureForThumbnail(L"Proto_Road_Plate_1", L"../../Client/Bin/Resource/MapObject/Road/PLATE 1.png");
+	AddTextureForThumbnail(L"Proto_Road_Plate_2", L"../../Client/Bin/Resource/MapObject/Road/PLATE 2.png");
+	AddTextureForThumbnail(L"Proto_Road_Pass_1", L"../../Client/Bin/Resource/MapObject/Road/PASSARELA.png");
+	AddTextureForThumbnail(L"Proto_Road_Pass_2", L"../../Client/Bin/Resource/MapObject/Road/PASSTAIRS.png");
+	AddTextureForThumbnail(L"Proto_Road_Lights", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC LIGHTS.png");
+	AddTextureForThumbnail(L"Proto_Road_Sign_1", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 1.png");
+	AddTextureForThumbnail(L"Proto_Road_Sign_2", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 2.png");
+	AddTextureForThumbnail(L"Proto_Road_Sign_3", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 3.png");
+	AddTextureForThumbnail(L"Proto_Road_Sign_4", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 4.png");
+	AddTextureForThumbnail(L"Proto_Road_Sign_5", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 5.png");
+	AddTextureForThumbnail(L"Proto_Road_Tree", L"../../Client/Bin/Resource/MapObject/Road/ARVORE 2.png");
+
 
 	return S_OK;
 }
