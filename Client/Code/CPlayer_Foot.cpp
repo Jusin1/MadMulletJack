@@ -50,11 +50,11 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
+  /*  if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
-    }
+    }*/
 }
 
 void CPlayer_Foot::Render_GameObject()
@@ -119,7 +119,7 @@ HRESULT CPlayer_Foot::Set_Texture()
 {
     m_bRenderOn = false;
 
-    switch (m_tInfo.ePlayerMove)
+    switch (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerMove)
     {
     case PMV_SLIDE:
     {
@@ -138,7 +138,7 @@ HRESULT CPlayer_Foot::Set_Texture()
         m_bRenderOn = false;
     }
 
-    switch (m_tInfo.ePlayerState)
+    switch (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState)
     {
     case KICK:
     {

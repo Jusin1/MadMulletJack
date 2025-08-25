@@ -51,11 +51,11 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     // player의 상태가 달라졌을 때, texture를 새로 셋팅
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
-    {
-        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-        Set_Texture();
-    }
+    //if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
+    //{
+    //    m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
+    //    Set_Texture();
+    //}
 }
 
 void CPlayer_HandL::Render_GameObject()
@@ -139,6 +139,9 @@ HRESULT CPlayer_HandL::Set_Texture()
     Set_Origin_Rot();
 
     m_bRenderOn = true;
+
+    // info 업데이트
+    m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
     
     // player state -> weapon 순으로 나누어서 texture 출력
     switch (m_tInfo.ePlayerState) {

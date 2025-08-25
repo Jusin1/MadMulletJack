@@ -52,11 +52,11 @@ void CPlayer_HandR::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
+   /* if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
-    }
+    }*/
 }
 
 void CPlayer_HandR::Render_GameObject()
@@ -141,7 +141,9 @@ HRESULT CPlayer_HandR::Set_Texture()
      Set_Origin_Rot();
 
     m_bRenderOn = true;
-    
+
+    m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
+
     switch (m_tInfo.ePlayerState)
     {
     case ATTACK:

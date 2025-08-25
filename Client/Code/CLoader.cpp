@@ -18,11 +18,12 @@
 #include "CPlayer_HandL.h"
 #include "CPlayer_Foot.h"
 #include "CPlayer_Arm.h"
+#include "CPlayerUI_Manager.h"
 
 // Weapon UI
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
-#include "CUIManager_Weapon.h"
+#include "CWeaponUI_Manager.h"
 
 // Hpbar UI
 #include "CHpbarUI.h"
@@ -1015,17 +1016,6 @@ HRESULT CLoader::Loading_UI()
 		CItemUI::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	// Player UI
-	// HandR UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
-		CPlayer_HandR::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	// HandL UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
-		CPlayer_HandL::Create(m_pGraphicDev))))
-		return E_FAIL;
-
 	// 몬스터 피격 이펙트
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_MonsterHitEffectUI",
 		CEffectUI::Create(m_pGraphicDev))))
@@ -1079,26 +1069,9 @@ HRESULT CLoader::Loading_UI()
 
 
 #pragma endregion 게임 진입 UI들 생성
-	// Foot UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
-		CPlayer_Foot::Create(m_pGraphicDev))))
-		return E_FAIL;
-	// Arm UI 생성
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerArmUI",
-		CPlayer_Arm::Create(m_pGraphicDev))))
-		return E_FAIL;
+	
 
-	// Weapon UI
-	// Pistol
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunPistolUI",
-		CPistol_Gun::Create(m_pGraphicDev))))
-		return E_FAIL;
 
-	// SubWeapon UI
-	// Knife
-	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SubWKnifeUI",
-		CKnife_SubW::Create(m_pGraphicDev))))
-		return E_FAIL;
 
 #pragma endregion 게임 진입 UI들 생성
 
@@ -1118,12 +1091,48 @@ HRESULT CLoader::Loading_UI()
 
 #pragma endregion HpBar UI
 
-#pragma region weapon manager UI
+#pragma region Player UI
+	// Player UI
+// HandR UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandRUI",
+		CPlayer_HandR::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// HandL UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerHandLUI",
+		CPlayer_HandL::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Foot UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerFootUI",
+		CPlayer_Foot::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// Arm UI 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerArmUI",
+		CPlayer_Arm::Create(m_pGraphicDev))))
+		return E_FAIL;
+	// player ui manager 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_PlayerUI",
+		CPlayerUI_Manager::Create(m_pGraphicDev))))
+		return E_FAIL;
+#pragma endregion Player UI
+
+#pragma region  weapon  UI
+	// Weapon UI
+	// Pistol
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunPistolUI",
+		CPistol_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// SubWeapon UI
+	// Knife
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_SubWKnifeUI",
+		CKnife_SubW::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 	//Weapon Manager UI
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_WeaponManagerUI",
-		CUIManager_Weapon::Create(m_pGraphicDev))))
+		CWeaponUI_Manager::Create(m_pGraphicDev))))
 		return E_FAIL;
-#pragma endregion weapon manager UI
+#pragma endregion weapon  UI
 
 	PhaseStep(1.0f, L"UI 로딩 완료");
 	PhaseDone(L"UI 로딩 완료");

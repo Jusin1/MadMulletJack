@@ -5,6 +5,7 @@
 #include "CObjectManager.h"
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
+#include "CPlayerUI_Manager.h"
 
 CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)

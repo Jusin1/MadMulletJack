@@ -8,20 +8,16 @@
 #include "CDInputMgr.h"
 #include "CGlobal_Info.h"
 #include "CMapFactory.h"
-#include "CPlayer_HandR.h"
-#include "CPlayer_HandL.h"
 #include "CVIBuffer_GridPanelBase.h"
 #include "CGameDataManager.h"
 #include "CGrounding.h"
-#include "CPlayer_Arm.h"
-#include "CPlayer_Foot.h"
 #include "CHpBarUI.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
 #include "CUIManager.h"
 #include "CManagement.h"
 #include "CTutorialTracker.h"
-#include "CUIManager_Weapon.h"
+#include "CWeaponUI_Manager.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL ,WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
@@ -64,14 +60,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	// ui들 생성
-	if (FAILED(Set_WeaponUI()))
+	if (FAILED(Set_UI()))
 		return E_FAIL;
 
-	if (FAILED(Set_PlayerUI()))
-		return E_FAIL;
-
-	if (FAILED(Set_HpBarUI()))
-		return E_FAIL;
 
 	// StartPosition 설정 -> scale 조정
 	if (MAPOBJECTDATA* p = reinterpret_cast<MAPOBJECTDATA*>(pArg))
@@ -1049,72 +1040,29 @@ HRESULT CPlayer::Change_Texture(const _tchar* LayerTag)
 	return S_OK;
 }
 
-HRESULT CPlayer::Set_PlayerUI()
-{
-	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
-	m_pPlayerUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIRoot", iSceneIndex, L"UI_Layer"));
-
-	if (m_pPlayerUI == nullptr)
-		return E_FAIL;
-
-	// foot UI 생성
-	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STATIC, L"UI_Layer"));
-	if (pFootUI)
-	{
-		pFootUI->Set_ObjTag(L"FootUI");
-		m_pPlayerUI->Add_Child(pFootUI); // 루트 UI에 등록
-	}
-
-	// habdR UI 생성
-	CPlayer_HandR* pHandRUI = dynamic_cast<CPlayer_HandR*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandRUI", iSceneIndex, L"UI_Layer"));
-	if (pHandRUI)
-	{
-		pHandRUI->Set_ObjTag(L"HandRUI");
-		m_pPlayerUI->Add_Child(pHandRUI); // 루트 UI에 등록
-	}
-
-	// handL UI 생성
-	CPlayer_HandL* pHandLUI = dynamic_cast<CPlayer_HandL*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerHandLUI", iSceneIndex, L"UI_Layer"));
-	if (pHandLUI)
-	{
-		pHandLUI->Set_ObjTag(L"HandLUI");
-
-		m_pPlayerUI->Add_Child(pHandLUI); // 루트 UI에 등록
-	}
-
-	// arm UI 생성
-	CPlayer_Arm* pArmUI = dynamic_cast<CPlayer_Arm*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerArmUI", iSceneIndex, L"UI_Layer"));
-	if (pArmUI)
-	{
-		pArmUI->Set_ObjTag(L"ArmUI");
-		m_pPlayerUI->Add_Child(pArmUI); // 루트 UI에 등록
-	}
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Set_HpBarUI()
+HRESULT CPlayer::Set_UI()
 {
 	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 
-	m_pHpBarUI = dynamic_cast<CUIBase*>(
-		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", iSceneIndex, L"UI_Layer"));
-
-	if (m_pHpBarUI == nullptr)
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Set_WeaponUI()
-{
-	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
-
+	// weapon ui
 	m_pWeaponUI = dynamic_cast<CUIBase*>(
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_WeaponManagerUI", iSceneIndex, L"UI_Layer"));
 
 	if (m_pWeaponUI == nullptr)
+		return E_FAIL;
+
+	// player ui
+	m_pPlayerUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerUI", iSceneIndex, L"UI_Layer"));
+
+	if (m_pPlayerUI == nullptr)
+		return E_FAIL;
+
+	// hpbar ui
+	m_pHpBarUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", iSceneIndex, L"UI_Layer"));
+
+	if (m_pHpBarUI == nullptr)
 		return E_FAIL;
 
 	return S_OK;

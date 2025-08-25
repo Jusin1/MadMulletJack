@@ -152,9 +152,8 @@ private:
 	HRESULT			Texture_Clone();
 	HRESULT			Change_Texture(const _tchar* componentTag);
 
-	HRESULT			Set_PlayerUI();
-	HRESULT			Set_HpBarUI();
-	HRESULT			Set_WeaponUI();
+	HRESULT			Set_UI();
+
 
 	// util func
 private:
