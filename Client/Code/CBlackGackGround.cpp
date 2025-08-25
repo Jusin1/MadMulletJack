@@ -60,6 +60,21 @@ _int CBlackGackGround::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
 	}
+
+	if (m_colorCycle) {
+		m_colorTimer += fTimeDelta;
+		if (m_colorTimer >= m_colorInterval) {
+			m_colorTimer = 0.f;
+			m_colorIndex = (m_colorIndex + 1) % 4;
+
+			switch (m_colorIndex) {
+			case 0: m_color = D3DXCOLOR(0.3f, 1.f, 0.3f, 1.f); break;    // 형광 연두 (네온 라임)
+			case 1: m_color = D3DXCOLOR(0.4f, 0.9f, 1.f, 1.f); break;    // 형광 하늘 (네온 스카이블루)
+			case 2: m_color = D3DXCOLOR(0.3f, 1.f, 0.3f, 1.f); break;    // 형광 연두 반복
+			case 3: m_color = D3DXCOLOR(1.f, 0.4f, 0.7f, 1.f); break;    // 형광 분홍 (네온 핑크)
+			}
+		}
+	}
 	
 	if (m_fadeActive)
 	{

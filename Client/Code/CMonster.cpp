@@ -6,6 +6,7 @@
 #include "CTimerMgr.h"
 #include "CPickingManager.h"
 #include "CColiderManager.h"
+#include "CCullingManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, MonsterType _eType)
 	: CCharacter(pGraphicDev), m_eType(_eType), m_eCategory(ObjectCategory::MONSTER)
@@ -56,6 +57,8 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 	CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 그룹에서 지워줌
 	CGameObject::Update_GameObject(fTimeDelta);
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_MONSTER, this); // collider 그룹에 넣어줌
+
+
 	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 	return NO_EVENT;
 }
@@ -64,12 +67,18 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 	//Key_Input(); // 테스트용 지워야 함
-
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
-	SetUp_BillBoard();
 	Compute_CamDistance(Get_Position());
+	SetUp_BillBoard();
+
+	// 컬링 적용
+	if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+	}
+
 	CPickingManager::GetInstance()->Add_PickingGroup(this); // picking 그룹에 넣어줌
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CMonster::Render_GameObject()

@@ -620,6 +620,13 @@ void CUIManager::DestroyEffectUI()
     m_pEffectUI = nullptr;
 }
 
+void CUIManager::DestroyReloadUI()
+{
+    if (!m_pReloadUI) return;
+    m_pReloadUI->Set_Dead(true);
+    m_pReloadUI = nullptr;
+}
+
 
 
 bool CUIManager::PhoneSlidesDone() const
@@ -693,7 +700,6 @@ void CUIManager::CloseShop()
         Safe_Release(c.icon);
         Safe_Release(c.title);
         Safe_Release(c.desc);
-        Safe_Release(c.price);
         Safe_Release(c.soldTag);
     }
 
@@ -723,40 +729,6 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
             parent->Add_Child(ui);
         };
 
-
-    // ── 1) 카드 버튼(프레임)
-    const float CARD_W = 200.f;
-    const float CARD_H = 300.f;
-    auto* btn = dynamic_cast<CButtonUI*>(
-        CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_UIButton", sceneIdx, L"UI_Layer"));
-    if (!btn) return;
-
-    btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
-    btn->SetSolidMode(false);
-
-    btn->SetHoverScale(1.14f);   
-    btn->SetPressScale(1.04f);  
-    btn->SetLerpSpeeds(22.f, 14.f);
-
-
-    btn->RegisterTexture(L"Com_Btn_Idle", L"Prototype_Component_Texture_PhoneShop_FrameUI", 0, 0, 0.f, false);
-    btn->RegisterTexture(L"Com_Btn_Hover", L"Prototype_Component_Texture_PhoneShop_BoardFrameUI", 0, 1, 0.f, false);
-
-
-    btn->SetStateTextures(
-        L"Com_Btn_Idle",   
-        L"Com_Btn_Hover", 
-        L"",         
-        L""               
-    );
-
-    btn->ChangeTexture(L"Com_Btn_Idle");
-
-    attach(btn);
-    outCard.btn = btn;
-    outCard.id = def.id;
-
     // - 2) 배경화면
     if (auto* back = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
@@ -771,6 +743,86 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         attach(back);
         outCard.pBack = back;
     }
+
+  
+    // ── 1) 카드 버튼(프레임)
+    const float CARD_W = 200.f;
+    const float CARD_H = 300.f;
+    auto* btn = dynamic_cast<CButtonUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIButton", sceneIdx, L"UI_Layer"));
+    if (!btn) return;
+
+    btn->Set_ButtonRect(cx, cy, CARD_W, CARD_H);
+    btn->SetSolidMode(false);
+    btn->RegisterTexture(L"Com_Btn_Frame", L"Prototype_Component_Texture_PhoneShop_BoardFrameUI", 0, 1, 0.f, false);
+    // 모든 상태가 같은 텍스처를 쓰되, '색'은 상태별 틴트로 제어
+    btn->SetStateTextures(
+        L"Com_Btn_Frame",   // Normal
+        L"Com_Btn_Frame",   // Hover
+        L"Com_Btn_Frame",   // Pressed
+        L"Com_Btn_Frame"    // Disabled
+    );
+
+    btn->SetTextureTints(
+        D3DXCOLOR(0.f, 0.f, 0.f, 1.f),  // Normal → 검정(무조건 까맣게)
+        D3DXCOLOR(1.f, 1.f, 1.f, 1.f),  // Hover  → 원본색
+        D3DXCOLOR(1.f, 1.f, 1.f, 1.f),  // Pressed→ 원본색 (원하면 0.9로 약간 어둡게)
+        D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.f)// Disabled→ 회색
+    );
+
+    // 나머지 효과 그대로
+    btn->SetHoverScale(1.14f);
+    btn->SetPressScale(1.04f);
+    btn->SetLerpSpeeds(22.f, 14.f);
+    attach(btn);
+    outCard.btn = btn;
+    outCard.id = def.id;
+
+    // ── 프레임 이미지 (0~2개)
+    for (size_t i = 0; i < def.frames.size() && i < 2; ++i) {
+        const FrameInfo& f = def.frames[i];
+
+        if (auto* frame = dynamic_cast<CImageUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
+        {
+            const float FRAME_X = cx + f.xOffset;
+            const float FRAME_Y = cy + f.yOffset;
+
+            frame->RegisterTexture(f.texTag.c_str(), f.protoTag.c_str(), 0, 0, 0.f, false);
+            frame->ChangeTexture(f.texTag.c_str());
+            frame->SetColorMode(CImageUI::ColorMode::TintMultiply);
+            frame->SetAlpha(200);
+            frame->SetAdditive(false);
+            frame->Set_UIPosition(FRAME_X, FRAME_Y, f.w, f.h);
+
+            attach(frame);
+            outCard.frames.push_back(frame);
+        }
+    }
+
+    // ── 서브배경 (색상 + 위치/크기 조절)
+    if (def.subBackColor.a > 0.0f) {
+        if (auto* subBack = dynamic_cast<CBlackGackGround*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer")))
+        {
+            const float SUB_W = (def.subBackW > 0.f) ? def.subBackW : 180.f;
+            const float SUB_H = (def.subBackH > 0.f) ? def.subBackH : 260.f;
+            const float SUB_X = cx + def.subBackXOffset;
+            const float SUB_Y = cy + def.subBackYOffset;
+
+            subBack->Set_UIPosition(SUB_X, SUB_Y, SUB_W, SUB_H);
+            subBack->SetColor(def.subBackColor);
+            subBack->SetAlpha(160);
+
+            attach(subBack);
+            outCard.subBack = subBack;
+        }
+    }
+
+
 
 
     CTextUI* buyLabel = dynamic_cast<CTextUI*>(
@@ -814,13 +866,16 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
     }
 
 
-    // ── 2) 아이콘
+
+    // ── 카드 아이콘
     if (auto* icon = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
     {
-        const float ICON_W = 140.f, ICON_H = 140.f;
-        const float ICON_Y = cy - 30.f;
+        const float ICON_W = def.iconW;
+        const float ICON_H = def.iconH;
+        const float ICON_Y = cy + def.iconYOffset;
+
         icon->RegisterTexture(def.artTag.c_str(), def.artProto.c_str(), 0, 0, 0.f, false);
         icon->ChangeTexture(def.artTag.c_str());
         icon->SetAdditive(false);
@@ -828,6 +883,10 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         attach(icon);
         outCard.icon = icon;
     }
+
+
+
+
 
     //  제목
     if (auto* t = dynamic_cast<CTextUI*>(
@@ -968,7 +1027,7 @@ void CUIManager::ClearAllUI()
 {
     // --- 기본 UI 포인터 정리 ---
     Safe_Release(m_pEnterUI);             m_pEnterUI = nullptr;
-    Safe_Release(m_pMonsterDieEffect);    m_pMonsterDieEffect = nullptr;
+    Safe_Release(m_pFlooroUI);    m_pFlooroUI = nullptr;
 
     Safe_Release(m_pVictoryText);         m_pVictoryText = nullptr;
     Safe_Release(m_pFloorTimeText);       m_pFloorTimeText = nullptr;
@@ -992,7 +1051,6 @@ void CUIManager::ClearAllUI()
         Safe_Release(card.icon);
         Safe_Release(card.title);
         Safe_Release(card.desc);
-        Safe_Release(card.price);
         Safe_Release(card.soldTag);
     }
     m_shopCards.clear();
@@ -1239,6 +1297,68 @@ void CUIManager::CreatePhoneScreen()
         img2->Play(true);
         // 프레임을 최상단으로 올리고 싶으면:
         parent->Add_ChildFront(img2);
+    }
+}
+
+void CUIManager::CreateReloadUI()
+{
+    if (m_pReloadUI) return; // 중복 방지
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    m_pReloadUI = dynamic_cast<CUIBase*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    if (!m_pReloadUI) return;
+
+    if (auto* pRed = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pRed->Set_UIPosition(0.f, 110.f, 170.f, 50.f);
+        pRed->SetAlpha(255);
+        pRed->SetColor(D3DCOLOR_ARGB(255, 220, 80, 80)); // 흐린 붉은색
+        m_pReloadUI->Add_Child(pRed);
+    }
+
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(-5.f, 105.f, 160.f, 40.f);
+        pBlack->SetAlpha(255);
+        m_pReloadUI->Add_Child(pBlack);
+    }
+
+    if (auto* pGreen = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pGreen->Set_UIPosition(30.f, 105.f, 100.f, 40.f);
+        pGreen->SetAlpha(255);
+        pGreen->SetColor(D3DCOLOR_ARGB(255, 0, 255, 0)); // 밝은 연두색 (Lime Green)
+        pGreen->EnableColorCycle(true, 0.8f); // ← 이 객체만 색상 자동 변경
+        m_pReloadUI->Add_Child(pGreen);
+    }
+
+
+    if (auto* txt1 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt1->SetFontTag(L"Font_UI_Regular");
+        txt1->SetText(L"[R]");
+        txt1->Set_UIPosition(-50.f, -95.f, 50.f, 25.f);
+        txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt1->SetScale(0.5f);
+        txt1->SetCentered(true);
+        m_pReloadUI->Add_Child(txt1);
+    }
+
+    if (auto* txt2 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt2->SetFontTag(L"Font_UI_Bold");
+        txt2->SetText(L"재장전");
+        txt2->Set_UIPosition(35.f, -95.f, 50.f, 25.f);
+        txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt2->SetScale(0.5f);
+        txt2->SetCentered(true);
+        m_pReloadUI->Add_Child(txt2);
     }
 }
 

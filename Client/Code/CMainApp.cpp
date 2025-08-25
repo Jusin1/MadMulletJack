@@ -32,8 +32,8 @@
 #include "CMapFactory.h"
 #include "CFrameMgr.h"
 #include "CFileManager.h"
-#include "CMapFactory.h"
 #include "CDataManager.h"
+#include "CCullingManager.h"
 
 //============
 // Scene
@@ -77,6 +77,10 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(CComponentMgr::GetInstance()->Ready_Prototype(SCENE_END)))
 		return E_FAIL;
 
+	// 컬링
+	if (FAILED(CCullingManager::GetInstance()->Ready_Culling(m_pGraphicDev)))
+		return E_FAIL;
+
 	// 기본 컴포넌트 등록
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
@@ -97,6 +101,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 	CManagement::GetInstance()->Update_Scene(fTimeDelta); // 씬 업데이트
 	CObjectManager::GetInstance()->Update(fTimeDelta); // 오브젝트 업데이트
 	CPicking::GetInstance()->Update();
+	CCullingManager::GetInstance()->Update_Culling();
 
 	return 0;
 }
@@ -463,6 +468,7 @@ CMainApp* CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CCullingManager::GetInstance()->DestroyInstance();
 	CComponentMgr::GetInstance()->DestroyInstance();
 	Engine::Safe_Release(m_pRenderer);
 	Engine::Safe_Release(m_pDeviceClass);
