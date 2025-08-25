@@ -157,9 +157,9 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	// 만약 체력이 0이 되면 state <- PLAYERDEAD
 	if (m_fHp <= 0)
 	{
-		// debug
-		Change_State(PLAYERDEAD);
-		Change_Move(PMV_NORMAL);
+		// debug  deadtest
+		/*Change_State(PLAYERDEAD);
+		Change_Move(PMV_NORMAL);*/
 	}
 }
 

@@ -50,12 +50,7 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    // player의 상태가 달라졌을 때, texture를 새로 셋팅
-    //if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
-    //{
-    //    m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-    //    Set_Texture();
-    //}
+
 }
 
 void CPlayer_HandL::Render_GameObject()
@@ -115,7 +110,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 3.f;
+    texInfo.m_fSpeed = 3.8f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;

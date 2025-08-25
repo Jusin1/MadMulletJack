@@ -50,11 +50,7 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-  /*  if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
-    {
-        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-        Set_Texture();
-    }*/
+
 }
 
 void CPlayer_Foot::Render_GameObject()
