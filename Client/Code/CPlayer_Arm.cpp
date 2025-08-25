@@ -124,7 +124,7 @@ HRESULT CPlayer_Arm::Set_Texture()
     PlayerStateInfo tPlayerInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
 
     if (tPlayerInfo.ePlayerState == OPENING &&
-        tPlayerInfo.ePlayerState == WP_NON) {
+        tPlayerInfo.eWeapon == WP_NON) {
         Change_Texture(TEXT("Com_Texture_Arm_Op1"));
         Set_UISizeAndPos(720.f, 680.f, WINCX * 0.5f, WINCY * 0.5f + 200);
         m_bRenderOn = true;

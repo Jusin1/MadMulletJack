@@ -158,7 +158,8 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	if (m_fHp <= 0)
 	{
 		// debug
-		// m_tPlayerInfo.ePlayerState = PLAYERDEAD;
+		Change_State(PLAYERDEAD);
+		Change_Move(PMV_NORMAL);
 	}
 }
 
@@ -448,7 +449,7 @@ void CPlayer::DOPING_Begin()
 	m_bIsAttack = true;
 	Add_Hp(5.f);
 
-	m_fStateTime = 0.2f;
+	m_fStateTime = 1.f;
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
@@ -602,9 +603,11 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	//debug
 	if (KEY_BUTTON_DOWN(DIK_E))
 		Change_State(ATTACK_INSTANT);
-
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
+	if (KEY_BUTTON_DOWN(DIK_M))
+		Change_State(DOPING);
+
 
 }
 
