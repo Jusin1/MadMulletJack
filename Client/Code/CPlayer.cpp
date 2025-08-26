@@ -488,11 +488,33 @@ void CPlayer::OPENING_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	//WP_NON, WP_PISTOL, WP_SHOTGUN, WP_RIFLE, WP_KATANA, WP_SNIPER, WP_END
+	switch (m_tPlayerInfo.eWeapon)
+	{
+	case WP_NON:
+		m_fStateTime = 1.5f;
+		break;
+	case WP_PISTOL:
+		m_fStateTime = 0.5f;
+		break;
+
+	case WP_SHOTGUN:
+		break;
+	case WP_RIFLE:
+		break;
+
+	case WP_KATANA:
+		break;
+	case WP_SNIPER:
+		break;
+
+	}
 }
 
 void CPlayer::OPENING_On(const _float& fTimeDelta)
 {
-	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+	if (StateTime_IsEnd(fTimeDelta))
 		Set_State_Normal();
 }
 
@@ -640,6 +662,16 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
 		Change_State(DOPING);
+
+	if (KEY_BUTTON_DOWN(DIK_C))
+		Change_Weapon2(WP_KICK);
+	if (KEY_BUTTON_DOWN(DIK_V))
+		Change_Weapon2(WP_KNIFE);
+
+	if (KEY_BUTTON_DOWN(DIK_Z))
+		Change_Weapon(WP_NON);
+	if (KEY_BUTTON_DOWN(DIK_X))
+		Change_Weapon(WP_PISTOL);
 }
 
 void CPlayer::Set_State_Normal()
@@ -860,6 +892,7 @@ void CPlayer::Change_Weapon(WEAPON _eWeapon)
 
 	// state는 opening으로 넘어감
 	Change_State(OPENING);
+	Change_Move(PMV_NORMAL);
 }
 
 void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
@@ -874,6 +907,11 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 {
+	// 상태 업데이트
+	m_tPrePlayerInfo.ePlayerMove = m_tPlayerInfo.ePlayerMove; // 전 state 저장
+	m_tPlayerInfo.ePlayerMove = ePlayerMove; // state 업데이트
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
 	// 바뀔때 y값 저장해옴 m_bYFix의 값에 따라 쓸래말래 결정
 	m_fFixY = GetTransform()->Get_Info(INFO_POS).y;
 	m_bIsFixY = bYFix;
@@ -886,8 +924,15 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		break;
 
 	case PMV_DASHATT:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
+	break;
+
 	case PMV_DASH:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
+
+		// 만약 전 state가 slide였다면 speed 좀 줄여줌
+		if (m_tPrePlayerInfo.ePlayerMove == PMV_SLIDE)
+			GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 1.f;
 	break;
 
 	case PMV_SLIDE:
@@ -911,11 +956,6 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	break;
 	}
-
-	// 상태 업데이트
-	m_tPrePlayerInfo.ePlayerMove = m_tPlayerInfo.ePlayerMove; // 전 state 저장
-	m_tPlayerInfo.ePlayerMove = ePlayerMove; // state 업데이트
-	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 }
 
 HRESULT CPlayer::Set_Component()

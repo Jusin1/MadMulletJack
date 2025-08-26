@@ -144,7 +144,7 @@ HRESULT CPistol_Gun::Texture_Clone()
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 9;
 	texInfo.m_fSpeed = 25.f;
-	texInfo.m_bLoop = false;
+	texInfo.m_bLoop = true;
 	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Op"), m_pTextureCom });

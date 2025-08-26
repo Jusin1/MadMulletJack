@@ -110,7 +110,7 @@ HRESULT CPlayer_HandR::Texture_Clone()
     // Opening - Pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 1.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpPistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
