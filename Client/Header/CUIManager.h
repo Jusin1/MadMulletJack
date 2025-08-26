@@ -42,8 +42,8 @@ class CUIManager :
     // 씬별로 어떤 카드들이 등장하는지 지정
     std::unordered_map<int, std::vector<UpgradeId>> gSceneShopCards = {
         { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
-        { SCENE_STAGE_1, { UpgradeId::SHOTGUN, UpgradeId::SlowMo } },
-        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_TUTORIAL, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
+        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN, UpgradeId::HEADSHOT } },
         { SCENE_STAGE_3,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
         { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
     };

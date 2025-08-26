@@ -934,6 +934,7 @@ void CUIManager::ClearAllUI()
     m_nextPhoneScreenTexTag.clear();
     m_slideTasks.clear();
     m_scaleTasks.clear();
+    m_pEnterUI = nullptr;
 }
 
 
