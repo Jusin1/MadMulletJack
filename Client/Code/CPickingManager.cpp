@@ -63,7 +63,7 @@ _bool CPickingManager::Picking()
         CGameObject* obj = *it;
         if (!obj || obj->Get_Dead() || !obj->Is_Active()) { it = m_PickingList.erase(it); continue; }
 
-        _vec3 hitW;
+        _vec3 hitW{};
         if (obj->Picking(&hitW)) {
             vecPicked.push_back(obj);
             vecPos.push_back(hitW);
