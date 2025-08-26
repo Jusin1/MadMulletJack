@@ -191,6 +191,7 @@ private:
 	
 	_float m_fNormalSpeed;
 	_float m_fDashCoolTime;
+	_float m_fAttackCoolTime;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;

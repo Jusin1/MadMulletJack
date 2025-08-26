@@ -10,7 +10,7 @@
 CCharacter::CCharacter(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGameObject(pGraphicDev), m_eObjID(OBJ_END), m_bPickingTrue(false),
 	m_fHp(0.f), m_fAttack(0.f), m_fVelocity(0.f), 
-	m_bJumping(false), m_fJumpTime(0.f), m_fMaxHp(10.f)
+	m_bJumping(false), m_fJumpTime(0.f), m_fMaxHp(0.f)
 {
 }
 

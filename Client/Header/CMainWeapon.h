@@ -30,8 +30,8 @@ public:
 	void Set_Powery(_int _iPower) { m_iPower = _iPower; }
 	_int Get_Precision() const { return m_iPrecision; }
 	void Set_Precision(_int _iPrecision) { m_iPrecision = _iPrecision; }
-	_int Get_Speed() const { return m_iSpeed; }
-	void Set_Speed(_int _iSpeed) { m_iSpeed = _iSpeed; }
+	_float Get_CoolTime() const { return m_fCoolTime; }
+	void Set_CoolTime(_int _iSpeed) { m_fCoolTime = _iSpeed; }
 
 	_float Get_Range() const { return m_fRange; }
 	void Set_Range(_float _fRange) { m_fRange = _fRange; }
@@ -42,7 +42,7 @@ protected:
 	_int m_iMaxBullet;	// 최대 maxBullet 수
 	_int m_iPower;		// 공격도
 	_int m_iPrecision;	// 정확도 <- 이거는 나중에 빼도 될듯.. 원작에 있어서 넣었어유..
-	_int m_iSpeed;		// 스피드 <- 총알 속도
+	_float m_fCoolTime;		// 스피드 <- 재 공격 속도
 	_float m_fRange;	// 공격 범위
 
 protected:

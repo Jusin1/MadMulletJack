@@ -18,12 +18,16 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
+#include "CUIManager.h"
+
+#include "CMainWeapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL , WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
-	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f)
+	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
+	m_fAttackCoolTime(0.f)
 {
 }
 
@@ -32,7 +36,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_TimerTag(rhs.m_TimerTag), m_fGround_Height(rhs.m_fGround_Height), m_eMoveKey(rhs.m_eMoveKey),
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
-	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime)
+	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime)
 {
 }
 
@@ -70,9 +75,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 		GetTransform()->Set_Info(INFO::INFO_POS, p->transform.Pos);
 	}
 	GetTransform()->Set_Scale(1.f, 2.f, 1.f);
-
+	
+	m_fMaxHp = 10.f;
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
-	m_fNormalSpeed = 8.f; // normal speed 값 -> 이값은 고정
+	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
 
 	// state 변경 해줌
 	Change_State(OPENING);
@@ -111,7 +117,6 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 		Set_OnTerrain(fTimeDelta);
 	}
 	
-
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
@@ -379,6 +384,28 @@ void CPlayer::ATTACK_On(const _float& fTimeDelta)
 
 void CPlayer::ATTACK_End()
 {
+	// 무한 모드 제외
+
+	// 다음 attack 속도 조절
+	//Find_Object
+	switch (m_tPlayerInfo.eWeapon)
+	{
+	case WP_NON:
+		break;
+	case WP_PISTOL:
+		m_fAttackCoolTime = dynamic_cast<CMainWeapon*>(m_pWeaponUI->Find_Child_ByTag(TEXT("PistolUI")))->Get_CoolTime();
+		break;
+
+	case WP_SHOTGUN:
+		break;
+	case WP_RIFLE:
+		break;
+
+	case WP_KATANA:
+		break;
+	case WP_SNIPER:
+		break;
+	}
 }
 
 // attack instant
@@ -402,6 +429,8 @@ void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 
 void CPlayer::ATTACK_INSTANT_End()
 {
+	// test -> 주석 빼주기
+	//Change_Weapon2(WP_KICK);
 }
 
 void CPlayer::ZOOMING_Begin()
@@ -474,7 +503,8 @@ void CPlayer::DOPING_On(const _float& fTimeDelta)
 
 void CPlayer::DOPING_End()
 {
-
+	// 전 무기로 바꿈
+	Change_Weapon2(m_tPrePlayerInfo.eWeapon2);
 }
 
 // opening
@@ -508,7 +538,6 @@ void CPlayer::OPENING_Begin()
 		break;
 	case WP_SNIPER:
 		break;
-
 	}
 }
 
@@ -690,6 +719,17 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		m_fDashCoolTime -= fTimeDelta;
 		if (m_fDashCoolTime <= 0.f)
 			m_fDashCoolTime = 0.f;
+	}
+
+	if (m_fAttackCoolTime != 0)
+	{
+		m_bIsAttack = false;
+		m_fAttackCoolTime -= fTimeDelta;
+		if (m_fAttackCoolTime <= 0.f)
+		{
+			m_fAttackCoolTime = 0.f;
+			m_bIsAttack = true;
+		}
 	}
 		
 	// debug
@@ -901,8 +941,9 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 	m_tPlayerInfo.eWeapon2 = _eWeapon2; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 
-	// state는 opening으로 넘어감
-	Change_State(OPENING);
+	// 충돌때 생성
+	// change 후 destroy
+	// CUIManager::GetInstance()->CreateItemUI();
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
@@ -924,11 +965,11 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		break;
 
 	case PMV_DASHATT:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 	break;
 
 	case PMV_DASH:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 
 		// 만약 전 state가 slide였다면 speed 좀 줄여줌
 		if (m_tPrePlayerInfo.ePlayerMove == PMV_SLIDE)
@@ -936,11 +977,11 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	break;
 
 	case PMV_SLIDE:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 3.f;
 	break;
 	
 	case PMV_WALL:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 3.f;
 		m_bIsFixY = true;
 		break;
 
@@ -1114,12 +1155,12 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 					// 몬스터 위치로 이동한 다음
 					if (Get_Pos().z < vMonPos.z) // z값을 기준으로 움직임 멈춤 조건
 					{
-						while (Get_Pos().z < vMonPos.z)
+						while (Get_Pos().z < (vMonPos.z) * 0.8)
 							m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
 					}
 					else
 					{
-						while (Get_Pos().z > vMonPos.z)
+						while (Get_Pos().z > (vMonPos.z) * 1.2)
 							m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
 					}
 

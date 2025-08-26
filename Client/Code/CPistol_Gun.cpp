@@ -41,10 +41,10 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 	m_bRenderOn = false;
 	m_bIsInfinite = false;
 
-	// 파워 / 정확도 / 속도
+	// 파워 / 정확도 / attack cool time
 	m_iPower = 3;
 	m_iPrecision = 10;
-	m_iSpeed = 5;
+	m_fCoolTime = 0.1f;
 	// 최대 불렛
 	m_iMaxBullet = 3; //origin : 9 / debug 3
 	m_iBullet = m_iMaxBullet;
@@ -252,7 +252,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case ATTACK:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
 				return E_FAIL;
-			Set_UISizeAndPos(245.f, 500.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 200.f);
+			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
 
 			m_iBullet--;
 
