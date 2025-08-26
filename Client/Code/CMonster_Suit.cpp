@@ -144,9 +144,16 @@ void CMonster_Suit::Set_Collider()
                 m_bKillAfterHit = false;
             }
 
+            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerMove == PMV_SLIDE)
+            {
+                SetState(HIT_DOOR);
+                m_bKillAfterHit = true;
+            }
+
             if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_INSTANT)
             {
                 SetState(INSKILL);
+                m_bKillAfterHit = false;
             }
         }
 
@@ -439,7 +446,8 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_INSTANT)
             // 죽음 처리
         {
-            m_bDead = true;
+            SetState(HIT_DOOR);
+            m_bKillAfterHit = true;
         } 
     }
         break;

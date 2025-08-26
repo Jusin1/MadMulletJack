@@ -430,7 +430,8 @@ void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 void CPlayer::ATTACK_INSTANT_End()
 {
 	// test -> 주석 빼주기
-	//Change_Weapon2(WP_KICK);
+	Change_Weapon2(WP_KICK);
+	Change_Move(PMV_DASHATT);
 }
 
 void CPlayer::ZOOMING_Begin()
@@ -569,6 +570,7 @@ void CPlayer::PLAYERDEAD_End()
 
 void CPlayer::Clear_Begin()
 {
+	m_bIsCountHp = false;
 	m_eMoveKey = MVKEY_NON;
 	m_pPlayerUI->Set_RenderOn(false);
 	m_pPlayerUI->Set_Active(false);
@@ -850,6 +852,7 @@ void CPlayer::Move_Dash(const _float& fTimeDelta)
 	if (m_pTransformCom->GetTransformInfo().fSpeed <= m_fNormalSpeed)
 	{
 		Change_Move(PMV_NORMAL);
+		m_eMoveKey = MVKEY_NORMAL;
 		m_fDashCoolTime = 0.5f;
 		return;
 	}
@@ -1153,16 +1156,22 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				if (m_tPlayerInfo.ePlayerMove == PMV_DASHATT)
 				{
 					// 몬스터 위치로 이동한 다음
-					if (Get_Pos().z < vMonPos.z) // z값을 기준으로 움직임 멈춤 조건
-					{
-						while (Get_Pos().z < (vMonPos.z) * 0.8)
-							m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
-					}
-					else
-					{
-						while (Get_Pos().z > (vMonPos.z) * 1.2)
-							m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
-					}
+					//if (Get_Pos().z < vMonPos.z) // z값을 기준으로 움직임 멈춤 조건
+					//{
+					//	//while (Get_Pos().z < (vMonPos.z) * 0.8)
+					//	while (Get_Pos().z < (vMonPos.z))
+					//		m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
+
+					//	PushBack(vDistance);
+					//}
+					//else
+					//{
+					//	//while (Get_Pos().z > (vMonPos.z) * 1.2)
+					//	while (Get_Pos().z > (vMonPos.z))
+					//		m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
+
+						PushBack(vDistance);
+					//}
 
 					// wap2에 따라 state 변경
 					switch (m_tPlayerInfo.eWeapon2)
