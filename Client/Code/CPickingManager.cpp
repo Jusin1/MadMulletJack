@@ -3,6 +3,7 @@
 #include "CTransform.h"
 #include "CObjectManager.h"
 #include "CCamera.h"
+#include "CGlobal_Info.h"
 
 IMPLEMENT_SINGLETON(CPickingManager)
 
@@ -52,6 +53,11 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 // 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK)
+    {
+        return false;
+    }
+
     if (m_bMouseInUI) return false;
     if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001)) return false;
 

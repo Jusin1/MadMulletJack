@@ -78,6 +78,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State(OPENING);
 	Change_Move(PMV_NORMAL);
 
+	m_bIsFixY = false;
+	Set_OnTerrain(1);
+
 	return S_OK;
 }
 
@@ -103,7 +106,11 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	Set_OnTerrain(fTimeDelta);
+	if(!m_bIsFixY)
+	{
+		Set_OnTerrain(fTimeDelta);
+	}
+	
 
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
@@ -176,7 +183,7 @@ void CPlayer::Change_State(PLAYERSTATE _eState)
 	StateNormalSet(); // 전체적으로 적용하는 setting
 	StateBegin(m_tPlayerInfo.ePlayerState); // 바꾸는 state begin 
 
-	Change_Move(m_tPlayerInfo.ePlayerMove);
+	//Change_Move(m_tPlayerInfo.ePlayerMove);
 }
 
 
@@ -265,7 +272,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	if (m_bIsCountHp)
 	{
-		CountHp(fTimeDelta);
+		CountTime(fTimeDelta);
 	}
 	
 	KeyInput(fTimeDelta);
@@ -315,6 +322,7 @@ void CPlayer::JUMP_Begin()
 	Set_Velocity(5.5f);
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
+	m_bIsFixY = false;
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -566,33 +574,44 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	// 상태 전환 키
 	if (m_bIsKeyInput) {
 		//DIK_LSHIFT
-		if (KEY_BUTTON_HOLD(DIK_LSHIFT) && m_tPlayerInfo.ePlayerMove != PMV_DASH && m_fDashCoolTime == 0)
+		if (KEY_BUTTON_HOLD(DIK_LSHIFT) &&				//  l-shift hold 시
+			m_tPlayerInfo.ePlayerMove != PMV_DASH &&	// 이중 dash 금지
+			m_fDashCoolTime == 0 &&						// dash cool time이 0이라면
+			m_tPlayerInfo.ePlayerMove != PMV_DASHJUMP)						
 		{
-			if (m_tPlayerInfo.ePlayerState == JUMP)
+			if (m_tPlayerInfo.ePlayerState == JUMP)		// jump후 l-shif -> move : jump dash
 			{
-				Change_Move(PMV_JUMPDASH);
+				Change_Move(PMV_DASHJUMP);
 				Change_State(IDLE);
+				m_bIsFixY = true;
+				return;
 			}
 				
 			else
+			{
+				CTutorialTracker::Get().Notify_Dash();
 				Change_Move(PMV_DASH);
-			CTutorialTracker::Get().Notify_Dash();
-			Change_Move(PMV_DASH);
+			}
 		}
 
 		//DIK_SPACE
-		if (KEY_BUTTON_DOWN(DIK_SPACE))
+		if (KEY_BUTTON_DOWN(DIK_SPACE) &&
+			m_tPlayerInfo.ePlayerState != JUMP) // 이중 jump 금지
 		{
 			Change_State(JUMP);
 			CTutorialTracker::Get().Notify_Jump();
 		}
 
-		if (IS_RBUTTON_HOLD && m_tPlayerInfo.ePlayerMove != PMV_DASHATT && m_fDashCoolTime == 0) // 우클릭
+		if (IS_RBUTTON_HOLD &&								// 우클릭 hold 시
+			m_tPlayerInfo.ePlayerMove != PMV_DASHATT &&		// 이중 dash attack 금지
+			m_fDashCoolTime == 0 &&							// dash cool time이 지나면
+			m_tPlayerInfo.ePlayerState != JUMP &&
+			m_tPlayerInfo.ePlayerMove != PMV_SLIDE)				// jump dash 막음
 		{
 			Change_Move(PMV_DASHATT);
 		}
 
-		if (m_tPlayerInfo.eWeapon == WP_PISTOL ||
+		if (m_tPlayerInfo.eWeapon == WP_PISTOL ||	// weapon1이 있을 때
 			m_tPlayerInfo.eWeapon == WP_SHOTGUN ||
 			m_tPlayerInfo.eWeapon == WP_RIFLE ||
 			m_tPlayerInfo.eWeapon == WP_PISTOL)
@@ -629,7 +648,7 @@ void CPlayer::Set_State_Normal()
 	Change_Move(PMV_NORMAL);
 }
 
-void CPlayer::CountHp(const _float& fTimeDelta)
+void CPlayer::CountTime(const _float& fTimeDelta)
 {
 	Add_Hp(-1.f * fTimeDelta);
 
@@ -662,6 +681,13 @@ void CPlayer::Move(const _float& fTimeDelta)
 	switch (m_tPlayerInfo.ePlayerMove)
 	{
 	case PMV_NORMAL:
+		// 만약 터레인 위에 없다면
+		/*if (m_tPlayerInfo.ePlayerState != JUMP &&
+			!Is_OnTerrain())
+		{
+			Change_Move(PMV_FALL);
+			Change_State(IDLE);
+		}*/
 		break;
 
 	case PMV_DASHATT:
@@ -716,19 +742,25 @@ void CPlayer::Move(const _float& fTimeDelta)
 	}
 		break;
 
-	case PMV_JUMPDASH:
+	case PMV_DASHJUMP:
 	{
 		// 만약 L-shift 을 땠따면
 		if (KEY_BUTTON_UP(DIK_LSHIFT))
 		{
 			// move state : normal
-			Set_State_Normal();
+			Change_Move(PMV_FALL);
+			Change_State(IDLE);
 			return;
 		}
 
 		m_eMoveKey = MVKEY_NON;
 		Move_JumpDash(fTimeDelta);
 	}
+		break;
+
+	case PMV_FALL:
+		m_eMoveKey = MVKEY_NORMAL;
+		Move_Fall(fTimeDelta);
 		break;
 
 	default:
@@ -757,7 +789,7 @@ void CPlayer::Move_Dash(const _float& fTimeDelta)
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 10.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 6.f;
 }
 
 void CPlayer::Move_Slide(const _float& fTimeDelta)
@@ -765,14 +797,14 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 	// 만약 slide에서 벗어나면
 	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::INCLINE)
 	{
-		Change_Move(PMV_DASHATT);
+		Change_Move(PMV_DASH);
 		return;
 	}
 
-	// 만약 jump이면 dash로 전환
+	// jump 불가능
 	if (m_tPlayerInfo.ePlayerState == JUMP)
 	{
-		Change_Move(PMV_DASH);
+		Change_State(IDLE);
 		return;
 	}
 
@@ -803,7 +835,41 @@ void CPlayer::Move_Wall(const _float& fTimeDelta)
 
 void CPlayer::Move_JumpDash(const _float& fTimeDelta)
 {
-	m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY + 2.f);
+	m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY);
+}
+
+void CPlayer::Move_Fall(const _float& fTimeDelta)
+{
+	// 만약 터레인에 있다면
+	if (Is_OnTerrain())
+	{
+		Set_State_Normal();
+		return;
+	}
+
+	_float Y = 0;
+	GetTransform()->Move_YDown(fTimeDelta,0.f,false, Y);
+}
+
+void CPlayer::Change_Weapon(WEAPON _eWeapon)
+{
+	// 상태 업데이트
+	m_tPrePlayerInfo.eWeapon = m_tPlayerInfo.eWeapon; // 전 state 저장
+	m_tPlayerInfo.eWeapon = _eWeapon; // state 업데이트
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
+	// state는 opening으로 넘어감
+	Change_State(OPENING);
+}
+
+void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
+{
+	m_tPrePlayerInfo.eWeapon2 = m_tPlayerInfo.eWeapon2; // 전 state 저장
+	m_tPlayerInfo.eWeapon2 = _eWeapon2; // state 업데이트
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
+	// state는 opening으로 넘어감
+	Change_State(OPENING);
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
@@ -821,7 +887,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	case PMV_DASHATT:
 	case PMV_DASH:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 8.f;
 	break;
 
 	case PMV_SLIDE:
@@ -833,9 +899,14 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		m_bIsFixY = true;
 		break;
 
-	case PMV_JUMPDASH:
+	case PMV_DASHJUMP:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
 		m_bIsFixY = true;
+		break;
+
+	case PMV_FALL:
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed;
+		m_bIsFixY = true; // set onterrain 방지
 		break;
 
 	break;
@@ -1051,7 +1122,6 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 
 _bool CPlayer::Set_Collider_With_SlideWall()
 {
-
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE))
 	{
 		// state, move 바꿈
@@ -1069,7 +1139,6 @@ void CPlayer::Set_Collider_With_Item()
 	//나중에 item으로 바꿔야함 test
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE))
 	{
-		//Change_State(KICK);
 		Change_State(DOPING);
 	}
 }
@@ -1109,21 +1178,18 @@ HRESULT CPlayer::Set_UI()
 	// weapon ui
 	m_pWeaponUI = dynamic_cast<CUIBase*>(
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_WeaponManagerUI", iSceneIndex, L"UI_Layer"));
-
 	if (m_pWeaponUI == nullptr)
 		return E_FAIL;
 
 	// player ui
 	m_pPlayerUI = dynamic_cast<CUIBase*>(
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerUI", iSceneIndex, L"UI_Layer"));
-
 	if (m_pPlayerUI == nullptr)
 		return E_FAIL;
 
 	// hpbar ui
 	m_pHpBarUI = dynamic_cast<CUIBase*>(
 		CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI", iSceneIndex, L"UI_Layer"));
-
 	if (m_pHpBarUI == nullptr)
 		return E_FAIL;
 
@@ -1204,6 +1270,8 @@ const TCHAR* CPlayer::MoveToString(PLAYERMOVE eMove)
 	case PMV_DASHATT: return TEXT("Move: DashAtt\n");
 	case PMV_SLIDE: return TEXT("Move: Slide\n");
 	case PMV_WALL: return TEXT("Move: Wall\n");
+	case PMV_DASHJUMP: return TEXT("Move: JumpDash\n");
 	case PMV_END: return TEXT("Move: Unknown\n");
+	case PMV_FALL: return TEXT("Move: Fall\n");
 	}
 }

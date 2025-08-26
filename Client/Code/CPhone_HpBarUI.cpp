@@ -42,7 +42,6 @@ HRESULT CPhone_HpBarUI::Initialize(void* pArg)
 _int CPhone_HpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
-
 	return NO_EVENT;
 }
 

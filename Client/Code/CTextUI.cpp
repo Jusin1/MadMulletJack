@@ -81,12 +81,24 @@ _int CTextUI::Update_GameObject(const _float& fTimeDelta)
 		m_color = HSVtoRGB(h, s, v);
 	}
 
+	if (m_bPosFix)
+		return NO_EVENT;
+
 	return __super::Update_GameObject(fTimeDelta), NO_EVENT;
 }
 
 void CTextUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	__super::LateUpdate_GameObject(fTimeDelta);
+	if (!m_bPosFix)
+	{
+		__super::LateUpdate_GameObject(fTimeDelta);
+	}
+
+	//debug
+	if (m_bPosFix)
+	{
+		int a = 0;
+	}
 }
 
 void CTextUI::Render_GameObject()
@@ -141,26 +153,26 @@ void CTextUI::Render_GameObject()
 
 
 		// 회전 적용을 위해서
-		if (m_bPosFix)
+		//if (m_bPosFix)
 		{
 			// 회전 중심: 문장 전체의 중앙
-			float totalWidth = measureTotalWidth(currScale);
-			_vec2 center = { pos.x + totalWidth * 0.5f, pos.y };
+			//float totalWidth = measureTotalWidth(currScale);
+			//_vec2 center = { pos.x + totalWidth * 0.5f, pos.y };
 
-			_vec2 rotated;
-			rotated.x = center.x + (charPos.x - center.x) * cosf(m_fRotSum) - (charPos.y - center.y) * sinf(m_fRotSum);
-			rotated.y = center.y + (charPos.x - center.x) * sinf(m_fRotSum) + (charPos.y - center.y) * cosf(m_fRotSum);
+			//_vec2 rotated;
+			//rotated.x = center.x + (charPos.x - center.x) * cosf(m_fRotSum) - (charPos.y - center.y) * sinf(m_fRotSum);
+			//rotated.y = center.y + (charPos.x - center.x) * sinf(m_fRotSum) + (charPos.y - center.y) * cosf(m_fRotSum);
 
 
-			Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
-				m_fontTag.c_str(), buf, &rotated, m_color, currScale);
+			//Engine::CFontMgr::GetInstance()->Render_Font_Scaled(
+			//	m_fontTag.c_str(), buf, &rotated, m_color, currScale);
 
-			_vec2 sz{};
-			Engine::CFontMgr::GetInstance()->Measure_Scaled(
-				m_fontTag.c_str(), buf, &sz, currScale);
+			//_vec2 sz{};
+			//Engine::CFontMgr::GetInstance()->Measure_Scaled(
+			//	m_fontTag.c_str(), buf, &sz, currScale);
 
-			x += sz.x + m_letterSpacing;
-			return;
+			//x += sz.x + m_letterSpacing;
+			//return;
 		}
 		//else
 		{
