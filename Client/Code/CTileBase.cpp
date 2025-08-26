@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Engine_Define.h"
+#include "CCullingManager.h"
 #include "CRenderer.h"
 #include "CPickingManager.h"
 #include "CVIBuffer_Rect.h"
@@ -62,7 +63,7 @@ _int CTileBase::Update_GameObject(const _float &fTimeDelta)
 	//CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-	m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+	
 
 	return NO_EVENT;
 }
@@ -70,6 +71,13 @@ _int CTileBase::Update_GameObject(const _float &fTimeDelta)
 void CTileBase::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+	Compute_CamDistance(Get_Position());
+	if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+	}
 	//CPickingManager::GetInstance()->Add_PickingGroup(this);
 }
 

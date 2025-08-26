@@ -587,9 +587,7 @@ void CUIManager::DestroyEnterUI()
 
     CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
     ClearAllUI();
-    
-
-    m_exitingEnter = true; 
+    m_exitingEnter = false; 
 }
 
 void CUIManager::DestroyItemUI()
