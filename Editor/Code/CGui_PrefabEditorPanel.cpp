@@ -366,7 +366,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_RowBuffer();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Increase_RowBuffer();
+			}
 		}
 	};
 
@@ -375,7 +378,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_RowBuffer();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Decrease_RowBuffer();
+			}
 		}
 	};
 
@@ -384,7 +390,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_ColBuffer();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Increase_ColBuffer();
+			}
 		}
 	};
 
@@ -393,7 +402,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_ColBuffer();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Decrease_ColBuffer();
+			}
 		}
 	};
 
@@ -402,7 +414,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Increase_Interval();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Increase_Interval();
+			}
 		}
 	};
 
@@ -411,7 +426,10 @@ CGuiBase *CGui_PrefabEditorPanel::GridPanelSizeButtons_Create()
 		[]()->void {
 		if (CGameObject *pGo = CGuiManager::GetInstance()->GetTarget())
 		{
-			static_cast<CGridPanel *>(pGo)->GetBuffer()->Decrease_Interval();
+			if (CGridPanel *pPanel = dynamic_cast<CGridPanel *>(pGo))
+			{
+				pPanel->GetBuffer()->Decrease_Interval();
+			}
 		}
 	};
 
@@ -721,6 +739,7 @@ CGuiBase *CGui_PrefabEditorPanel::TileThumbnail_Create()
 	AddThumbnail("Wall_Hole_2", L"Proto_Wall_Hole_2", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_3", L"Proto_Wall_Hole_3", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_4", L"Proto_Wall_Hole_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Wall_Hole_4_B", L"Proto_Wall_Hole_4_B", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Border", L"Proto_Wall_Border", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_1", L"Proto_Wall_Boss_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_2", L"Proto_Wall_Boss_2", pThumbnail, TileType::DECO);
@@ -732,6 +751,26 @@ CGuiBase *CGui_PrefabEditorPanel::TileThumbnail_Create()
 	AddThumbnail("NoDraw", L"Proto_GridNoDraw", pThumbnail, TileType::DECO);
 	AddThumbnail("Cable_1", L"Proto_CABLES_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Cable_2", L"Proto_CABLES_2", pThumbnail, TileType::DECO);
+
+	// Road
+	AddThumbnail("Road_1", L"Proto_Road_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_2", L"Proto_Road_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_3", L"Proto_Road_3", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_4", L"Proto_Road_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Corner", L"Proto_Road_Corner", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_StreetLights", L"Proto_Road_StreetLights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_TrafficLights", L"Proto_Road_TrafficLights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Plate_1", L"Proto_Road_Plate_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Plate_2", L"Proto_Road_Plate_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Pass_1", L"Proto_Road_Pass_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Pass_2", L"Proto_Road_Pass_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Lights", L"Proto_Road_Lights", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_1", L"Proto_Road_Sign_1", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_2", L"Proto_Road_Sign_2", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_3", L"Proto_Road_Sign_3", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_4", L"Proto_Road_Sign_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Sign_5", L"Proto_Road_Sign_5", pThumbnail, TileType::DECO);
+	AddThumbnail("Road_Tree", L"Proto_Road_Tree", pThumbnail, TileType::DECO);
 
 	// Acid
 	AddThumbnail("Acid_Floor_1", L"Proto_Acid_Floor_1", pThumbnail, TileType::ACID);

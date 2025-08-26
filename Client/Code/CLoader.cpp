@@ -542,6 +542,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Wall_Hole_2", L"../Bin/Resource/MapObject/Wall/WALL HOLE 2.png", 1);
 	AddTexture(L"Proto_Wall_Hole_3", L"../Bin/Resource/MapObject/Wall/WALL HOLE 3.png", 1);
 	AddTexture(L"Proto_Wall_Hole_4", L"../Bin/Resource/MapObject/Wall/WALL HOLE 4.png", 1);
+	AddTexture(L"Proto_Wall_Hole_4_B", L"../Bin/Resource/MapObject/Wall/WALL HOLE 4_B.png", 1);
 	AddTexture(L"Proto_Wall_Boss_1", L"../Bin/Resource/MapObject/Wall/WALL boss 3 1.png", 1);
 	AddTexture(L"Proto_Wall_Boss_2", L"../Bin/Resource/MapObject/Wall/WALL boss 3 2.png", 1);
 	AddTexture(L"Proto_Wall_Boss_3", L"../Bin/Resource/MapObject/Wall/WALL boss 3 3.png", 1);

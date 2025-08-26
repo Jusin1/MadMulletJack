@@ -710,6 +710,7 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	AddThumbnail("Wall_Hole_2", L"Proto_Wall_Hole_2", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_3", L"Proto_Wall_Hole_3", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_4", L"Proto_Wall_Hole_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Wall_Hole_4_B", L"Proto_Wall_Hole_4_B", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Border", L"Proto_Wall_Border", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_1", L"Proto_Wall_Boss_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_2", L"Proto_Wall_Boss_2", pThumbnail, TileType::DECO);
