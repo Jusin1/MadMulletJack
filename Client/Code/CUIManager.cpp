@@ -229,20 +229,6 @@ void CUIManager::Update(const _float& dt)
     }
 
 
-    if (m_exitingEnter && m_slideTasks.empty()) {
-        if (m_pEnterUI) {
-            std::vector<CUIBase*> stk{ m_pEnterUI };
-            while (!stk.empty()) {
-                CUIBase* n = stk.back(); stk.pop_back();
-                if (!n) continue;
-                n->Set_Active(false);
-                for (auto* ch : n->GetChildren())
-                    if (ch) stk.push_back(ch);
-            }
-            m_pEnterUI = nullptr;
-        }
-        m_exitingEnter = false;
-    }
 }
 
 void CUIManager::CreateClearUI()
