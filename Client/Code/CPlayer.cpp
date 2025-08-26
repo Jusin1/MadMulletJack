@@ -272,7 +272,7 @@ void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	if (m_bIsCountHp)
 	{
-		CountHp(fTimeDelta);
+		CountTime(fTimeDelta);
 	}
 	
 	KeyInput(fTimeDelta);
@@ -577,11 +577,11 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		if (KEY_BUTTON_HOLD(DIK_LSHIFT) &&				//  l-shift hold 시
 			m_tPlayerInfo.ePlayerMove != PMV_DASH &&	// 이중 dash 금지
 			m_fDashCoolTime == 0 &&						// dash cool time이 0이라면
-			m_tPlayerInfo.ePlayerMove != PMV_JUMPDASH)						
+			m_tPlayerInfo.ePlayerMove != PMV_DASHJUMP)						
 		{
 			if (m_tPlayerInfo.ePlayerState == JUMP)		// jump후 l-shif -> move : jump dash
 			{
-				Change_Move(PMV_JUMPDASH);
+				Change_Move(PMV_DASHJUMP);
 				Change_State(IDLE);
 				m_bIsFixY = true;
 				return;
@@ -648,7 +648,7 @@ void CPlayer::Set_State_Normal()
 	Change_Move(PMV_NORMAL);
 }
 
-void CPlayer::CountHp(const _float& fTimeDelta)
+void CPlayer::CountTime(const _float& fTimeDelta)
 {
 	Add_Hp(-1.f * fTimeDelta);
 
@@ -742,7 +742,7 @@ void CPlayer::Move(const _float& fTimeDelta)
 	}
 		break;
 
-	case PMV_JUMPDASH:
+	case PMV_DASHJUMP:
 	{
 		// 만약 L-shift 을 땠따면
 		if (KEY_BUTTON_UP(DIK_LSHIFT))
@@ -801,11 +801,10 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 		return;
 	}
 
-	// 만약 jump이면 dash로 전환
+	// jump 불가능
 	if (m_tPlayerInfo.ePlayerState == JUMP)
 	{
-		Change_Move(PMV_DASH);
-		m_bIsFixY = true;
+		Change_State(IDLE);
 		return;
 	}
 
@@ -852,6 +851,27 @@ void CPlayer::Move_Fall(const _float& fTimeDelta)
 	GetTransform()->Move_YDown(fTimeDelta,0.f,false, Y);
 }
 
+void CPlayer::Change_Weapon(WEAPON _eWeapon)
+{
+	// 상태 업데이트
+	m_tPrePlayerInfo.eWeapon = m_tPlayerInfo.eWeapon; // 전 state 저장
+	m_tPlayerInfo.eWeapon = _eWeapon; // state 업데이트
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
+	// state는 opening으로 넘어감
+	Change_State(OPENING);
+}
+
+void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
+{
+	m_tPrePlayerInfo.eWeapon2 = m_tPlayerInfo.eWeapon2; // 전 state 저장
+	m_tPlayerInfo.eWeapon2 = _eWeapon2; // state 업데이트
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
+	// state는 opening으로 넘어감
+	Change_State(OPENING);
+}
+
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 {
 	// 바뀔때 y값 저장해옴 m_bYFix의 값에 따라 쓸래말래 결정
@@ -879,7 +899,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		m_bIsFixY = true;
 		break;
 
-	case PMV_JUMPDASH:
+	case PMV_DASHJUMP:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
 		m_bIsFixY = true;
 		break;
@@ -1250,7 +1270,7 @@ const TCHAR* CPlayer::MoveToString(PLAYERMOVE eMove)
 	case PMV_DASHATT: return TEXT("Move: DashAtt\n");
 	case PMV_SLIDE: return TEXT("Move: Slide\n");
 	case PMV_WALL: return TEXT("Move: Wall\n");
-	case PMV_JUMPDASH: return TEXT("Move: JumpDash\n");
+	case PMV_DASHJUMP: return TEXT("Move: JumpDash\n");
 	case PMV_END: return TEXT("Move: Unknown\n");
 	case PMV_FALL: return TEXT("Move: Fall\n");
 	}

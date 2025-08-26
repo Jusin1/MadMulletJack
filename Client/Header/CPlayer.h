@@ -81,13 +81,13 @@ private:
 
 	void Clear_Begin();
 
-	void KeyInput(const _float& fTimeDelta);
-	void Set_State_Normal(); // state를 idle로 move를 normal로 바꿈
+	void KeyInput(const _float& fTimeDelta);	// 모든 keyinput 여기서 처리
+	void Set_State_Normal();					// state를 idle로 move를 normal로 바꿈
 
 	const TCHAR* StateToString(PLAYERSTATE eState );	//debug
 	const TCHAR* MoveToString(PLAYERMOVE eMove);		// debug
 
-	void CountHp(const _float& fTimeDelta); // hp를 시간에 따라 깎아줌
+	void CountTime(const _float& fTimeDelta); // 시간 카운트 해줌 : hptime, dashcool time
 
 	_bool StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime =1.f); // state 시간 누적하면서 끝났는지 bool값으로 반환
 
@@ -102,6 +102,9 @@ private:
 	void Move_Wall(const _float& fTimeDelta);
 	void Move_JumpDash(const _float& fTimeDelta);
 	void Move_Fall(const _float& fTimeDelta);
+
+	void Change_Weapon(WEAPON _eWeapon);
+	void Change_Weapon2(WEAPON2 _eWeapon2);
 
 	// getter setter func
 public:
@@ -144,8 +147,8 @@ private:
 	void			Set_Collider_With_Door();
 	void			Set_Colllider_With_Monster(const _float& fTimeDelta);
 	_bool			Set_Collider_With_SlideWall();
-	void			Set_Collider_With_Item(); // item과 충돌시 -> test : 자판기랑 collision
-	_bool			Set_Collider_With_SpecialTile(); // 발차기 이벤트 나가는 tile || wall 충돌 검사
+	void			Set_Collider_With_Item();			// item과 충돌시 -> test : 자판기랑 collision
+	_bool			Set_Collider_With_SpecialTile();	// 발차기 이벤트 나가는 tile || wall 충돌 검사
 
 	void			HitFromObject(const _float& fTimeDelta, _float fHit); // hit만큼 목숨 깍아줌
 
@@ -153,9 +156,7 @@ private:
 private:
 	HRESULT			Texture_Clone();
 	HRESULT			Change_Texture(const _tchar* componentTag);
-
 	HRESULT			Set_UI();
-
 
 	// util func
 private:
