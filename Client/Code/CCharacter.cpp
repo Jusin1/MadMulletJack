@@ -116,6 +116,22 @@ void CCharacter::Set_OnTerrain(const _float &fTimeDelta)
 	m_pTransformCom->Set_Info(INFO_POS, { vPos.x , vPos.y , vPos.z });
 }
 
+_bool CCharacter::Is_OnTerrain()
+{
+	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+
+	_float fHeight;
+	if (m_pGroundingCom->GetHeight(CGameDataManager::GetInstance()->Get_SortedFloorEntries(), vPos.x, vPos.z, &fHeight))
+	{
+		// 만약 내가 pos가 terrain위가 아니라면
+		if (vPos.y > fHeight + m_pTransformCom->Get_Scale().y * 0.5f)
+			return false; // false 반환
+
+		else
+			return true; // 아니라면  true 반환
+	}
+}
+
 void CCharacter::Gravity(const _float &fDeltaTime)
 {
 	_float fVel = Get_Velocity();

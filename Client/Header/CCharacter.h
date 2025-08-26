@@ -27,6 +27,7 @@ public:
 protected:
 	HRESULT	Set_Component();
 	void	Set_OnTerrain(const _float &fTimeDelta);
+	_bool	Is_OnTerrain(); // terrain 위에 있는지 없는지 검사
 
 	// getter setter func
 public:

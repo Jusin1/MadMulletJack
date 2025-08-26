@@ -101,6 +101,7 @@ private:
 	void Move_Slide(const _float& fTimeDelta);
 	void Move_Wall(const _float& fTimeDelta);
 	void Move_JumpDash(const _float& fTimeDelta);
+	void Move_Fall(const _float& fTimeDelta);
 
 	// getter setter func
 public:
