@@ -100,6 +100,7 @@ private:
 	void Move_Dash(const _float& fTimeDelta);
 	void Move_Slide(const _float& fTimeDelta);
 	void Move_Wall(const _float& fTimeDelta);
+	void Move_JumpDash(const _float& fTimeDelta);
 
 	// getter setter func
 public:
@@ -131,6 +132,7 @@ public:
 	_bool	Get_IsCountHp() const { return m_bIsCountHp; }
 	void	Set_IsCountHp(_bool _bCountHp) { m_bIsCountHp = _bCountHp; }
 
+	// collider func
 private:
 	HRESULT			Set_Component();
 	void			Set_Collider(const _float& fTimeDelta);
@@ -141,18 +143,23 @@ private:
 	void			Set_Collider_With_Door();
 	void			Set_Colllider_With_Monster(const _float& fTimeDelta);
 	_bool			Set_Collider_With_SlideWall();
+	void			Set_Collider_With_Item(); // item과 충돌시 -> test : 자판기랑 collision
+	_bool			Set_Collider_With_SpecialTile(); // 발차기 이벤트 나가는 tile || wall 충돌 검사
 
-	void			HitFromObject(const _float& fTimeDelta, _float fHit);
+	void			HitFromObject(const _float& fTimeDelta, _float fHit); // hit만큼 목숨 깍아줌
 
-	_float			CosRadian(_vec3 v1, _vec3 v2); // 두 벡터를 정규화 후 내적값 반환
-
+	// setting func
 private:
-	HRESULT Texture_Clone();
-	HRESULT Change_Texture(const _tchar* componentTag);
+	HRESULT			Texture_Clone();
+	HRESULT			Change_Texture(const _tchar* componentTag);
 
-	HRESULT Set_PlayerUI();
-	HRESULT Set_HpBarUI();
-	HRESULT Set_WeaponUI();
+	HRESULT			Set_UI();
+
+
+	// util func
+private:
+	_float			CosRadian(_vec3 v1, _vec3 v2); // 두 벡터를 정규화 후 내적값 반환
+	void			PushBack(_vec3 vDistance); // vDistance 만큼 위치 조정
 
 private:
 	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
@@ -181,6 +188,7 @@ private:
 	_float m_fFixY; // 고정 y값
 	
 	_float m_fNormalSpeed;
+	_float m_fDashCoolTime;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;

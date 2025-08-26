@@ -106,6 +106,14 @@ _int CTutorial::Update_Scene(const _float& fTimeDelta)
 void CTutorial::LateUpdate_Scene(const _float& fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+    if (GetAsyncKeyState('5') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Door();
+    }
+    if (GetAsyncKeyState('7') & 0x8000)
+    {
+        CTutorialTracker::Get().Notify_Soda();
+    }
 }
 
 void CTutorial::Render_Scene()

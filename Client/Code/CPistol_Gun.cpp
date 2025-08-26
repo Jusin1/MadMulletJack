@@ -61,28 +61,31 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	// 만약 지금 idle texture 라면
 	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
+		// scene을 받아옴
 		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
-		Engine::CTransform* pHandRformCom = nullptr;
 
-		// handR의 위치 받아옴
+		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
+		_uint iPlayerUI_Idx = 0;
 		switch (eCurScene)
 		{
 		case SCENE_DEV:
-			pHandRformCom =
-				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-					Get_Component(SCENE_DEV, L"UI_Layer", L"Com_Transform", 4));
+			iPlayerUI_Idx = 1;
 			break;
+
 		case SCENE_TUTORIAL:
-			pHandRformCom =
-				dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-					Get_Component(SCENE_TUTORIAL, L"UI_Layer", L"Com_Transform", 8));
+			iPlayerUI_Idx = 1;
 			break;
 		}
-		
-		if (pHandRformCom)
+
+		// handR을 받아옴
+		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
+			->Find_Object(eCurScene, L"UI_Layer", iPlayerUI_Idx))
+			->Find_Child_ByTag(L"HandRUI");
+
+		// handR 위치를 기준으로 pos 갱신 (offset 적용)
+		if (pHandR)
 		{
-			// 위치를 통해 pos update
-			Set_UIPos(pHandRformCom->Get_Info(INFO_POS), -120.f, 350.f);
+			Set_UIPos(pHandR->GetTransform()->Get_Info(INFO_POS), -120.f, 350.f);
 		}
 	}
 
@@ -99,7 +102,6 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-
 }
 
 void CPistol_Gun::Render_GameObject()
@@ -241,7 +243,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 		case OPENING:
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
-			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f );
+			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f );
 
 			Set_New_TransInfo(500.f, 0.f);
 			

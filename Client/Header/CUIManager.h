@@ -16,45 +16,66 @@ class CUIManager :
     public CBase
 {
 #pragma region 카드
-    enum class UpgradeId { SlowMo, UZI, Sniper,  };
+    enum class UpgradeId { SlowMo, FIRE, SHOTGUN, HEADSHOT,};
 
     struct ShopItemDef {
         UpgradeId           id;
-        std::wstring        title;          // 카드 상단/중앙 제목
-        std::wstring        desc;           // 설명(여러 줄 \n 가능)
-        std::wstring        backTag;        // 배경화면 텍스쳐 태그
-        std::wstring        backProto;      // 배경화면 프로토타입
-        std::wstring        artTag;         // 아이콘/아트 텍스처 태그
-        std::wstring        artProto;       // 아이콘/아트 프로토타입
+        std::wstring        backTag;
+        std::wstring        backProto;
+        std::wstring        artTag;
+        std::wstring        artProto;
+
+        // ── 아이콘 옵션 ──
+        float               iconW = 140.f;
+        float               iconH = 50.f;
+        float               iconYOffset = -30.f;
     };
 
     struct ShopCardUI {
-        CButtonUI* btn = nullptr;  // 카드 전체 클릭 영역(프레임 텍스처)
-        CImageUI* pBack = nullptr;
-        CImageUI* icon = nullptr;  // 가운데 이미지
-        CTextUI* title = nullptr;  // 제목
-        CTextUI* desc = nullptr;  // 설명
-        CTextUI* price = nullptr;  // 가격 텍스트
-        CImageUI* soldTag = nullptr;  // "구매" 배너(옵션)
-        bool bought = false;
-        int  priceValue = 0;
-        UpgradeId id{};
+        CImageUI* pBack = nullptr;   // 배경 이미지
+        CButtonUI* btn = nullptr;     // 버튼 (클릭 영역)
+        CImageUI* icon = nullptr;    // 아이콘
+        bool        bought = false;    // 구매 여부
+        UpgradeId   id{};
     };
 
-    inline static const std::vector<ShopItemDef> kShopPool = { // 총 9개 카드가 필요
-    { UpgradeId::SlowMo,     L"슬로우 옵션", L"슬로우 모션을\n활성화합니다.",
-      L"Com_Tex_BackGround", L"NONE",
-      L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_SlowMo_Art" },
-    { UpgradeId::UZI, L"UZI",   L"우지 총입니다.",
-    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_Slow",
-      L"Com_Tex_BossArt",    L"Prototype_Component_Texture_BossKiller_Art"},
-    { UpgradeId::Sniper,     L"저격총",     L"저격총입니다.",
-    L"Com_Tex_BackGround", L"Prototype_Component_Texture_Back_SNIPER",
-      L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art" },
+    // 씬별로 어떤 카드들이 등장하는지 지정
+    std::unordered_map<int, std::vector<UpgradeId>> gSceneShopCards = {
+        { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_STAGE_1, { UpgradeId::SHOTGUN, UpgradeId::SlowMo } },
+        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_STAGE_3,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+    };
+
+    // ── 카드 데이터 풀 ──
+    inline static const std::vector<ShopItemDef> kShopPool = {
+        { UpgradeId::SlowMo,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_SlowMoArt",  L"Prototype_Component_Texture_Monster_Bullet_Slow_Bullet",
+          160.f, 210.f, 50.f },
+
+        { UpgradeId::FIRE,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_FireArt",    L"Prototype_Component_Texture_Fire_Ex",
+          160.f, 210.f, 50.f },
+
+        { UpgradeId::SHOTGUN,
+          L"Com_Tex_BackGround", L"NONE",
+          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art",
+          160.f, 280.f, 10.f },
+
+        { UpgradeId::HEADSHOT,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
+          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_HeadSHOT",
+          160.f, 210.f, 50.f }
+
+
     };
 
     static const ShopItemDef* FindShopDef(UpgradeId id) {
-        for (auto& d : kShopPool) if (d.id == id) return &d;
+        for (auto& d : kShopPool)
+            if (d.id == id) return &d;
         return nullptr;
     }
 
@@ -77,10 +98,12 @@ public:
     // 작은 이펙트 생성
     void CreateEffectUI(const std::wstring& str);
     void CreateItemUI();
+    void CreateReloadUI();
 
     void DestroyEnterUI();
     void DestroyItemUI();
     void DestroyEffectUI();
+    void DestroyReloadUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
     void Update(const _float& dt);
@@ -158,9 +181,10 @@ private:
 
 private:
     CUIBase* m_pEnterUI = nullptr;
-    CUIBase* m_pMonsterDieEffect = nullptr;
+    CUIBase* m_pFlooroUI = nullptr;
     CUIBase* m_pItemUI = nullptr;
     CUIBase* m_pEffectUI = nullptr;
+    CUIBase* m_pReloadUI = nullptr;
 
     // Clear text
     CTextUI* m_pVictoryText = nullptr;

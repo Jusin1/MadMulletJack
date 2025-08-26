@@ -50,12 +50,7 @@ _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_HandL::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    // player의 상태가 달라졌을 때, texture를 새로 셋팅
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo()) // 이거 올리자
-    {
-        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-        Set_Texture();
-    }
+
 }
 
 void CPlayer_HandL::Render_GameObject()
@@ -88,8 +83,8 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // Doping
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 7;
-    texInfo.m_fSpeed = 3.f;
-    texInfo.m_bLoop = false;
+    texInfo.m_fSpeed = 9.f;
+    texInfo.m_bLoop = true;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Doping", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLDoping", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandL_Doping"), m_pTextureCom });
@@ -115,7 +110,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
-    texInfo.m_fSpeed = 3.f;
+    texInfo.m_fSpeed = 3.8f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Pistol", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLRePistol", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -139,6 +134,9 @@ HRESULT CPlayer_HandL::Set_Texture()
     Set_Origin_Rot();
 
     m_bRenderOn = true;
+
+    // info 업데이트
+    m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
     
     // player state -> weapon 순으로 나누어서 texture 출력
     switch (m_tInfo.ePlayerState) {
@@ -169,11 +167,11 @@ HRESULT CPlayer_HandL::Set_Texture()
 
             Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 310.f); //idle pos
 
-            Set_New_TransInfo(600.f, -40.f);
+            Set_New_TransInfo(1200.f, -40.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
             m_fRotSum += D3DXToRadian(-40.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, true, 450.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 550.f, 0.f };
         }
 
         else if (m_tInfo.eWeapon == WP_SHOTGUN) {
@@ -201,9 +199,9 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_At2_Knife"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 700.f, WINCY * 0.5f + 290); //idle pos
+            Set_UISizeAndPos(800.f, 624.f, WINCX * 0.5 - 500.f, WINCY * 0.5f + 290); //idle pos
 
-            Set_New_TransInfo(1800.f, 0.f);
+            Set_New_TransInfo(3000.f, 0.f);
             //m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, 1); // rotation texture
             //m_fRotSum += D3DXToRadian (-20.f) * 1;
 
@@ -221,12 +219,12 @@ HRESULT CPlayer_HandL::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Doping"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(220.f, 220.f, WINCX * 0.5f, WINCY * 0.5f + 250.f);
+        Set_UISizeAndPos(330.f, 330.f, WINCX * 0.5f, WINCY * 0.5f + 400.f);
 
         //// info를 새로 맞춰줌
-        Set_New_TransInfo(140.f, 0.f);
+        Set_New_TransInfo(400.f, 0.f);
 
-        m_tMoveInfo = { MV_NON, false, 0.f, 0.f };
+        m_tMoveInfo = { MV_UP, true, 150.f, 0.f };
     }
     break;
 

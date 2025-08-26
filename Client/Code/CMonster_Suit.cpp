@@ -149,6 +149,23 @@ void CMonster_Suit::Set_Collider()
                 SetState(INSKILL);
             }
         }
+
+        if (CColiderManager::GetInstance()->CollisionGroup(
+            CColiderManager::COLLISION_TILE_ELECTRIC, this,
+            CColiderManager::COLLISION_SPHERE, nullptr))
+        {
+            if  (m_eMonState!= HIT_ELECTRIC) { // 이미 전기 상태면 또 안 바꾸기
+                SetState(HIT_ELECTRIC);
+            }
+        }
+
+        if (CColiderManager::GetInstance()->CollisionGroup(
+            CColiderManager::COLLISION_DOOR, this,
+            CColiderManager::COLLISION_SPHERE, nullptr))
+        {
+            SetState(HIT_DOOR);
+            m_pColiderCom->Set_Active(false);
+        }
     }
     
 
@@ -260,16 +277,18 @@ HRESULT CMonster_Suit::Texture_Clone()
 
     struct AnimDef { const wchar_t* tag; const wchar_t* proto; int start; int end; float speed; bool loop; };
     AnimDef anims[] = {
-        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12, 13.f,  true },
-        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13, 13.f, true },
-        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9, 13.f, true },
-        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 13.f, true },
-        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22, 17.f, true },
-        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 13.f, true },
-        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 13.f, true },
-        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 13.f, true },
-        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 13.f, true },
-        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,13.f,false}
+        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12, 8.f,  true },
+        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13, 10.f, true },
+        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9, 10.f, true },
+        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 7.f, true },
+        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22, 10.f, true },
+        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 7.f, true },
+        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 10.f, true },
+        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 10.f, true },
+        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 10.f, true },
+        { L"Com_Texture_Hit_Eletric",     L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC",   0, 15, 7.f, false },
+        { L"Com_Texture_Hit_Door",     L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",   0, 14, 7.f, false },
+        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,6.f,false}
     };
 
     for (auto& a : anims)
@@ -307,6 +326,8 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case AIM:   tag = L"Com_Texture_Aim";   break;
     case SHOT:  tag = L"Com_Texture_Shot";  break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
+    case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
+    case HIT_DOOR: tag = L"Com_Texture_Hit_Door"; break;
 
     case HIT:
         if (m_bKillAfterHit) {
@@ -380,7 +401,9 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case SHOT:
-        if (m_pTextureCom->Is_AnimFinished()) SetState(AIM);
+        if (m_pTextureCom->Is_AnimFinished()) {
+            SetState(IDLE);
+        }
         break;
 
     case HIT:
@@ -390,6 +413,14 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         }
         break;
 
+    case HIT_ELECTRIC:
+        if (m_pTextureCom->Is_AnimFinished()) {
+            m_bDead = true;
+        }
+        break;
+    case HIT_DOOR:
+        if (m_pTextureCom->Is_AnimFinished())
+            m_bDead = true;
     case KICKED:
         if (m_pTextureCom->Is_AnimFinished()) { // 애니메이션 끝나면
             if (m_bKillAfterHit) m_bDead = true;
@@ -398,7 +429,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         else
         {
             // 뒤로 날아가
-            m_pTransformCom->Move_PosDir(dt, (m_pTransformCom->Get_Info(INFO_LOOK)));
+            m_pTransformCom->Move_PosDir(dt * 3.f, (m_pTransformCom->Get_Info(INFO_LOOK)));
         }
         break;
 
@@ -432,6 +463,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
     break;
 
     case DEATH:
+        m_pTransformCom->Move_Forward(dt * 0.1f);
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
         break;
 
@@ -481,7 +513,8 @@ void CMonster_Suit::TrySpawnDeathUI()
     if (!m_pendingDeathUI) return;
     m_pendingDeathUI = false;
 
-    const bool  isHead = (m_lastFatalPart == HIT_HEAD || m_lastFatalPart == HIT_BALLS);
+    const bool  isHead = (m_lastFatalPart == HIT_HEAD);
+
     const float secsAdd = isHead ? 3.0f : 2.0f;
 
     if (auto ui = dynamic_cast<CEffectUI*>(
@@ -499,7 +532,7 @@ void CMonster_Suit::TrySpawnDeathUI()
             L"Com_Tex_Heal",
             secsAdd,
             m_pTransformCom, 
-            0.5f,            
+            0.9f,            
             240.f,           
             120.f,           
             0.85f,
@@ -521,8 +554,6 @@ void CMonster_Suit::TrySpawnDeathUI()
         banner->SetBannerRightFixedScale(1.0f); 
         banner->SetBannerTextOffset(30.f, 5.f);
 
-
-
         banner->SetBannerLabelPop(1.35f, 0.22f);
 
         banner->SetBannerAngle(0.f);
@@ -530,7 +561,7 @@ void CMonster_Suit::TrySpawnDeathUI()
         banner->SetBannerTextAngle(0.f);
 
 
-        banner->SetBannerDownSpeed(32.f);
+        banner->SetBannerDownSpeed(130.f);
 
         banner->SetBannerExtraWidth(80.f);
         banner->ShowBanner(

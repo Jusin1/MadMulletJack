@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "CUIBase.h"
 CUIBase::CUIBase(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev) , m_fRotSum(0.f)
+    : CGameObject(pGraphicDev) , m_fRotSum(0.f), m_bPosParentFix(false)
 {
 }
 
 CUIBase::CUIBase(const CUIBase& rhs)
-    : CGameObject(rhs), m_fRotSum(rhs.m_fRotSum)
+    : CGameObject(rhs), m_fRotSum(rhs.m_fRotSum), m_bPosParentFix(rhs.m_bPosParentFix)
 {
 }
 
@@ -43,30 +43,37 @@ _int CUIBase::Update_GameObject(const _float& fTimeDelta) // 자식 Update돌리기
     if (m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(RENDER_UI, this);
 
-    for (auto& pChild : m_vecChildren)
+    // 부모랑 같이 움직인다면
+    if (m_bPosParentFix)
     {
-        if (pChild && pChild->Is_Active())
-            pChild->Update_GameObject(fTimeDelta);
+        // 부모 위치 가져오기
+        _vec3 vParentPos = m_pTransformCom->Get_Info(INFO_POS);
+
+        // 자식들 위치 갱신
+        for (auto& pChild : m_vecChildren)
+        {
+            if (!pChild) continue;
+
+            // 부모 좌표 + 오프셋 = 자식 좌표
+            _vec3 childPos = vParentPos + pChild->Get_LocalOffset();
+            pChild->GetTransform()->Set_Info(INFO_POS, childPos);
+
+            if (pChild->Is_Active())
+                pChild->Update_GameObject(fTimeDelta);
+        }
     }
 
-    ////// 부모 위치 가져오기
-    //_vec3 vParentPos = m_pTransformCom->Get_Info(INFO_POS);
-
-    //// 자식들 위치 갱신
-    //for (auto& pChild : m_vecChildren)
-    //{
-    //    if (!pChild) continue;
-
-    //    // 부모 좌표 + 오프셋 = 자식 좌표
-    //    _vec3 childPos = vParentPos + pChild->Get_LocalOffset();
-    //    pChild->GetTransform()->Set_Info(INFO_POS, childPos);
-
-    //    if (pChild->Is_Active())
-    //        pChild->Update_GameObject(fTimeDelta);
-    //}
+    // 따로 움직인다면
+    else
+    {
+        for (auto& pChild : m_vecChildren)
+        {
+            if (pChild && pChild->Is_Active())
+                pChild->Update_GameObject(fTimeDelta);
+        }
+    }
 
     return NO_EVENT;
-
 }
 
 void CUIBase::LateUpdate_GameObject(const _float& fTimeDelta) // 자식 LateUpdate

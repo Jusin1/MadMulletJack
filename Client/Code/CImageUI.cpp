@@ -100,7 +100,7 @@ void CImageUI::Render_GameObject()
     }
 
     m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
-    __super::Render_GameObject();
+    __super::Render_GameObject(); 
     if (sb) { sb->Apply(); sb->Release(); }
 }
 

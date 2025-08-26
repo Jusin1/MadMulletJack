@@ -35,13 +35,17 @@ public:
 
     void Set_RotSum(_float _fRotSum) { m_fRotSum = _fRotSum; }
     _float Get_RotSum() const { return m_fRotSum; }
+
+    void Set_IsPosParentFix(_bool _bPosParentFix) { m_bPosParentFix = _bPosParentFix; }
+
+    void Set_LocalOffset(const _vec3& offset) { m_vLocalOffset = offset; }
+    _vec3 Get_LocalOffset() const { return m_vLocalOffset; }
      
 protected:
     virtual HRESULT			Set_Component();
     void Set_Origin_Rot(); // 전에 local 행렬을 돌렸다면 다시 돌려두기
     _vec3 m_vLocalOffset;
-    void Set_LocalOffset(const _vec3& offset) { m_vLocalOffset = offset; }
-    _vec3 Get_LocalOffset() const { return m_vLocalOffset; }
+
     
 
 protected:
@@ -51,6 +55,8 @@ protected:
     const _tchar* m_pObjTag;
     _float m_fRotSum; // texture 바뀌고 돌린만큼 다시 돌리기 위해
     CUIBase* m_pParent = nullptr;
+
+    _bool m_bPosParentFix; // 부모랑 같이 움직일래 말래
 
 public:
     CUIBase* GetParent() const { return m_pParent; }

@@ -50,19 +50,7 @@ _int CPlayer_Foot::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Foot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
-    {
-        m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-        Set_Texture();
-    }
 
-    // kick 애니메이션 끝난거 알려주기
-    if (m_CurrentAnimTag == TEXT("Com_Texture_Foots_Kick") && 
-        m_pTextureCom->Is_AnimFinished())
-    {
-        CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-        m_bRenderOn = false;
-    }
 }
 
 void CPlayer_Foot::Render_GameObject()
@@ -127,7 +115,7 @@ HRESULT CPlayer_Foot::Set_Texture()
 {
     m_bRenderOn = false;
 
-    switch (m_tInfo.ePlayerMove)
+    switch (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerMove)
     {
     case PMV_SLIDE:
     {
@@ -146,7 +134,7 @@ HRESULT CPlayer_Foot::Set_Texture()
         m_bRenderOn = false;
     }
 
-    switch (m_tInfo.ePlayerState)
+    switch (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState)
     {
     case KICK:
     {

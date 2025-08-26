@@ -453,11 +453,14 @@
     <ClInclude Include="..\Header\CTutorialUI.h">
       <Filter>02. GameObject\06. UI\TutorialUI</Filter>
     </ClInclude>
-    <ClInclude Include="CUIManager_Weapon.h">
+    <ClInclude Include="CWeaponUI_Manager.h">
       <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPrefab.h">
       <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerUI_Manager.h">
+      <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -662,11 +665,14 @@
     <ClCompile Include="..\Code\CTutorialUI.cpp">
       <Filter>02. GameObject\06. UI\TutorialUI</Filter>
     </ClCompile>
-    <ClCompile Include="CUIManager_Weapon.cpp">
+    <ClCompile Include="CWeaponUI_Manager.cpp">
       <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPrefab.cpp">
       <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerUI_Manager.cpp">
+      <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

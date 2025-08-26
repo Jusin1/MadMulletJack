@@ -64,11 +64,11 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
+    /*if (m_tInfo != CGlobal_Info::Get_Instance()->Get_PlayerInfo())
     {
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
-    }
+    }*/
 }
 
 void CPlayer_Arm::Render_GameObject()
@@ -121,7 +121,10 @@ HRESULT CPlayer_Arm::Texture_Clone()
 
 HRESULT CPlayer_Arm::Set_Texture()
 {
-    if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_NON) {
+    PlayerStateInfo tPlayerInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
+
+    if (tPlayerInfo.ePlayerState == OPENING &&
+        tPlayerInfo.eWeapon == WP_NON) {
         Change_Texture(TEXT("Com_Texture_Arm_Op1"));
         Set_UISizeAndPos(720.f, 680.f, WINCX * 0.5f, WINCY * 0.5f + 200);
         m_bRenderOn = true;

@@ -85,7 +85,7 @@ void CTile_Electric::LateUpdate_GameObject(const _float &fTimeDelta)
     if (!m_bActivated)
     {
         // 테스트용 추후에 몬스터로
-        if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+        if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
         {
              m_bActivated = true;
         }

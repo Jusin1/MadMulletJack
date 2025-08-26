@@ -16,13 +16,11 @@ public:
 
 public:
     HRESULT Change_Texture(const _tchar* pTextureTag);
-    HRESULT Set_WeaponUI();
 
 private:
     virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
     HRESULT Texture_Clone();
-    
-    void Update_Weapon2_Knife();
+  
 
 private:
     map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
@@ -35,7 +33,6 @@ public:
 
 private:
     PlayerStateInfo m_tInfo;
-    CUIBase* m_pWeaponUI = nullptr;
     
 public:
     static CPlayer_HandR* Create(LPDIRECT3DDEVICE9 pGraphicDev);

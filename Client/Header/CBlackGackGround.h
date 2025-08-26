@@ -25,6 +25,14 @@ public:
 public: // 구멍 뚫기
 	void SetHoleRect(_float x, _float y, _float w, _float h);
 	void ClearHole() { m_useHole = false; }
+public:
+	// 색상 싸이클 설정
+	void EnableColorCycle(bool on, float interval = 1.f) {
+		m_colorCycle = on;
+		m_colorInterval = interval;
+		m_colorTimer = 0.f;
+		m_colorIndex = 0;
+	}
 
 public:
 	static CBlackGackGround* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -51,6 +59,13 @@ private: // 구멍
 	_float m_holeY;
 	_float m_holeW;
 	_float m_holeH;
+
+private:
+	//  색상변화 플래그
+	bool   m_colorCycle = false;   
+	int    m_colorIndex = 0;
+	float  m_colorTimer = 0.f;
+	float  m_colorInterval = 1.0f; 
 
 private:
 	_bool m_bPosFix; // 위치 고정 할래말래
