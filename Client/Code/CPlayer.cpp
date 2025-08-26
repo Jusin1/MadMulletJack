@@ -461,7 +461,7 @@ void CPlayer::ZOOM_End()
 // reload
 void CPlayer::RELOAD_Begin()
 {
-	m_bIsKeyInput = true;
+	//m_bIsKeyInput = true;
 	//m_fStateTime = 0.5f; // origin 0.5 debug 2.f
 
 	m_pHpBarUI->Set_RenderOn(false);
@@ -662,10 +662,10 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			Change_Move(PMV_DASHATT);
 		}
 
-		if (m_tPlayerInfo.eWeapon == WP_PISTOL ||	// weapon1이 있을 때
-			m_tPlayerInfo.eWeapon == WP_SHOTGUN ||
-			m_tPlayerInfo.eWeapon == WP_RIFLE ||
-			m_tPlayerInfo.eWeapon == WP_PISTOL)
+		if (m_tPlayerInfo.ePlayerState != RELOAD &&		// 전에가 reload가 아니고
+			(m_tPlayerInfo.eWeapon != WP_NON &&			// weapon1이 있을 때
+			m_tPlayerInfo.eWeapon != WP_KATANA &&
+			m_tPlayerInfo.eWeapon != WP_END ))
 		{
 			if (KEY_BUTTON_DOWN(DIK_R))
 			{
@@ -849,7 +849,7 @@ void CPlayer::Move_Dash(const _float& fTimeDelta)
 	// 만약 일정 속도 이하가 되면 -> state: IDLE
 	if (m_pTransformCom->GetTransformInfo().fSpeed <= m_fNormalSpeed)
 	{
-		Set_State_Normal();
+		Change_Move(PMV_NORMAL);
 		m_fDashCoolTime = 0.5f;
 		return;
 	}

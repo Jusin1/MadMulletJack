@@ -239,7 +239,7 @@ HRESULT CPlayer_HandR::Set_Texture()
 
         Set_New_TransInfo(50.f, 0.f);
 
-        m_tMoveInfo = { MV_RL, false, 30.f, 0.f };
+        m_tMoveInfo = { MV_RL, false, 10.f, 0.f };
     }
         break;
     }
