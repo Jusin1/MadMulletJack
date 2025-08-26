@@ -324,7 +324,12 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case IDLE:  tag = L"Com_Texture_Idle";  break;
     case CHASE: tag = L"Com_Texture_Chase"; break;
     case AIM:   tag = L"Com_Texture_Aim";   break;
-    case SHOT:  tag = L"Com_Texture_Shot";  break;
+    case SHOT:
+        if (s == SHOT) {
+            m_shotTimer = 0.f;   // ← 초기화
+        }
+        tag = L"Com_Texture_Shot";
+        break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
     case HIT_DOOR: tag = L"Com_Texture_Hit_Door"; break;
@@ -401,9 +406,29 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case SHOT:
-        if (m_pTextureCom->Is_AnimFinished()) {
-            SetState(IDLE);
+    {
+        // 플레이어가 사거리 벗어나면 CHASE로
+        if (dist > m_fAimRadius) {
+            SetState(CHASE);
+            break;
         }
+
+        if (m_pPlayerTr)
+            m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
+
+        m_shotTimer += dt;
+
+        if (m_pTextureCom->Is_AnimFinished()) {
+            m_pTextureCom->Stop_Anim();
+        }
+
+        if (m_shotTimer >= 0.7f) {
+            m_shotTimer = 0.f;
+            m_pTextureCom->Set_Zero_Frame();
+            m_pTextureCom->Resume_Anim();
+
+        }
+    }
         break;
 
     case HIT:
@@ -514,7 +539,7 @@ void CMonster_Suit::TrySpawnDeathUI()
     m_pendingDeathUI = false;
 
     const bool  isHead = (m_lastFatalPart == HIT_HEAD);
-
+    
     const float secsAdd = isHead ? 3.0f : 2.0f;
 
     if (auto ui = dynamic_cast<CEffectUI*>(
@@ -547,32 +572,36 @@ void CMonster_Suit::TrySpawnDeathUI()
         banner->Change_Texture(L"Com_Tex_Heal");
         banner->SetImageSize(40.f, 40.f);
         banner->SetBannerShowIcon(true);
-        banner->SetImageOffset(27.f, 5.f);
-        
+        banner->SetImageOffset(30.f, 5.f);
+
         banner->SetBannerRightText(isHead ? L"3sec" : L"2sec");
         banner->SetNumberEmphasis(L"23", 1.35f);
-        banner->SetBannerRightFixedScale(1.0f); 
+        banner->SetBannerRightFixedScale(1.0f);
+
+
         banner->SetBannerTextOffset(30.f, 5.f);
 
-        banner->SetBannerLabelPop(1.35f, 0.22f);
-
         banner->SetBannerAngle(0.f);
-        banner->LinkBannerTextAngleToBanner(true); 
+        banner->LinkBannerTextAngleToBanner(true);
         banner->SetBannerTextAngle(0.f);
-
 
         banner->SetBannerDownSpeed(130.f);
 
-        banner->SetBannerExtraWidth(80.f);
+
         banner->ShowBanner(
-            isHead ? L"헤드샷" : L"처치",
-            1.10f,           
-            175.f, 180.f,
-            1.4f, 1.0f,
+            isHead ? L"사요나라" : L"처치",
+            1.10f,                 // 유지 시간
+            175.f, 180.f,          // 위치
+            1.0f, 1.0f,            // scaleStart, scaleEnd → 팝업 효과 별도 적용
             L"Font_UI_Effect",
             D3DXCOLOR(1, 1, 1, 1),
             0.85f,
             4.f);
+
+        banner->SetBoxSize(360.f, 50.f); 
+
+        banner->SetBannerLabelPop(100.f, 0.25f);
+
     }
 
 

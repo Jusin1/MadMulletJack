@@ -235,7 +235,9 @@ void CEffectUI::Render_GameObject()
             afterX += (m_gap + m_iconW);
         }
         if (!m_RightText.empty()) {
-            const float rScale = m_rightUseFixedScale ? m_rightFixedScale : baseScale;
+            // 오른쪽 텍스트에도 팝업 효과(labelScale) 적용
+            const float rScale = m_rightUseFixedScale ? m_rightFixedScale : labelScale;
+
             float x = afterX + m_gap + m_textOffX;
             for (wchar_t ch : m_RightText) {
                 float sc = rScale * (isEm(ch) ? m_emScale : 1.f);
