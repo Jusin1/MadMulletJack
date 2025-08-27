@@ -18,7 +18,7 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
-#include "CUIManager.h"
+#include "CMapfactory.h"
 
 #include "CMainWeapon.h"
 
@@ -87,6 +87,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_bIsFixY = false;
 	Set_OnTerrain(1);
 
+	m_iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+
 	return S_OK;
 }
 
@@ -96,9 +98,13 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		return DEAD;*/
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta); // curOn -> keyInput
+	if (m_bIsZoomStage)
+	{
+		ZoomUpdate(fTimeDelta);
+	}
 
-	Move(fTimeDelta); // move : speed 와 현재 y, bFixY 결정
+	else
+		NormalUpdate(fTimeDelta);
 
 	// collider group 해줌
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_PLAYER, this);
@@ -112,15 +118,19 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if(!m_bIsFixY)
-	{
-		Set_OnTerrain(fTimeDelta);
-	}
-	
-	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
-	// 콜라이더 set
-	Set_Collider(fTimeDelta);
+	if (m_bIsZoomStage)
+	{
+		ZoomLateUpdate(fTimeDelta);
+	}
+
+	else
+	{
+		NormalLateUpdate(fTimeDelta);
+	}
+		
+
+	
 
 	__super::LateUpdate_GameObject(fTimeDelta);
 }
@@ -157,6 +167,7 @@ void CPlayer::Render_GameObject()
 #endif
 }
 
+/////////////// public func
 void CPlayer::Add_Hp(_float _fAddHp)
 {
 	// 체력을 더함
@@ -175,121 +186,55 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	}
 }
 
-void CPlayer::Change_State(PLAYERSTATE _eState)
+//////////////////////////// zoom 여부에 따른 update, lateupdate func
+_int CPlayer::NormalUpdate(const _float& fTimeDelta)
 {
-	// 이전 state 정리 및 업데이트
-	StateEnd(m_tPlayerInfo.ePlayerState);
-	m_tPrePlayerInfo.ePlayerState = m_tPlayerInfo.ePlayerState;
+	StateUpdate(m_tPlayerInfo.ePlayerState, fTimeDelta); // curOn -> keyInput
 
-	// state 저장
-	m_tPlayerInfo.ePlayerState = _eState;
+	Move(fTimeDelta); // move : speed 와 현재 y, bFixY 결정
 
-	// 새로은 state 시작
-	StateNormalSet(); // 전체적으로 적용하는 setting
-	StateBegin(m_tPlayerInfo.ePlayerState); // 바꾸는 state begin 
-
-	//Change_Move(m_tPlayerInfo.ePlayerMove);
+	return NO_EVENT;
 }
 
-
-// IDLE, JUMP, DASH_ATTACK, DASH, SLIED, KICK, ATTACK,
-// ATTACK_INSTANT, RELOAD, HIT, DOPING, WALL, OPENING, PLAYERDEAD, PLAYER_END
-void CPlayer::StateBegin(PLAYERSTATE _e)
+_int CPlayer::ZoomUpdate(const _float& fTimeDelta)
 {
-	switch (_e) {
-	case IDLE:
-		IDLE_Begin();break;
-	case JUMP:
-		JUMP_Begin();break;
-	case KICK:
-		KICK_Begin();break;
-	case ATTACK:
-		ATTACK_Begin();break;
-	case ATTACK_INSTANT:
-		ATTACK_INSTANT_Begin();break;
-	case RELOAD:
-		RELOAD_Begin();break;
-	case DOPING:
-		DOPING_Begin();break;
-	case OPENING:
-		OPENING_Begin();break;
-	case PLAYERDEAD:
-		PLAYERDEAD_Begin();break;
-	case CLEAR:
-		Clear_Begin(); break;
-		break;
-	}
-
-	// 변경된 player info 전달
-	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
-	CGlobal_Info::Get_Instance()->Set_STATE(STATE_ON);
+	StateUpdateZoom(m_tPlayerInfo.ePlayerState, fTimeDelta);
 }
 
-void CPlayer::StateEnd(PLAYERSTATE _e)
+void CPlayer::NormalLateUpdate(const _float& fTimeDelta)
 {
-	switch (_e) {
-	case IDLE:
-		IDLE_End();break;
-	case JUMP:
-		JUMP_End();break;
-	case KICK:
-		KICK_End();break;
-	case ATTACK:
-		ATTACK_End();break;
-	case ATTACK_INSTANT:
-		ATTACK_INSTANT_End();break;
-	case RELOAD:
-		RELOAD_End();break;
-	case DOPING:
-		DOPING_End();break;
-	case OPENING:
-		OPENING_End();break;
-	case PLAYERDEAD:
-		PLAYERDEAD_End();break;
-	}
-}
-
-void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
-{
-	OutputDebugString(StateToString(_e));
-	OutputDebugString(MoveToString(m_tPlayerInfo.ePlayerMove));
-
-	switch (_e) {
-	case IDLE:
-		IDLE_On(fTimeDelta);break;
-	case JUMP:
-		JUMP_On(fTimeDelta);break;
-	case KICK:
-		KICK_On(fTimeDelta);break;
-	case ATTACK:
-		ATTACK_On(fTimeDelta);break;
-	case ATTACK_INSTANT:
-		ATTACK_INSTANT_On(fTimeDelta);break;
-	case RELOAD:
-		RELOAD_On(fTimeDelta);break;
-	case DOPING:
-		DOPING_On(fTimeDelta);break;
-	case OPENING:
-		OPENING_On(fTimeDelta);break;
-	case PLAYERDEAD:
-		PLAYERDEAD_On(fTimeDelta);break;
-	}
-
-	if (m_bIsCountHp)
+	// y값 조정 ( fixYf로 이동하지 않을때)
+	if (!m_bIsFixY)
 	{
-		CountTime(fTimeDelta);
+		// jump를 하거나 terrain을 타거나
+		Set_OnTerrain(fTimeDelta);
 	}
-	
-	KeyInput(fTimeDelta);
+
+	// 다른 객체가 this 객체의 pos를 쓰려면 update를 해줘야함
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+
+	// 콜라이더 set
+	Set_Collider(fTimeDelta);
 }
 
+void CPlayer::ZoomLateUpdate(const _float& fTimeDelta)
+{
+	// jump를 하거나 terrain을 타거나
+	Set_OnTerrain(fTimeDelta);
+
+	// 콜라이더 set
+	Set_ColliderZoom(fTimeDelta);
+}
+////////////////////////////////////////////////////////////////////
+
+/////////////////////// state util func
 void CPlayer::StateNormalSet()
 {
-	m_bIsKeyInput		= false;
-	m_bIsInvincible		= false;
-	m_bIsAttack			= false;
-	m_bJumping			= false;
-	m_bIsCountHp		= true;
+	m_bIsKeyInput = false;
+	m_bIsInvincible = false;
+	m_bIsAttack = false;
+	m_bJumping = false;
+	m_bIsCountHp = true;
 
 	m_fAddTime = 0.f;
 	m_fStateTime = 0.f;
@@ -303,6 +248,291 @@ void CPlayer::StateNormalSet()
 
 	m_pPlayerUI->Set_Active(true);
 	m_pPlayerUI->Set_RenderOn(true);
+}
+
+void CPlayer::StateZoomSet()
+{
+	m_bIsKeyInput = false;
+	m_bIsInvincible = false;
+	m_bJumping = false;
+	m_bIsCountHp = true;
+	m_bIsAttack = false;
+
+	m_fAddTime = 0.f;
+	m_fStateTime = 0.f;
+
+	//m_fMaxHp = 100.f;
+
+	// 움직임 키
+	m_eMoveKey = MVKEY_NON;
+
+	// ui 키기
+	m_pHpBarUI->Set_Active(true);
+	m_pHpBarUI->Set_RenderOn(true);
+
+	m_pPlayerUI->Set_Active(true);
+	m_pPlayerUI->Set_RenderOn(true);
+}
+
+void CPlayer::Set_State_Normal()
+{
+	Change_State(IDLE);
+	Change_Move(PMV_NORMAL);
+}
+
+// time count
+void CPlayer::CountTime(const _float& fTimeDelta)
+{
+	// 초당 hp 감소
+	Add_Hp(-1.f * fTimeDelta);
+
+	// dashcooltime 이 0초가 아니라면 cooltime 깎아줌
+	if (m_fDashCoolTime != 0)
+	{
+		m_fDashCoolTime -= fTimeDelta;
+		if (m_fDashCoolTime <= 0.f)
+			m_fDashCoolTime = 0.f;
+	}
+
+	//  attack cool 타임 전해줌
+	if (m_fAttackCoolTime != 0)
+	{
+		m_bIsAttack = false;
+		m_fAttackCoolTime -= fTimeDelta;
+		if (m_fAttackCoolTime <= 0.f)
+		{
+			m_fAttackCoolTime = 0.f;
+			m_bIsAttack = true;
+		}
+	}
+
+	// hpbar에게 hp 전해줌
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
+
+	// debug
+	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
+}
+
+void CPlayer::CountTimeZoom(const _float& fTimeDelta)
+{
+	//  attack cool 타임 전해줌
+	if (m_fAttackCoolTime != 0)
+	{
+		m_bIsAttack = false;
+		m_fAttackCoolTime -= fTimeDelta;
+		if (m_fAttackCoolTime <= 0.f)
+		{
+			m_fAttackCoolTime = 0.f;
+			m_bIsAttack = true;
+		}
+	}
+
+	// hpbar에게 hp 전해줌
+	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
+
+	// debug
+	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
+}
+
+_bool CPlayer::StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime)
+{
+	// 누적 시간 더해줌 (초 단위)
+	m_fAddTime += fTimeDelta * fAddTime;
+
+	// 누적시간이 스테이트시간 보다 크거나 같으면 return true
+	return (m_fAddTime >= m_fStateTime);
+}
+
+
+//////////////////// state func
+void CPlayer::Change_State(PLAYERSTATE _eState)
+{
+	// 이전 state 정리 및 업데이트
+	StateEnd(m_tPlayerInfo.ePlayerState);
+	m_tPrePlayerInfo.ePlayerState = m_tPlayerInfo.ePlayerState;
+
+	// state 저장
+	m_tPlayerInfo.ePlayerState = _eState;
+
+	// 새로은 state 시작
+	StateNormalSet(); // 전체적으로 적용하는 setting
+	StateBegin(m_tPlayerInfo.ePlayerState); // 바꾸는 state begin 
+}
+
+void CPlayer::StateBegin(PLAYERSTATE _e)
+{
+	switch (_e) {
+	case IDLE:
+		IDLE_Begin();break;
+
+	case JUMP:
+		JUMP_Begin();break;
+
+	case KICK:
+		KICK_Begin();break;
+
+	case ATTACK:
+		ATTACK_Begin();break;
+
+	case ATTACK_INSTANT:
+		ATTACK_INSTANT_Begin();break;
+
+	case ZOOMING:
+		ZOOMING_Begin(); break;
+
+	case ZOOM:
+		ZOOM_Begin(); break;
+
+	case DOPING:
+		DOPING_Begin();break;
+
+	case OPENING:
+		OPENING_Begin();break;
+
+	case PLAYERDEAD:
+		PLAYERDEAD_Begin();break;
+
+	case CLEAR:
+		Clear_Begin(); break;
+		break;
+
+	case ATTEND:
+		ATTEND_Begin(); break;
+	}
+
+	// 변경된 player info 전달
+	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo);
+	CGlobal_Info::Get_Instance()->Set_STATE(STATE_ON);
+}
+
+void CPlayer::StateEnd(PLAYERSTATE _e)
+{
+	switch (_e) {
+	case IDLE:
+		IDLE_End();break;
+
+	case JUMP:
+		JUMP_End();break;
+
+	case KICK:
+		KICK_End();break;
+
+	case ATTACK:
+		ATTACK_End();break;
+
+	case ATTACK_INSTANT:
+		ATTACK_INSTANT_End();break;
+
+	case ZOOMING:
+		ZOOMING_End(); break;
+
+	case ZOOM:
+		ZOOM_End(); break;
+
+	case RELOAD:
+		RELOAD_End();break;
+
+	case DOPING:
+		DOPING_End();break;
+
+	case OPENING:
+		OPENING_End();break;
+
+	case PLAYERDEAD:
+		PLAYERDEAD_End();break;
+
+	case ATTEND:
+		ATTEND_End(); break;
+	}
+}
+
+void CPlayer::StateUpdate(PLAYERSTATE _e, const _float& fTimeDelta)
+{
+	//debug
+	OutputDebugString(StateToString(_e));
+	OutputDebugString(MoveToString(m_tPlayerInfo.ePlayerMove));
+
+	switch (_e) {
+	case IDLE:
+		IDLE_On(fTimeDelta);break;
+
+	case JUMP:
+		JUMP_On(fTimeDelta);break;
+
+	case KICK:
+		KICK_On(fTimeDelta);break;
+
+	case ATTACK:
+		ATTACK_On(fTimeDelta);break;
+
+	case ATTACK_INSTANT:
+		ATTACK_INSTANT_On(fTimeDelta);break;
+
+	case ZOOMING:
+		ZOOMING_On(fTimeDelta); break;
+
+	case ZOOM:
+		ZOOM_On(fTimeDelta); break;
+
+	case RELOAD:
+		RELOAD_On(fTimeDelta);break;
+
+	case DOPING:
+		DOPING_On(fTimeDelta);break;
+
+	case OPENING:
+		OPENING_On(fTimeDelta);break;
+
+	case PLAYERDEAD:
+		PLAYERDEAD_On(fTimeDelta);break;
+
+	case ATTEND:
+		ATTEND_On(fTimeDelta); break;
+	}
+
+	if (m_bIsCountHp)
+	{
+		CountTime(fTimeDelta);
+	}
+	
+	KeyInput(fTimeDelta);
+}
+// zoom
+void CPlayer::StateUpdateZoom(PLAYERSTATE _e, const _float& fTimeDelta)
+{
+	//debug
+	OutputDebugString(StateToString(_e));
+	OutputDebugString(MoveToString(m_tPlayerInfo.ePlayerMove));
+
+	switch (_e) {
+	case IDLE:
+		IDLE_On(fTimeDelta); break;
+
+	case ATTACK:
+		ATTACK_On(fTimeDelta); break;
+
+	case ZOOMING:
+		ZOOMING_On(fTimeDelta); break;
+
+	case ZOOM:
+		ZOOM_On(fTimeDelta); break;
+
+	case OPENING:
+		OPENING_On(fTimeDelta); break;
+
+	case PLAYERDEAD:
+		PLAYERDEAD_On(fTimeDelta); break;
+
+	case ATTEND:
+		ATTEND_On(fTimeDelta); break;
+	}
+
+	if (m_bIsCountHp)
+	{
+		CountTimeZoom(fTimeDelta);
+	}
+
+	KeyInputZoom(fTimeDelta);
 }
 
 // idle
@@ -363,7 +593,6 @@ void CPlayer::KICK_On(const _float& fTimeDelta)
 	{
 		Change_State(IDLE);
 	}
-		
 }
 
 void CPlayer::KICK_End()
@@ -373,13 +602,14 @@ void CPlayer::KICK_End()
 // attack
 void CPlayer::ATTACK_Begin()
 {
-	m_bIsKeyInput = true;
+	if(!m_bIsZoomStage)
+		m_bIsKeyInput = true;
 }
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
 {
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Change_State(IDLE);
+		Change_State(ATTEND);
 }
 
 void CPlayer::ATTACK_End()
@@ -393,7 +623,9 @@ void CPlayer::ATTACK_End()
 	case WP_NON:
 		break;
 	case WP_PISTOL:
-		m_fAttackCoolTime = dynamic_cast<CMainWeapon*>(m_pWeaponUI->Find_Child_ByTag(TEXT("PistolUI")))->Get_CoolTime();
+		m_fAttackCoolTime = 
+			dynamic_cast<CMainWeapon*>(m_pWeaponUI->				// 내 weapon ui의 
+			Find_Child_ByTag(TEXT("PistolUI")))->Get_CoolTime();	// 무기의 cooltime을 가져와라
 		break;
 
 	case WP_SHOTGUN:
@@ -429,18 +661,19 @@ void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
 
 void CPlayer::ATTACK_INSTANT_End()
 {
-	// test -> 주석 빼주기
+	// 무기를 썼으면 kick(non)으로 바꿔라
 	Change_Weapon2(WP_KICK);
-	Change_Move(PMV_DASHATT);
 }
 
 void CPlayer::ZOOMING_Begin()
 {
-	m_bIsInvincible = true;
+
 }
 
 void CPlayer::ZOOMING_On(const _float& fTimeDelta)
 {
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Change_State(ZOOM);
 }
 
 void CPlayer::ZOOMING_End()
@@ -449,6 +682,8 @@ void CPlayer::ZOOMING_End()
 
 void CPlayer::ZOOM_Begin()
 {
+	m_bIsKeyInput = true;
+	m_bIsAttack = true;
 }
 
 void CPlayer::ZOOM_On(const _float& fTimeDelta)
@@ -462,9 +697,6 @@ void CPlayer::ZOOM_End()
 // reload
 void CPlayer::RELOAD_Begin()
 {
-	//m_bIsKeyInput = true;
-	//m_fStateTime = 0.5f; // origin 0.5 debug 2.f
-
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
 }
@@ -579,6 +811,21 @@ void CPlayer::Clear_Begin()
 	m_pWeaponUI->Set_Active(false);
 }
 
+void CPlayer::ATTEND_Begin()
+{
+
+}
+
+void CPlayer::ATTEND_On(const _float& fTimeDelta)
+{
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Change_State(IDLE);
+}
+
+void CPlayer::ATTEND_End()
+{
+}
+
 void CPlayer::KeyInput(const _float& fTimeDelta)
 {
 	// 움직임 키
@@ -689,6 +936,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	//debug
 	if (KEY_BUTTON_DOWN(DIK_E))
 		Change_State(ATTACK_INSTANT);
+
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
@@ -705,50 +953,29 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_PISTOL);
 }
 
-void CPlayer::Set_State_Normal()
+void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 {
-	Change_State(IDLE);
-	Change_Move(PMV_NORMAL);
-}
-
-void CPlayer::CountTime(const _float& fTimeDelta)
-{
-	Add_Hp(-1.f * fTimeDelta);
-
-	// dashcooltime 이 0초가 아니라면 cooltime 깎아줌
-	if (m_fDashCoolTime != 0)
+	// 우 클릭시
+	// 현재가 zooming -> idle
+	// 현재가 idle -> zoom
+	if (m_bIsKeyInput && (IS_RBUTTON_DOWN))
 	{
-		m_fDashCoolTime -= fTimeDelta;
-		if (m_fDashCoolTime <= 0.f)
-			m_fDashCoolTime = 0.f;
-	}
+		if (m_tPlayerInfo.ePlayerState == IDLE)
+			Change_State(ZOOMING);
 
-	if (m_fAttackCoolTime != 0)
+		else
+			Change_State(IDLE);
+	}
+	
+
+	// 좌 클릭시 : attack
+	if (m_bIsAttack && IS_LBUTTON_DOWN)
 	{
-		m_bIsAttack = false;
-		m_fAttackCoolTime -= fTimeDelta;
-		if (m_fAttackCoolTime <= 0.f)
-		{
-			m_fAttackCoolTime = 0.f;
-			m_bIsAttack = true;
-		}
+		Change_State(ATTACK);
 	}
-		
-	// debug
-	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
-	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
 }
 
-_bool CPlayer::StateTime_IsEnd(const _float& fTimeDelta, _float fAddTime)
-{
-	// 누적 시간 더해줌 (초 단위)
-	m_fAddTime += fTimeDelta * fAddTime;
-
-	// 누적시간이 스테이트시간 보다 크거나 같으면 return true
-	return (m_fAddTime >= m_fStateTime);
-}
-
-//PMV_NORMAL, PMV_DASH,PMV_DASHATT, PMV_SLIDE, PMV_END
+////////////////// move func
 void CPlayer::Move(const _float& fTimeDelta)
 {
 	_vec3 vDistance;
@@ -926,6 +1153,7 @@ void CPlayer::Move_Fall(const _float& fTimeDelta)
 	GetTransform()->Move_YDown(fTimeDelta,0.f,false, Y);
 }
 
+/////////////////// change weapons
 void CPlayer::Change_Weapon(WEAPON _eWeapon)
 {
 	// 상태 업데이트
