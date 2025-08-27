@@ -186,6 +186,8 @@
     <ClInclude Include="..\Header\CMainWeapon.h" />
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
+    <ClInclude Include="..\Header\CMonster_Fat.h" />
+    <ClInclude Include="..\Header\CMonster_Soldier.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
     <ClInclude Include="..\Header\CTextEffectUI.h" />
@@ -263,6 +265,8 @@
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
+    <ClCompile Include="..\Code\CMonster_Fat.cpp" />
+    <ClCompile Include="..\Code\CMonster_Soldier.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
     <ClCompile Include="..\Code\CTextEffectUI.cpp" />

@@ -247,6 +247,9 @@
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Fat">
       <UniqueIdentifier>{12f948f9-9a9b-4618-8204-b0a36fe6cbbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Soldier">
+      <UniqueIdentifier>{61a6fa21-86aa-4941-a6ef-a562e0d7200b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -471,6 +474,12 @@
     <ClInclude Include="..\Header\CBullet.h">
       <Filter>02. GameObject\08. Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Fat.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Fat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Soldier.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Soldier</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -685,6 +694,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\08. Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Fat.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Fat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Soldier.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Soldier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

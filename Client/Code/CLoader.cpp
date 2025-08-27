@@ -55,6 +55,8 @@
  
 // 몬스터
 #include "CMonster_Suit.h"
+#include "CMonster_Fat.h"
+#include "CMonster_Soldier.h"
 
 // 총알
 #include "CBullet.h"
@@ -331,6 +333,150 @@ HRESULT CLoader::Loading_Dev()
 
 #pragma endregion 슈트 몬스터
 
+#pragma region 뚱뚱한 몬스터
+	PhaseStep(0.5f, L"몬스터 텍스쳐");
+
+	// Monster
+	// IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Idle/fg_idle%02d.png", 12))))
+		return E_FAIL;
+
+	// CHASE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Chase",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Walk/fg_walk%02d.png", 14))))
+		return E_FAIL;
+
+	// AIM
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Aim",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/aim/fg_aim%02d.png", 9))))
+		return E_FAIL;
+
+	// SHOT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Shot",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/shoot/fg_shoot%02d.png", 7))))
+		return E_FAIL;
+
+	// Jump
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Jump",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/jump/ft_jumping%02d.png", 21))))
+		return E_FAIL;
+
+	// HEAD_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_HEAD",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HeadHit/fg_2fly%02d.png", 21))))
+		return E_FAIL;
+
+	// BODY_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BODY",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Hit2/fg_hit%02d.png", 8))))
+		return E_FAIL;
+
+	// BALL_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BALL",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HitBall/BALLSHOT%03d.png", 23))))
+		return E_FAIL;
+
+	// ELECTRIC - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_ELECTRIC",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Electric/ELECTRIC%03d.png", 14))))
+		return E_FAIL;
+
+	// DOOR - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DOOR",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Fly_back_Endo/fat_Flyback_endo%02d.png", 31))))
+		return E_FAIL;
+
+	// DEATH
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DEATH",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Death/fg_death%02d.png", 20))))
+		return E_FAIL;
+
+
+	// Blocking -> Kicked
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Blocking/Fat_blocking%02d.png", 5))))
+		return E_FAIL;
+
+	// 추가 예정
+	// InstanceKill
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
+	//	return E_FAIL;
+
+#pragma endregion 뚱뚱한 몬스터
+
+#pragma region 군인 몬스터
+	PhaseStep(0.6f, L"몬스터 텍스쳐");
+	// IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Idle/vg_idle%02d.png", 12))))
+		return E_FAIL;
+
+	// CHASE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Walk",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/walk/vg_walk%02d.png", 14))))
+		return E_FAIL;
+
+	// AIM
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Aim",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/aim/vg_aim%02d.png", 9))))
+		return E_FAIL;
+
+	// SHOT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Shot",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Shot/vg_shot%02d.png", 7))))
+		return E_FAIL;
+
+	// Jump
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Jump",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Jump/vg_jumping%02d.png", 23))))
+		return E_FAIL;
+
+	// HEAD_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_HEAD",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/hit/HeadShot/HeadShot%03d.png", 21))))
+		return E_FAIL;
+
+	// BODY_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_BODY",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/hit/Hit2/vg_hit%02d.png", 8))))
+		return E_FAIL;
+
+	// BALL_HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_BALL",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/hit/HitBall/Ball%03d.png", 23))))
+		return E_FAIL;
+
+	// ELECTRIC - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_ELEC",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/hit/ElecHit/ELECTRIC%03d.png", 15))))
+		return E_FAIL;
+
+	// DOOR - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_DOOR",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Death/Death_Back/vg_flyback%02d.png", 25))))
+		return E_FAIL;
+
+	// DEATH
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_DEATH",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Death/NormalDeath/DEATH%03d.png", 23))))
+		return E_FAIL;
+
+
+	// Blocking -> Kicked
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_BLOCK",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Blocking/Blocking%03d.png", 5))))
+		return E_FAIL;
+
+	 //추가 예정
+	 //InstanceKill
+	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
+	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
+	//	return E_FAIL;
+
+#pragma endregion 군인 몬스터
+	PhaseStep(0.7f, L"최종 프로토타입 생성");
 	// 총알
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Bullet",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Bullet/BULLET%03d.png", 4))))
@@ -1071,6 +1217,14 @@ HRESULT CLoader::Loading_UI()
 	// Monster_Suit 생성
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Suit",
 		CMonster_Suit::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Fat",
+		CMonster_Fat::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Soldier",
+		CMonster_Soldier::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// UI
