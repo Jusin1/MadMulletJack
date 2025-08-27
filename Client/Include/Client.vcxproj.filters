@@ -241,6 +241,12 @@
     <Filter Include="02. GameObject\07. MapObject\04. Prefab">
       <UniqueIdentifier>{adeded63-d707-4f1d-acab-85f137514f65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Bullet">
+      <UniqueIdentifier>{2ba0cc05-01f1-4274-b4e0-6ea65cc4d03c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Fat">
+      <UniqueIdentifier>{12f948f9-9a9b-4618-8204-b0a36fe6cbbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -462,6 +468,9 @@
     <ClInclude Include="CPlayerUI_Manager.h">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\08. Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -673,6 +682,9 @@
     </ClCompile>
     <ClCompile Include="CPlayerUI_Manager.cpp">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\08. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

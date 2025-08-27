@@ -56,6 +56,9 @@
 // 몬스터
 #include "CMonster_Suit.h"
 
+// 총알
+#include "CBullet.h"
+
 // MapObject
 #include "CGridPanel.h"
 #include "CTile_Acid.h"
@@ -301,6 +304,11 @@ HRESULT CLoader::Loading_Dev()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_environ/electric/SM_HIT_ELEC%03d.png", 15))))
 		return E_FAIL;
 
+	// VENT - HIT
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/death/Blood/BLOOD%03d.png", 4))))
+		return E_FAIL;
+
 	// DOOR - HIT
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/hit_environ/wall/SM_HIT_WALL%03d.png", 14))))
@@ -323,6 +331,10 @@ HRESULT CLoader::Loading_Dev()
 
 #pragma endregion 슈트 몬스터
 
+	// 총알
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Bullet",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Bullet/BULLET%03d.png", 4))))
+		return E_FAIL;
 
 #pragma region MapObject
 	PhaseStep(0.92f, L"최종 프로토타입 생성");
@@ -370,6 +382,11 @@ HRESULT CLoader::Loading_Dev()
 		CPrefab::Create(m_pGraphicDev))))
 		return E_FAIL;
 #pragma endregion
+
+	// 총알 생성
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Bullet",
+		CBullet::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// CubeTex

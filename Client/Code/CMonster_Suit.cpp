@@ -9,21 +9,20 @@
 #include "CPicking.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
+#include "CBullet.h"
+#include "CPickingManager.h"
 
 #ifdef _DEBUG
 namespace {
     static LPD3DXMESH g_pDebugSphereMesh = nullptr;
-
     static void EnsureDebugSphereMesh(LPDIRECT3DDEVICE9 dev)
     {
         if (!g_pDebugSphereMesh)
             D3DXCreateSphere(dev, 1.f, 16, 16, &g_pDebugSphereMesh, nullptr);
     }
-
     static D3DCOLOR PartColor(CMonster_Suit::HIT_PART p)
     {
-        switch (p)
-        {
+        switch (p) {
         case CMonster_Suit::HIT_HEAD:  return D3DCOLOR_ARGB(255, 255, 80, 80);
         case CMonster_Suit::HIT_BALLS: return D3DCOLOR_ARGB(255, 255, 220, 80);
         case CMonster_Suit::HIT_LEG:   return D3DCOLOR_ARGB(255, 80, 150, 255);
@@ -34,14 +33,9 @@ namespace {
 }
 #endif
 
-// 정적 콤보 변수 정의
-ULONGLONG CMonster_Suit::s_lastKillTimeMs = 0;
-int       CMonster_Suit::s_comboCount = 0;
-
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
-    , m_pPlayerTr(nullptr)
     , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
     , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
 {
@@ -50,7 +44,6 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
     : CMonster(rhs)
     , m_eMonState(rhs.m_eMonState), m_ePrevState(rhs.m_ePrevState)
-    , m_pPlayerTr(nullptr)
     , m_fChaseRadius(rhs.m_fChaseRadius), m_fAimRadius(rhs.m_fAimRadius), m_fLoseRadius(rhs.m_fLoseRadius)
     , m_jumpCD(rhs.m_jumpCD), m_jumpDir(rhs.m_jumpDir), m_bKillAfterHit(rhs.m_bKillAfterHit)
 {
@@ -67,21 +60,19 @@ HRESULT CMonster_Suit::Ready_GameObject()
 HRESULT CMonster_Suit::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg))) return E_FAIL;
-    
+
     m_fHp = 2;
 
-    CTransform::TRANSFORMINFO TransformInfo{};
-    TransformInfo.fSpeed = 5.f;
-    TransformInfo.fRotationSpeed = D3DXToRadian(90.f);
-
-    m_pTransformCom->SetTransformInfo(TransformInfo);
+    CTransform::TRANSFORMINFO ti{};
+    ti.fSpeed = 5.f;
+    ti.fRotationSpeed = D3DXToRadian(90.f);
+    m_pTransformCom->SetTransformInfo(ti);
     m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 
     GetPlayerTransform();
 
     m_jumpCD = 1.f + (rand() % 2001) / 1000.f;
     SetState(IDLE);
-
     SetupHitSpheres();
 
     _float fOut{ 0.f };
@@ -112,72 +103,128 @@ void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 void CMonster_Suit::Render_GameObject()
 {
     if (m_eMonState != INSKILL)
-    {
         __super::Render_GameObject();
-    }
 
 #ifdef _DEBUG
-    if (g_ColiderRender)
-        DebugRender_HitSpheres();
+    if (g_ColiderRender) DebugRender_HitSpheres();
 #endif
 }
 
 void CMonster_Suit::Set_Collider()
 {
-    _vec3 vDistance;
+    // 모든 충돌체 OFF면 스킵
+    if (!m_pColiderCom || !m_pColiderCom->Is_Active()) {
+        Set_Collider_With_Wall();
+        return;
+    }
 
-    if (m_pColiderCom)
-        m_pColiderCom->Update_ColliderSphere();
+    m_pColiderCom->Update_ColliderSphere();
 
-    if (m_eMonState != INSKILL) // inskill일때는 colli를 하지 않음
+    if (m_eMonState != INSKILL)
     {
         if (CColiderManager::GetInstance()->CollisionGroup(
-            CColiderManager::COLLISION_PLAYER, this,
-            CColiderManager::COLLISION_SPHERE, nullptr))
+            CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
         {
-            _vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-            (void)vPosition;
-
-            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
-            {
+            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK) {
                 SetState(KICKED);
                 m_bKillAfterHit = false;
             }
-
             if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_INSTANT)
-            {
                 SetState(INSKILL);
-            }
         }
 
         if (CColiderManager::GetInstance()->CollisionGroup(
-            CColiderManager::COLLISION_TILE_ELECTRIC, this,
-            CColiderManager::COLLISION_SPHERE, nullptr))
+            CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE, nullptr))
         {
-            if  (m_eMonState!= HIT_ELECTRIC) { // 이미 전기 상태면 또 안 바꾸기
-                SetState(HIT_ELECTRIC);
-            }
+            if (m_eMonState != HIT_ELECTRIC) SetState(HIT_ELECTRIC);
         }
 
         if (CColiderManager::GetInstance()->CollisionGroup(
-            CColiderManager::COLLISION_DOOR, this,
-            CColiderManager::COLLISION_SPHERE, nullptr))
+            CColiderManager::COLLISION_TILE_VENT, this, CColiderManager::COLLISION_SPHERE, nullptr))
         {
+            if (m_eMonState != HIT_BENT) SetState(HIT_BENT);
+        }
+        
+        CGameObject* pDoor = nullptr;
+        if (CColiderManager::GetInstance()->CollisionGroupSphereTagWho(
+            CColiderManager::COLLISION_DOOR,
+            this,
+            L"Com_Collider_Sphere",        // 몬스터 구면
+            L"Com_Collider_Sphere_Open",   // 문(열림) 구면
+            nullptr,
+            pDoor))
+        {
+            auto sphereWorldCenter = [](CColider_Sphere* s, CTransform* tr) -> _vec3 {
+                if (!s || !tr) return _vec3(0, 0, 0);
+                const auto d = s->Get_SphereDesc(); // {fRadius, vOffset}
+                return tr->Get_Info(INFO_POS)
+                    + tr->Get_Info(INFO_RIGHT) * d.vOffset.x
+                    + tr->Get_Info(INFO_UP) * d.vOffset.y
+                    + tr->Get_Info(INFO_LOOK) * d.vOffset.z;
+                };
+
+            // 내/문(열림) 스피어 & 트랜스폼
+            auto* myS = m_pColiderCom;
+            auto* myTr = m_pTransformCom;
+            auto* openS = pDoor ? dynamic_cast<CColider_Sphere*>(pDoor->Find_Component(L"Com_Collider_Sphere_Open")) : nullptr;
+            auto* doorTr = pDoor ? pDoor->GetTransform() : nullptr;
+
+            // 중심점
+            const _vec3 myC = sphereWorldCenter(myS, myTr);
+            const _vec3 openC = sphereWorldCenter(openS, doorTr);
+
+            // 밀릴 방향: 문 open 중심 -> 몬스터 중심 (수평)
+            _vec3 dir = myC - openC; dir.y = 0.f;
+            if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // 완전 겹침 대비
+                dir = -myTr->Get_Info(INFO_LOOK); dir.y = 0.f;
+            }
+            D3DXVec3Normalize(&dir, &dir);
+
+            // LOOK을 '밀릴 방향'으로 맞춰두면, 이후 HIT_DOOR 상태에서 그 방향으로 이동시킬 수 있음
+            const _vec3 myPos = myTr->Get_Info(INFO_POS);
+            myTr->LookAt(myPos + dir);   // 내부에서 Right/Up 재정렬 가정
+
+            // 상태 전환 + 내 구면 비활성(반복 충돌 방지)
             SetState(HIT_DOOR);
-            m_pColiderCom->Set_Active(false);
+            if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+            m_bPickable = false;
+
+            return; // 이 프레임은 더 안 건드림
         }
     }
-    
 
     Set_Collider_With_Wall();
 }
 
+void CMonster_Suit::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
+{
+    CMonster::GetDeathUIConfig(cfg, isHeadshot);
+
+    cfg.bannerBoxW = 360.f;
+    cfg.bannerBoxH = 50.f;
+
+
+    cfg.rightTextNormal = L"2sec";
+    cfg.rightTextHead = L"3sec";
+
+    // 기본 처치 텍스트
+    cfg.killTextNormal = L"처치";
+
+    // ★ 헤드샷/급소 처치 문구 분기
+    switch (m_lastKillKind)
+    {
+    case KillKind::Balls: cfg.killTextHead = L"급소";   break;
+    case KillKind::Head:  cfg.killTextHead = L"헤드샷"; break;
+    default:              cfg.killTextHead = L"처치"; break;
+    }
+}
+
 _bool CMonster_Suit::Picking(_vec3* PickingPoint)
 {
+    // CMonster::Picking 에서 죽음/비활성 체크
     CPicking* pk = CPicking::GetInstance();
     _vec3 rayO = pk->GetRayOrigin();
-    _vec3 rayD = pk->GetRayDir();
-    D3DXVec3Normalize(&rayD, &rayD);
+    _vec3 rayD = pk->GetRayDir(); D3DXVec3Normalize(&rayD, &rayD);
 
     const _matrix& W = *m_pTransformCom->Get_World();
     _vec3 axX(W._11, W._12, W._13), axY(W._21, W._22, W._23), axZ(W._31, W._32, W._33);
@@ -202,12 +249,8 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
         if (CPicking::IntersectRaySphere(o2, d2, c2, rW, &t) && t >= 0.f)
         {
             bool better = false;
-            if (ps.priority > best.priority) {
-                better = true;
-            }
-            else if (ps.priority == best.priority && t < best.t) {
-                better = true;
-            }
+            if (ps.priority > best.priority) better = true;
+            else if (ps.priority == best.priority && t < best.t) better = true;
 
             if (better) {
                 _vec3 hit2 = o2 + d2 * t;
@@ -224,7 +267,7 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
     return true;
 }
 
-void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
+void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
 {
     HIT_PART part = m_cachedHitPart;
     if (part == HIT_UNKNOWN) part = HIT_BODY;
@@ -247,48 +290,66 @@ void CMonster_Suit::HitAt(const _vec3& hitPosWorld)
 
 void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 {
-    float prevHp = m_fHp;
+    if (m_bDead) return;
+
+    const float prevHp = m_fHp;
     m_fHp -= dmg;
 
-    if (prevHp > 0.f && m_fHp <= 0.f) {
-        m_lastFatalPart = part;
-        m_pendingDeathUI = true;
-    }
+    const bool lethal = (prevHp > 0.f && m_fHp <= 0.f);
+    const bool isHead = (part == HIT_HEAD);
+    const bool isBalls = (part == HIT_BALLS);
+    const bool headshot = (isHead || isBalls);
 
-    if (m_fHp <= 0) {
-        if (part == HIT_HEAD || part == HIT_BALLS) {
+    if (lethal)
+    {
+        // ★ 처치 종류 기록(배너 문구 분기)
+        if (isBalls)      m_lastKillKind = KillKind::Balls;
+        else if (isHead)  m_lastKillKind = KillKind::Head;
+        else              m_lastKillKind = KillKind::Normal;
+
+        // 배너는 죽을 때만 뜸
+        QueueDeathUI(headshot);
+
+        // 충돌/픽킹 차단
+        m_bPickable = false;
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        CPickingManager::GetInstance()->Remove_PickingGroup(this);
+
+        // 상태 전환
+        if (headshot) {          // 머리/급소 즉사: HIT 진입하면서 1회 배너
             m_bKillAfterHit = true;
             SetState(HIT);
         }
-        else {
+        else {                  // 일반 즉사: DEATH 진입하면서 1회 배너
             m_bKillAfterHit = false;
             SetState(DEATH);
         }
+        return;
     }
-    else {
-        m_bKillAfterHit = false;
-        SetState(HIT);
-    }
+
+    // 비치명타: 배너 금지(히트 애니만)
+    m_bKillAfterHit = false;
+    SetState(HIT);
 }
 
 HRESULT CMonster_Suit::Texture_Clone()
 {
     CTexture::TEXINFO info{};
-
     struct AnimDef { const wchar_t* tag; const wchar_t* proto; int start; int end; float speed; bool loop; };
     AnimDef anims[] = {
         { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12, 8.f,  true },
-        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13, 10.f, true },
-        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9, 10.f, true },
-        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 7.f, true },
-        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22, 10.f, true },
-        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 7.f, true },
-        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8, 10.f, true },
-        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23, 10.f, true },
-        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",   0, 21, 10.f, true },
-        { L"Com_Texture_Hit_Eletric",     L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC",   0, 15, 7.f, false },
-        { L"Com_Texture_Hit_Door",     L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",   0, 14, 7.f, false },
-        {L"Com_Texture_Blocking",   L"Prototype_Component_Texture_Monster_Suit_Blocking",   0,4,6.f,false}
+        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13,10.f,  true },
+        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9,10.f,  true },
+        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 7.f,  true },
+        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22,10.f,  true },
+        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 7.f,true },
+        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8,10.f,true },
+        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23,10.f,true },
+        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",    0, 21,10.f,true },
+        { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC", 0, 15, 7.f,false },
+        { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
+        { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",     0, 14, 7.f,false },
+        { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Suit_Blocking",      0,  4, 6.f,false }
     };
 
     for (auto& a : anims)
@@ -304,7 +365,6 @@ HRESULT CMonster_Suit::Texture_Clone()
 
         m_mapTexture.insert({ a.tag, m_pTextureCom });
     }
-
     return S_OK;
 }
 
@@ -324,47 +384,41 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case IDLE:  tag = L"Com_Texture_Idle";  break;
     case CHASE: tag = L"Com_Texture_Chase"; break;
     case AIM:   tag = L"Com_Texture_Aim";   break;
-    case SHOT:
-        if (s == SHOT) {
-            m_shotTimer = 0.f;   // ← 초기화
-        }
-        tag = L"Com_Texture_Shot";
-        break;
+    case SHOT:  m_shotTimer = 0.f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
-    case HIT_DOOR: tag = L"Com_Texture_Hit_Door"; break;
+    case HIT_BENT:     tag = L"Com_Texture_Hit_VENT";    break;
+    case HIT_DOOR:
+        tag = L"Com_Texture_Hit_Door";
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        m_bPickable = false;
+        break;
 
     case HIT:
         if (m_bKillAfterHit) {
-            TrySpawnDeathUI();
+            DisableAllCollisionAndPicking(); 
+            TrySpawnDeathUI_Common();     
         }
-        if (m_pTextureCom) {
-            m_pTextureCom->Set_Zero_Frame();
-            m_pTextureCom->Resume_Anim();
-        }
+        if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
         return;
 
     case KICKED:
-        tag = L"Com_Texture_Blocking";
-        break;
+        tag = L"Com_Texture_Blocking"; break;
 
     case INSKILL:
         break;
 
     case DEATH:
+        DisableAllCollisionAndPicking();
         tag = L"Com_Texture_Death";
         break;
     }
 
     Change_Texture(tag);
-
-    if (m_pTextureCom) {
-        m_pTextureCom->Set_Zero_Frame();
-        m_pTextureCom->Resume_Anim();
-    }
+    if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
 
     if (s == DEATH) {
-        TrySpawnDeathUI();
+        TrySpawnDeathUI_Common(); // 일반 사망 시점 1회 배너
     }
 }
 
@@ -397,8 +451,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         m_jumpCD -= dt;
         if (m_jumpCD <= 0.f) {
             m_jumpDir = (rand() & 1) ? +1 : -1;
-            SetState(JUMP);
-            break;
+            SetState(JUMP); break;
         }
         if (dist > m_fChaseRadius) { SetState(CHASE); break; }
         if (m_pPlayerTr) m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
@@ -407,29 +460,30 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 
     case SHOT:
     {
-        // 플레이어가 사거리 벗어나면 CHASE로
-        if (dist > m_fAimRadius) {
-            SetState(CHASE);
-            break;
-        }
-
-        if (m_pPlayerTr)
-            m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
+        if (dist > m_fAimRadius) { SetState(CHASE); break; }
+        if (m_pPlayerTr) m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
 
         m_shotTimer += dt;
-
-        if (m_pTextureCom->Is_AnimFinished()) {
-            m_pTextureCom->Stop_Anim();
-        }
+        if (m_pTextureCom->Is_AnimFinished()) m_pTextureCom->Stop_Anim();
 
         if (m_shotTimer >= 0.7f) {
             m_shotTimer = 0.f;
             m_pTextureCom->Set_Zero_Frame();
             m_pTextureCom->Resume_Anim();
-
+            auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+            if (auto* bullet = dynamic_cast<CBullet*>(CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_Bullet", sceneIdx, L"Monster_Layer")))
+            {
+                _vec3 vMuzzle = m_pTransformCom->Get_Info(INFO_POS);
+                _vec3 vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+                D3DXVec3Normalize(&vLook, &vLook);
+                vMuzzle += vLook * 2.f;
+                vMuzzle.y += 0.14f;
+                bullet->Fire(vMuzzle, vLook);
+            }
         }
     }
-        break;
+    break;
 
     case HIT:
         if (m_pTextureCom->Is_AnimFinished()) {
@@ -439,42 +493,55 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case HIT_ELECTRIC:
-        if (m_pTextureCom->Is_AnimFinished()) {
-            m_bDead = true;
-        }
+    case HIT_BENT:
+        if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
         break;
     case HIT_DOOR:
+    {
+        // 누적 시간
+        m_kbTime += dt;
+
+        const float maxDist = 1.f;   // 밀려날 거리
+        const float knockTime = 0.9f;   // 밀리는 시간 
+
+        float t = min(1.f, m_kbTime / knockTime);
+        float ratio = 1.f - (1.f - t) * (1.f - t);  
+        float targetDist = maxDist * ratio;
+
+        float delta = targetDist - m_kbProgress;
+
+        if (delta > 0.f) {
+            _vec3 dir = m_pTransformCom->Get_Info(INFO_LOOK);
+            dir.y = 0.f;
+            D3DXVec3Normalize(&dir, &dir);
+            m_pTransformCom->Move_PosDir(delta, dir);
+            m_kbProgress += delta;
+        }
+
         if (m_pTextureCom->Is_AnimFinished())
             m_bDead = true;
+    }
+        break;
+
     case KICKED:
-        if (m_pTextureCom->Is_AnimFinished()) { // 애니메이션 끝나면
+        if (m_pTextureCom->Is_AnimFinished()) {
             if (m_bKillAfterHit) m_bDead = true;
             else SetState((m_ePrevState == DEATH) ? DEATH : IDLE);
         }
-        else
-        {
-            // 뒤로 날아가
+        else {
             m_pTransformCom->Move_PosDir(dt * 3.f, (m_pTransformCom->Get_Info(INFO_LOOK)));
         }
         break;
 
     case INSKILL:
-    {
-        // 만약 attack instant 가 끝나면
         if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_INSTANT)
-            // 죽음 처리
-        {
             m_bDead = true;
-        } 
-    }
         break;
 
     case JUMP:
     {
         const _matrix& W = *m_pTransformCom->Get_World();
-        _vec3 right(W._11, W._12, W._13);
-        right.y = 0.f;
-        D3DXVec3Normalize(&right, &right);
+        _vec3 right(W._11, W._12, W._13); right.y = 0.f; D3DXVec3Normalize(&right, &right);
         if (m_jumpDir < 0) right = -right;
         m_pTransformCom->Move_PosDir(dt * 0.25f, right);
 
@@ -496,161 +563,15 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
     }
 }
 
-CTransform* CMonster_Suit::GetPlayerTransform()
-{
-
-    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
-    if (!m_pPlayerTr)
-    {
-        m_pPlayerTr = dynamic_cast<CTransform*>(
-            CObjectManager::GetInstance()->Get_Component(sceneIdx, L"Player_Layer", L"Com_Transform", 0));
-    }
-    return m_pPlayerTr;
-}
-
-float CMonster_Suit::DistanceToPlayer() const
-{
-    if (!m_pPlayerTr) return FLT_MAX;
-    _vec3 my = m_pTransformCom->Get_Info(INFO_POS);
-    _vec3 pl = m_pPlayerTr->Get_Info(INFO_POS);
-    _vec3 diff = pl - my;
-    return D3DXVec3Length(&diff);
-}
-
 void CMonster_Suit::SetupHitSpheres()
 {
     m_hitSpheres.clear();
+    const int PRI_LEG = 0, PRI_BODY = 1, PRI_BALLS = 2, PRI_HEAD = 3;
 
-    const int PRI_LEG = 0;
-    const int PRI_BODY = 1;
-    const int PRI_BALLS = 2; 
-    const int PRI_HEAD = 3;
-
-    //                         part                pos                radius   우선순위   x크기
-    m_hitSpheres.push_back({ HIT_HEAD,  _vec3(0.00f,  0.38f,  0.0f), 0.10f, PRI_HEAD,  0.50f });
-    m_hitSpheres.push_back({ HIT_BODY,  _vec3(0.00f,  0.08f,  0.00f), 0.28f, PRI_BODY,  0.50f });
-    m_hitSpheres.push_back({ HIT_BALLS, _vec3(0.00f, -0.07f,  0.0f), 0.06f, PRI_BALLS, 0.2f });
-    m_hitSpheres.push_back({ HIT_LEG,   _vec3(0.0f, -0.2f, 0.0f), 0.22f, PRI_LEG,   0.90f });
-}
-
-void CMonster_Suit::TrySpawnDeathUI()
-{
-    if (!m_pendingDeathUI) return;
-    m_pendingDeathUI = false;
-
-    const bool  isHead = (m_lastFatalPart == HIT_HEAD);
-    
-    const float secsAdd = isHead ? 3.0f : 2.0f;
-
-    if (auto ui = dynamic_cast<CEffectUI*>(
-        CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
-    {
-        ui->SetImageSize(40.f, 40.f);
-        ui->SetBoxSize(200.f, 50.f);
-        ui->Change_Texture(L"Com_Tex_Heal");
-
-        ui->SetNumberEmphasis(L"23", 1.0f);
-
-        ui->ShowFollowTransform(
-            isHead ? L"3sec" : L"2sec",
-            L"Com_Tex_Heal",
-            secsAdd,
-            m_pTransformCom, 
-            0.9f,            
-            240.f,           
-            120.f,           
-            0.85f,
-            L"Font_UI_Effect",
-            D3DXCOLOR(1, 1, 1, 1));
-    }
-
-    if (auto banner = dynamic_cast<CEffectUI*>(
-        CObjectManager::GetInstance()->Clone_GameObject(
-            L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
-    {
-        banner->Change_Texture(L"Com_Tex_Heal");
-        banner->SetImageSize(40.f, 40.f);
-        banner->SetBannerShowIcon(true);
-        banner->SetImageOffset(30.f, 5.f);
-
-        banner->SetBannerRightText(isHead ? L"3sec" : L"2sec");
-        banner->SetNumberEmphasis(L"23", 1.35f);
-        banner->SetBannerRightFixedScale(1.0f);
-
-
-        banner->SetBannerTextOffset(30.f, 5.f);
-
-        banner->SetBannerAngle(0.f);
-        banner->LinkBannerTextAngleToBanner(true);
-        banner->SetBannerTextAngle(0.f);
-
-        banner->SetBannerDownSpeed(130.f);
-
-
-        banner->ShowBanner(
-            isHead ? L"사요나라" : L"처치",
-            1.10f,                 // 유지 시간
-            175.f, 180.f,          // 위치
-            1.0f, 1.0f,            // scaleStart, scaleEnd → 팝업 효과 별도 적용
-            L"Font_UI_Effect",
-            D3DXCOLOR(1, 1, 1, 1),
-            0.85f,
-            4.f);
-
-        banner->SetBoxSize(360.f, 50.f); 
-
-        banner->SetBannerLabelPop(100.f, 0.25f);
-
-    }
-
-
-    {
-        const ULONGLONG now = GetTickCount64();
-        if (now - s_lastKillTimeMs <= 1500) ++s_comboCount;
-        else                                s_comboCount = 1;
-        s_lastKillTimeMs = now;
-
-        if (s_comboCount >= 2)
-        {
-            if (auto left = dynamic_cast<CEffectUI*>(
-                CObjectManager::GetInstance()->Clone_GameObject(
-                    L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
-            {
-                left->SetBannerExtraWidth(20.f);
-                wchar_t buf[16]; swprintf(buf, 16, L"X%d", s_comboCount);
-                left->ShowBanner(
-                    buf,
-                    1.00f,
-                    60.f, 340.f,     
-                    3.f, 1.3f,
-                    L"Font_UI_Effect",        
-                    D3DXCOLOR(1, 1, 1, 1),
-                    0.85f,
-                    -8.f);
-                left->SetBannerTextAngle(10.f);
-            }
-
-            // 오른쪽 "COMBO +1 sec"
-            if (auto right = dynamic_cast<CEffectUI*>(
-                CObjectManager::GetInstance()->Clone_GameObject(
-                    L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
-            {
-                right->SetBannerExtraWidth(40.f);
-                right->ShowBanner(
-                    L"COMBO",
-                    1.00f,
-                    260.f, 370.f,  
-                    1.2f, 1.0f,
-                    L"Font_UI_Effect",
-                    D3DXCOLOR(1, 1, 1, 1),
-                    0.85f,
-                    -8.f);
-                right->SetBannerTextOffset(20.f, -10.f);
-                right->SetBannerTextAngle(3.f);
-            }
-        }
-    }
+    m_hitSpheres.push_back({ HIT_HEAD,  _vec3(0.00f,  0.38f, 0.0f), 0.10f, PRI_HEAD,  0.50f });
+    m_hitSpheres.push_back({ HIT_BODY,  _vec3(0.00f,  0.08f, 0.0f), 0.28f, PRI_BODY,  0.50f });
+    m_hitSpheres.push_back({ HIT_BALLS, _vec3(0.00f, -0.07f, 0.0f), 0.06f, PRI_BALLS, 0.20f });
+    m_hitSpheres.push_back({ HIT_LEG,   _vec3(0.00f, -0.20f,0.0f), 0.22f, PRI_LEG,   0.90f });
 }
 
 _vec3 CMonster_Suit::GetHeadWorldPos() const
@@ -666,8 +587,7 @@ _vec3 CMonster_Suit::GetHeadWorldPos() const
 
 bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) const
 {
-    D3DXMATRIX view, proj, id;
-    D3DVIEWPORT9 vp{};
+    D3DXMATRIX view, proj, id; D3DVIEWPORT9 vp{};
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &view);
     m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &proj);
     m_pGraphicDev->GetViewport(&vp);
@@ -675,14 +595,11 @@ bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) cons
 
     D3DXVECTOR3 in(world.x, world.y, world.z), out;
     D3DXVec3Project(&out, &in, &vp, &proj, &view, &id);
-
     sx = out.x; sy = out.y;
     return (out.z >= 0.f && out.z <= 1.f);
 }
 
-
 #ifdef _DEBUG
-
 void CMonster_Suit::DebugRender_HitSpheres() const
 {
     if (!m_pGraphicDev || m_hitSpheres.empty()) return;
@@ -715,11 +632,10 @@ void CMonster_Suit::DebugRender_HitSpheres() const
     {
         _vec3 cW; D3DXVec3TransformCoord(&cW, &ps.localCenter, &W);
         float rW = max(0.0001f, ps.radius * sMax);
-
         float sx = (ps.xScale > 1e-6f) ? ps.xScale : 1.0f;
 
         _matrix S, T, M;
-        D3DXMatrixScaling(&S, rW * sx, rW, rW); 
+        D3DXMatrixScaling(&S, rW * sx, rW, rW);
         D3DXMatrixTranslation(&T, cW.x, cW.y, cW.z);
         M = S * T;
 
