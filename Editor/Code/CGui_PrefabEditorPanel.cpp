@@ -247,11 +247,10 @@ CGuiBase *CGui_PrefabEditorPanel::SceneDropbox_Create()
 	Names[1] = "TUTORIAL";
 	Names[2] = "STAGE_1";
 	Names[3] = "STAGE_2";
-	Names[4] = "STAGE_3";
-	Names[5] = "SNIPE";
-	Names[6] = "ROOFTOP";
-	Names[7] = "ROAD";
-	Names[8] = "PREFAB";
+	Names[4] = "SNIPE";
+	Names[5] = "ROOFTOP";
+	Names[6] = "ROAD";
+	Names[7] = "PREFAB";
 
 	return CGui_Dropbox<MapEditorSceneType>::Create("SceneType", MapEditorSceneType::DEV, Names);
 }

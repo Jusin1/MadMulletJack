@@ -160,9 +160,7 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 	case SCENE_DEV:
 	case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
-	case SCENE_STAGE_2:
-	case SCENE_STAGE_3:
-		
+	case SCENE_STAGE_2:		
 		m_vLocalOffset = { 22.f, -110.f,0.f };
 
 		Set_New_TransInfo(50.f, 7.f);

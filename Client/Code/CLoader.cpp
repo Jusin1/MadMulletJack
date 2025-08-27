@@ -103,23 +103,19 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	} break;
 	case SCENE_STAGE_2:
 	{
-
-	} break;
-	case SCENE_STAGE_3:
-	{
-
+		pLoader->Loading_Stage_2();
 	} break;
 	case SCENE_SNIPE:
 	{
-
+		pLoader->Loading_Snipe();
 	} break;
 	case SCENE_BOSS:
 	{
-
+		pLoader->Loading_Rooftop();
 	} break;
 	case SCENE_CAR:
 	{
-
+		pLoader->Loading_Road();
 	} break;
 	}
 	return 0;
@@ -413,12 +409,6 @@ HRESULT CLoader::Loading_Stage_1()
 }
 
 HRESULT CLoader::Loading_Stage_2()
-{
-	m_isFinished = true;
-	return S_OK;
-}
-
-HRESULT CLoader::Loading_Stage_3()
 {
 	m_isFinished = true;
 	return S_OK;

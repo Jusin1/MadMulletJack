@@ -61,6 +61,22 @@ HRESULT CGameDataManager::Bind_FloorList(list<Engine::CGameObject *> *_pFloorlis
 		tEntry.fInverseItv = 1.f / pBuffer->GetData()->dwInterval;
 		tEntry.pBuffer = pBuffer;
 		tEntry.matWorld = *pTransform->Get_World();
+
+		_float fLenghtX = (pBuffer->GetData()->dwCountX - 1) * pBuffer->GetData()->dwInterval;
+		_float fLenghtZ = (pBuffer->GetData()->dwCountZ - 1) * pBuffer->GetData()->dwInterval;
+
+		auto Wof = [&](float lx, float lz)->_vec3 {
+			_vec3 l{ lx, 0.f, lz }, w;
+			D3DXVec3TransformCoord(&w, &l, &tEntry.matWorld);
+			return w;
+			};
+		_vec3 w00 = Wof(0.f, 0.f);
+		_vec3 w10 = Wof(fLenghtX, 0.f);
+		_vec3 w01 = Wof(0.f, fLenghtZ);
+
+		// 평면 저장(패널은 한 평면이라 가정)
+		D3DXPlaneFromPoints(&tEntry.planeWorld, &w00, &w10, &w01);
+
 		::D3DXMatrixInverse(&tEntry.matWorldInv, nullptr, pTransform->Get_World());
 
 		m_vecSortedFloorEntries.push_back(tEntry);

@@ -44,7 +44,6 @@ class CUIManager :
         { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
         { SCENE_TUTORIAL, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
         { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN, UpgradeId::HEADSHOT } },
-        { SCENE_STAGE_3,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
         { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
     };
 

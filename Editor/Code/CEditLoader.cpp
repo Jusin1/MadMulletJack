@@ -50,10 +50,6 @@ unsigned int APIENTRY Editor_Thread_Main(void *pArg)
 	{
 		pLoader->Loading_Stage_2();
 	} break;
-	case SCENE_STAGE_3:
-	{
-		// TODO
-	} break;
 	case SCENE_SNIPE:
 	{
 		pLoader->Loading_Snipe();
@@ -189,28 +185,6 @@ HRESULT CEditLoader::Loading_Stage_1()
 HRESULT CEditLoader::Loading_Stage_2()
 {
 	SetData(SCENE_STAGE_2);
-
-	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
-
-	// 객체 생성
-	lstrcpy(m_szLoading, L"객체 생성 중.");
-	InstancingObjects(L"Wall_Layer");
-	InstancingObjects(L"Tile_Layer");
-	InstancingObjects(L"Env_Layer");
-	InstancingObjects(L"Monster_Layer");
-	InstancingPrefabs();
-
-	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-
-	lstrcpy(m_szLoading, TEXT("로딩이 완료되었습니다."));
-	m_isFinished = true;
-
-	return S_OK;
-}
-
-HRESULT CEditLoader::Loading_Stage_3()
-{
-	SetData(SCENE_STAGE_3);
 
 	lstrcpy(m_szLoading, L"텍스쳐 로딩 중");
 

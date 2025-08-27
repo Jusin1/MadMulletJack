@@ -8,6 +8,10 @@
 #include "CDev.h"
 #include "CTutorial.h"
 #include "CStage.h"
+#include "CStage_2.h"
+#include "CStage_Boss.h"
+#include "CStage_Snipe.h"
+#include "CStage_Car.h"
 
 // UI
 #include "CObjectManager.h"
@@ -71,6 +75,10 @@ _int CLoading_Scene::Update_Scene(const _float& dt)
 			case SCENE_DEV:      pNew = CDev::Create(m_pGraphicDev);      break;
 			case SCENE_TUTORIAL: pNew = CTutorial::Create(m_pGraphicDev); break;
 			case SCENE_STAGE_1: pNew = CStage::Create(m_pGraphicDev); break;
+			case SCENE_STAGE_2: pNew = CStage_2::Create(m_pGraphicDev); break;
+			case SCENE_SNIPE: pNew = CStage_Snipe::Create(m_pGraphicDev); break;
+			case SCENE_BOSS: pNew = CStage_Boss::Create(m_pGraphicDev); break;
+			case SCENE_CAR: pNew = CStage_Car::Create(m_pGraphicDev); break;
 			default: break;
 			}
 			if (pNew) CManagement::GetInstance()->Open_Scene(m_eNextScene, pNew);
@@ -103,7 +111,11 @@ _int CLoading_Scene::Update_Scene(const _float& dt)
 		case SCENE_LOGO:     pNew = CLogo::Create(m_pGraphicDev);     break;
 		case SCENE_DEV:      pNew = CDev::Create(m_pGraphicDev);      break;
 		case SCENE_TUTORIAL: pNew = CTutorial::Create(m_pGraphicDev); break;
-		case SCENE_STAGE_1:  pNew = CStage::Create(m_pGraphicDev); break;
+		case SCENE_STAGE_1: pNew = CStage::Create(m_pGraphicDev); break;
+		case SCENE_STAGE_2: pNew = CStage_2::Create(m_pGraphicDev); break;
+		case SCENE_SNIPE: pNew = CStage_Snipe::Create(m_pGraphicDev); break;
+		case SCENE_BOSS: pNew = CStage_Boss::Create(m_pGraphicDev); break;
+		case SCENE_CAR: pNew = CStage_Car::Create(m_pGraphicDev); break;
 		default: break;
 		}
 		if (pNew) CManagement::GetInstance()->Open_Scene(m_eNextScene, pNew);

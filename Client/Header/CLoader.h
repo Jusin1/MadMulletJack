@@ -31,7 +31,6 @@ public:
 	HRESULT			Loading_Tutorial();	// Dev 씬 로딩
 	HRESULT			Loading_Stage_1();	// Stage_1 로딩
 	HRESULT			Loading_Stage_2();	// Stage_2 로딩
-	HRESULT			Loading_Stage_3();	// Stage_3 로딩
 	HRESULT			Loading_Snipe();	// Snipe 씬 로딩
 	HRESULT			Loading_Rooftop();	// 옥상 보스 씬 로딩
 	HRESULT			Loading_Road();	// 자동차 보스 씬 로딩

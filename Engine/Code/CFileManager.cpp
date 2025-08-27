@@ -327,8 +327,6 @@ wstring CFileManager::SceneIdToWstring(_uint iSceneID)
         return L"Stage_1";
     case SCENE_STAGE_2:
         return L"Stage_2";
-    case SCENE_STAGE_3:
-        return L"Stage_3";
     case SCENE_SNIPE:
         return L"Snipe";
     case SCENE_BOSS:
