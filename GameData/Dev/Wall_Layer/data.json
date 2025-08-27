@@ -368,42 +368,5 @@
                 0.0
             ]
         }
-    },
-    {
-        "Color": 3435973836,
-        "ObjectCategory": 0,
-        "ObjectType": 5,
-        "PanelData": {
-            "Count_X": 2,
-            "Count_Y": 2,
-            "Count_Z": 2,
-            "Interval": 2,
-            "Type": 5
-        },
-        "TextureData": {
-            "FilePath": "Proto_Wall_Slidedash"
-        },
-        "TransformData": {
-            "Look": [
-                -0.9999996423721313,
-                0.0,
-                1.6391273049976007e-07
-            ],
-            "Pos": [
-                30.0,
-                0.5,
-                5.0
-            ],
-            "Right": [
-                1.6391273049976007e-07,
-                0.0,
-                0.9999996423721313
-            ],
-            "Up": [
-                0.0,
-                0.9999998807907104,
-                0.0
-            ]
-        }
     }
 ]

@@ -261,6 +261,8 @@ CGuiBase *CGui_PrefabEditorPanel::PrefabtypeDropbox_Create()
 	vector<string> Names{ g_PrefabTypeCount };
 	Names[0] = "SIGN_PILLAR";
 	Names[1] = "ROAD";
+	Names[2] = "SIGN_PILLAR_2";
+	Names[3] = "Tileset_1";
 
 	return CGui_Dropbox<PrefabType>::Create("PrefabType", PrefabType::SIGN_PILLAR, Names);
 }

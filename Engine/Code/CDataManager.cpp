@@ -10,6 +10,8 @@ CDataManager::CDataManager()
 	m_PrefabData = vector<PREFABDATA>{ g_PrefabTypeCount };
 	m_PrefabData[0].eType = PrefabType::SIGN_PILLAR;
 	m_PrefabData[1].eType = PrefabType::ROAD;
+	m_PrefabData[2].eType = PrefabType::SING_PILLAR_2;
+	m_PrefabData[3].eType = PrefabType::TILESET_1;
 }
 
 CDataManager::~CDataManager()

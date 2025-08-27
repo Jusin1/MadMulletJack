@@ -24,6 +24,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(WallType, {
 NLOHMANN_JSON_SERIALIZE_ENUM(PrefabType, {
     {PrefabType::SIGN_PILLAR, "SIGNPILLAR"},
     {PrefabType::ROAD, "ROAD"},
+    {PrefabType::SING_PILLAR_2, "SIGNPILLAR_2"},
+    {PrefabType::TILESET_1, "TILESET_1"},
     {PrefabType::NONE, "NONE"}
     })
 
@@ -348,6 +350,10 @@ wstring CFileManager::PrefabTypeToWstring(PrefabType _e)
         return L"Sign_Pillar";
     case PrefabType::ROAD:
         return L"Road";
+    case PrefabType::SING_PILLAR_2:
+        return L"Sign_Pillar_2";
+    case PrefabType::TILESET_1:
+        return L"Tileset_1";
     }
 
     return wstring{};

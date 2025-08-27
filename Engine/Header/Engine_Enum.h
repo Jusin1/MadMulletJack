@@ -95,6 +95,8 @@ namespace Engine
 	{
 		SIGN_PILLAR,
 		ROAD,
+		SING_PILLAR_2,
+		TILESET_1,
 		NONE
 	};
 	constexpr size_t g_PrefabTypeCount{ static_cast<size_t>(PrefabType::NONE) };
