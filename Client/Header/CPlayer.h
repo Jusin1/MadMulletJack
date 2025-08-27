@@ -102,6 +102,11 @@ private:
 	void ATTEND_On(const _float& fTimeDelta);
 	void ATTEND_End();
 
+	void ATTACK_ZOOM_Begin();
+	void ATTACK_ZOOM_On(const _float& fTimeDelta);
+	void ATTACK_ZOOM_End();
+
+
 	void KeyInput(const _float& fTimeDelta);	// 모든 keyinput 여기서 처리
 	void KeyInputZoom(const _float& fTimeDelta); // zoom
 
@@ -178,13 +183,13 @@ private:
 
 	// util func
 private:
-	_float			CosRadian(_vec3 v1, _vec3 v2); // 두 벡터를 정규화 후 내적값 반환
-	void			PushBack(_vec3 vDistance); // vDistance 만큼 위치 조정
+	_float			CosRadian(_vec3 v1, _vec3 v2);	// 두 벡터를 정규화 후 내적값 반환
+	void			PushBack(_vec3 vDistance);		// vDistance 만큼 위치 조정
 
 private:
-	Engine::CColider_Cube* m_pColliderCom; // 큐브 충돌
-	Engine::CColider_Sphere* m_pColiderSphere; // 구 충돌
-	Engine::CTexture* m_pTextureCom; // 기본 텍스쳐 -> 지금은 필요없긴 한디 우선 남겨두겠습니다
+	Engine::CColider_Cube* m_pColliderCom;			// 큐브 충돌
+	Engine::CColider_Sphere* m_pColiderSphere;		// 구 충돌
+	Engine::CTexture* m_pTextureCom;				// 기본 텍스쳐 -> 지금은 필요없긴 한디 우선 남겨두겠습니다
 	map<const _tchar*, CTexture*> m_mapTexture;
 
 private:
