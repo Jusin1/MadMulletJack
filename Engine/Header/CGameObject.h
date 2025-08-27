@@ -50,6 +50,7 @@ public:
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent;
 	_vec3									m_vPosition;
+	_vec3									m_vPrevPosition;
 	_float									m_fRadius;
 	_bool									m_bDead;
 	_matrix									m_CollisionMatrix; // 충돌 시 사용할 월드 행렬

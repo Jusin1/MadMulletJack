@@ -104,7 +104,14 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    Set_OnTerrain(fTimeDelta);
+    m_fComputeTime += fTimeDelta;
+
+    if (m_fComputeTime > 1.f)
+    {
+        Set_OnTerrain(fTimeDelta);
+        m_fCamDistance = 0.f;
+    }
+
     Set_Collider();
     __super::LateUpdate_GameObject(fTimeDelta);
 }
@@ -168,8 +175,8 @@ void CMonster_Suit::Set_Collider()
         }
     }
     
-
-    Set_Collider_With_Wall();
+    if(IsMoved())
+        Set_Collider_With_Wall();
 }
 
 _bool CMonster_Suit::Picking(_vec3* PickingPoint)

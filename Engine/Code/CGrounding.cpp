@@ -185,29 +185,47 @@ _float CGrounding::Compute_Height(const PANELENTRY &tPanelEntry, _float fX, _flo
 
 	_ulong	dwIndex = indexZ * dwCntX + indexX;
 
-	_float	fWidth = (fX - pTerrainVtxPos[dwIndex].x) * tPanelEntry.fInverseItv;
-	_float	fHeight = (fZ - pTerrainVtxPos[dwIndex].z) * tPanelEntry.fInverseItv;
+	// _float	fWidth = (fX - pTerrainVtxPos[dwIndex].x) * tPanelEntry.fInverseItv;
+	// _float	fHeight = (fZ - pTerrainVtxPos[dwIndex].z) * tPanelEntry.fInverseItv;
+	//D3DXPLANE		Plane;
+	//// ¿ì »ó´Ü 
+	//if (fWidth + fHeight <= 1.f)
+	//{
+	//	D3DXPlaneFromPoints(&Plane,
+	//		&pTerrainVtxPos[dwIndex],
+	//		&pTerrainVtxPos[dwIndex + 1],
+	//		&pTerrainVtxPos[dwIndex + dwCntX]);
+	//}
+	//// ÁÂ ÇÏ´Ü
+	//else
+	//{
+	//	D3DXPlaneFromPoints(&Plane,
+	//		&pTerrainVtxPos[dwIndex + dwCntX + 1],
+	//		&pTerrainVtxPos[dwIndex + dwCntX],
+	//		&pTerrainVtxPos[dwIndex + 1]);
+	//}
 
-	D3DXPLANE		Plane;
+	//return (-Plane.a * fX - Plane.c * fZ - Plane.d) / Plane.b;
 
-	// ¿ì »ó´Ü 
-	if (fWidth + fHeight <= 1.f)
-	{
-		D3DXPlaneFromPoints(&Plane,
-			&pTerrainVtxPos[dwIndex],
-			&pTerrainVtxPos[dwIndex + 1],
-			&pTerrainVtxPos[dwIndex + dwCntX]);
+	const _vec3 &vLeftBottom = pTerrainVtxPos[dwIndex];
+	const _vec3 &vRightBottom = pTerrainVtxPos[dwIndex + 1];
+	const _vec3 &vLeftTop = pTerrainVtxPos[dwIndex + dwCntX];
+	const _vec3 &vRightTop = pTerrainVtxPos[dwIndex + dwCntX + 1];
+
+
+	const _float fWidth = (fX - vLeftBottom.x) * tPanelEntry.fInverseItv;
+	const _float fHeight = (fZ - vLeftBottom.z) * tPanelEntry.fInverseItv;
+
+	if (fWidth + fHeight <= 1.f) {
+		// ¿ÞÂÊ ¾Æ·¡ »ï°¢Çü
+		return vLeftBottom.y + (vRightBottom.y - vLeftBottom.y) * fWidth + (vLeftTop.y - vLeftBottom.y) * fHeight;
 	}
-	// ÁÂ ÇÏ´Ü
-	else
-	{
-		D3DXPlaneFromPoints(&Plane,
-			&pTerrainVtxPos[dwIndex + dwCntX + 1],
-			&pTerrainVtxPos[dwIndex + dwCntX],
-			&pTerrainVtxPos[dwIndex + 1]);
+	else {
+		// ¿À¸¥ÂÊ À§ »ï°¢Çü
+		const _float fWidth2 = 1.f - fWidth;
+		const _float fHeight2 = 1.f - fHeight;
+		return vRightTop.y + (vRightBottom.y - vRightTop.y) * fHeight2 + (vLeftTop.y - vRightTop.y) * fWidth2;
 	}
-
-	return (-Plane.a * fX - Plane.c * fZ - Plane.d) / Plane.b;
 }
 
 _float CGrounding::Y_OnPanelPlane(const PANELENTRY &tPanelEntry, _float fX, _float fZ)

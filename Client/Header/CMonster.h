@@ -28,6 +28,19 @@ public:
 public:
 	ObjectCategory GetCategory() const { return m_eCategory; }
 	MonsterType GetType() const { return m_eType; }
+	_bool IsMoved()
+	{
+		_bool bReturn;
+		static constexpr _float fEpsilon{ 1e-6f };
+		const _float fMoved =
+			(m_vPosition.x - m_vPrevPosition.x) * (m_vPosition.x - m_vPrevPosition.x) +
+			(m_vPosition.y - m_vPrevPosition.y) * (m_vPosition.y - m_vPrevPosition.y) +
+			(m_vPosition.z - m_vPrevPosition.z) * (m_vPosition.z - m_vPrevPosition.z);
+
+		bReturn = fMoved > fEpsilon;
+		m_vPrevPosition = m_vPosition;
+		return bReturn;
+	}
 protected:
 	HRESULT	Set_Component();
 	
@@ -52,6 +65,8 @@ protected:
 public:
 	ObjectCategory m_eCategory;
 	MonsterType m_eType;
+	_float m_fComputeTime{0.f};
+	_vec3 m_vPrevPosition;
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
