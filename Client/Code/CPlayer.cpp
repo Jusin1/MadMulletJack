@@ -18,7 +18,7 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
-
+#include "CUIManager.h"
 #include "CMainWeapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -708,6 +708,8 @@ void CPlayer::ATTACK_INSTANT_Begin()
 
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
+
+	CUIManager::GetInstance()->CreateEffectUI(TEXT("돌진 처치"));
 }
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
@@ -867,6 +869,9 @@ void CPlayer::Clear_Begin()
 	m_pHpBarUI->Set_RenderOn(false);
 	m_pHpBarUI->Set_Active(false);
 	m_pWeaponUI->Set_Active(false);
+
+	CUIManager::GetInstance()->CreateEffectUI(TEXT("승 리"));
+	CUIManager::GetInstance()->DestroyReloadUI();
 }
 
 void CPlayer::ATTEND_Begin()
