@@ -53,7 +53,8 @@ void CPickingManager::Remove_PickingGroup(CGameObject* pGameObject)
 // 마우스 클릭 시 가장 가까운 오브젝트를 픽킹
 _bool CPickingManager::Picking()
 {
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK)
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK &&
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_ZOOM)
     {
         return false;
     }
