@@ -875,9 +875,9 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 	// Katana - Hand_L
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_Hand_L",
+	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_Hand_L",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/LeftArm.png", 1))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	// Knife
 	// Knife - idle
