@@ -91,7 +91,7 @@ void CTile_Vent::LateUpdate_GameObject(const _float &fTimeDelta)
     if (m_bDead) return;
 
     // 테스트용 추후에 몬스터로
-    if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+    if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, nullptr))
     {
         if (!m_bKilled)
         {
@@ -135,7 +135,7 @@ HRESULT CTile_Vent::Set_Component(void *pArg)
 
     CColider_Sphere::COLLINFO CollSphereInfo;
     ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-    CollSphereInfo.fRadius = 0.5f;
+    CollSphereInfo.fRadius = 0.2f;
     CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);    // 중심 오프셋 없음
 
     // Colider_Sphere

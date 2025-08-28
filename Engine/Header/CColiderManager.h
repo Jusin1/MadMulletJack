@@ -14,7 +14,7 @@ class ENGINE_DLL CColiderManager :
 public:
     enum COLLISION_GROUP {COLLISION_PLAYER, COLLISION_MONSTER, COLLISION_BLOCK,
         COLLISION_DUMMY, COLLISION_VERWALL, COLLISION_HORWALL, COLLISION_CEILING,
-        COLLISION_DOOR, COLLISION_TILE_ELECTRIC, COLLISION_TILE_VENT, COLLISION_WALL_SLIDE, COLLISION_END};
+        COLLISION_DOOR, COLLISION_TILE_ELECTRIC, COLLISION_TILE_VENT, COLLISION_WALL_SLIDE, COLLISION_BULLET, COLLISION_END};
     enum COLLISION_TYPE {COLLISION_RECT, COLLISION_CUBE, COLLISION_SPHERE, COLLISION_SPHERE_CUBE, COLLISION_CUBE_SPHERE};
 
 private:
@@ -32,6 +32,8 @@ public:
 
     // 특정 오브젝트가 그룹 내 오브젝트와 충돌하는지 검사
     _bool CollisionGroup(COLLISION_GROUP eGroup, class CGameObject* pGameObject, COLLISION_TYPE eCollisionType, _vec3* pOutDistance);
+    _bool CollisionGroupSphereTag( COLLISION_GROUP eGroup, class CGameObject* pOwner, const wchar_t* ownerSphereTag, const wchar_t* targetSphereTag, _vec3* pOutDistance);
+    _bool CollisionGroupSphereTagWho(COLLISION_GROUP eGroup,class CGameObject* pGameObject,const _tchar* mySphereTag,const _tchar* targetSphereTag,_vec3* pOutDistance,class CGameObject*& pWho);
 
     _bool Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, COLLISION_TYPE eCollisionType);
 

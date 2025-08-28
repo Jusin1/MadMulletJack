@@ -221,7 +221,7 @@ HRESULT CPlayer_HandR::Set_Texture()
         if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Dead"))))
             return E_FAIL;
 
-        Set_UISizeAndPos(280.f, 280.f, WINCX * 0.5f, WINCY * 0.5f + 240); // pos를 정하고
+        Set_UISizeAndPos(280., 280.f, WINCX * 0.5f, WINCY * 0.5f + 240); // pos를 정하고
 
         Set_New_TransInfo(50.f, 0.f);
 

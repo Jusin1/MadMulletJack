@@ -117,6 +117,47 @@ _bool  CColiderManager::CollisionGroup(COLLISION_GROUP eGroup, class CGameObject
 	return false;
 }
 
+_bool CColiderManager::CollisionGroupSphereTag(COLLISION_GROUP eGroup, CGameObject* pOwner, const wchar_t* ownerSphereTag, const wchar_t* targetSphereTag, _vec3* pOutDistance)
+{
+	if (!pOwner || !ownerSphereTag || !targetSphereTag) return false;
+
+	auto* pOwnerSphere = dynamic_cast<CColider_Sphere*>(
+		pOwner->Find_Component(ownerSphereTag));
+	if (!pOwnerSphere || !pOwnerSphere->Is_Active()) return false;
+
+	for (auto& iter : m_GameObjects[eGroup])
+	{
+		if (!iter) continue;
+
+		auto* pTargetSphere = dynamic_cast<CColider_Sphere*>(
+			iter->Find_Component(targetSphereTag));
+		if (!pTargetSphere || !pTargetSphere->Is_Active()) continue;
+
+		if (pOwnerSphere->Collision_Check(pTargetSphere, pOutDistance))
+			return true;
+	}
+	return false;
+}
+
+_bool CColiderManager::CollisionGroupSphereTagWho(COLLISION_GROUP eGroup, CGameObject* pGameObject, const _tchar* mySphereTag, const _tchar* targetSphereTag, _vec3* pOutDistance, CGameObject*& pWho)
+{
+	pWho = nullptr;
+
+	auto* pMine = dynamic_cast<CColider_Sphere*>(pGameObject->Find_Component(mySphereTag));
+	if (!pMine || !pMine->Is_Active()) return false;
+
+	for (auto& iter : m_GameObjects[eGroup]) {
+		auto* pOther = dynamic_cast<CColider_Sphere*>(iter->Find_Component(targetSphereTag));
+		if (!pOther || !pOther->Is_Active()) continue;
+
+		if (pMine->Collision_Check(pOther, pOutDistance)) {
+			pWho = iter; // ← 충돌한 문 오브젝트
+			return true;
+		}
+	}
+	return false;
+}
+
 _bool CColiderManager::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject* pDamageCauser, COLLISION_TYPE eCollisionType)
 {
 	CComponent* Target = nullptr;

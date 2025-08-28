@@ -1,5 +1,5 @@
-ï»¿#include "pch.h"
-#include "CMonster_Suit.h"
+#include "pch.h"
+#include "CMonster_Soldier.h"
 #include "CGameDataManager.h"
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
@@ -20,20 +20,20 @@ namespace {
         if (!g_pDebugSphereMesh)
             D3DXCreateSphere(dev, 1.f, 16, 16, &g_pDebugSphereMesh, nullptr);
     }
-    static D3DCOLOR PartColor(CMonster_Suit::HIT_PART p)
+    static D3DCOLOR PartColor(CMonster_Soldier::HIT_PART p)
     {
         switch (p) {
-        case CMonster_Suit::HIT_HEAD:  return D3DCOLOR_ARGB(255, 255, 80, 80);
-        case CMonster_Suit::HIT_BALLS: return D3DCOLOR_ARGB(255, 255, 220, 80);
-        case CMonster_Suit::HIT_LEG:   return D3DCOLOR_ARGB(255, 80, 150, 255);
-        case CMonster_Suit::HIT_BODY:  return D3DCOLOR_ARGB(255, 120, 255, 120);
+        case CMonster_Soldier::HIT_HEAD:  return D3DCOLOR_ARGB(255, 255, 80, 80);
+        case CMonster_Soldier::HIT_BALLS: return D3DCOLOR_ARGB(255, 255, 220, 80);
+        case CMonster_Soldier::HIT_LEG:   return D3DCOLOR_ARGB(255, 80, 150, 255);
+        case CMonster_Soldier::HIT_BODY:  return D3DCOLOR_ARGB(255, 120, 255, 120);
         default:                       return D3DCOLOR_ARGB(255, 200, 200, 200);
         }
     }
 }
 #endif
 
-CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
+CMonster_Soldier::CMonster_Soldier(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
     , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
@@ -41,7 +41,7 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
-CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
+CMonster_Soldier::CMonster_Soldier(const CMonster_Soldier& rhs)
     : CMonster(rhs)
     , m_eMonState(rhs.m_eMonState), m_ePrevState(rhs.m_ePrevState)
     , m_fChaseRadius(rhs.m_fChaseRadius), m_fAimRadius(rhs.m_fAimRadius), m_fLoseRadius(rhs.m_fLoseRadius)
@@ -49,15 +49,15 @@ CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
 {
 }
 
-CMonster_Suit::~CMonster_Suit() {}
+CMonster_Soldier::~CMonster_Soldier() {}
 
-HRESULT CMonster_Suit::Ready_GameObject()
+HRESULT CMonster_Soldier::Ready_GameObject()
 {
     if (FAILED(__super::Ready_GameObject())) return E_FAIL;
     return S_OK;
 }
 
-HRESULT CMonster_Suit::Initialize(void* pArg)
+HRESULT CMonster_Soldier::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg))) return E_FAIL;
 
@@ -82,10 +82,13 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
+    
+    m_pTransformCom->Set_Info(INFO_POS, _vec3(5.f, -5.f, 13.f));
+
     return S_OK;
 }
 
-_int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
+_int CMonster_Soldier::Update_GameObject(const _float& fTimeDelta)
 {
     if (m_bDead) return DEAD;
     OnUpdateState(m_eMonState, fTimeDelta);
@@ -93,14 +96,14 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
     return NO_EVENT;
 }
 
-void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMonster_Soldier::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Set_OnTerrain(fTimeDelta);
     Set_Collider();
     __super::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CMonster_Suit::Render_GameObject()
+void CMonster_Soldier::Render_GameObject()
 {
     if (m_eMonState != INSKILL)
         __super::Render_GameObject();
@@ -110,9 +113,9 @@ void CMonster_Suit::Render_GameObject()
 #endif
 }
 
-void CMonster_Suit::Set_Collider()
+void CMonster_Soldier::Set_Collider()
 {
-    // ëª¨ë“  ì¶©ëŒì²´ OFFë©´ ìŠ¤í‚µ
+    // ¸ğµç Ãæµ¹Ã¼ OFF¸é ½ºÅµ
     if (!m_pColiderCom || !m_pColiderCom->Is_Active()) {
         Set_Collider_With_Wall();
         return;
@@ -129,17 +132,8 @@ void CMonster_Suit::Set_Collider()
                 SetState(KICKED);
                 m_bKillAfterHit = false;
             }
-
-            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerMove == PMV_SLIDE)
-            {
-                SetState(HIT_DOOR);
-                m_bKillAfterHit = true;
-            }
-
             if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_INSTANT)
                 SetState(INSKILL);
-                m_bKillAfterHit = false;
-            }
         }
 
         if (CColiderManager::GetInstance()->CollisionGroup(
@@ -153,13 +147,13 @@ void CMonster_Suit::Set_Collider()
         {
             if (m_eMonState != HIT_BENT) SetState(HIT_BENT);
         }
-        
+
         CGameObject* pDoor = nullptr;
         if (CColiderManager::GetInstance()->CollisionGroupSphereTagWho(
             CColiderManager::COLLISION_DOOR,
             this,
-            L"Com_Collider_Sphere",        // ëª¬ìŠ¤í„° êµ¬ë©´
-            L"Com_Collider_Sphere_Open",   // ë¬¸(ì—´ë¦¼) êµ¬ë©´
+            L"Com_Collider_Sphere",        // ¸ó½ºÅÍ ±¸¸é
+            L"Com_Collider_Sphere_Open",   // ¹®(¿­¸²) ±¸¸é
             nullptr,
             pDoor))
         {
@@ -172,40 +166,40 @@ void CMonster_Suit::Set_Collider()
                     + tr->Get_Info(INFO_LOOK) * d.vOffset.z;
                 };
 
-            // ë‚´/ë¬¸(ì—´ë¦¼) ìŠ¤í”¼ì–´ & íŠ¸ëœìŠ¤í¼
+            // ³»/¹®(¿­¸²) ½ºÇÇ¾î & Æ®·£½ºÆû
             auto* myS = m_pColiderCom;
             auto* myTr = m_pTransformCom;
             auto* openS = pDoor ? dynamic_cast<CColider_Sphere*>(pDoor->Find_Component(L"Com_Collider_Sphere_Open")) : nullptr;
             auto* doorTr = pDoor ? pDoor->GetTransform() : nullptr;
 
-            // ì¤‘ì‹¬ì 
+            // Áß½ÉÁ¡
             const _vec3 myC = sphereWorldCenter(myS, myTr);
             const _vec3 openC = sphereWorldCenter(openS, doorTr);
 
-            // ë°€ë¦´ ë°©í–¥: ë¬¸ open ì¤‘ì‹¬ -> ëª¬ìŠ¤í„° ì¤‘ì‹¬ (ìˆ˜í‰)
+            // ¹Ğ¸± ¹æÇâ: ¹® open Áß½É -> ¸ó½ºÅÍ Áß½É (¼öÆò)
             _vec3 dir = myC - openC; dir.y = 0.f;
-            if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // ì™„ì „ ê²¹ì¹¨ ëŒ€ë¹„
+            if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // ¿ÏÀü °ãÄ§ ´ëºñ
                 dir = -myTr->Get_Info(INFO_LOOK); dir.y = 0.f;
             }
             D3DXVec3Normalize(&dir, &dir);
 
-            // LOOKì„ 'ë°€ë¦´ ë°©í–¥'ìœ¼ë¡œ ë§ì¶°ë‘ë©´, ì´í›„ HIT_DOOR ìƒíƒœì—ì„œ ê·¸ ë°©í–¥ìœ¼ë¡œ ì´ë™ì‹œí‚¬ ìˆ˜ ìˆìŒ
+            // LOOKÀ» '¹Ğ¸± ¹æÇâ'À¸·Î ¸ÂÃçµÎ¸é, ÀÌÈÄ HIT_DOOR »óÅÂ¿¡¼­ ±× ¹æÇâÀ¸·Î ÀÌµ¿½ÃÅ³ ¼ö ÀÖÀ½
             const _vec3 myPos = myTr->Get_Info(INFO_POS);
-            myTr->LookAt(myPos + dir);   // ë‚´ë¶€ì—ì„œ Right/Up ì¬ì •ë ¬ ê°€ì •
+            myTr->LookAt(myPos + dir);   // ³»ºÎ¿¡¼­ Right/Up ÀçÁ¤·Ä °¡Á¤
 
-            // ìƒíƒœ ì „í™˜ + ë‚´ êµ¬ë©´ ë¹„í™œì„±(ë°˜ë³µ ì¶©ëŒ ë°©ì§€)
+            // »óÅÂ ÀüÈ¯ + ³» ±¸¸é ºñÈ°¼º(¹İº¹ Ãæµ¹ ¹æÁö)
             SetState(HIT_DOOR);
             if (m_pColiderCom) m_pColiderCom->Set_Active(false);
             m_bPickable = false;
 
-            return; // ì´ í”„ë ˆì„ì€ ë” ì•ˆ ê±´ë“œë¦¼
+            return; // ÀÌ ÇÁ·¹ÀÓÀº ´õ ¾È °Çµå¸²
         }
     }
 
     Set_Collider_With_Wall();
 }
 
-void CMonster_Suit::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
+void CMonster_Soldier::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
 {
     CMonster::GetDeathUIConfig(cfg, isHeadshot);
 
@@ -216,21 +210,21 @@ void CMonster_Suit::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
     cfg.rightTextNormal = L"2sec";
     cfg.rightTextHead = L"3sec";
 
-    // ê¸°ë³¸ ì²˜ì¹˜ í…ìŠ¤íŠ¸
-    cfg.killTextNormal = L"ì²˜ì¹˜";
+    // ±âº» Ã³Ä¡ ÅØ½ºÆ®
+    cfg.killTextNormal = L"Ã³Ä¡";
 
-    // â˜… í—¤ë“œìƒ·/ê¸‰ì†Œ ì²˜ì¹˜ ë¬¸êµ¬ ë¶„ê¸°
+    // ¡Ú Çìµå¼¦/±Ş¼Ò Ã³Ä¡ ¹®±¸ ºĞ±â
     switch (m_lastKillKind)
     {
-    case KillKind::Balls: cfg.killTextHead = L"ê¸‰ì†Œ";   break;
-    case KillKind::Head:  cfg.killTextHead = L"í—¤ë“œìƒ·"; break;
-    default:              cfg.killTextHead = L"ì²˜ì¹˜"; break;
+    case KillKind::Balls: cfg.killTextHead = L"±Ş¼Ò";   break;
+    case KillKind::Head:  cfg.killTextHead = L"Çìµå¼¦"; break;
+    default:              cfg.killTextHead = L"Ã³Ä¡"; break;
     }
 }
 
-_bool CMonster_Suit::Picking(_vec3* PickingPoint)
+_bool CMonster_Soldier::Picking(_vec3* PickingPoint)
 {
-    // CMonster::Picking ì—ì„œ ì£½ìŒ/ë¹„í™œì„± ì²´í¬
+    // CMonster::Picking ¿¡¼­ Á×À½/ºñÈ°¼º Ã¼Å©
     CPicking* pk = CPicking::GetInstance();
     _vec3 rayO = pk->GetRayOrigin();
     _vec3 rayD = pk->GetRayDir(); D3DXVec3Normalize(&rayD, &rayD);
@@ -276,7 +270,7 @@ _bool CMonster_Suit::Picking(_vec3* PickingPoint)
     return true;
 }
 
-void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
+void CMonster_Soldier::HitAt(const _vec3& /*hitPosWorld*/)
 {
     HIT_PART part = m_cachedHitPart;
     if (part == HIT_UNKNOWN) part = HIT_BODY;
@@ -297,7 +291,7 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
     ApplyDamage(part, dmg);
 }
 
-void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
+void CMonster_Soldier::ApplyDamage(HIT_PART part, int dmg)
 {
     if (m_bDead) return;
 
@@ -311,54 +305,54 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 
     if (lethal)
     {
-        // â˜… ì²˜ì¹˜ ì¢…ë¥˜ ê¸°ë¡(ë°°ë„ˆ ë¬¸êµ¬ ë¶„ê¸°)
+        // ¡Ú Ã³Ä¡ Á¾·ù ±â·Ï(¹è³Ê ¹®±¸ ºĞ±â)
         if (isBalls)      m_lastKillKind = KillKind::Balls;
         else if (isHead)  m_lastKillKind = KillKind::Head;
         else              m_lastKillKind = KillKind::Normal;
 
-        // ë°°ë„ˆëŠ” ì£½ì„ ë•Œë§Œ ëœ¸
+        // ¹è³Ê´Â Á×À» ¶§¸¸ ¶ä
         QueueDeathUI(headshot);
 
-        // ì¶©ëŒ/í”½í‚¹ ì°¨ë‹¨
+        // Ãæµ¹/ÇÈÅ· Â÷´Ü
         m_bPickable = false;
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
-        // ìƒíƒœ ì „í™˜
-        if (headshot) {          // ë¨¸ë¦¬/ê¸‰ì†Œ ì¦‰ì‚¬: HIT ì§„ì…í•˜ë©´ì„œ 1íšŒ ë°°ë„ˆ
+        // »óÅÂ ÀüÈ¯
+        if (headshot) {          // ¸Ó¸®/±Ş¼Ò Áï»ç: HIT ÁøÀÔÇÏ¸é¼­ 1È¸ ¹è³Ê
             m_bKillAfterHit = true;
             SetState(HIT);
         }
-        else {                  // ì¼ë°˜ ì¦‰ì‚¬: DEATH ì§„ì…í•˜ë©´ì„œ 1íšŒ ë°°ë„ˆ
+        else {                  // ÀÏ¹İ Áï»ç: DEATH ÁøÀÔÇÏ¸é¼­ 1È¸ ¹è³Ê
             m_bKillAfterHit = false;
             SetState(DEATH);
         }
         return;
     }
 
-    // ë¹„ì¹˜ëª…íƒ€: ë°°ë„ˆ ê¸ˆì§€(íˆíŠ¸ ì• ë‹ˆë§Œ)
+    // ºñÄ¡¸íÅ¸: ¹è³Ê ±İÁö(È÷Æ® ¾Ö´Ï¸¸)
     m_bKillAfterHit = false;
     SetState(HIT);
 }
 
-HRESULT CMonster_Suit::Texture_Clone()
+HRESULT CMonster_Soldier::Texture_Clone()
 {
     CTexture::TEXINFO info{};
     struct AnimDef { const wchar_t* tag; const wchar_t* proto; int start; int end; float speed; bool loop; };
     AnimDef anims[] = {
-        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Suit_Idle",   0, 12, 8.f,  true },
-        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Suit_Chase",  0, 13,10.f,  true },
-        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Suit_Aim",    0,  9,10.f,  true },
-        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Suit_Shot",   0,  8, 7.f,  true },
-        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Suit_Jump",   0, 22,10.f,  true },
-        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Suit_HIT_HEAD",  0, 21, 7.f,true },
-        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Suit_HIT_BODY",  0,  8,10.f,true },
-        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23,10.f,true },
-        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",    0, 21,10.f,true },
-        { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC", 0, 15, 7.f,false },
+        { L"Com_Texture_Idle",      L"Prototype_Component_Texture_Monster_Solider_Idle",   0, 12, 8.f,  true },
+        { L"Com_Texture_Chase",     L"Prototype_Component_Texture_Monster_Solider_Walk",  0, 13,10.f,  true },
+        { L"Com_Texture_Aim",       L"Prototype_Component_Texture_Monster_Solider_Aim",    0,  9,10.f,  true },
+        { L"Com_Texture_Shot",      L"Prototype_Component_Texture_Monster_Solider_Shot",   0,  8, 7.f,  true },
+        { L"Com_Texture_Jump",      L"Prototype_Component_Texture_Monster_Solider_Jump",   0, 23,10.f,  true },
+        { L"Com_Texture_Hit_Head",  L"Prototype_Component_Texture_Monster_Solider_HEAD",  0, 21, 7.f,true },
+        { L"Com_Texture_Hit_Body",  L"Prototype_Component_Texture_Monster_Solider_BODY",  0,  8,10.f,true },
+        { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Solider_BALL",  0, 23,10.f,true },
+        { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Solider_DEATH",    0, 23,10.f,true },
+        { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Solider_ELEC", 0, 15, 7.f,false },
         { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
-        { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",     0, 14, 7.f,false },
-        { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Suit_Blocking",      0,  4, 6.f,false }
+        { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Solider_DOOR",     0, 25, 7.f,false },
+        { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Solider_BLOCK",      0,  5, 6.f,false }
     };
 
     for (auto& a : anims)
@@ -377,14 +371,14 @@ HRESULT CMonster_Suit::Texture_Clone()
     return S_OK;
 }
 
-void CMonster_Suit::SetState(MON_STATE next)
+void CMonster_Soldier::SetState(MON_STATE next)
 {
     m_ePrevState = m_eMonState;
     m_eMonState = next;
     OnEnterState(next);
 }
 
-void CMonster_Suit::OnEnterState(MON_STATE s)
+void CMonster_Soldier::OnEnterState(MON_STATE s)
 {
     const wchar_t* tag = L"Com_Texture_Idle";
 
@@ -405,8 +399,8 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
 
     case HIT:
         if (m_bKillAfterHit) {
-            DisableAllCollisionAndPicking(); 
-            TrySpawnDeathUI_Common();     
+            DisableAllCollisionAndPicking();
+            TrySpawnDeathUI_Common();
         }
         if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
         return;
@@ -427,11 +421,11 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
 
     if (s == DEATH) {
-        TrySpawnDeathUI_Common(); // ì¼ë°˜ ì‚¬ë§ ì‹œì  1íšŒ ë°°ë„ˆ
+        TrySpawnDeathUI_Common(); // ÀÏ¹İ »ç¸Á ½ÃÁ¡ 1È¸ ¹è³Ê
     }
 }
 
-void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
+void CMonster_Soldier::OnUpdateState(MON_STATE s, const _float& dt)
 {
     if (!m_pTextureCom) return;
     GetPlayerTransform();
@@ -507,14 +501,14 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
     case HIT_DOOR:
     {
-        // ëˆ„ì  ì‹œê°„
+        // ´©Àû ½Ã°£
         m_kbTime += dt;
 
-        const float maxDist = 1.f;   // ë°€ë ¤ë‚  ê±°ë¦¬
-        const float knockTime = 0.9f;   // ë°€ë¦¬ëŠ” ì‹œê°„ 
+        const float maxDist = 1.f;   // ¹Ğ·Á³¯ °Å¸®
+        const float knockTime = 0.9f;   // ¹Ğ¸®´Â ½Ã°£ 
 
         float t = min(1.f, m_kbTime / knockTime);
-        float ratio = 1.f - (1.f - t) * (1.f - t);  
+        float ratio = 1.f - (1.f - t) * (1.f - t);
         float targetDist = maxDist * ratio;
 
         float delta = targetDist - m_kbProgress;
@@ -530,7 +524,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         if (m_pTextureCom->Is_AnimFinished())
             m_bDead = true;
     }
-        break;
+    break;
 
     case KICKED:
         if (m_pTextureCom->Is_AnimFinished()) {
@@ -544,12 +538,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
 
     case INSKILL:
         if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_INSTANT)
-            // ì£½ìŒ ì²˜ë¦¬
-        {
-            SetState(HIT_DOOR);
-            m_bKillAfterHit = true;
-        } 
-    }
+            m_bDead = true;
         break;
 
     case JUMP:
@@ -577,7 +566,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
     }
 }
 
-void CMonster_Suit::SetupHitSpheres()
+void CMonster_Soldier::SetupHitSpheres()
 {
     m_hitSpheres.clear();
     const int PRI_LEG = 0, PRI_BODY = 1, PRI_BALLS = 2, PRI_HEAD = 3;
@@ -588,7 +577,7 @@ void CMonster_Suit::SetupHitSpheres()
     m_hitSpheres.push_back({ HIT_LEG,   _vec3(0.00f, -0.20f,0.0f), 0.22f, PRI_LEG,   0.90f });
 }
 
-_vec3 CMonster_Suit::GetHeadWorldPos() const
+_vec3 CMonster_Soldier::GetHeadWorldPos() const
 {
     float headOffsetY = 0.9f;
     if (m_pColiderCom) headOffsetY = m_pColiderCom->Get_SphereDesc().fRadius;
@@ -599,7 +588,7 @@ _vec3 CMonster_Suit::GetHeadWorldPos() const
     return pos;
 }
 
-bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) const
+bool CMonster_Soldier::WorldToScreen(const _vec3& world, float& sx, float& sy) const
 {
     D3DXMATRIX view, proj, id; D3DVIEWPORT9 vp{};
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &view);
@@ -614,7 +603,7 @@ bool CMonster_Suit::WorldToScreen(const _vec3& world, float& sx, float& sy) cons
 }
 
 #ifdef _DEBUG
-void CMonster_Suit::DebugRender_HitSpheres() const
+void CMonster_Soldier::DebugRender_HitSpheres() const
 {
     if (!m_pGraphicDev || m_hitSpheres.empty()) return;
     EnsureDebugSphereMesh(m_pGraphicDev);
@@ -668,9 +657,9 @@ void CMonster_Suit::DebugRender_HitSpheres() const
 }
 #endif
 
-CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CMonster_Soldier* CMonster_Soldier::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CMonster_Suit* pInstance = new CMonster_Suit(pGraphicDev);
+    CMonster_Soldier* pInstance = new CMonster_Soldier(pGraphicDev);
     if (FAILED(pInstance->Ready_GameObject()))
     {
         MSG_BOX("CMonster_Suit Create Failed");
@@ -679,9 +668,9 @@ CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pInstance;
 }
 
-CGameObject* CMonster_Suit::Clone(void* pArg)
+CGameObject* CMonster_Soldier::Clone(void* pArg)
 {
-    CMonster_Suit* pInstance = new CMonster_Suit(*this);
+    CMonster_Soldier* pInstance = new CMonster_Soldier(*this);
     if (FAILED(pInstance->Initialize(pArg)))
     {
         MSG_BOX("CMonster_Suit Clone Failed");
@@ -690,7 +679,7 @@ CGameObject* CMonster_Suit::Clone(void* pArg)
     return pInstance;
 }
 
-void CMonster_Suit::Free()
+void CMonster_Soldier::Free()
 {
     __super::Free();
 }

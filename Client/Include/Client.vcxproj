@@ -156,6 +156,7 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBannerUI.h" />
     <ClInclude Include="..\Header\CBlackGackGround.h" />
+    <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CButtonUI.h" />
     <ClInclude Include="..\Header\CCameraFPS.h" />
     <ClInclude Include="..\Header\CCharacter.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
     <ClInclude Include="..\Header\CItemUI.h" />
+    <ClInclude Include="..\Header\CKatana.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -185,6 +187,8 @@
     <ClInclude Include="..\Header\CMainWeapon.h" />
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
+    <ClInclude Include="..\Header\CMonster_Fat.h" />
+    <ClInclude Include="..\Header\CMonster_Soldier.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPlayerUI_Manager.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
@@ -234,6 +238,7 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBannerUI.cpp" />
     <ClCompile Include="..\Code\CBlackGackGround.cpp" />
+    <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CButtonUI.cpp" />
     <ClCompile Include="..\Code\CCameraFPS.cpp" />
     <ClCompile Include="..\Code\CCharacter.cpp" />
@@ -248,6 +253,7 @@
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
     <ClCompile Include="..\Code\CItemUI.cpp" />
+    <ClCompile Include="..\Code\CKatana.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -262,6 +268,8 @@
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
+    <ClCompile Include="..\Code\CMonster_Fat.cpp" />
+    <ClCompile Include="..\Code\CMonster_Soldier.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPlayerUI_Manager.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />

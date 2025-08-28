@@ -8,7 +8,9 @@
 #include "CTile_NormalDoor.h"
 
 CTile_NormalDoor::CTile_NormalDoor(LPDIRECT3DDEVICE9 pGraphicDevice)
-	: CTileBase(pGraphicDevice, TileType::NORMALDOOR), m_pColiderSphere(nullptr)
+	: CTileBase(pGraphicDevice, TileType::NORMALDOOR)
+	, m_pColiderSphere(nullptr)
+	, m_pColiderSphereOpen(nullptr) // 추가
 {
 	m_pDoors.reserve(2);
 }
@@ -76,17 +78,14 @@ _int CTile_NormalDoor::Update_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead) return DEAD;
 
-	if (m_fAngle < m_fTargetAngle)
-	{
+	if (m_fAngle < m_fTargetAngle) {
 		m_fAngle += fTimeDelta * 500.f;
-		if (m_fAngle - m_fTargetAngle > 0.f)
-			m_fAngle = m_fTargetAngle;
-
+		if (m_fAngle - m_fTargetAngle > 0.f) m_fAngle = m_fTargetAngle;
 		PivotRotate();
 	}
 
-	if (!m_bOpend)
-		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
+	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
+
 	return __super::Update_GameObject(fTimeDelta);
 }
 
@@ -96,23 +95,33 @@ void CTile_NormalDoor::LateUpdate_GameObject(const _float &fTimeDelta)
 
 	if (!m_bOpend)
 	{
-		if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
+		if (CColiderManager::GetInstance()->CollisionGroup(
+			CColiderManager::COLLISION_PLAYER, this,
+			CColiderManager::COLLISION_SPHERE, nullptr))
 		{
-			if (m_fTargetAngle < 84.99f)
-				m_fTargetAngle = 84.99f;
-
+			if (m_fTargetAngle < 84.99f) m_fTargetAngle = 84.99f;
 			m_bOpend = true;
+
+			if (m_pColiderSphere) {
+				m_pColiderSphere->Set_Active(false);
+				m_pColiderSphere->Update_ColliderSphere();
+			}
+			if (m_pColiderSphereOpen) {
+				m_pColiderSphereOpen->Set_Active(true);
+				m_pColiderSphereOpen->Update_ColliderSphere();
+			}
 		}
 	}
+
 	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CTile_NormalDoor::Render_GameObject()
 {
 #ifdef _DEBUG
-	if (g_ColiderRender && m_pColiderSphere != nullptr)
-	{
-		m_pColiderSphere->Render_ColliderSphere();
+	if (g_ColiderRender) {
+		if (m_pColiderSphere)     m_pColiderSphere->Render_ColliderSphere();
+		if (m_pColiderSphereOpen) m_pColiderSphereOpen->Render_ColliderSphere();
 	}
 #endif
 }
@@ -165,6 +174,7 @@ HRESULT CTile_NormalDoor::Set_Component(void *pArg)
 			m_pDoors[1]->GetTransform()->Set_Scale(1.f, 2.f, 1.f);
 			m_matInitDoors[1] = *m_pDoors[1]->GetTransform()->Get_World();
 
+			// 닫혀있는 문 충돌체
 			CColider_Sphere::COLLINFO CollSphereInfo;
 			ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
 			CollSphereInfo.fRadius = 0.5f;
@@ -173,9 +183,20 @@ HRESULT CTile_NormalDoor::Set_Component(void *pArg)
 			// Colider_Sphere
 			if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere", (CComponent **)&m_pColiderSphere, &CollSphereInfo)))
 				return E_FAIL;
-
 			m_pColiderSphere->Set_Transform(m_pTransformCom);
 			m_pColiderSphere->Update_ColliderSphere();
+
+			// 열려있는 문 충돌체
+			CColider_Sphere::COLLINFO openDesc{};
+			openDesc.fRadius = 0.2f;              
+			openDesc.vOffset = _vec3(0.f, 0.f, 0.f);
+			if (FAILED(Add_Components(
+				L"Com_Collider_Sphere_Open", SCENE_STATIC, L"Proto_Colider_Sphere",
+				(CComponent**)&m_pColiderSphereOpen, &openDesc)))
+				return E_FAIL;
+			m_pColiderSphereOpen->Set_Transform(m_pTransformCom);
+			m_pColiderSphereOpen->Set_Active(false);   
+			m_pColiderSphereOpen->Update_ColliderSphere();
 		}
 		else
 		{

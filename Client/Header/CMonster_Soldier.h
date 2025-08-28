@@ -1,7 +1,7 @@
 #pragma once
 #include "CMonster.h"
-
-class CMonster_Suit : public CMonster
+class CMonster_Soldier :
+    public CMonster
 {
     enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, HIT_ELECTRIC, HIT_BENT, HIT_DOOR, KICKED, INSKILL, DEATH };
 
@@ -17,9 +17,9 @@ public:
     };
 
 private:
-    explicit CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev);
-    explicit CMonster_Suit(const CMonster_Suit& rhs);
-    virtual ~CMonster_Suit();
+    explicit CMonster_Soldier(LPDIRECT3DDEVICE9 pGraphicDev);
+    explicit CMonster_Soldier(const CMonster_Soldier& rhs);
+    virtual ~CMonster_Soldier();
 
 public:
     virtual HRESULT Ready_GameObject();
@@ -39,7 +39,7 @@ protected:
     void            GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const override;
 
 public:
-    static  CMonster_Suit* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+    static  CMonster_Soldier* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;
     virtual void           Free() override;
 
@@ -77,9 +77,10 @@ private:
     float       m_shotTimer = 0.f;
 
 
-    float  m_kbTime = 0.f;       
-    float  m_kbDur = 0.20f;     
-    float  m_kbTotalDist = 0.35f;   
-    float  m_kbProgress = 0.f;       
-    _vec3  m_kbDir = _vec3(0, 0, 0); 
+    float  m_kbTime = 0.f;
+    float  m_kbDur = 0.20f;
+    float  m_kbTotalDist = 0.35f;
+    float  m_kbProgress = 0.f;
+    _vec3  m_kbDir = _vec3(0, 0, 0);
 };
+

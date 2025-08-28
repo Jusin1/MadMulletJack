@@ -22,7 +22,7 @@
 #include "CMainWeapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL , WP_KNIFE }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
+	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL , WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
@@ -1038,6 +1038,9 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
 		Change_Weapon2(WP_DOPING);
+	if (KEY_BUTTON_DOWN(DIK_T))
+		Change_Weapon(WEAPON::WP_KATANA);
+}
 
 	if (KEY_BUTTON_DOWN(DIK_C))
 		Change_Weapon2(WP_KICK);
@@ -1280,6 +1283,8 @@ void CPlayer::Change_Weapon(WEAPON _eWeapon)
 {
 	// 상태 업데이트
 	m_tPrePlayerInfo.eWeapon = m_tPlayerInfo.eWeapon; // 전 state 저장
+	if (m_tPrePlayerInfo.eWeapon == WEAPON::WP_KATANA)
+		m_pPlayerUI->Set_Active(false);
 	m_tPlayerInfo.eWeapon = _eWeapon; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 
