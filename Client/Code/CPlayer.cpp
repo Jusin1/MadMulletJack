@@ -26,7 +26,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
-	m_fAttackCoolTime(0.f)
+	m_fAttackCoolTime(0.f), m_vPrePos({0.f,0.f,0.f})
 {
 }
 
@@ -36,7 +36,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
 	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
-	m_fAttackCoolTime(rhs.m_fAttackCoolTime)
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_vPrePos(rhs.m_vPrePos)
 {
 }
 
@@ -743,6 +743,9 @@ void CPlayer::ZOOM_Begin()
 {
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
+
+	//m_vPrePos = Get_Pos();
+	//GetTransform()->Move_PosDir(1.f, Get_Look());
 }
 
 void CPlayer::ZOOM_On(const _float& fTimeDelta)
@@ -751,6 +754,7 @@ void CPlayer::ZOOM_On(const _float& fTimeDelta)
 
 void CPlayer::ZOOM_End()
 {
+	//GetTransform()->Set_Info(INFO_POS, m_vPrePos);
 }
 
 // reload
@@ -895,6 +899,9 @@ void CPlayer::ATTACK_ZOOM_Begin()
 	// sniper는 텍스처 유지라서
 	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
 		m_fStateTime = 1.f;
+
+	//m_vPrePos = Get_Pos();
+	//GetTransform()->Move_PosDir(1.f, Get_Look());
 }
 
 void CPlayer::ATTACK_ZOOM_On(const _float& fTimeDelta)
@@ -912,6 +919,7 @@ void CPlayer::ATTACK_ZOOM_On(const _float& fTimeDelta)
 
 void CPlayer::ATTACK_ZOOM_End()
 {
+	//GetTransform()->Set_Info(INFO_POS, m_vPrePos);
 }
 
 void CPlayer::ZOOMOUT_Begin()
