@@ -125,6 +125,15 @@ HRESULT CPlayer_HandR::Texture_Clone()
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Shotgun"), m_pTextureCom });
 
+    // Opening - Katana
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_Op_Katana", SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpKatana", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Katana"), m_pTextureCom });
+
 
     return S_OK;
 }
@@ -167,6 +176,14 @@ HRESULT CPlayer_HandR::Set_Texture()
             //// info∏¶ ªı∑Œ ∏¬√Á¡‹
             Set_New_TransInfo(0.f, 0.f);
         }
+        else if (m_tInfo.eWeapon == WP_KATANA) {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Katana"))))
+                return E_FAIL;
+            Set_UISizeAndPos(400, 600.f, WINCX * 0.5f + 500.f , WINCY * 0.5f + 500.f);
+            Set_New_TransInfo(600.f, 0.f);
+            m_tMoveInfo = { MV_UP, true, 200.f, 0.f };
+        }
+        
 
         else {
             m_bRenderOn = false;

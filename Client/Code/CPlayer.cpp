@@ -831,7 +831,7 @@ void CPlayer::OPENING_Begin()
 		break;
 
 	case WP_KATANA:
-		m_fStateTime = 1.65f;
+		m_fStateTime = 8.f;
 		break;
 	case WP_SNIPER:
 		m_fStateTime = 1.65f;
@@ -1297,8 +1297,6 @@ void CPlayer::Change_Weapon(WEAPON _eWeapon)
 {
 	// 상태 업데이트
 	m_tPrePlayerInfo.eWeapon = m_tPlayerInfo.eWeapon; // 전 state 저장
-	if (m_tPrePlayerInfo.eWeapon == WEAPON::WP_KATANA)
-		m_pPlayerUI->Set_Active(false);
 	m_tPlayerInfo.eWeapon = _eWeapon; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 

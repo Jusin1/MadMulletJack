@@ -127,6 +127,8 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 			return E_FAIL;
 		if (FAILED(TagUI_SetActive(L"ArmUI", true)))
 			return E_FAIL;
+		if (FAILED(TagUI_SetActive(L"HandRUI", true)))
+			return E_FAIL;
 		break;
 
 	case PLAYERDEAD:

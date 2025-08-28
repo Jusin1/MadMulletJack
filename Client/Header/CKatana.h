@@ -24,8 +24,8 @@ private:
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
-	CImageUI* m_pLeftHand;
-	CImageUI* m_pLightHand;
+	CUIBase* m_pOpenUI;
+	CImageUI* m_pSheathUI;
 
 public:
 	static CKatana* Create(LPDIRECT3DDEVICE9 pGraphicDev);

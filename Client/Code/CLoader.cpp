@@ -979,6 +979,11 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/left/reload/shotgun/ShotR_Left%03d.png", 2))))
 		return E_FAIL;
 
+	// HandL - Opening - Katana
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_Hand_L",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/LeftArm.png", 1))))
+		return E_FAIL;
+
 	// HandR
 	// // HandR - Idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRIdle",
@@ -999,6 +1004,11 @@ HRESULT CLoader::Loading_UI()
 	// handr - op - shotgun
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpShotgun",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/right/opening/shotGun/ShotG_OpR%03d.png", 4))))
+		return E_FAIL;
+
+	// handr - op - Katana
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandROpKatana",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/RightArm.png", 1))))
 		return E_FAIL;
 
 	// HpBar
@@ -1030,6 +1040,11 @@ HRESULT CLoader::Loading_UI()
 	// HpB - Crack
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarCrack",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/crack/Phone_Crack000.png", 1))))
+		return E_FAIL;
+
+	// Katana - sheath(Ä®Áý)
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaSheath",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/Open_Sheath.png", 1))))
 		return E_FAIL;
 
 

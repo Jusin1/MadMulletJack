@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "CKatana.h"
+#include "CManagement.h"
+#include "CObjectManager.h"
+#include "CImageUI.h"
 
 CKatana::CKatana(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMainWeapon(pGraphicDev)
+	, m_pOpenUI(nullptr)
 {
 }
 
@@ -30,6 +34,25 @@ HRESULT CKatana::Initialize(void* pArg)
 
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
+
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+	m_pOpenUI = dynamic_cast<CUIBase*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+	if (!m_pOpenUI) return E_FAIL;
+	// 화면 스크린 생성
+	m_pSheathUI = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+
+
+	if (m_pSheathUI)
+	{
+		Set_UISizeAndPos(400.f, 100.f, WINCX * 0.5f - 400.f, WINCY * 0.5f + 50.f);
+		m_pSheathUI->RegisterTexture(L"Com_Texture_Sheath", L"Prototype_Component_Texture_KatanaSheath", 0, 1, 0.f, true);
+		m_pSheathUI->ChangeTexture(L"Com_Texture_Sheath");
+		m_pOpenUI->Add_Child(m_pSheathUI);
+	}
 
 	Set_Texture();
 }
@@ -77,9 +100,6 @@ HRESULT CKatana::Set_Texture()
 	switch (m_tInfo.ePlayerState)
 	{
 	case OPENING:
-		if (FAILED(Change_Texture(TEXT("Com_Texture_Sniper_Op"))))
-			return E_FAIL;
-		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
 		break;
 	}
 
@@ -92,70 +112,12 @@ HRESULT CKatana::Texture_Clone()
 
 	// IDLE
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
+	texInfo.m_iEndTex = 1;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_Idle", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Idle", SCENE_STATIC, L"Prototype_Component_Texture_KatanaSheath", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Idle"), m_pTextureCom });
-
-	// OP
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 30;
-	texInfo.m_fSpeed = 20.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Op", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Op"), m_pTextureCom });
-
-	// attack
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 2;
-	texInfo.m_fSpeed = 10.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_Attack", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Attack"), m_pTextureCom });
-
-	// attack end
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 14;
-	texInfo.m_fSpeed = 10.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_AttackEnd", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_AttEnd", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_AttackEnd"), m_pTextureCom });
-
-	// zoooming
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 6;
-	texInfo.m_fSpeed = 10.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_Zooming", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Zooming"), m_pTextureCom });
-
-	// zooom
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 1;
-	texInfo.m_fSpeed = 0.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_Zoom", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zoom", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Zoom"), m_pTextureCom });
-
-	// attack zoom
-	// zoom texture 유지
-
-	// zoomout
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 7;
-	texInfo.m_fSpeed = 10.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Sniper_ZoomOut", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_ZoomOut"), m_pTextureCom });
-
 	return S_OK;
 }
 
@@ -193,5 +155,6 @@ CGameObject* CKatana::Clone(void* pArg)
 
 void CKatana::Free()
 {
+	Safe_Release(m_pOpenUI);
 	__super::Free();
 }
