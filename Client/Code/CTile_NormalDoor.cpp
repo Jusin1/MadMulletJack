@@ -188,8 +188,8 @@ HRESULT CTile_NormalDoor::Set_Component(void *pArg)
 
 			// 열려있는 문 충돌체
 			CColider_Sphere::COLLINFO openDesc{};
-			openDesc.fRadius = 0.2f;              
-			openDesc.vOffset = _vec3(0.f, 0.f, 0.f);
+			openDesc.fRadius = 0.3f;              
+			openDesc.vOffset = _vec3(0.f, 0.f, 1.5f);
 			if (FAILED(Add_Components(
 				L"Com_Collider_Sphere_Open", SCENE_STATIC, L"Proto_Colider_Sphere",
 				(CComponent**)&m_pColiderSphereOpen, &openDesc)))

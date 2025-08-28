@@ -224,6 +224,8 @@ void CMonster_Soldier::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) con
 
 _bool CMonster_Soldier::Picking(_vec3* PickingPoint)
 {
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WEAPON::WP_KATANA)
+        return false;
     // CMonster::Picking 에서 죽음/비활성 체크
     CPicking* pk = CPicking::GetInstance();
     _vec3 rayO = pk->GetRayOrigin();

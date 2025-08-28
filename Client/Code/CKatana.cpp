@@ -1,8 +1,5 @@
 #include "pch.h"
 #include "CKatana.h"
-#include "CTimerMgr.h"
-#include "CManagement.h"
-#include "CObjectManager.h"
 
 CKatana::CKatana(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMainWeapon(pGraphicDev)
@@ -23,7 +20,6 @@ HRESULT CKatana::Ready_GameObject()
 	if (FAILED(__super::Ready_GameObject()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -35,63 +31,12 @@ HRESULT CKatana::Initialize(void* pArg)
 	if (FAILED(Texture_Clone()))
 		return E_FAIL;
 
-	m_bActive = false;
-	m_bRenderOn = false;
-
-	// 파워 / 정확도 / 속도
-	m_iPower = 3;
-	m_iPrecision = 10;
-	m_fCoolTime = 0.1f;
-	// 최대 불렛
-	m_iMaxBullet = 3; //origin : 9 / debug 3
-	m_iBullet = m_iMaxBullet;
-
 	Set_Texture();
-
-	return S_OK;
 }
 
 _int CKatana::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
-
-	// 만약 지금 idle texture 라면
-	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
-	{
-		// scene을 받아옴
-		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
-
-		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		_uint iPlayerUI_Idx = 0;
-		switch (eCurScene)
-		{
-		case SCENE_DEV:
-			iPlayerUI_Idx = 1;
-			break;
-
-		case SCENE_TUTORIAL:
-			iPlayerUI_Idx = 1;
-			break;
-		}
-
-		// handR을 받아옴
-		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-			->Find_Object(eCurScene, L"UI_Layer", iPlayerUI_Idx))
-			->Find_Child_ByTag(L"HandRUI");
-
-		// handR 위치를 기준으로 pos 갱신 (offset 적용)
-		if (pHandR)
-		{
-			Set_UIPos(pHandR->GetTransform()->Get_Info(INFO_POS), -120.f, 350.f);
-		}
-	}
-
-	// 만약 지금 idle texture가 아니고 ani가 끝났다면
-	else if (m_pTextureCom->Is_AnimFinished())
-	{
-		// state 끝났다고 알려줌
-		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-	}
 
 	return NO_EVENT;
 }
@@ -118,10 +63,27 @@ void CKatana::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	__super::Render_GameObject();
+	CUI::Render_GameObject();
 
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+}
+
+HRESULT CKatana::Set_Texture()
+{
+
+	m_tMoveInfo.eUIMove = MV_NON;
+
+	switch (m_tInfo.ePlayerState)
+	{
+	case OPENING:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_Sniper_Op"))))
+			return E_FAIL;
+		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
+		break;
+	}
+
+	return S_OK;
 }
 
 HRESULT CKatana::Texture_Clone()
@@ -133,154 +95,66 @@ HRESULT CKatana::Texture_Clone()
 	texInfo.m_iEndTex = 3;
 	texInfo.m_fSpeed = 1.f;
 	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Idle", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Idle", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Idle"), m_pTextureCom });
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Idle"), m_pTextureCom });
 
-	// Opening
+	// OP
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 9;
-	texInfo.m_fSpeed = 25.f;
+	texInfo.m_iEndTex = 30;
+	texInfo.m_fSpeed = 20.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Op", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Op", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Op", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Op"), m_pTextureCom });
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Op"), m_pTextureCom });
 
-	// Attack
+	// attack
+	texInfo.m_iStart = 0;
+	texInfo.m_iEndTex = 2;
+	texInfo.m_fSpeed = 10.f;
+	texInfo.m_bLoop = false;
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Attack", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
+		return E_FAIL;
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Attack"), m_pTextureCom });
+
+	// attack end
+	texInfo.m_iStart = 0;
+	texInfo.m_iEndTex = 14;
+	texInfo.m_fSpeed = 10.f;
+	texInfo.m_bLoop = false;
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_AttackEnd", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_AttEnd", (CComponent**)&m_pTextureCom, &texInfo)))
+		return E_FAIL;
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_AttackEnd"), m_pTextureCom });
+
+	// zoooming
 	texInfo.m_iStart = 0;
 	texInfo.m_iEndTex = 6;
-	texInfo.m_fSpeed = 20.f;
+	texInfo.m_fSpeed = 10.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Zooming", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Att"), m_pTextureCom });
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Zooming"), m_pTextureCom });
 
-	// Reload
+	// zooom
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 13;
-	texInfo.m_fSpeed = 20.f;
+	texInfo.m_iEndTex = 1;
+	texInfo.m_fSpeed = 0.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_Re", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_Zoom", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zoom", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Re"), m_pTextureCom });
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_Zoom"), m_pTextureCom });
 
-	// CIdle
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Idle", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Idle"), m_pTextureCom });
+	// attack zoom
+	// zoom texture 유지
 
-	// CAttack
+	// zoomout
 	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 5;
-	texInfo.m_fSpeed = 0.5f;
+	texInfo.m_iEndTex = 7;
+	texInfo.m_fSpeed = 10.f;
 	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
+	if (FAILED(Add_Components(L"Com_Texture_Sniper_ZoomOut", SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
 		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Att"), m_pTextureCom });
-
-	// CZooming
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Zooming", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Zooming"), m_pTextureCom });
-
-	// CZoomIdle
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomIdle", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomIdle"), m_pTextureCom });
-
-	// CZoomAtt
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomAtt", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomAtt"), m_pTextureCom });
-
-	return S_OK;
-}
-
-HRESULT CKatana::Set_Texture() {
-	//IDLE, JUMP, KICK, ATTACK,
-	//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, PLAYER_END
-	m_bRenderOn = true;
-
-	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
-
-	// scene car 에서 쓰는 texture가 아예 달라서 scene 별로 나누어서 결정
-	if (eScene == SCENE_CAR)
-	{
-		switch (m_tInfo.ePlayerState)
-		{
-		case IDLE:
-			break;
-		case ATTACK:
-			break;
-		case ZOOMING:
-			break;
-		}
-	}
-
-	else
-	{
-		switch (m_tInfo.ePlayerState)
-		{
-		case OPENING:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
-				return E_FAIL;
-			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f);
-
-			Set_New_TransInfo(500.f, 0.f);
-
-			break;
-
-		case ATTACK:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
-				return E_FAIL;
-			Set_UISizeAndPos(245.f, 500.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 200.f);
-
-			m_iBullet--;
-
-			break;
-
-		case ATTACK_INSTANT:
-			m_bRenderOn = false;
-			break;
-
-		case RELOAD:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Re"))))
-				return E_FAIL;
-			Set_UISizeAndPos(360.f, 660.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
-
-			Reload_Bullet();
-
-			break;
-
-		case PLAYERDEAD:
-			m_bActive = false;
-			break;
-
-		default:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
-				return E_FAIL;
-			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
-			//pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
-
-			break;
-		}
-	}
+	m_mapTextures.insert({ TEXT("Com_Texture_Sniper_ZoomOut"), m_pTextureCom });
 
 	return S_OK;
 }
@@ -300,7 +174,7 @@ CKatana* CKatana::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	CKatana* pInstance = new CKatana(pGraphicDev);
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
-		MSG_BOX("CPistol_Gun Create Failed");
+		MSG_BOX("CSniper_Gun Create Failed");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
@@ -311,7 +185,7 @@ CGameObject* CKatana::Clone(void* pArg)
 	CKatana* pInstance = new CKatana(*this);
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("CPistol_Gun Clone Failed");
+		MSG_BOX("CSniper_Gun Clone Failed");
 		Safe_Release(pInstance);
 	}
 	return pInstance;

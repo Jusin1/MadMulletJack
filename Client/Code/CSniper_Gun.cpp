@@ -119,8 +119,6 @@ HRESULT CSniper_Gun::Set_Texture()
 		if (FAILED(Change_Texture(TEXT("Com_Texture_Sniper_Op"))))
 			return E_FAIL;
 		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
-
-
 		break;
 
 	case PLAYERDEAD:

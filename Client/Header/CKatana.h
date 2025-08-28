@@ -1,5 +1,6 @@
 #pragma once
 #include "CMainWeapon.h"
+class CImageUI;
 class CKatana :
     public CMainWeapon
 {
@@ -23,6 +24,8 @@ private:
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
+	CImageUI* m_pLeftHand;
+	CImageUI* m_pLightHand;
 
 public:
 	static CKatana* Create(LPDIRECT3DDEVICE9 pGraphicDev);

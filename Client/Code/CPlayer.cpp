@@ -825,6 +825,7 @@ void CPlayer::OPENING_Begin()
 		break;
 
 	case WP_KATANA:
+		m_fStateTime = 1.65f;
 		break;
 	case WP_SNIPER:
 		m_fStateTime = 1.65f;

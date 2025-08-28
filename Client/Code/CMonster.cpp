@@ -8,6 +8,7 @@
 #include "CColiderManager.h"
 #include "CCullingManager.h"
 #include "CEffectUI.h"
+#include "CPlayer.h"
 
 
 ULONGLONG CMonster::s_lastKillTimeMs = 0; // 마지막 처치 시각(ms)
