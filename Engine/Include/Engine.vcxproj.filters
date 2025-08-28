@@ -130,6 +130,15 @@
     <Filter Include="00. Manager\14. CullingManager">
       <UniqueIdentifier>{296bd382-76b9-48ce-a143-1e6c805fa96d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\15. ObjectPool">
+      <UniqueIdentifier>{b1ebfff7-1efd-44f3-bec2-95267166ded9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\03. Management\02. GameObject\Effect">
+      <UniqueIdentifier>{904f05d2-13fc-41ed-8db0-f79e38d9278e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\15. ObjectPool\Pool">
+      <UniqueIdentifier>{89f1cefd-313a-4453-a7b8-23bcbd511d70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -251,6 +260,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCullingManager.cpp">
       <Filter>00. Manager\14. CullingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CObjectPoolManager.cpp">
+      <Filter>00. Manager\15. ObjectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect.cpp">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CObjectPool.cpp">
+      <Filter>00. Manager\15. ObjectPool\Pool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -394,6 +412,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCullingManager.h">
       <Filter>00. Manager\14. CullingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CObjectPoolManager.h">
+      <Filter>00. Manager\15. ObjectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffect.h">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CObjectPool.h">
+      <Filter>00. Manager\15. ObjectPool\Pool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

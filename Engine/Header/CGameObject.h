@@ -45,9 +45,15 @@ public:
 
 	virtual void HitAt(const _vec3& hitPosWorld) {} // 맞은 지점 전달
 	virtual void ExportData(void *pData) {};
+
+	virtual HRESULT Init_Pooling() { return S_OK; }
+	virtual HRESULT Clear_Pooling() { return S_OK; }
 public:
 	CTransform* GetTransform() const { return m_pTransformCom; }
+	_int Get_ActiveIndex() const { return m_iActiveIndex; }
+	void Set_AcitveIndex(_int _i) { m_iActiveIndex = _i; }
 protected:
+	_int									m_iActiveIndex{ -1 };
 	map<const _tchar*, CComponent*>			m_mapComponent;
 	_vec3									m_vPosition;
 	_vec3									m_vPrevPosition;
