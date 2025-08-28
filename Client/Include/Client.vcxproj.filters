@@ -241,6 +241,9 @@
     <Filter Include="02. GameObject\07. MapObject\04. Prefab">
       <UniqueIdentifier>{adeded63-d707-4f1d-acab-85f137514f65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\01. Sniper_Gun">
+      <UniqueIdentifier>{b823a077-0904-4df6-afb3-5ad1bba06486}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -453,13 +456,16 @@
     <ClInclude Include="..\Header\CTutorialUI.h">
       <Filter>02. GameObject\06. UI\TutorialUI</Filter>
     </ClInclude>
-    <ClInclude Include="CWeaponUI_Manager.h">
-      <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CPrefab.h">
       <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayerUI_Manager.h">
+    <ClInclude Include="..\Header\CSniper_Gun.h">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\01. Sniper_Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeaponUI_Manager.h">
+      <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerUI_Manager.h">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -665,13 +671,16 @@
     <ClCompile Include="..\Code\CTutorialUI.cpp">
       <Filter>02. GameObject\06. UI\TutorialUI</Filter>
     </ClCompile>
-    <ClCompile Include="CWeaponUI_Manager.cpp">
-      <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CPrefab.cpp">
       <Filter>02. GameObject\07. MapObject\04. Prefab</Filter>
     </ClCompile>
-    <ClCompile Include="CPlayerUI_Manager.cpp">
+    <ClCompile Include="..\Code\CSniper_Gun.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\01. Sniper_Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeaponUI_Manager.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\02. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerUI_Manager.cpp">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClCompile>
   </ItemGroup>

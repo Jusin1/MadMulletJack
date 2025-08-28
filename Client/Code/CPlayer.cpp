@@ -18,7 +18,6 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
-#include "CMapfactory.h"
 
 #include "CMainWeapon.h"
 
@@ -84,10 +83,29 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State(OPENING);
 	Change_Move(PMV_NORMAL);
 
+	// terrain위에 있도록 함
 	m_bIsFixY = false;
 	Set_OnTerrain(1);
 
-	m_iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+	// test 용으로 scene 별로 나누는데
+	// 실제로는 collision 같은걸 만들어야 하지 않을까..
+	switch (CMapFactory::GetInstance()->GetTargetSceneIndex())
+	{
+	case SCENE_DEV:
+
+	case SCENE_STAGE_1:
+	case SCENE_STAGE_2:
+		m_bIsZoomStage = false;
+		break;
+
+	case SCENE_TUTORIAL:
+	case SCENE_SNIPE:
+	case SCENE_BOSS:
+	case SCENE_CAR:
+		m_bIsZoomStage = true;
+		Change_Weapon(WP_SNIPER);
+		break;
+	}
 
 	return S_OK;
 }
@@ -129,9 +147,6 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 		NormalLateUpdate(fTimeDelta);
 	}
 		
-
-	
-
 	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -199,6 +214,8 @@ _int CPlayer::NormalUpdate(const _float& fTimeDelta)
 _int CPlayer::ZoomUpdate(const _float& fTimeDelta)
 {
 	StateUpdateZoom(m_tPlayerInfo.ePlayerState, fTimeDelta);
+
+	return NO_EVENT;
 }
 
 void CPlayer::NormalLateUpdate(const _float& fTimeDelta)
@@ -221,6 +238,9 @@ void CPlayer::ZoomLateUpdate(const _float& fTimeDelta)
 {
 	// jump를 하거나 terrain을 타거나
 	Set_OnTerrain(fTimeDelta);
+
+	// 다른 객체가 this 객체의 pos를 쓰려면 update를 해줘야함
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 
 	// 콜라이더 set
 	Set_ColliderZoom(fTimeDelta);
@@ -248,6 +268,9 @@ void CPlayer::StateNormalSet()
 
 	m_pPlayerUI->Set_Active(true);
 	m_pPlayerUI->Set_RenderOn(true);
+
+	m_pWeaponUI->Set_Active(true);
+	m_pWeaponUI->Set_RenderOn(true);
 }
 
 void CPlayer::StateZoomSet()
@@ -270,8 +293,11 @@ void CPlayer::StateZoomSet()
 	m_pHpBarUI->Set_Active(true);
 	m_pHpBarUI->Set_RenderOn(true);
 
-	m_pPlayerUI->Set_Active(true);
-	m_pPlayerUI->Set_RenderOn(true);
+	m_pWeaponUI->Set_Active(true);
+	m_pWeaponUI->Set_RenderOn(true);
+
+	m_pPlayerUI->Set_Active(false);
+	m_pPlayerUI->Set_RenderOn(false);
 }
 
 void CPlayer::Set_State_Normal()
@@ -315,17 +341,17 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 
 void CPlayer::CountTimeZoom(const _float& fTimeDelta)
 {
-	//  attack cool 타임 전해줌
-	if (m_fAttackCoolTime != 0)
-	{
-		m_bIsAttack = false;
-		m_fAttackCoolTime -= fTimeDelta;
-		if (m_fAttackCoolTime <= 0.f)
-		{
-			m_fAttackCoolTime = 0.f;
-			m_bIsAttack = true;
-		}
-	}
+	////  attack cool 타임 전해줌
+	//if (m_fAttackCoolTime != 0)
+	//{
+	//	m_bIsAttack = false;
+	//	m_fAttackCoolTime -= fTimeDelta;
+	//	if (m_fAttackCoolTime <= 0.f)
+	//	{
+	//		m_fAttackCoolTime = 0.f;
+	//		m_bIsAttack = true;
+	//	}
+	//}
 
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
@@ -355,7 +381,12 @@ void CPlayer::Change_State(PLAYERSTATE _eState)
 	m_tPlayerInfo.ePlayerState = _eState;
 
 	// 새로은 state 시작
-	StateNormalSet(); // 전체적으로 적용하는 setting
+	if (m_bIsZoomStage)
+	{
+		StateZoomSet();
+	}
+	else
+		StateNormalSet(); // 전체적으로 적용하는 setting
 	StateBegin(m_tPlayerInfo.ePlayerState); // 바꾸는 state begin 
 }
 
@@ -383,6 +414,9 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 	case ZOOM:
 		ZOOM_Begin(); break;
 
+	case RELOAD:
+		RELOAD_Begin(); break;
+
 	case DOPING:
 		DOPING_Begin();break;
 
@@ -398,6 +432,12 @@ void CPlayer::StateBegin(PLAYERSTATE _e)
 
 	case ATTEND:
 		ATTEND_Begin(); break;
+
+	case ATTACK_ZOOM:
+		ATTACK_ZOOM_Begin(); break;
+
+	case ZOOMOUT:
+		ZOOMOUT_Begin(); break;
 	}
 
 	// 변경된 player info 전달
@@ -443,6 +483,12 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 
 	case ATTEND:
 		ATTEND_End(); break;
+
+	case ATTACK_ZOOM:
+		ATTACK_ZOOM_End(); break;
+
+	case ZOOMOUT:
+		ZOOMOUT_End(); break;
 	}
 }
 
@@ -525,6 +571,12 @@ void CPlayer::StateUpdateZoom(PLAYERSTATE _e, const _float& fTimeDelta)
 
 	case ATTEND:
 		ATTEND_On(fTimeDelta); break;
+
+	case ATTACK_ZOOM:
+		ATTACK_ZOOM_On(fTimeDelta); break;
+
+	case ZOOMOUT:
+		ZOOMOUT_On(fTimeDelta); break;
 	}
 
 	if (m_bIsCountHp)
@@ -604,6 +656,8 @@ void CPlayer::ATTACK_Begin()
 {
 	if(!m_bIsZoomStage)
 		m_bIsKeyInput = true;
+
+	m_bIsAttack = false;
 }
 
 void CPlayer::ATTACK_On(const _float& fTimeDelta)
@@ -636,6 +690,9 @@ void CPlayer::ATTACK_End()
 	case WP_KATANA:
 		break;
 	case WP_SNIPER:
+		m_fAttackCoolTime =
+			dynamic_cast<CMainWeapon*>(m_pWeaponUI->				// 내 weapon ui의 
+				Find_Child_ByTag(TEXT("SniperUI")))->Get_CoolTime();	// 무기의 cooltime을 가져와라
 		break;
 	}
 }
@@ -770,6 +827,7 @@ void CPlayer::OPENING_Begin()
 	case WP_KATANA:
 		break;
 	case WP_SNIPER:
+		m_fStateTime = 1.65f;
 		break;
 	}
 }
@@ -813,6 +871,7 @@ void CPlayer::Clear_Begin()
 
 void CPlayer::ATTEND_Begin()
 {
+	m_bIsAttack = false;
 
 }
 
@@ -823,6 +882,44 @@ void CPlayer::ATTEND_On(const _float& fTimeDelta)
 }
 
 void CPlayer::ATTEND_End()
+{
+}
+
+void CPlayer::ATTACK_ZOOM_Begin()
+{
+	// sniper는 텍스처 유지라서
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
+		m_fStateTime = 1.f;
+}
+
+void CPlayer::ATTACK_ZOOM_On(const _float& fTimeDelta)
+{
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER &&
+		StateTime_IsEnd(fTimeDelta))
+	{
+		Change_State(ATTEND);
+		return;
+	}
+
+	else if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Change_State(ATTEND);
+}
+
+void CPlayer::ATTACK_ZOOM_End()
+{
+}
+
+void CPlayer::ZOOMOUT_Begin()
+{
+}
+
+void CPlayer::ZOOMOUT_On(const _float& fTimeDelta)
+{
+	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
+		Change_State(IDLE);
+}
+
+void CPlayer::ZOOMOUT_End()
 {
 }
 
@@ -940,7 +1037,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
-		Change_State(DOPING);
+		Change_Weapon2(WP_DOPING);
 
 	if (KEY_BUTTON_DOWN(DIK_C))
 		Change_Weapon2(WP_KICK);
@@ -951,6 +1048,13 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_NON);
 	if (KEY_BUTTON_DOWN(DIK_X))
 		Change_Weapon(WP_PISTOL);
+
+	if (KEY_BUTTON_DOWN(DIK_B))
+	{
+		Change_Weapon(WP_SNIPER);
+
+		m_bIsZoomStage = !m_bIsZoomStage;
+	}
 }
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
@@ -963,16 +1067,34 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 		if (m_tPlayerInfo.ePlayerState == IDLE)
 			Change_State(ZOOMING);
 
-		else
-			Change_State(IDLE);
+		else if(m_tPlayerInfo.ePlayerState == ZOOM)
+			Change_State(ZOOMOUT);
 	}
 	
 
 	// 좌 클릭시 : attack
-	if (m_bIsAttack && IS_LBUTTON_DOWN)
+	if (IS_LBUTTON_DOWN)
 	{
-		Change_State(ATTACK);
+		if (m_bIsAttack)
+		{
+			if (m_tPlayerInfo.ePlayerState == ZOOM)
+				Change_State(ATTACK_ZOOM);
+
+			else
+				Change_State(ATTACK);
+		}
 	}
+
+	// debug
+	if (KEY_BUTTON_DOWN(DIK_B))
+	{
+		Change_Weapon(WP_PISTOL);
+
+		m_bIsZoomStage = !m_bIsZoomStage;
+	}
+
+	if (KEY_BUTTON_DOWN(DIK_O))
+		Change_State(OPENING);
 }
 
 ////////////////// move func
@@ -1091,7 +1213,7 @@ void CPlayer::Move_Dash(const _float& fTimeDelta)
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
 	// speed 깎음 (like 마찰력)
-	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 6.f;
+	m_pTransformCom->GetTransformInfo().fSpeed -= fTimeDelta * 4.f;
 }
 
 void CPlayer::Move_Slide(const _float& fTimeDelta)
@@ -1171,6 +1293,9 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 	m_tPrePlayerInfo.eWeapon2 = m_tPlayerInfo.eWeapon2; // 전 state 저장
 	m_tPlayerInfo.eWeapon2 = _eWeapon2; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
+
+	if (m_tPlayerInfo.eWeapon2 == WP_DOPING)
+		Change_State(DOPING);
 
 	// 충돌때 생성
 	// change 후 destroy
@@ -1285,6 +1410,16 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	
 	Set_Collider_With_SpecialTile();
 	//Set_Collider_With_Item();
+}
+
+void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
+{
+	// 구 충돌
+	m_pColiderSphere->Update_ColliderSphere();
+
+	Set_Collider_With_Clear();
+	Set_Collider_With_Wall();
+	Set_Collider_With_Door();
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -1575,6 +1710,7 @@ const TCHAR* CPlayer::StateToString(PLAYERSTATE eState)
 	case OPENING: return TEXT("State: OPENING\n");
 	case PLAYERDEAD: return TEXT("State: PLAYERDEAD\n");
 	case CLEAR: return TEXT("State: CLEAR\n");
+	case ATTEND: return TEXT("State: ATTEND\n");
 	default: return TEXT("State: UNKNOWN\n");
 	}
 }

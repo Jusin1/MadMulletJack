@@ -46,7 +46,6 @@ _int CUI::Update_GameObject(const _float& fTimeDelta)
 void CUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-
 }
 
 void CUI::Render_GameObject()

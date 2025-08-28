@@ -39,7 +39,6 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 _int CWeapon::Update_GameObject(const _float& fTimeDelta)
 {
-
 	return NO_EVENT;
 }
 

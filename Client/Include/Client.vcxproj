@@ -186,7 +186,9 @@
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Suit.h" />
+    <ClInclude Include="..\Header\CPlayerUI_Manager.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
+    <ClInclude Include="..\Header\CSniper_Gun.h" />
     <ClInclude Include="..\Header\CTextEffectUI.h" />
     <ClInclude Include="..\Header\CTile_Bottle.h" />
     <ClInclude Include="..\Header\CTile_NormalDoor.h" />
@@ -221,9 +223,8 @@
     <ClInclude Include="..\Header\CUIBase.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
+    <ClInclude Include="..\Header\CWeaponUI_Manager.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="CPlayerUI_Manager.h" />
-    <ClInclude Include="CWeaponUI_Manager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -262,7 +263,9 @@
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
+    <ClCompile Include="..\Code\CPlayerUI_Manager.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
+    <ClCompile Include="..\Code\CSniper_Gun.cpp" />
     <ClCompile Include="..\Code\CTextEffectUI.cpp" />
     <ClCompile Include="..\Code\CTile_Bottle.cpp" />
     <ClCompile Include="..\Code\CTile_NormalDoor.cpp" />
@@ -297,10 +300,9 @@
     <ClCompile Include="..\Code\CUIBase.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
+    <ClCompile Include="..\Code\CWeaponUI_Manager.cpp" />
     <ClCompile Include="..\Header\Client_Global.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="CPlayerUI_Manager.cpp" />
-    <ClCompile Include="CWeaponUI_Manager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

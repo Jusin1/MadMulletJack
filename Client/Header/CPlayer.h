@@ -106,6 +106,10 @@ private:
 	void ATTACK_ZOOM_On(const _float& fTimeDelta);
 	void ATTACK_ZOOM_End();
 
+	void ZOOMOUT_Begin();
+	void ZOOMOUT_On(const _float& fTimeDelta);
+	void ZOOMOUT_End();
+
 
 	void KeyInput(const _float& fTimeDelta);	// 모든 keyinput 여기서 처리
 	void KeyInputZoom(const _float& fTimeDelta); // zoom

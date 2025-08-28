@@ -69,6 +69,12 @@ _int CGun::Update_GameObject(const _float& fTimeDelta)
 		CUIManager::GetInstance()->DestroyReloadUI();
 	}
 
+	if (m_tInfo.ePlayerState == CLEAR)
+	{
+		// reloa ui »èÁ¦
+		CUIManager::GetInstance()->DestroyReloadUI();
+	}
+
 	return NO_EVENT;
 }
 

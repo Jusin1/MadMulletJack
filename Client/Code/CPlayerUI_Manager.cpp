@@ -62,7 +62,6 @@ void CPlayerUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 		// 바뀐 info를 기준으로 onoff 결정
 		PlayerUI_OnOff();
 	}
-
 }
 
 void CPlayerUI_Manager::Render_GameObject()
@@ -82,6 +81,7 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 	// handR은 거의 켜주기 때문에 active true
 	if (FAILED(TagUI_SetActive(L"HandRUI", true)))
 		return E_FAIL;
+
 
 	// state에 따라 onoff
 	switch (m_tInfo.ePlayerState)
@@ -175,7 +175,7 @@ HRESULT CPlayerUI_Manager::Set_PlayerUI()
 	_uint iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
 	// foot UI 생성
-	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", SCENE_STATIC, L"UI_Layer"));
+	CPlayer_Foot* pFootUI = dynamic_cast<CPlayer_Foot*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_PlayerFootUI", iSceneIndex, L"UI_Layer"));
 	if (pFootUI)
 	{
 		pFootUI->Set_ObjTag(L"FootUI");

@@ -22,6 +22,7 @@
 
 // Weapon UI
 #include "CPistol_Gun.h"
+#include "CSniper_Gun.h"
 #include "CKnife_SubW.h"
 #include "CWeaponUI_Manager.h"
 
@@ -734,6 +735,36 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
 		return E_FAIL;
 
+	// Sniper Gun
+	// 이거는 나중에 scene_sniper 에서만 load
+	// Sniper - Idle
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/idle/sniperG_Idle%03d.png", 3))))
+		return E_FAIL;
+	// Sniper - Op
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Op",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/opening/SG_Op%03d.png", 30))))
+		return E_FAIL;
+	// Sniper - attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Attack",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/attack/Sniper_Att%03d.png", 2))))
+		return E_FAIL;
+	// Sniper - attack end
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_AttEnd",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/reload/SG_Reload%03d.png", 14))))
+		return E_FAIL;
+	// Sniper - zooming
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zooming",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/zooming/sniperG_Zooming%03d.png", 6))))
+		return E_FAIL;
+	// Sniper - zoom
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Zoom",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/zooming/sniperG_Zoom.png", 1))))
+		return E_FAIL;
+	// Sniper - zoom attack
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_ZoomAtt",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/zoomAtt/sniperG_ZoomAtt%03d.png", 7))))
+		return E_FAIL;
 
 #pragma endregion Weapon texture
 
@@ -1170,6 +1201,11 @@ HRESULT CLoader::Loading_UI()
 	// Pistol
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunPistolUI",
 		CPistol_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Sniper
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunSniperUI",
+		CSniper_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// SubWeapon UI

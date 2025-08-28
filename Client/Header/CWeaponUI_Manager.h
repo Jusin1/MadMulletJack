@@ -25,6 +25,14 @@ private:
 	void	Weapon2_Off();
 	void	TagUI_SetActive(const _tchar* pTag, _bool _bActive);
 
+	// weapon create func
+	HRESULT Create_Pistol(_uint _iSceneIdx);
+	HRESULT Create_Sniper(_uint _iSceneIdx);
+	
+	// weapon create func
+	HRESULT Create_Knife(_uint _iSceneIdx);
+
+
 	//getter setter func
 public:
 	WEAPON Get_Weapon() const { return m_eWeapon; }

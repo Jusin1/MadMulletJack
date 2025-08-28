@@ -6,6 +6,8 @@
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
 #include "CPlayerUI_Manager.h"
+#include "CSniper_Gun.h"
+#include "CMapFactory.h"
 
 CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)
@@ -37,6 +39,7 @@ HRESULT CWeaponUI_Manager::Initialize(void* pArg)
 
 	if(FAILED(Set_WeaponUI()))
 		return E_FAIL;
+
 	if (FAILED(Set_Weapon2UI()))
 		return E_FAIL;
 
@@ -55,7 +58,7 @@ _int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 
 void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	__super::LateUpdate_GameObject(fTimeDelta);
+	
 
 	PlayerStateInfo tPlayerInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
 
@@ -78,6 +81,8 @@ void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 		// 무기2 off
 		Weapon2_Off();
 	}
+
+	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CWeaponUI_Manager::Render_GameObject()
@@ -107,6 +112,7 @@ void CWeaponUI_Manager::Weapon_Change()
 		break;
 
 	case WP_SNIPER:
+		TagUI_SetActive(L"SniperUI", false);
 		break;
 	}
 
@@ -133,6 +139,7 @@ void CWeaponUI_Manager::Weapon_Change()
 		break;
 
 	case WP_SNIPER:
+		TagUI_SetActive(L"SniperUI", true);
 		break;
 	}
 }
@@ -180,37 +187,124 @@ void CWeaponUI_Manager::Weapon2_Off()
 
 void CWeaponUI_Manager::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
 {
-	Find_Child_ByTag(pTag)->Set_Active(_bActive);
+	CUIBase* pWeapon = Find_Child_ByTag(pTag);
+	if (pWeapon)
+	{
+		pWeapon ->Set_Active(_bActive);
+	}
 }
 
-HRESULT CWeaponUI_Manager::Set_WeaponUI()
+HRESULT CWeaponUI_Manager::Create_Pistol(_uint _iSceneIdx)
 {
-	_uint iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
-
 	// pistol 생성 및 list에 넣기
-	CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", iSceneIndex, L"UI_Layer"));
+	CPistol_Gun* pPistolUI = dynamic_cast<CPistol_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunPistolUI", _iSceneIdx, L"UI_Layer"));
 	if (pPistolUI)
 	{
 		pPistolUI->Set_ObjTag(L"PistolUI");
 		pPistolUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
 		Add_Child(pPistolUI); // 루트 UI에 등록
+
+		return S_OK;
 	}
+
+	return E_FAIL;
+}
+
+HRESULT CWeaponUI_Manager::Create_Sniper(_uint _iSceneIdx)
+{
+	// pistol 생성 및 list에 넣기
+	CSniper_Gun* pSniperUI = dynamic_cast<CSniper_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunSniperUI", _iSceneIdx, L"UI_Layer"));
+	if (pSniperUI)
+	{
+		pSniperUI->Set_ObjTag(L"SniperUI");
+		pSniperUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+		Add_Child(pSniperUI); // 루트 UI에 등록
+
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CWeaponUI_Manager::Create_Knife(_uint _iSceneIdx)
+{
+	// knife 생성 및 list에 넣기
+	CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", _iSceneIdx, L"UI_Layer"));
+	if (pKnifeUI)
+	{
+		pKnifeUI->Set_ObjTag(L"KnifeUI");
+		pKnifeUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+		Add_Child(pKnifeUI); // 루트 UI에 등록
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CWeaponUI_Manager::Set_WeaponUI()
+{
+	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
+	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
+
+	//switch (iTargetScene)
+	//{
+	//case SCENE_DEV:
+	//case SCENE_TUTORIAL:
+	//case SCENE_STAGE_1:
+	//case SCENE_STAGE_2:
+	//	if (FAILED(Create_Pistol(iCloneScene)))
+	//		return E_FAIL;
+
+	//	break;
+
+	//case SCENE_SNIPE:
+	//	if (FAILED(Create_Sniper(iCloneScene)))
+	//		return E_FAIL;
+	//	break;
+
+	//case SCENE_BOSS:
+	//case SCENE_CAR:
+	//	break;
+	//}
+
+	// test
+	Create_Pistol(iCloneScene);
+	Create_Sniper(iCloneScene);
 
 	return S_OK;
 }
 
 HRESULT CWeaponUI_Manager::Set_Weapon2UI()
 {
-	_uint iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
+	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
+	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
 
-	// knife 생성 및 list에 넣기
-	CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", iSceneIndex, L"UI_Layer"));
-	if (pKnifeUI)
+	switch (iTargetScene)
 	{
-		pKnifeUI->Set_ObjTag(L"KnifeUI");
-		pKnifeUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
-		Add_Child(pKnifeUI); // 루트 UI에 등록
+	case SCENE_DEV:
+	case SCENE_TUTORIAL:
+	case SCENE_STAGE_1:
+	case SCENE_STAGE_2:
+
+		if (FAILED(Create_Knife(iCloneScene)))
+			return E_FAIL;
+
+		break;
+
+	case SCENE_SNIPE:
+	case SCENE_BOSS:
+	case SCENE_CAR:
+		break;
 	}
+
+	//CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", iSceneIndex, L"UI_Layer"));
+	//if (pKnifeUI)
+	//{
+	//	pKnifeUI->Set_ObjTag(L"KnifeUI");
+	//	pKnifeUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+	//	Add_Child(pKnifeUI); // 루트 UI에 등록
+	//}
+	
 
 	return S_OK;
 }

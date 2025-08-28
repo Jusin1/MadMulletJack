@@ -3,6 +3,7 @@
 #include "CTimerMgr.h"
 #include "CManagement.h"
 #include "CObjectManager.h"
+#include "CMapFactory.h"
 
 CPistol_Gun::CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -62,11 +63,11 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
 		// scene을 받아옴
-		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
+		_uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
 
 		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
 		_uint iPlayerUI_Idx = 0;
-		switch (eCurScene)
+		switch (iCurScene)
 		{
 		case SCENE_DEV:
 			iPlayerUI_Idx = 1;
@@ -79,7 +80,7 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-			->Find_Object(eCurScene, L"UI_Layer", iPlayerUI_Idx))
+			->Find_Object(iCurScene, L"UI_Layer", iPlayerUI_Idx))
 			->Find_Child_ByTag(L"HandRUI");
 
 		// handR 위치를 기준으로 pos 갱신 (offset 적용)
@@ -121,7 +122,7 @@ void CPistol_Gun::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	__super::Render_GameObject();
+	CUI::Render_GameObject();
 
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -244,8 +245,6 @@ HRESULT CPistol_Gun::Set_Texture() {
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
 				return E_FAIL;
 			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f );
-
-			Set_New_TransInfo(500.f, 0.f);
 			
 			break;
 
