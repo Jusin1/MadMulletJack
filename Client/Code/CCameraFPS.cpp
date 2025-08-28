@@ -50,19 +50,19 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
 {
     CCamera::Update_GameObject(fTimeDelta);
     
-    // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
-    Engine::CTransform* pPlayerTransformCom =
-        dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
-    if (pPlayerTransformCom == nullptr)
-        return NO_EVENT;
-
-    _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-    //vPlayerPos.y += m_fOffset;
-    m_pTransformCom->Set_Info(INFO_POS, vPlayerPos );
+    // 플레이어의 위치를 가져와서 셋팅
+    Set_PlayerPos();
 
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;
+
+    // transform info 수정
+    if (m_pTransformCom)
+    {
+        CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
+        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 10.f, tMyTransInfo.fRotationSpeed });
+    }
+
     return NO_EVENT;
 }
 
@@ -75,6 +75,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
 
     // 마우스로 바라보는 방향 조절
     // fix가 아니고 clear가 아닐때
+    // 카메라 월드행렬 완성
     if (false == m_bFix &&
         CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR)
     {
@@ -82,6 +83,31 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
         Mouse_Fix();
     }
 
+    // zoom 상태일때
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM ||
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
+    {
+        //_matrix   matCamWorld;
+        //m_pTransformCom->Get_World(&matCamWorld);
+
+        //_vec3 vLook;
+        //vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        //m_pTransformCom->Move_PosDir(20.f, vLook);
+
+   /*     _matrix	matCamWorld;
+        D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+
+
+  
+       _vec3	vLook;
+       memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
+
+            _vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook)  * 5.f;
+
+            m_vEye += vLength;
+            m_vAt += vLength;
+        }*/
+    }
 }
 
 void CCameraFPS::Mouse_Move()
@@ -105,7 +131,6 @@ void CCameraFPS::Mouse_Move()
         D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouseMove / 10.f));
 
         matCamWorld = matCamWorld * matRot;
-
     }
 
     // 플레이어에게 y축 회전 넘겨줌
@@ -165,7 +190,7 @@ HRESULT CCameraFPS::Set_PlayerPos()
         return E_FAIL;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-    vPlayerPos.z -= 10.f; // z값  살짝 뒤로   debug
+
     m_pTransformCom->Set_Info(INFO_POS, vPlayerPos);
 
     return S_OK;
