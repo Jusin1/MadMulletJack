@@ -41,7 +41,7 @@ HRESULT CKatana::Initialize(void* pArg)
 	// 파워 / 정확도 / 속도
 	m_iPower = 3;
 	m_iPrecision = 10;
-	m_iSpeed = 5;
+	m_fCoolTime = 0.1f;
 	// 최대 불렛
 	m_iMaxBullet = 3; //origin : 9 / debug 3
 	m_iBullet = m_iMaxBullet;

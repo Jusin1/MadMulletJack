@@ -1040,7 +1040,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon2(WP_DOPING);
 	if (KEY_BUTTON_DOWN(DIK_T))
 		Change_Weapon(WEAPON::WP_KATANA);
-}
+
 
 	if (KEY_BUTTON_DOWN(DIK_C))
 		Change_Weapon2(WP_KICK);

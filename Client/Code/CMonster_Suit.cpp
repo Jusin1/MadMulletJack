@@ -138,69 +138,69 @@ void CMonster_Suit::Set_Collider()
 
             if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_INSTANT)
                 SetState(INSKILL);
-                m_bKillAfterHit = false;
-            }
-        }
-
-        if (CColiderManager::GetInstance()->CollisionGroup(
-            CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE, nullptr))
-        {
-            if (m_eMonState != HIT_ELECTRIC) SetState(HIT_ELECTRIC);
-        }
-
-        if (CColiderManager::GetInstance()->CollisionGroup(
-            CColiderManager::COLLISION_TILE_VENT, this, CColiderManager::COLLISION_SPHERE, nullptr))
-        {
-            if (m_eMonState != HIT_BENT) SetState(HIT_BENT);
-        }
-        
-        CGameObject* pDoor = nullptr;
-        if (CColiderManager::GetInstance()->CollisionGroupSphereTagWho(
-            CColiderManager::COLLISION_DOOR,
-            this,
-            L"Com_Collider_Sphere",        // 몬스터 구면
-            L"Com_Collider_Sphere_Open",   // 문(열림) 구면
-            nullptr,
-            pDoor))
-        {
-            auto sphereWorldCenter = [](CColider_Sphere* s, CTransform* tr) -> _vec3 {
-                if (!s || !tr) return _vec3(0, 0, 0);
-                const auto d = s->Get_SphereDesc(); // {fRadius, vOffset}
-                return tr->Get_Info(INFO_POS)
-                    + tr->Get_Info(INFO_RIGHT) * d.vOffset.x
-                    + tr->Get_Info(INFO_UP) * d.vOffset.y
-                    + tr->Get_Info(INFO_LOOK) * d.vOffset.z;
-                };
-
-            // 내/문(열림) 스피어 & 트랜스폼
-            auto* myS = m_pColiderCom;
-            auto* myTr = m_pTransformCom;
-            auto* openS = pDoor ? dynamic_cast<CColider_Sphere*>(pDoor->Find_Component(L"Com_Collider_Sphere_Open")) : nullptr;
-            auto* doorTr = pDoor ? pDoor->GetTransform() : nullptr;
-
-            // 중심점
-            const _vec3 myC = sphereWorldCenter(myS, myTr);
-            const _vec3 openC = sphereWorldCenter(openS, doorTr);
-
-            // 밀릴 방향: 문 open 중심 -> 몬스터 중심 (수평)
-            _vec3 dir = myC - openC; dir.y = 0.f;
-            if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // 완전 겹침 대비
-                dir = -myTr->Get_Info(INFO_LOOK); dir.y = 0.f;
-            }
-            D3DXVec3Normalize(&dir, &dir);
-
-            // LOOK을 '밀릴 방향'으로 맞춰두면, 이후 HIT_DOOR 상태에서 그 방향으로 이동시킬 수 있음
-            const _vec3 myPos = myTr->Get_Info(INFO_POS);
-            myTr->LookAt(myPos + dir);   // 내부에서 Right/Up 재정렬 가정
-
-            // 상태 전환 + 내 구면 비활성(반복 충돌 방지)
-            SetState(HIT_DOOR);
-            if (m_pColiderCom) m_pColiderCom->Set_Active(false);
-            m_bPickable = false;
-
-            return; // 이 프레임은 더 안 건드림
+            m_bKillAfterHit = false;
         }
     }
+
+    if (CColiderManager::GetInstance()->CollisionGroup(
+        CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE, nullptr))
+    {
+        if (m_eMonState != HIT_ELECTRIC) SetState(HIT_ELECTRIC);
+    }
+
+    if (CColiderManager::GetInstance()->CollisionGroup(
+        CColiderManager::COLLISION_TILE_VENT, this, CColiderManager::COLLISION_SPHERE, nullptr))
+    {
+        if (m_eMonState != HIT_BENT) SetState(HIT_BENT);
+    }
+
+    CGameObject* pDoor = nullptr;
+    if (CColiderManager::GetInstance()->CollisionGroupSphereTagWho(
+        CColiderManager::COLLISION_DOOR,
+        this,
+        L"Com_Collider_Sphere",        // 몬스터 구면
+        L"Com_Collider_Sphere_Open",   // 문(열림) 구면
+        nullptr,
+        pDoor))
+    {
+        auto sphereWorldCenter = [](CColider_Sphere* s, CTransform* tr) -> _vec3 {
+            if (!s || !tr) return _vec3(0, 0, 0);
+            const auto d = s->Get_SphereDesc(); // {fRadius, vOffset}
+            return tr->Get_Info(INFO_POS)
+                + tr->Get_Info(INFO_RIGHT) * d.vOffset.x
+                + tr->Get_Info(INFO_UP) * d.vOffset.y
+                + tr->Get_Info(INFO_LOOK) * d.vOffset.z;
+            };
+
+        // 내/문(열림) 스피어 & 트랜스폼
+        auto* myS = m_pColiderCom;
+        auto* myTr = m_pTransformCom;
+        auto* openS = pDoor ? dynamic_cast<CColider_Sphere*>(pDoor->Find_Component(L"Com_Collider_Sphere_Open")) : nullptr;
+        auto* doorTr = pDoor ? pDoor->GetTransform() : nullptr;
+
+        // 중심점
+        const _vec3 myC = sphereWorldCenter(myS, myTr);
+        const _vec3 openC = sphereWorldCenter(openS, doorTr);
+
+        // 밀릴 방향: 문 open 중심 -> 몬스터 중심 (수평)
+        _vec3 dir = myC - openC; dir.y = 0.f;
+        if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // 완전 겹침 대비
+            dir = -myTr->Get_Info(INFO_LOOK); dir.y = 0.f;
+        }
+        D3DXVec3Normalize(&dir, &dir);
+
+        // LOOK을 '밀릴 방향'으로 맞춰두면, 이후 HIT_DOOR 상태에서 그 방향으로 이동시킬 수 있음
+        const _vec3 myPos = myTr->Get_Info(INFO_POS);
+        myTr->LookAt(myPos + dir);   // 내부에서 Right/Up 재정렬 가정
+
+        // 상태 전환 + 내 구면 비활성(반복 충돌 방지)
+        SetState(HIT_DOOR);
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        m_bPickable = false;
+
+        return; // 이 프레임은 더 안 건드림
+    }
+
 
     Set_Collider_With_Wall();
 }
@@ -549,7 +549,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
             SetState(HIT_DOOR);
             m_bKillAfterHit = true;
         } 
-    }
+    
         break;
 
     case JUMP:
@@ -572,8 +572,6 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         m_pTransformCom->Move_Forward(dt * 0.1f);
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
         break;
-
-    default: break;
     }
 }
 

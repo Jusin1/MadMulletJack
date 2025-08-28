@@ -206,20 +206,6 @@ HRESULT CWeaponUI_Manager::Create_Pistol(_uint _iSceneIdx)
 		pPistolUI->Set_ObjTag(L"PistolUI");
 		pPistolUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
 		Add_Child(pPistolUI); // 루트 UI에 등록
-	}
-
-	CKatana* pKatanaUI = dynamic_cast<CKatana*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_KatanaUI", iSceneIndex, L"UI_Layer"));
-	if (pKatanaUI)
-	{
-		pKatanaUI->Set_ObjTag(L"KatanaUI");
-		pKatanaUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
-		Add_Child(pKatanaUI); // 루트 UI에 등록
-	}
-	
-
-	return S_OK;
-}
-
 		return S_OK;
 	}
 
@@ -236,6 +222,20 @@ HRESULT CWeaponUI_Manager::Create_Sniper(_uint _iSceneIdx)
 		pSniperUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
 		Add_Child(pSniperUI); // 루트 UI에 등록
 
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CWeaponUI_Manager::Create_Katana(_uint _iSceneIdx)
+{
+	CKatana* pKatanaUI = dynamic_cast<CKatana*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_KatanaUI", _iSceneIdx, L"UI_Layer"));
+	if (pKatanaUI)
+	{
+		pKatanaUI->Set_ObjTag(L"KatanaUI");
+		pKatanaUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+		Add_Child(pKatanaUI); // 루트 UI에 등록
 		return S_OK;
 	}
 
@@ -286,6 +286,7 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 	// test
 	Create_Pistol(iCloneScene);
 	Create_Sniper(iCloneScene);
+	Create_Katana(iCloneScene);
 
 	return S_OK;
 }
