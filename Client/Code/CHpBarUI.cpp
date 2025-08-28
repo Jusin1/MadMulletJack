@@ -120,6 +120,8 @@ HRESULT CHpBarUI::Set_HpBarUI()
 	// 현재 씬을 받아옴
 	auto iSceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 	_vec3 vLocalOffset;
+
+	// phone
 	CPhone_HpBarUI* pPhoneUI = dynamic_cast<CPhone_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Phone", iSceneIdx, L"UI_Layer"));
 	if (pPhoneUI)
 	{
@@ -130,24 +132,16 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		pPhoneUI->Set_LocalOffset(vLocalOffset);
 	}
 
-	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", iSceneIdx, L"UI_Layer"));
-	if (pManUI)
-	{
-		pManUI->Set_ObjTag(L"ManUI");
-		Add_Child(pManUI); // 루트 UI에 등록
-
-		// offset은 클래스 내부에서
-	}
-
+	//rect
 	if (auto* pRect = dynamic_cast<CBlackGackGround*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_BlackBackground", iSceneIdx, L"UI_Layer"))) {
-		pRect->Set_UISizeAndPos(128.f,98.f,264.f, 638.f);
-		m_fRectY = 98.f;
-		pRect->SetColor(D3DXCOLOR{0.f,1.f,0.f,1.f});
+		pRect->Set_UISizeAndPos(128.f, 95.f, 264.f, 638.f);
+		m_fRectY = 95.f;
+		pRect->SetColor(D3DXCOLOR{ 0.f,1.f,0.f,1.f });
 		pRect->SetAlpha(1.f);
-		pRect->FadeTo(190,0.f,0.2f);
-		
+		pRect->FadeTo(190, 0.f, 0.2f);
+
 		pRect->Set_IsPosFix(false);
 
 		pRect->Set_New_TransInfo(0.f, 7.2f);
@@ -160,6 +154,15 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		pRect->Set_LocalOffset(vLocalOffset);
 	}
 
+	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", iSceneIdx, L"UI_Layer"));
+	if (pManUI)
+	{
+		pManUI->Set_ObjTag(L"ManUI");
+		Add_Child(pManUI); // 루트 UI에 등록
+
+		// offset은 클래스 내부에서
+	}
+
 	if (auto* txt1 = dynamic_cast<CTextUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_TextUI", iSceneIdx, L"UI_Layer"))) {
@@ -170,15 +173,15 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		txt1->SetCentered(true);
 		txt1->SetLetterSpacing(1.f);
 		txt1->SetPosFix(true);
-		txt1->SetRotation(40.f);
+		//txt1->SetRotation(40.f);
 
-		txt1->Set_UISizeAndPos(10.f, 10.f, 100.f, 100.f);
+		txt1->Set_UIPosition(100.f, 100.f, 0.f, 0.f);
 
 
 		txt1->Set_ObjTag(L"Text");
 		Add_Child(txt1);
 
-		vLocalOffset = { 700.f, 500.f,0.f };
+		vLocalOffset = { 30.f, -200.f,0.f };
 		txt1->Set_LocalOffset(vLocalOffset);
 	}
 

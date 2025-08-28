@@ -83,7 +83,7 @@ HRESULT CPhone_HpBarUI::Set_Texture(SCENE _eSCENE)
 	switch (_eSCENE)
 	{
 	case SCENE_DEV:
-	case SCENE_TUTORIAL:
+	//case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:
 	case SCENE_STAGE_3:
@@ -91,6 +91,7 @@ HRESULT CPhone_HpBarUI::Set_Texture(SCENE _eSCENE)
 			return E_FAIL;
 		break;
 
+	case SCENE_TUTORIAL:
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
 	case SCENE_CAR:
