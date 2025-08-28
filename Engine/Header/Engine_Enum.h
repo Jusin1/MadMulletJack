@@ -100,5 +100,23 @@ namespace Engine
 		NONE
 	};
 	constexpr size_t g_PrefabTypeCount{ static_cast<size_t>(PrefabType::NONE) };
+
+	enum class EffectMode : unsigned int
+	{
+		LINEAR = 0,
+		CURVE_NOISE,
+		GRAVITY_ARC,
+		SPIRAL,
+		NONE
+	};
+	constexpr size_t g_EffectModeCount{ static_cast<size_t>(EffectMode::NONE) };
+
+	enum class BlendMode : unsigned int
+	{
+		ADDITIVE,
+		ALPHA,
+		NONE
+	};
+	constexpr size_t g_BlendModeCount{ static_cast<size_t>(BlendMode::NONE) };
 }
 #endif // Engine_Enum_h__

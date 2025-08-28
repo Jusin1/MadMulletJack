@@ -32,7 +32,6 @@
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
 
-
 // Effect UI
 #include "CEffectUI.h"
 
@@ -62,6 +61,9 @@
 
 // ÃÑ¾Ë
 #include "CBullet.h"
+
+// ÀÌÆåÆ®
+#include "CEffect_Pixel.h"
 
 // MapObject
 #include "CGridPanel.h"
@@ -453,6 +455,10 @@ HRESULT CLoader::Loading_Dev()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_DefaultPrefab",
 		CPrefab::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_PixelEffect",
+		CEffect_Pixel::Create(m_pGraphicDev))))
 		return E_FAIL;
 #pragma endregion
 

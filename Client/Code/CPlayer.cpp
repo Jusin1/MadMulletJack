@@ -21,6 +21,11 @@
 #include "CUIManager.h"
 #include "CMainWeapon.h"
 
+//test bj 0829
+#include "CEffect_Pixel.h"
+
+
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL , WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
@@ -1071,6 +1076,19 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_SNIPER);
 
 		m_bIsZoomStage = !m_bIsZoomStage;
+	}
+
+	//test bj 0829
+	if (KEY_BUTTON_DOWN(DIK_K))
+	{
+		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
+			CManagement::GetInstance()->Get_CurrentSceneIdx(),
+			L"Effect_Layer",
+			nullptr);
+		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
+		pEffect->SetTargetPosition(_vec3{ 2.f, 1.f, 5.f });
+		pEffect->SetOptions(CEffect_Pixel::Get_Preset_Blood());
+		pEffect->Trigger();
 	}
 }
 
