@@ -22,6 +22,7 @@ typedef struct tagPanelEntry
 	CVIBuffer_GridPanelBase *pBuffer;
 	_matrix matWorldInv;
 	_matrix matWorld;
+	D3DXPLANE planeWorld;
 } PANELENTRY;
 
 class ENGINE_DLL CVIBuffer_GridPanelBase : public CVIBuffer

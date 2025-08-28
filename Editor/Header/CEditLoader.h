@@ -18,7 +18,6 @@ public:
 	HRESULT			Loading_Tutorial();
 	HRESULT			Loading_Stage_1();
 	HRESULT			Loading_Stage_2();
-	HRESULT			Loading_Stage_3();
 	HRESULT			Loading_Snipe();
 	HRESULT			Loading_Rooftop();
 	HRESULT			Loading_Road();

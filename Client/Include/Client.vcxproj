@@ -192,6 +192,10 @@
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPlayerUI_Manager.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
+    <ClInclude Include="..\Header\CStage_2.h" />
+    <ClInclude Include="..\Header\CStage_Boss.h" />
+    <ClInclude Include="..\Header\CStage_Car.h" />
+    <ClInclude Include="..\Header\CStage_Snipe.h" />
     <ClInclude Include="..\Header\CSniper_Gun.h" />
     <ClInclude Include="..\Header\CTextEffectUI.h" />
     <ClInclude Include="..\Header\CTile_Bottle.h" />
@@ -273,6 +277,10 @@
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPlayerUI_Manager.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
+    <ClCompile Include="..\Code\CStage_2.cpp" />
+    <ClCompile Include="..\Code\CStage_Boss.cpp" />
+    <ClCompile Include="..\Code\CStage_Car.cpp" />
+    <ClCompile Include="..\Code\CStage_Snipe.cpp" />
     <ClCompile Include="..\Code\CSniper_Gun.cpp" />
     <ClCompile Include="..\Code\CTextEffectUI.cpp" />
     <ClCompile Include="..\Code\CTile_Bottle.cpp" />

@@ -86,7 +86,6 @@ HRESULT CPhone_HpBarUI::Set_Texture(SCENE _eSCENE)
 	//case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:
-	case SCENE_STAGE_3:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_HpBar_PhoneN"))))
 			return E_FAIL;
 		break;

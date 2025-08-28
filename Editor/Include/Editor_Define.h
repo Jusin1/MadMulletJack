@@ -46,7 +46,6 @@ enum class MapEditorSceneType : unsigned int
 	TUTORIAL,
 	STAGE_1,
 	STAGE_2,
-	STAGE_3,
 	SNIPE,
 	ROOFTOP,
 	ROAD,

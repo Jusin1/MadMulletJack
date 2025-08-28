@@ -85,7 +85,8 @@ _bool CGrounding::GetHeight(const vector<PANELENTRY> *pPanelEntries, _float fX, 
 		}
 		else
 		{
-			_vec3 src{ fX, (*pPanelEntries)[_i].fY, fZ };
+			_float fY = Y_OnPanelPlane((*pPanelEntries)[_i], fX, fZ);
+			_vec3 src{ fX, fY, fZ };
 			::D3DXVec3TransformCoord(&src, &src, &(*pPanelEntries)[_i].matWorldInv);
 			src.y = Compute_Height((*pPanelEntries)[_i], src.x, src.z);
 			::D3DXVec3TransformCoord(&src, &src, &(*pPanelEntries)[_i].matWorld);
@@ -161,8 +162,8 @@ _bool CGrounding::IsInside_Slope(const PANELENTRY &tPanelEntry, _float fX, _floa
 	_float fLocalMaxX = (pBuffer->GetData()->dwCountX - 1) * pBuffer->GetData()->dwInterval;
 	_float fLocalMaxZ = (pBuffer->GetData()->dwCountZ - 1) * pBuffer->GetData()->dwInterval;
 
-	// 미리 캐싱해둔 역행렬을 통해서 계산
-	_vec3 srcLocal{ fX, tPanelEntry.fY, fZ };
+	_float fY = Y_OnPanelPlane(tPanelEntry, fX, fZ);
+	_vec3 srcLocal{ fX, fY, fZ };
 	::D3DXVec3TransformCoord(&srcLocal, &srcLocal, &tPanelEntry.matWorldInv);
 
 	return ((srcLocal.x >= -m_fEpsilon) && (srcLocal.x < fLocalMaxX + m_fEpsilon)) &&
@@ -175,36 +176,60 @@ _float CGrounding::Compute_Height(const PANELENTRY &tPanelEntry, _float fX, _flo
 	_ulong dwCntZ = tPanelEntry.pBuffer->GetData()->dwCountZ;
 	_vec3 *pTerrainVtxPos = tPanelEntry.pBuffer->GetVerticesData();
 
-	int indexX = int(fX * tPanelEntry.fInverseItv);
-	int indexZ = int(fZ * tPanelEntry.fInverseItv);
+	int indexX = (int)floorf(fX * tPanelEntry.fInverseItv);
+	int indexZ = (int)floorf(fZ * tPanelEntry.fInverseItv);
 
 	// 배열 접근 오버런 방지
 	indexX = (std::max)(0, (std::min)(indexX, (int)dwCntX - 2));
 	indexZ = (std::max)(0, (std::min)(indexZ, (int)dwCntZ - 2));
-	
+
 	_ulong	dwIndex = indexZ * dwCntX + indexX;
 
-	_float	fWidth = (fX - pTerrainVtxPos[dwIndex + dwCntX].x) * tPanelEntry.fInverseItv;
-	_float	fHeight = (pTerrainVtxPos[dwIndex + dwCntX].z - fZ) * tPanelEntry.fInverseItv;
+	// _float	fWidth = (fX - pTerrainVtxPos[dwIndex].x) * tPanelEntry.fInverseItv;
+	// _float	fHeight = (fZ - pTerrainVtxPos[dwIndex].z) * tPanelEntry.fInverseItv;
+	//D3DXPLANE		Plane;
+	//// 우 상단 
+	//if (fWidth + fHeight <= 1.f)
+	//{
+	//	D3DXPlaneFromPoints(&Plane,
+	//		&pTerrainVtxPos[dwIndex],
+	//		&pTerrainVtxPos[dwIndex + 1],
+	//		&pTerrainVtxPos[dwIndex + dwCntX]);
+	//}
+	//// 좌 하단
+	//else
+	//{
+	//	D3DXPlaneFromPoints(&Plane,
+	//		&pTerrainVtxPos[dwIndex + dwCntX + 1],
+	//		&pTerrainVtxPos[dwIndex + dwCntX],
+	//		&pTerrainVtxPos[dwIndex + 1]);
+	//}
 
-	D3DXPLANE		Plane;
+	//return (-Plane.a * fX - Plane.c * fZ - Plane.d) / Plane.b;
 
-	// 우 상단 
-	if (fWidth > fHeight)
-	{
-		D3DXPlaneFromPoints(&Plane,
-			&pTerrainVtxPos[dwIndex + dwCntX],
-			&pTerrainVtxPos[dwIndex + dwCntX + 1],
-			&pTerrainVtxPos[dwIndex + 1]);
+	const _vec3 &vLeftBottom = pTerrainVtxPos[dwIndex];
+	const _vec3 &vRightBottom = pTerrainVtxPos[dwIndex + 1];
+	const _vec3 &vLeftTop = pTerrainVtxPos[dwIndex + dwCntX];
+	const _vec3 &vRightTop = pTerrainVtxPos[dwIndex + dwCntX + 1];
+
+
+	const _float fWidth = (fX - vLeftBottom.x) * tPanelEntry.fInverseItv;
+	const _float fHeight = (fZ - vLeftBottom.z) * tPanelEntry.fInverseItv;
+
+	if (fWidth + fHeight <= 1.f) {
+		// 왼쪽 아래 삼각형
+		return vLeftBottom.y + (vRightBottom.y - vLeftBottom.y) * fWidth + (vLeftTop.y - vLeftBottom.y) * fHeight;
 	}
-	// 좌 하단
-	else
-	{
-		D3DXPlaneFromPoints(&Plane,
-			&pTerrainVtxPos[dwIndex + dwCntX],
-			&pTerrainVtxPos[dwIndex + 1],
-			&pTerrainVtxPos[dwIndex]);
+	else {
+		// 오른쪽 위 삼각형
+		const _float fWidth2 = 1.f - fWidth;
+		const _float fHeight2 = 1.f - fHeight;
+		return vRightTop.y + (vRightBottom.y - vRightTop.y) * fHeight2 + (vLeftTop.y - vRightTop.y) * fWidth2;
 	}
+}
 
-	return (-Plane.a * fX - Plane.c * fZ - Plane.d) / Plane.b;
+_float CGrounding::Y_OnPanelPlane(const PANELENTRY &tPanelEntry, _float fX, _float fZ)
+{
+	const D3DXPLANE &pl = tPanelEntry.planeWorld;
+	return (-pl.a * fX - pl.c * fZ - pl.d) / pl.b;
 }

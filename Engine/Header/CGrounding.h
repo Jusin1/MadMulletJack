@@ -30,6 +30,7 @@ private:
 	_bool IsInside(const PANELENTRY &tPanelEntry, _float fX, _float fZ);
 	_bool IsInside_Slope(const PANELENTRY &tPanelEntry, _float fX, _float fZ);
 	_float Compute_Height(const PANELENTRY &tPanelEntry, _float fX, _float fZ);
+	_float Y_OnPanelPlane(const PANELENTRY &tPanelEntry, _float fX, _float fZ);
 private:
 	_bool m_bGrounded{ true };
 	constexpr static _float m_fGravity{ 9.8f };

@@ -86,7 +86,6 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 		case SCENE_TUTORIAL:
 		case SCENE_STAGE_1:
 		case SCENE_STAGE_2:
-		case SCENE_STAGE_3:
 			m_vRectOriginOffset = { 33.5f, -200.f,0.f };
 			
 			break;

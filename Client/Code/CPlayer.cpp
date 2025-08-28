@@ -41,9 +41,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 }
 
 CPlayer::~CPlayer()
-{
+{ 
 }
-
+ 
 HRESULT CPlayer::Ready_GameObject()
 {
 	if (FAILED(__super::Ready_GameObject()))

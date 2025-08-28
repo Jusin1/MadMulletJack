@@ -1,0 +1,5915 @@
+[
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        3.2782517678242584e-07,
+                        5.960457016840337e-08,
+                        -0.9999986886978149
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        -0.9999986886978149,
+                        3.552709020119291e-15,
+                        -2.2351711947976582e-07
+                    ],
+                    "Up": [
+                        -7.993603236202285e-15,
+                        0.9999996423721313,
+                        2.9802313505911115e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.2351720474489412e-07,
+                        0.0,
+                        -0.9999989867210388
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        -0.9999987483024597,
+                        0.0,
+                        -2.2351714790147525e-07
+                    ],
+                    "Up": [
+                        0.0,
+                        0.9999996423721313,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Bandit_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        5.32608938574289e-15,
+                        0.25867414474487305,
+                        0.9653852581977844
+                    ],
+                    "Pos": [
+                        1.0,
+                        11.5,
+                        -0.5
+                    ],
+                    "Right": [
+                        2.99896502494812,
+                        5.927489041823719e-07,
+                        -2.050911405149236e-07
+                    ],
+                    "Up": [
+                        -3.5751776295001036e-07,
+                        1.9312562942504883,
+                        -0.5174784660339355
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beach_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587883472442627,
+                        0.9658114910125732
+                    ],
+                    "Pos": [
+                        1.0,
+                        9.25,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9994442462921143,
+                        5.180669973015029e-07,
+                        -1.3881562210826814e-07
+                    ],
+                    "Up": [
+                        -5.363332320484915e-07,
+                        1.9314607381820679,
+                        -0.5175333023071289
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587747275829315,
+                        0.9657605290412903
+                    ],
+                    "Pos": [
+                        1.0,
+                        6.999874114990234,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995179176330566,
+                        6.475995633081766e-07,
+                        -1.7352374470647192e-07
+                    ],
+                    "Up": [
+                        -3.2778424952084606e-07,
+                        1.9316078424453735,
+                        -0.5175727009773254
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_SaveHer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.664021533617866e-15,
+                        0.25876906514167786,
+                        0.9657395482063293
+                    ],
+                    "Pos": [
+                        1.0,
+                        4.75,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995884895324707,
+                        3.453946533227281e-07,
+                        -9.254820554360776e-08
+                    ],
+                    "Up": [
+                        -4.469727628020337e-07,
+                        1.9315828084945679,
+                        -0.5175659656524658
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -0.8660215139389038,
+                -2.9802196266359715e-08,
+                0.4999978840351105
+            ],
+            "Pos": [
+                9.0,
+                -35.0,
+                156.0
+            ],
+            "Right": [
+                0.4999987781047821,
+                4.470336634199157e-08,
+                0.8660229444503784
+            ],
+            "Up": [
+                -1.8358901954229623e-08,
+                0.9999955892562866,
+                2.780582164518819e-08
+            ]
+        },
+        "PrefabType": 0
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        3.2782517678242584e-07,
+                        5.960457016840337e-08,
+                        -0.9999986886978149
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        -0.9999986886978149,
+                        3.552709020119291e-15,
+                        -2.2351711947976582e-07
+                    ],
+                    "Up": [
+                        -7.993603236202285e-15,
+                        0.9999996423721313,
+                        2.9802313505911115e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.2351720474489412e-07,
+                        0.0,
+                        -0.9999989867210388
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        -0.9999987483024597,
+                        0.0,
+                        -2.2351714790147525e-07
+                    ],
+                    "Up": [
+                        0.0,
+                        0.9999996423721313,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Bandit_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        5.32608938574289e-15,
+                        0.25867414474487305,
+                        0.9653852581977844
+                    ],
+                    "Pos": [
+                        1.0,
+                        11.5,
+                        -0.5
+                    ],
+                    "Right": [
+                        2.99896502494812,
+                        5.927489041823719e-07,
+                        -2.050911405149236e-07
+                    ],
+                    "Up": [
+                        -3.5751776295001036e-07,
+                        1.9312562942504883,
+                        -0.5174784660339355
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beach_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587883472442627,
+                        0.9658114910125732
+                    ],
+                    "Pos": [
+                        1.0,
+                        9.25,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9994442462921143,
+                        5.180669973015029e-07,
+                        -1.3881562210826814e-07
+                    ],
+                    "Up": [
+                        -5.363332320484915e-07,
+                        1.9314607381820679,
+                        -0.5175333023071289
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587747275829315,
+                        0.9657605290412903
+                    ],
+                    "Pos": [
+                        1.0,
+                        6.999874114990234,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995179176330566,
+                        6.475995633081766e-07,
+                        -1.7352374470647192e-07
+                    ],
+                    "Up": [
+                        -3.2778424952084606e-07,
+                        1.9316078424453735,
+                        -0.5175727009773254
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_SaveHer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.664021533617866e-15,
+                        0.25876906514167786,
+                        0.9657395482063293
+                    ],
+                    "Pos": [
+                        1.0,
+                        4.75,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995884895324707,
+                        3.453946533227281e-07,
+                        -9.254820554360776e-08
+                    ],
+                    "Up": [
+                        -4.469727628020337e-07,
+                        1.9315828084945679,
+                        -0.5175659656524658
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.8660215139389038,
+                -5.960439253271943e-08,
+                0.4999978840351105
+            ],
+            "Pos": [
+                23.0,
+                -35.0,
+                177.0
+            ],
+            "Right": [
+                0.4999987781047821,
+                4.470336989470525e-08,
+                -0.8660229444503784
+            ],
+            "Up": [
+                3.325999742287422e-08,
+                0.9999955892562866,
+                1.9963706243686374e-09
+            ]
+        },
+        "PrefabType": 0
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                5.960456661568969e-08,
+                -0.999998927116394,
+                7.993597306971655e-15
+            ],
+            "Pos": [
+                7.0,
+                -23.0,
+                180.0
+            ],
+            "Right": [
+                1.639126594454865e-07,
+                0.0,
+                -0.9999992847442627
+            ],
+            "Up": [
+                0.9999984502792358,
+                5.9604555957548655e-08,
+                1.6391253154779406e-07
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                5.0,
+                -38.0,
+                178.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999986290931702,
+                2.9802285084201685e-08,
+                1.0430800045924116e-07
+            ],
+            "Pos": [
+                9.0,
+                -23.0,
+                178.0
+            ],
+            "Right": [
+                4.4703462265260896e-08,
+                -0.9999991655349731,
+                -1.1920917586394353e-07
+            ],
+            "Up": [
+                1.639125741803582e-07,
+                1.192091474422341e-07,
+                -0.9999987483024597
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -2.9802290413272203e-08,
+                2.9802283307844846e-08,
+                0.9999991655349731
+            ],
+            "Pos": [
+                9.0,
+                -23.0,
+                158.0
+            ],
+            "Right": [
+                1.1920921849650767e-07,
+                -0.9999994039535522,
+                0.0
+            ],
+            "Up": [
+                0.9999988079071045,
+                1.6391258839121292e-07,
+                2.9802288636915364e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                18.399999618530273,
+                -43.0,
+                145.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -0.9999991655349731,
+                1.6391264523463178e-07
+            ],
+            "Pos": [
+                18.399999618530273,
+                -23.0,
+                140.0
+            ],
+            "Right": [
+                0.9999992847442627,
+                -2.9802283307844846e-08,
+                4.47034445016925e-08
+            ],
+            "Up": [
+                -4.4703437396265144e-08,
+                1.0430802177552323e-07,
+                0.9999988675117493
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                12.0,
+                -31.0,
+                149.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                149.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999992847442627,
+                0.0,
+                1.639126594454865e-07
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                164.0
+            ],
+            "Right": [
+                1.0430807151351473e-07,
+                1.4901153200241879e-08,
+                -0.9999993443489075
+            ],
+            "Up": [
+                -1.998401020808808e-15,
+                0.9999997615814209,
+                1.4901154088420299e-08
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999992847442627,
+                0.0,
+                1.639126594454865e-07
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                161.0
+            ],
+            "Right": [
+                1.0430807151351473e-07,
+                1.4901153200241879e-08,
+                -0.9999993443489075
+            ],
+            "Up": [
+                -1.998401020808808e-15,
+                0.9999997615814209,
+                1.4901154088420299e-08
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999992847442627,
+                0.0,
+                1.639126594454865e-07
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                158.0
+            ],
+            "Right": [
+                1.0430807151351473e-07,
+                1.4901153200241879e-08,
+                -0.9999993443489075
+            ],
+            "Up": [
+                -1.998401020808808e-15,
+                0.9999997615814209,
+                1.4901154088420299e-08
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                164.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                18.0,
+                -31.0,
+                164.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999990463256836,
+                -2.9802293965985882e-08,
+                1.1920917586394353e-07
+            ],
+            "Pos": [
+                18.0,
+                -31.0,
+                170.0
+            ],
+            "Right": [
+                1.0430807151351473e-07,
+                1.490115142388504e-08,
+                -0.9999993443489075
+            ],
+            "Up": [
+                2.980229751869956e-08,
+                0.9999992847442627,
+                1.4901155864777138e-08
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.9999992847442627,
+                0.0,
+                1.639126594454865e-07
+            ],
+            "Pos": [
+                18.0,
+                -31.0,
+                173.0
+            ],
+            "Right": [
+                1.0430807151351473e-07,
+                1.4901153200241879e-08,
+                -0.9999993443489075
+            ],
+            "Up": [
+                -1.998401020808808e-15,
+                0.9999997615814209,
+                1.4901154088420299e-08
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                18.0,
+                -31.0,
+                179.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                21.0,
+                -37.0,
+                165.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                18.0,
+                -31.0,
+                209.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                15.0,
+                -31.0,
+                218.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.9795925726716632e-08,
+                        2.979592750307347e-08,
+                        0.9997854828834534
+                    ],
+                    "Pos": [
+                        0.49996432662010193,
+                        0.49996432662010193,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999276399612427,
+                        2.0860116478615964e-07,
+                        -2.980016589049228e-08
+                    ],
+                    "Up": [
+                        -1.1920067777282384e-07,
+                        0.9999277591705322,
+                        -2.980016944320596e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997466206550598
+                    ],
+                    "Pos": [
+                        1.499957799911499,
+                        0.49995777010917664,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.9999150633811951,
+                        1.7879877134419075e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879877134419075e-07,
+                        0.9999150633811951,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        0.9997041821479797
+                    ],
+                    "Pos": [
+                        2.499950647354126,
+                        0.49995070695877075,
+                        -0.0010000000474974513
+                    ],
+                    "Right": [
+                        0.999900758266449,
+                        1.7879621339034202e-07,
+                        0.0
+                    ],
+                    "Up": [
+                        -1.7879621339034202e-07,
+                        0.999900758266449,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999997615814209
+            ],
+            "Pos": [
+                21.0,
+                -31.0,
+                218.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                1.4901158529312397e-08,
+                0.0
+            ],
+            "Up": [
+                -1.4901158529312397e-08,
+                0.9999997615814209,
+                0.0
+            ]
+        },
+        "PrefabType": 3
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                0.0,
+                0.9999994039535522
+            ],
+            "Pos": [
+                20.5,
+                -28.0,
+                224.0
+            ],
+            "Right": [
+                1.6391264523463178e-07,
+                -0.9999991655349731,
+                0.0
+            ],
+            "Up": [
+                0.9999991655349731,
+                1.6391264523463178e-07,
+                1.49011496475282e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                1.490115231206346e-08,
+                -2.442490018900634e-15,
+                0.9999997615814209
+            ],
+            "Pos": [
+                18.5,
+                -30.0,
+                224.0
+            ],
+            "Right": [
+                1.1920921849650767e-07,
+                0.9999994039535522,
+                0.0
+            ],
+            "Up": [
+                -0.9999992847442627,
+                1.639126594454865e-07,
+                1.4901153200241879e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        3.2782517678242584e-07,
+                        5.960457016840337e-08,
+                        -0.9999986886978149
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        -0.9999986886978149,
+                        3.552709020119291e-15,
+                        -2.2351711947976582e-07
+                    ],
+                    "Up": [
+                        -7.993603236202285e-15,
+                        0.9999996423721313,
+                        2.9802313505911115e-08
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 7,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.2351720474489412e-07,
+                        0.0,
+                        -0.9999989867210388
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        -0.9999987483024597,
+                        0.0,
+                        -2.2351714790147525e-07
+                    ],
+                    "Up": [
+                        0.0,
+                        0.9999996423721313,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Bandit_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        5.32608938574289e-15,
+                        0.25867414474487305,
+                        0.9653852581977844
+                    ],
+                    "Pos": [
+                        1.0,
+                        11.5,
+                        -0.5
+                    ],
+                    "Right": [
+                        2.99896502494812,
+                        5.927489041823719e-07,
+                        -2.050911405149236e-07
+                    ],
+                    "Up": [
+                        -3.5751776295001036e-07,
+                        1.9312562942504883,
+                        -0.5174784660339355
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beach_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587883472442627,
+                        0.9658114910125732
+                    ],
+                    "Pos": [
+                        1.0,
+                        9.25,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9994442462921143,
+                        5.180669973015029e-07,
+                        -1.3881562210826814e-07
+                    ],
+                    "Up": [
+                        -5.363332320484915e-07,
+                        1.9314607381820679,
+                        -0.5175333023071289
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Beer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.2587747275829315,
+                        0.9657605290412903
+                    ],
+                    "Pos": [
+                        1.0,
+                        6.999874114990234,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995179176330566,
+                        6.475995633081766e-07,
+                        -1.7352374470647192e-07
+                    ],
+                    "Up": [
+                        -3.2778424952084606e-07,
+                        1.9316078424453735,
+                        -0.5175727009773254
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 1,
+                "ObjectType": 7,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 2,
+                    "Count_Z": 2,
+                    "Interval": 1,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_SaveHer_Outdoor"
+                },
+                "TransformData": {
+                    "Look": [
+                        2.664021533617866e-15,
+                        0.25876906514167786,
+                        0.9657395482063293
+                    ],
+                    "Pos": [
+                        1.0,
+                        4.75,
+                        -0.5009999871253967
+                    ],
+                    "Right": [
+                        2.9995884895324707,
+                        3.453946533227281e-07,
+                        -9.254820554360776e-08
+                    ],
+                    "Up": [
+                        -4.469727628020337e-07,
+                        1.9315828084945679,
+                        -0.5175659656524658
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -0.49999794363975525,
+                -5.9604406743574145e-08,
+                0.8660219311714172
+            ],
+            "Pos": [
+                15.0,
+                -35.0,
+                214.0
+            ],
+            "Right": [
+                0.8660231828689575,
+                5.2153929175347e-08,
+                0.49999865889549255
+            ],
+            "Up": [
+                -1.996366405521144e-09,
+                0.9999955892562866,
+                2.9802192713646036e-08
+            ]
+        },
+        "PrefabType": 0
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                22.399999618530273,
+                -40.0,
+                189.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                15.699999809265137,
+                -40.0,
+                196.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -1.4901159417490817e-08,
+                0.9999998807907104
+            ],
+            "Pos": [
+                22.299999237060547,
+                -40.0,
+                204.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                0.9999998807907104,
+                1.4901159417490817e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -4.470344805440618e-08,
+                0.9999991655349731,
+                1.6391264523463178e-07
+            ],
+            "Pos": [
+                15.699999809265137,
+                -22.0,
+                224.0
+            ],
+            "Right": [
+                0.9999995231628418,
+                4.4703465817974575e-08,
+                6.217245973285561e-15
+            ],
+            "Up": [
+                -2.220444858110231e-16,
+                1.0430807151351473e-07,
+                -0.9999993443489075
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                0.0,
+                -0.9999993443489075,
+                1.0430807151351473e-07
+            ],
+            "Pos": [
+                15.699999809265137,
+                -20.0,
+                188.0
+            ],
+            "Right": [
+                0.9999998807907104,
+                0.0,
+                0.0
+            ],
+            "Up": [
+                0.0,
+                1.0430807151351473e-07,
+                0.9999993443489075
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -2.220444858110231e-16,
+                -0.9999992847442627,
+                1.639126594454865e-07
+            ],
+            "Pos": [
+                22.299999237060547,
+                -20.0,
+                188.0
+            ],
+            "Right": [
+                0.999998927116394,
+                -1.2434484323274597e-14,
+                -1.043079933538138e-07
+            ],
+            "Up": [
+                -2.9802279755131167e-08,
+                1.1920911902052467e-07,
+                0.9999985694885254
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -5.9604584379258085e-08,
+                0.999998927116394,
+                1.6391260260206764e-07
+            ],
+            "Pos": [
+                22.299999237060547,
+                -22.0,
+                224.0
+            ],
+            "Right": [
+                0.9999994039535522,
+                -4.318021495919311e-08,
+                -1.1570106650538037e-08
+            ],
+            "Up": [
+                -7.45057615603173e-09,
+                1.1920921849650767e-07,
+                -0.9999994039535522
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                -1.490115231206346e-08,
+                -2.442490018900634e-15,
+                0.9999997615814209
+            ],
+            "Pos": [
+                20.5,
+                -30.0,
+                224.0
+            ],
+            "Right": [
+                1.1920921849650767e-07,
+                -0.9999994039535522,
+                0.0
+            ],
+            "Up": [
+                0.9999992847442627,
+                1.639126594454865e-07,
+                1.4901153200241879e-08
+            ]
+        },
+        "PrefabType": 2
+    },
+    {
+        "Childrens": [
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 0,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 0
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        2.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "Color": 0,
+                "ObjectCategory": 0,
+                "ObjectType": 1,
+                "PanelData": {
+                    "Count_X": 2,
+                    "Count_Y": 10,
+                    "Count_Z": 2,
+                    "Interval": 2,
+                    "Type": 1
+                },
+                "TextureData": {
+                    "FilePath": "Proto_Wall_Hole_3"
+                },
+                "TransformData": {
+                    "Look": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Pos": [
+                        2.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Right": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        ],
+        "ParentTransformData": {
+            "Look": [
+                1.4901153200241879e-08,
+                -2.4424904424171076e-15,
+                0.9999998807907104
+            ],
+            "Pos": [
+                18.5,
+                -32.0,
+                224.0
+            ],
+            "Right": [
+                1.6391264523463178e-07,
+                0.9999992251396179,
+                0.0
+            ],
+            "Up": [
+                -0.9999992251396179,
+                1.6391264523463178e-07,
+                1.490115142388504e-08
+            ]
+        },
+        "PrefabType": 2
+    }
+]

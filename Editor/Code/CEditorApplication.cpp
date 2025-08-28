@@ -501,6 +501,7 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_Wall_Hole_2", L"../../Client/Bin/Resource/MapObject/Wall/WALL HOLE 2.png");
 	AddTextureForThumbnail(L"Proto_Wall_Hole_3", L"../../Client/Bin/Resource/MapObject/Wall/WALL HOLE 3.png");
 	AddTextureForThumbnail(L"Proto_Wall_Hole_4", L"../../Client/Bin/Resource/MapObject/Wall/WALL HOLE 4.png");
+	AddTextureForThumbnail(L"Proto_Wall_Hole_4_B", L"../../Client/Bin/Resource/MapObject/Wall/WALL HOLE 4_B.png");
 	AddTextureForThumbnail(L"Proto_Wall_Boss_1", L"../../Client/Bin/Resource/MapObject/Wall/WALL boss 3 1.png");
 	AddTextureForThumbnail(L"Proto_Wall_Boss_2", L"../../Client/Bin/Resource/MapObject/Wall/WALL boss 3 2.png");
 	AddTextureForThumbnail(L"Proto_Wall_Boss_3", L"../../Client/Bin/Resource/MapObject/Wall/WALL boss 3 3.png");

@@ -61,10 +61,6 @@ _int CEditorLoadingScene::Update_Scene(const _float &fTimeDelta)
 		{
 			pNewScene = CScene_Stage_2::Create(m_pGraphicDev);
 		} break;
-		case SCENE_STAGE_3:
-		{
-			// Æó±â
-		} break;
 		case SCENE_SNIPE:
 		{
 			pNewScene = CScene_Snipe::Create(m_pGraphicDev);

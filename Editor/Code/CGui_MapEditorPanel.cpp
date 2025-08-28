@@ -255,11 +255,10 @@ CGuiBase *CGui_MapEditorPanel::SceneDropbox_Create()
 	Names[1] = "TUTORIAL";
 	Names[2] = "STAGE_1";
 	Names[3] = "STAGE_2";
-	Names[4] = "STAGE_3";
-	Names[5] = "SNIPE";
-	Names[6] = "ROOFTOP";
-	Names[7] = "ROAD";
-	Names[8] = "PREFAB";
+	Names[4] = "SNIPE";
+	Names[5] = "ROOFTOP";
+	Names[6] = "ROAD";
+	Names[7] = "PREFAB";
 
 	return CGui_Dropbox<MapEditorSceneType>::Create("SceneType", MapEditorSceneType::DEV, Names);
 }
@@ -269,6 +268,8 @@ CGuiBase *CGui_MapEditorPanel::PrefabtypeDropbox_Create()
 	vector<string> Names{ g_PrefabTypeCount };
 	Names[0] = "SIGN_PILLAR";
 	Names[1] = "ROAD";
+	Names[2] = "SIGN_PILLAR_2";
+	Names[3] = "Tileset_1";
 
 	return CGui_Dropbox<PrefabType>::Create("PrefabType", PrefabType::SIGN_PILLAR, Names);
 }
@@ -710,6 +711,7 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	AddThumbnail("Wall_Hole_2", L"Proto_Wall_Hole_2", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_3", L"Proto_Wall_Hole_3", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Hole_4", L"Proto_Wall_Hole_4", pThumbnail, TileType::DECO);
+	AddThumbnail("Wall_Hole_4_B", L"Proto_Wall_Hole_4_B", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Border", L"Proto_Wall_Border", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_1", L"Proto_Wall_Boss_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Wall_Boss_2", L"Proto_Wall_Boss_2", pThumbnail, TileType::DECO);

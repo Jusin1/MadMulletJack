@@ -241,6 +241,21 @@
     <Filter Include="02. GameObject\07. MapObject\04. Prefab">
       <UniqueIdentifier>{adeded63-d707-4f1d-acab-85f137514f65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\01. Stage\03. Car">
+      <UniqueIdentifier>{1195b3a5-670c-4123-a687-703bb73879d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Stage\02. Boss">
+      <UniqueIdentifier>{0600d03b-e57f-41c2-bec8-4f73cbc1f8e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Stage\01. Snipe">
+      <UniqueIdentifier>{3431ad1f-75f8-4c5d-9d4b-325beb0f243d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Bullet">
+      <UniqueIdentifier>{29da6c75-4db3-4d27-9214-33e789412ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Effect">
+      <UniqueIdentifier>{d95c9932-47bf-448e-9df8-9d241f17e8c6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\08. Bullet">
       <UniqueIdentifier>{2ba0cc05-01f1-4274-b4e0-6ea65cc4d03c}</UniqueIdentifier>
     </Filter>
@@ -480,6 +495,18 @@
     <ClInclude Include="..\Header\CPlayerUI_Manager.h">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CStage_2.h">
+      <Filter>01. Scene\01. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStage_Snipe.h">
+      <Filter>01. Scene\01. Stage\01. Snipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStage_Boss.h">
+      <Filter>01. Scene\01. Stage\02. Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStage_Car.h">
+      <Filter>01. Scene\01. Stage\03. Car</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CBullet.h">
       <Filter>02. GameObject\08. Bullet</Filter>
     </ClInclude>
@@ -706,6 +733,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerUI_Manager.cpp">
       <Filter>02. GameObject\06. UI\Player_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStage_2.cpp">
+      <Filter>01. Scene\01. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStage_Snipe.cpp">
+      <Filter>01. Scene\01. Stage\01. Snipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStage_Boss.cpp">
+      <Filter>01. Scene\01. Stage\02. Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStage_Car.cpp">
+      <Filter>01. Scene\01. Stage\03. Car</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\08. Bullet</Filter>

@@ -110,23 +110,19 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	} break;
 	case SCENE_STAGE_2:
 	{
-
-	} break;
-	case SCENE_STAGE_3:
-	{
-
+		pLoader->Loading_Stage_2();
 	} break;
 	case SCENE_SNIPE:
 	{
-
+		pLoader->Loading_Snipe();
 	} break;
 	case SCENE_BOSS:
 	{
-
+		pLoader->Loading_Rooftop();
 	} break;
 	case SCENE_CAR:
 	{
-
+		pLoader->Loading_Road();
 	} break;
 	}
 	return 0;
@@ -583,12 +579,6 @@ HRESULT CLoader::Loading_Stage_2()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_Stage_3()
-{
-	m_isFinished = true;
-	return S_OK;
-}
-
 HRESULT CLoader::Loading_Snipe()
 {
 	m_isFinished = true;
@@ -707,6 +697,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Wall_Hole_2", L"../Bin/Resource/MapObject/Wall/WALL HOLE 2.png", 1);
 	AddTexture(L"Proto_Wall_Hole_3", L"../Bin/Resource/MapObject/Wall/WALL HOLE 3.png", 1);
 	AddTexture(L"Proto_Wall_Hole_4", L"../Bin/Resource/MapObject/Wall/WALL HOLE 4.png", 1);
+	AddTexture(L"Proto_Wall_Hole_4_B", L"../Bin/Resource/MapObject/Wall/WALL HOLE 4_B.png", 1);
 	AddTexture(L"Proto_Wall_Boss_1", L"../Bin/Resource/MapObject/Wall/WALL boss 3 1.png", 1);
 	AddTexture(L"Proto_Wall_Boss_2", L"../Bin/Resource/MapObject/Wall/WALL boss 3 2.png", 1);
 	AddTexture(L"Proto_Wall_Boss_3", L"../Bin/Resource/MapObject/Wall/WALL boss 3 3.png", 1);
