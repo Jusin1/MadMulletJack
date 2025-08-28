@@ -6,6 +6,7 @@
 #include "CPistol_Gun.h"
 #include "CKnife_SubW.h"
 #include "CPlayerUI_Manager.h"
+#include "CKatana.h"
 
 CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)
@@ -104,6 +105,7 @@ void CWeaponUI_Manager::Weapon_Change()
 		break;
 
 	case WP_KATANA:
+		TagUI_SetActive(L"KatanaUI", false);
 		break;
 
 	case WP_SNIPER:
@@ -130,6 +132,7 @@ void CWeaponUI_Manager::Weapon_Change()
 		break;
 
 	case WP_KATANA:
+		TagUI_SetActive(L"KatanaUI", true);
 		break;
 
 	case WP_SNIPER:
@@ -195,6 +198,15 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 		pPistolUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
 		Add_Child(pPistolUI); // 루트 UI에 등록
 	}
+
+	CKatana* pKatanaUI = dynamic_cast<CKatana*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_KatanaUI", iSceneIndex, L"UI_Layer"));
+	if (pKatanaUI)
+	{
+		pKatanaUI->Set_ObjTag(L"KatanaUI");
+		pKatanaUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+		Add_Child(pKatanaUI); // 루트 UI에 등록
+	}
+	
 
 	return S_OK;
 }

@@ -170,6 +170,7 @@
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
     <ClInclude Include="..\Header\CItemUI.h" />
+    <ClInclude Include="..\Header\CKatana.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -251,6 +252,7 @@
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
     <ClCompile Include="..\Code\CItemUI.cpp" />
+    <ClCompile Include="..\Code\CKatana.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>

@@ -83,7 +83,8 @@ HRESULT CMonster_Soldier::Initialize(void* pArg)
         &fOut);
 
     
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(0.f, 0.f, 4.f));
+    m_pTransformCom->Set_Info(INFO_POS, _vec3(5.f, -5.f, 13.f));
+
     return S_OK;
 }
 

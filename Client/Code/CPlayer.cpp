@@ -640,6 +640,8 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_State(OPENING);
 	if (KEY_BUTTON_DOWN(DIK_M))
 		Change_State(DOPING);
+	if (KEY_BUTTON_DOWN(DIK_T))
+		Change_Weapon(WEAPON::WP_KATANA);
 }
 
 void CPlayer::Set_State_Normal()
@@ -855,6 +857,8 @@ void CPlayer::Change_Weapon(WEAPON _eWeapon)
 {
 	// 상태 업데이트
 	m_tPrePlayerInfo.eWeapon = m_tPlayerInfo.eWeapon; // 전 state 저장
+	if (m_tPrePlayerInfo.eWeapon == WEAPON::WP_KATANA)
+		m_pPlayerUI->Set_Active(false);
 	m_tPlayerInfo.eWeapon = _eWeapon; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 

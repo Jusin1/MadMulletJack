@@ -250,6 +250,9 @@
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Soldier">
       <UniqueIdentifier>{61a6fa21-86aa-4941-a6ef-a562e0d7200b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\00. MainWap\01. Katana">
+      <UniqueIdentifier>{b894e561-405b-4107-9e40-77d69c910903}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="..\Header\CMonster_Soldier.h">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Soldier</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKatana.h">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\01. Katana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -700,6 +706,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster_Soldier.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKatana.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\01. Katana</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
