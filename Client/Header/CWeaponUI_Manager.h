@@ -33,6 +33,9 @@ private:
 	// weapon create func
 	HRESULT Create_Knife(_uint _iSceneIdx);
 
+	// effect
+	HRESULT Create_Effect(_uint _iSceneIdx);
+
 
 	//getter setter func
 public:

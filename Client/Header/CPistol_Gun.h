@@ -19,6 +19,8 @@ private:
 	virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
 	virtual HRESULT Texture_Clone()	override;
 	virtual HRESULT Change_Texture(const _tchar* pTextureTag) override;
+
+	HRESULT Set_Effect();
 	
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐

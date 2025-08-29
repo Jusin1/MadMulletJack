@@ -1488,14 +1488,13 @@ void CPlayer::Set_Collider_With_Wall()
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_HORWALL, 
 		this, CColiderManager::COLLISION_SPHERE_CUBE,1.f))
 	{
-		GetTransform()->GetTransformInfo().fSpeed = 0.f;
+
 	}
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_VERWALL, 
 		this, CColiderManager::COLLISION_SPHERE_CUBE, 1.f))
 	{
-		GetTransform()->GetTransformInfo().fSpeed = 0.f;
-	}
 
+	}
 
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, -0.01f))
 	{
@@ -1539,23 +1538,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				// Dash_attack 중일때 몬스터와 충돌하면 
 				if (m_tPlayerInfo.ePlayerMove == PMV_DASHATT)
 				{
-					// 몬스터 위치로 이동한 다음
-					//if (Get_Pos().z < vMonPos.z) // z값을 기준으로 움직임 멈춤 조건
-					//{
-					//	//while (Get_Pos().z < (vMonPos.z) * 0.8)
-					//	while (Get_Pos().z < (vMonPos.z))
-					//		m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
-
-					//	PushBack(vDistance);
-					//}
-					//else
-					//{
-					//	//while (Get_Pos().z > (vMonPos.z) * 1.2)
-					//	while (Get_Pos().z > (vMonPos.z))
-					//		m_pTransformCom->Move_PosDir(fTimeDelta * 0.8, vDir);
-
-						PushBack(vDistance);
-					//}
+					PushBack(vDistance);
 
 					// wap2에 따라 state 변경
 					switch (m_tPlayerInfo.eWeapon2)

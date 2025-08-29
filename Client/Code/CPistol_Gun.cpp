@@ -4,6 +4,7 @@
 #include "CManagement.h"
 #include "CObjectManager.h"
 #include "CMapFactory.h"
+#include "CImageUI.h"
 
 CPistol_Gun::CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -57,6 +58,8 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 
 _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 {
+	//CUIBase::Update_GameObject(fTimeDelta);
+
 	__super::Update_GameObject(fTimeDelta);
 
 	// 만약 지금 idle texture 라면
@@ -107,10 +110,10 @@ void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CPistol_Gun::Render_GameObject()
 {
+	
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
 	m_pTextureCom->MoveFrame();
@@ -239,6 +242,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 	else 
 	{
+		CImageUI* pEff = dynamic_cast<CImageUI*>(this->Find_Child_ByTag(TEXT("Effect")));
 		switch (m_tInfo.ePlayerState)
 		{
 		case OPENING:
@@ -254,6 +258,15 @@ HRESULT CPistol_Gun::Set_Texture() {
 			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
 
 			m_iBullet--;
+
+			//effect play
+			
+			if (pEff)
+			{
+				pEff->Set_Active(true);
+				pEff->Set_RenderOn(true);
+				pEff->Play(true);
+			}
 
 			break;
 
@@ -295,6 +308,31 @@ HRESULT CPistol_Gun::Change_Texture(const _tchar* pTextureTag)
 	m_pTextureCom->Set_Zero_Frame();
 	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
 	return S_OK;
+}
+
+HRESULT CPistol_Gun::Set_Effect()
+{
+	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
+	//_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
+
+	if (auto* effect = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", iCloneScene, L"UI_Layer"))) {
+		effect->Set_UIPosition(WINCX * 0.5, WINCY * 0.5, 130.f, 130.f);
+		effect->RegisterTexture(L"Com_Texture_Text", 
+			L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 10.f, false);
+		effect->ChangeTexture(L"Com_Texture_Text");
+		//effect->SetAdditive(false);
+		//effect->SetTintRGBA(255, 0, 0, 255);
+		//effect->SetColorMode(CImageUI::ColorMode::TintMultiply);
+
+		effect->Set_ObjTag(L"Effect");
+		Add_Child(effect);
+
+		return S_OK;
+	}
+
+	return E_FAIL;
 }
 
 CPistol_Gun* CPistol_Gun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
