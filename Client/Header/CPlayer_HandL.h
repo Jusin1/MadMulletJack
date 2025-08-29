@@ -22,12 +22,15 @@ private:
     HRESULT Texture_Clone();
 
 private:
+    void Katana(const _float& fTimeDelta);
+
+private:
     map<const _tchar*, CTexture*> m_mapTextures; // 애니메이션 텍스쳐
     wstring m_CurrentAnimTag; // 현재 애니메이션 태그
 
 private:
     PlayerStateInfo m_tInfo;
-
+    float m_fWaitTimer; // 대기 시간
 public:
     static CPlayer_HandL* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -688,6 +688,9 @@ void CPlayer::ATTACK_End()
 		break;
 
 	case WP_KATANA:
+		//m_fAttackCoolTime =
+		//	dynamic_cast<CMainWeapon*>(m_pWeaponUI->				// 내 weapon ui의 
+		//		Find_Child_ByTag(TEXT("KatanaUI")))->Get_CoolTime();	// 무기의 cooltime을 가져와라
 		break;
 	case WP_SNIPER:
 		m_fAttackCoolTime =
@@ -831,7 +834,7 @@ void CPlayer::OPENING_Begin()
 		break;
 
 	case WP_KATANA:
-		m_fStateTime = 8.f;
+		m_fStateTime = 2.f;
 		break;
 	case WP_SNIPER:
 		m_fStateTime = 1.65f;

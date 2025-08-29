@@ -1,5 +1,6 @@
 #pragma once
 #include "CUI.h"
+class CImageUI;
 class CPlayer_HandR :public CUI
 {
 protected:
@@ -31,8 +32,19 @@ public:
     PlayerStateInfo Get_Info() const { return m_tInfo; }
     void Set_Info(PlayerStateInfo _tPlayerStateInfo) { m_tInfo = _tPlayerStateInfo; }
 
+public:
+    void SetKatanaComboStep(int step); // ÄÞº¸ ¼¼ÆÃ
+    void Katana(const float& fTimeDelta);
+
 private:
     PlayerStateInfo m_tInfo;
+
+private:
+    // Ä® °ü·Ã º¯¼ö
+    float m_fWaitTimer;
+private:
+    int  m_iKatanaComboStep; // ÄÞº¸ ´Ü°è
+    bool m_bKatanaComboAnim; // ÄÞº¸ ÁßÀÎ ¿©ºÎ
     
 public:
     static CPlayer_HandR* Create(LPDIRECT3DDEVICE9 pGraphicDev);

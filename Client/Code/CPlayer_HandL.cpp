@@ -5,12 +5,12 @@
 #include "CMapFactory.h"
 
 CPlayer_HandL::CPlayer_HandL(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev), m_tInfo({ PLAYER_END,PMV_END, WP_END, WP2_END })
+    : CUI(pGraphicDev), m_tInfo({ PLAYER_END,PMV_END, WP_END, WP2_END }), m_fWaitTimer(0.f)
 {
 }
 
 CPlayer_HandL::CPlayer_HandL(const CPlayer_HandL& rhs)
-    : CUI(rhs), m_tInfo(rhs.m_tInfo)
+    : CUI(rhs), m_tInfo(rhs.m_tInfo), m_fWaitTimer(rhs.m_fWaitTimer)
 {
 }
 
@@ -44,7 +44,7 @@ HRESULT CPlayer_HandL::Initialize(void* pArg)
 _int CPlayer_HandL::Update_GameObject(const _float& fTimeDelta)
 {
     Move_UI(fTimeDelta);
-
+    Katana(fTimeDelta);
     return NO_EVENT;
 }
 
@@ -137,6 +137,36 @@ HRESULT CPlayer_HandL::Texture_Clone()
     return S_OK;
 }
 
+void CPlayer_HandL::Katana(const _float& fTimeDelta)
+{
+    if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_KATANA)
+    {
+        if (m_tMoveInfo.eUIMove == MV_UP && m_tMoveInfo.IsRangeEnd())
+        {
+            m_tMoveInfo.eUIMove = MV_LEFT;
+            m_tMoveInfo.bStop = true;
+            m_tMoveInfo.fRange = 100.f;   
+            m_tMoveInfo.fSumRange = 0.f;
+            m_tMoveInfo.bRenderStop = false;
+
+            Set_New_TransInfo(1900, 0.f);
+        }
+        if (m_tMoveInfo.eUIMove == MV_LEFT && m_tMoveInfo.IsRangeEnd())
+        {
+            m_fWaitTimer += fTimeDelta;
+            if (m_fWaitTimer >= 0.6f) 
+            {
+                m_tMoveInfo.eUIMove = MV_LEFT;
+                m_tMoveInfo.bStop = true;
+                m_tMoveInfo.fRange = 1000.f;   
+                m_tMoveInfo.fSumRange = 0.f;
+                m_tMoveInfo.bRenderStop = false;
+                Set_New_TransInfo(1850.f, 0.f);
+            }
+        }
+    }
+}
+
 HRESULT CPlayer_HandL::Set_Texture()
 {
     // 만약 회전이 됐으면 다시 되돌려라
@@ -165,9 +195,9 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Katana"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(300.f, 500.f, WINCX * 0.5f - 400.f, WINCY * 0.5f + 500.f);
-            Set_New_TransInfo(600.f, 0.f);
-            m_tMoveInfo = { MV_UP, true, 200.f, 0.f };
+            Set_UISizeAndPos(300.f, 500.f, WINCX * 0.5f - 470.f, WINCY * 0.5f + 500.f);
+            Set_New_TransInfo(700.f, 0.f);
+            m_tMoveInfo = { MV_UP, true, 220.f, 0.f };
         }
 
         else {

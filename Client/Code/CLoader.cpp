@@ -331,78 +331,78 @@ HRESULT CLoader::Loading_Dev()
 
 #pragma endregion 슈트 몬스터
 
-#pragma region 뚱뚱한 몬스터
-	PhaseStep(0.4f, L"몬스터 텍스쳐");
-
-	// Monster
-	// IDLE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Idle/fg_idle%02d.png", 12))))
-		return E_FAIL;
-
-	// CHASE
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Chase",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Walk/fg_walk%02d.png", 14))))
-		return E_FAIL;
-
-	// AIM
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Aim",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/aim/fg_aim%02d.png", 9))))
-		return E_FAIL;
-
-	// SHOT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Shot",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/shoot/fg_shoot%02d.png", 7))))
-		return E_FAIL;
-
-	// Jump
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Jump",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/jump/ft_jumping%02d.png", 21))))
-		return E_FAIL;
-
-	// HEAD_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_HEAD",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HeadHit/fg_2fly%02d.png", 21))))
-		return E_FAIL;
-
-	// BODY_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BODY",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Hit2/fg_hit%02d.png", 8))))
-		return E_FAIL;
-
-	// BALL_HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BALL",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HitBall/BALLSHOT%03d.png", 23))))
-		return E_FAIL;
-
-	// ELECTRIC - HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_ELECTRIC",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Electric/ELECTRIC%03d.png", 14))))
-		return E_FAIL;
-
-	// DOOR - HIT
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DOOR",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Fly_back_Endo/fat_Flyback_endo%02d.png", 31))))
-		return E_FAIL;
-
-	// DEATH
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DEATH",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Death/fg_death%02d.png", 20))))
-		return E_FAIL;
-
-
-	// Blocking -> Kicked
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Blocking/Fat_blocking%02d.png", 5))))
-		return E_FAIL;
-
-	// 추가 예정
-	// InstanceKill
-	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
-	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
-	//	return E_FAIL;
-
-#pragma endregion 뚱뚱한 몬스터
+//#pragma region 뚱뚱한 몬스터
+//	PhaseStep(0.4f, L"몬스터 텍스쳐");
+//
+//	// Monster
+//	// IDLE
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Idle",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Idle/fg_idle%02d.png", 12))))
+//		return E_FAIL;
+//
+//	// CHASE
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Chase",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Walk/fg_walk%02d.png", 14))))
+//		return E_FAIL;
+//
+//	// AIM
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Aim",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/aim/fg_aim%02d.png", 9))))
+//		return E_FAIL;
+//
+//	// SHOT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Shot",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/shoot/fg_shoot%02d.png", 7))))
+//		return E_FAIL;
+//
+//	// Jump
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_Jump",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/jump/ft_jumping%02d.png", 21))))
+//		return E_FAIL;
+//
+//	// HEAD_HIT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_HEAD",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HeadHit/fg_2fly%02d.png", 21))))
+//		return E_FAIL;
+//
+//	// BODY_HIT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BODY",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Hit2/fg_hit%02d.png", 8))))
+//		return E_FAIL;
+//
+//	// BALL_HIT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BALL",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/HitBall/BALLSHOT%03d.png", 23))))
+//		return E_FAIL;
+//
+//	// ELECTRIC - HIT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_ELECTRIC",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Hit/Electric/ELECTRIC%03d.png", 14))))
+//		return E_FAIL;
+//
+//	// DOOR - HIT
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DOOR",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Fly_back_Endo/fat_Flyback_endo%02d.png", 31))))
+//		return E_FAIL;
+//
+//	// DEATH
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_DEATH",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Death/fg_death%02d.png", 20))))
+//		return E_FAIL;
+//
+//
+//	// Blocking -> Kicked
+//	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",
+//		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Blocking/Fat_blocking%02d.png", 5))))
+//		return E_FAIL;
+//
+//	// 추가 예정
+//	// InstanceKill
+//	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
+//	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
+//	//	return E_FAIL;
+//
+//#pragma endregion 뚱뚱한 몬스터
 	PhaseStep(0.6f, L"최종 프로토타입 생성");
 	// 총알
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Bullet",
@@ -874,10 +874,11 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/attack/PISTOL_ZOOM_ATTACK%03d.png", 3))))
 		return E_FAIL;
 
-	// Katana - Hand_L
-	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_Hand_L",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/LeftArm.png", 1))))
-		return E_FAIL;*/
+	// Katana
+	// Katana - IDLE
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_IDLE",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/IDLE/KATANA.png", 1))))
+		return E_FAIL;
 
 	// Knife
 	// Knife - idle
@@ -1011,6 +1012,21 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/RightArm.png", 1))))
 		return E_FAIL;
 
+	// handr - IDLE - Katana
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRIdleKatana",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/HandR_Idle%03d.png", 3))))
+		return E_FAIL;
+
+	// handr - Attack2 - Katana
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRAttack2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack2/Attack2Hand.png", 1))))
+		return E_FAIL;
+
+	// handr - Attack3 - Katana
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHandRAttack3",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack3/Attack3Hand.png", 1))))
+		return E_FAIL;
+
 	// HpBar
 	// HpB - PhoneN
 	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
@@ -1047,6 +1063,50 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/Open_Sheath.png", 1))))
 		return E_FAIL;
 
+	// Katana - Handle(칼 손잡이)
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaHandle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/Handle.png", 1))))
+		return E_FAIL;
+
+	// Katana - Knife(칼)
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Knife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/Knife.png", 1))))
+		return E_FAIL;
+
+	// Katana - Shine Knife(빛나는 칼)
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_ShineKnife",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/OPENING/Knife_Shiny.png", 1))))
+		return E_FAIL;
+
+	// Katana - Attack - 가로베기
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack1/Attack1.png", 1))))
+		return E_FAIL;
+
+	// Katana - Attack - 대각선 오른쪽베기 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack2/Attack2.png", 1))))
+		return E_FAIL;
+
+	// Katana - Attack - 대각선 왼쪽베기
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack3",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack3/Attack3.png", 1))))
+		return E_FAIL;
+
+	// Katana - Attack - 가로베기 이펙트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttackEffect1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack1/LEFT_SLASH%03d.png", 5))))
+		return E_FAIL;
+
+	// Katana - Effect - 대각선 오른쪽베기 이펙트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttackEffect2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack2/LEFT_SLASH%03d.png", 5))))
+		return E_FAIL;
+
+	// Katana - Effect - 대각선 왼쪽베기 이펙트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttackEffect3",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack3/LEFT_SLASH%03d.png", 5))))
+		return E_FAIL;
 
 #pragma endregion UI
 

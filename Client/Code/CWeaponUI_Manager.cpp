@@ -110,7 +110,7 @@ void CWeaponUI_Manager::Weapon_Change()
 		break;
 
 	case WP_KATANA:
-		TagUI_SetActive(L"KatanaUI", true);
+		TagUI_SetActive(L"KatanaUI", false);
 		break;
 
 	case WP_SNIPER:

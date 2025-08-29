@@ -6,12 +6,12 @@
 #include "CMapFactory.h"
 
 CPlayer_HandR::CPlayer_HandR(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CUI(pGraphicDev),m_tInfo({ PLAYER_END, PMV_END,WP_END, WP2_END })
+    : CUI(pGraphicDev),m_tInfo({ PLAYER_END, PMV_END,WP_END, WP2_END }), m_fWaitTimer(0.f), m_iKatanaComboStep(0), m_bKatanaComboAnim(false)
 {
 }
 
 CPlayer_HandR::CPlayer_HandR(const CPlayer_HandR& rhs)
-    : CUI(rhs), m_tInfo(rhs.m_tInfo)
+    : CUI(rhs), m_tInfo(rhs.m_tInfo), m_fWaitTimer(rhs.m_fWaitTimer), m_iKatanaComboStep(rhs.m_iKatanaComboStep), m_bKatanaComboAnim(rhs.m_bKatanaComboAnim)
 {
 }
 
@@ -45,6 +45,7 @@ _int CPlayer_HandR::Update_GameObject(const _float& fTimeDelta)
 {   
     Move_UI(fTimeDelta); // ui 움직임 함수
 
+    Katana(fTimeDelta);
     return NO_EVENT;
 }
 
@@ -134,8 +135,100 @@ HRESULT CPlayer_HandR::Texture_Clone()
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Op_Katana"), m_pTextureCom });
 
+    // IDLE - Katana
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 1.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_IDLE_Katana", SCENE_STATIC, L"Prototype_Component_Texture_UIHandRIdleKatana", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_IDLE_Katana"), m_pTextureCom });
 
+    // Katana AttackCombo2
+    texInfo.m_iStart = 0; texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 40.f; texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_KatanaAtk2", SCENE_STATIC,
+        L"Prototype_Component_Texture_UIHandRAttack2",
+        (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_KatanaAtk2"), m_pTextureCom });
     return S_OK;
+
+    // Katana AttackCombo3
+    texInfo.m_iStart = 0; texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 40.f; texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_HandR_KatanaAtk3", SCENE_STATIC,
+        L"Prototype_Component_Texture_UIHandRAttack3",
+        (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_HandR_KatanaAtk3"), m_pTextureCom });
+    return S_OK;
+}
+
+void CPlayer_HandR::SetKatanaComboStep(int step)
+{
+    m_iKatanaComboStep = step;
+    m_bKatanaComboAnim = true;
+    m_bRenderOn = true; 
+    step = 3;
+    switch (step)
+    {
+    case 1: // 1타 ? 횡베기
+        Change_Texture(TEXT("Com_Texture_HandR_Op_Katana"));
+        Set_UISizeAndPos(480.f, 650.f, WINCX * 0.5f + 100.f, WINCY * 0.5f + 300.f);
+        Set_New_TransInfo(3500.f, 0.f);
+        m_tMoveInfo = { MV_RIGHT, true, 1000.f, 0.f };
+        break;
+
+    case 2: // 2타 ? 오른쪽 대가것ㄴ
+        Change_Texture(TEXT("Com_Texture_HandR_KatanaAtk2"));
+        Set_UISizeAndPos(700.f, 900.f, WINCX * 0.5f + 200.f, WINCY * 0.5f + 300.f);
+        Set_New_TransInfo(7000.f, 0.f);
+        m_tMoveInfo = { MV_RDOWN, true, 1200.f, 0.f };
+        break;
+
+    case 3: // 2타 ? 왼쪽 대각선
+        Change_Texture(TEXT("Com_Texture_HandR_KatanaAtk3"));
+        Set_UISizeAndPos(700.f, 900.f, WINCX * 0.5f + 200.f, WINCY * 0.5f + 300.f);
+        Set_New_TransInfo(7000.f, 0.f);
+        m_tMoveInfo = { MV_RDOWN, true, 1200.f, 0.f };
+        break;
+    }
+}
+
+void CPlayer_HandR::Katana(const float& fTimeDelta)
+{
+    if (m_tInfo.ePlayerState == OPENING && m_tInfo.eWeapon == WP_KATANA)
+    {
+        if (m_tMoveInfo.eUIMove == MV_UP && m_tMoveInfo.IsRangeEnd())
+        {
+            m_tMoveInfo.eUIMove = MV_RIGHT;
+            m_tMoveInfo.bStop = true;
+            m_tMoveInfo.fRange = 80.f;   
+            m_tMoveInfo.fSumRange = 0.f;
+            m_tMoveInfo.bRenderStop = false;
+
+            Set_New_TransInfo(1900, 0.f);
+        }
+        if (m_tMoveInfo.eUIMove == MV_RIGHT && m_tMoveInfo.IsRangeEnd())
+        {
+            m_fWaitTimer += fTimeDelta;
+            if (m_fWaitTimer >= 0.7f) 
+            {
+                m_tMoveInfo.eUIMove = MV_RIGHT;
+                m_tMoveInfo.bStop = true;
+                m_tMoveInfo.fRange = 1000.f;   
+                m_tMoveInfo.fSumRange = 0.f;
+                m_tMoveInfo.bRenderStop = false;
+
+                Set_New_TransInfo(1850.f, 0.f);
+            }
+        }
+    }
+    if (m_bKatanaComboAnim && m_pTextureCom && m_pTextureCom->Is_AnimFinished())
+    {
+        m_bKatanaComboAnim = false;
+    }
 }
 
 HRESULT CPlayer_HandR::Set_Texture()
@@ -147,10 +240,22 @@ HRESULT CPlayer_HandR::Set_Texture()
 
     m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
 
+    if (m_bKatanaComboAnim && m_tInfo.eWeapon == WP_KATANA)
+        return S_OK;
     switch (m_tInfo.ePlayerState)
     {
     case ATTACK:
         m_bRenderOn = false;
+        if (m_tInfo.eWeapon == WP_KATANA) {
+            if (m_bKatanaComboAnim) break;
+
+            m_bRenderOn = true;
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Katana"))))
+                return E_FAIL;
+            Set_UISizeAndPos(480.f, 650.f, WINCX * 0.5f + 100.f, WINCY * 0.5f + 300.f);
+            Set_New_TransInfo(3500.f, 0.f);
+            m_tMoveInfo = { MV_RIGHT, true, 1000.f, 0.f };
+        }
         break;
 
     case OPENING:
@@ -179,8 +284,8 @@ HRESULT CPlayer_HandR::Set_Texture()
         else if (m_tInfo.eWeapon == WP_KATANA) {
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Op_Katana"))))
                 return E_FAIL;
-            Set_UISizeAndPos(400, 600.f, WINCX * 0.5f + 500.f , WINCY * 0.5f + 500.f);
-            Set_New_TransInfo(600.f, 0.f);
+            Set_UISizeAndPos(500.f, 700.f, WINCX * 0.5f + 200.f , WINCY * 0.5f + 500.f);
+            Set_New_TransInfo(700.f, 0.f);
             m_tMoveInfo = { MV_UP, true, 200.f, 0.f };
         }
         
@@ -248,15 +353,26 @@ HRESULT CPlayer_HandR::Set_Texture()
 
     default:
     {
-        if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Idle"))))
-            return E_FAIL;
+        if (m_tInfo.eWeapon == WP_KATANA)
+        {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_IDLE_Katana"))))
+                return E_FAIL;
+            Set_UISizeAndPos(600.f, 800.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 570.f); 
+            Set_New_TransInfo(50.f, 0.f);
+            m_tMoveInfo = { MV_UpDown, false, 10.f, 0.f };
+        }
+        else
+        {
+            if (FAILED(Change_Texture(TEXT("Com_Texture_HandR_Idle"))))
+                return E_FAIL;
 
-        // idle pos
-        Set_UISizeAndPos(400.f, 600.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 570.f); // pos를 정하고
+            // idle pos
+            Set_UISizeAndPos(400.f, 600.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 570.f); // pos를 정하고
 
-        Set_New_TransInfo(50.f, 0.f);
+            Set_New_TransInfo(50.f, 0.f);
 
-        m_tMoveInfo = { MV_RL, false, 10.f, 0.f };
+            m_tMoveInfo = { MV_RL, false, 10.f, 0.f };
+        }
     }
         break;
     }

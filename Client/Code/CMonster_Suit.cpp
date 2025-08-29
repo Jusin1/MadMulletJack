@@ -11,6 +11,7 @@
 #include "CManagement.h"
 #include "CBullet.h"
 #include "CPickingManager.h"
+#include "CCullingManager.h"
 
 #ifdef _DEBUG
 namespace {

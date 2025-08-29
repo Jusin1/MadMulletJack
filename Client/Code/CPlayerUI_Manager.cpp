@@ -83,7 +83,7 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 		return E_FAIL;
 
 	if (m_tInfo.eWeapon == WEAPON::WP_KATANA)
-		TagUI_SetActive(L"HandRUI", false);
+		TagUI_SetActive(L"HandRUI", true);
 
 	// state¿¡ µû¶ó onoff
 	switch (m_tInfo.ePlayerState)

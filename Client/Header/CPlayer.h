@@ -194,7 +194,7 @@ private:
 	Engine::CColider_Cube* m_pColliderCom;			// 큐브 충돌
 	Engine::CColider_Sphere* m_pColiderSphere;		// 구 충돌
 	Engine::CTexture* m_pTextureCom;				// 기본 텍스쳐 -> 지금은 필요없긴 한디 우선 남겨두겠습니다
-	map<const _tchar*, CTexture*> m_mapTexture;
+	map<const _tchar*, CTexture*> m_mapTexture; 
 
 private:
 	PlayerStateInfo m_tPlayerInfo;
