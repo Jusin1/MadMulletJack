@@ -1090,6 +1090,28 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		pEffect->SetOptions(Get_Preset_Blood());
 		pEffect->Trigger();
 	}
+	if (KEY_BUTTON_DOWN(DIK_U))
+	{
+		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
+			CManagement::GetInstance()->Get_CurrentSceneIdx(),
+			L"Effect_Layer",
+			nullptr);
+		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
+		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+		pEffect->SetOptions(Get_Preset_Electric());
+		pEffect->Trigger();
+	}
+	if (KEY_BUTTON_DOWN(DIK_I))
+	{
+		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
+			CManagement::GetInstance()->Get_CurrentSceneIdx(),
+			L"Effect_Layer",
+			nullptr);
+		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
+		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+		pEffect->SetOptions(Get_Preset_BulletSpark());
+		pEffect->Trigger();
+	}
 }
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
@@ -1765,4 +1787,6 @@ const TCHAR* CPlayer::MoveToString(PLAYERMOVE eMove)
 	case PMV_END: return TEXT("Move: Unknown\n");
 	case PMV_FALL: return TEXT("Move: Fall\n");
 	}
+
+	return nullptr;
 }

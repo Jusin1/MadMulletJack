@@ -799,6 +799,8 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Road_Sign_4", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 4.png",1);
 	AddTexture(L"Proto_Road_Sign_5", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 5.png",1);
 	AddTexture(L"Proto_Road_Tree", L"../../Client/Bin/Resource/MapObject/Road/ARVORE 2.png",1);
+
+	return S_OK;
 }
 
 float CLoader::Get_Progress() const
@@ -1401,4 +1403,6 @@ HRESULT CLoader::Loading_UI()
 
 	PhaseStep(1.0f, L"UI 로딩 완료");
 	PhaseDone(L"UI 로딩 완료");
+
+	return S_OK;
 }

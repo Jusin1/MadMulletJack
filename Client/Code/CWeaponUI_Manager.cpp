@@ -54,7 +54,7 @@ _int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	return NO_EVENT();
+	return NO_EVENT;
 }
 
 void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)

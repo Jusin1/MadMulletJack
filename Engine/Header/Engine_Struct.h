@@ -116,10 +116,6 @@ namespace Engine
 		EffectMode eMode = EffectMode::LINEAR;
 		int   iPixelCount = 64;
 
-		// 반복 횟수 및 시간
-		int   iRepeatCount = 1;
-		float fRepeatTime = 0.05f;
-
 		// 생명시간
 		float fLife_Min = 0.15f;
 		float fLife_Max = 0.35f;
@@ -138,6 +134,12 @@ namespace Engine
 		
 		// 저항
 		float fDrag = 0.0f;
+
+		// 노이즈/스파이럴 파라미터
+		float fNoiseStrength = 15.f; // CURVE_NOISE: 가속 크기(도/초 수준)
+		float fNoiseFreq = 20.f; // Hz
+		float fSpiralFreq = 8.f;  // SPIRAL 회전 빈도
+		float fSpiralAmp = 6.f;  // SPIRAL 반경 가속
 
 		// 전기, 스파이크 = Add
 		// 피 = Alpha

@@ -14,9 +14,10 @@ private:
 		_float       fDurationTime;
 		// ¼ö¸í
 		_float       fLifeTime;
-		D3DCOLOR    colorStart;
-		D3DCOLOR    colorEnd;
+		D3DXCOLOR    colorStart;
+		D3DXCOLOR    colorEnd;
 		_float       fSize;
+		_float		 fPhase;
 		_bool        bAlive;
 	} ParticleInfo;
 private:
@@ -57,11 +58,8 @@ private:
 		return dwReturn;
 	}
 private:
-	_bool m_bAlive{ FALSE };
 	_int m_iAliveCount{ 0 };
-	_int m_iRepeatRemain{ 0 };
 	_int m_iVBCapacity{ 0 };
-	_float m_fRepeatTimer{ 0.f };
 	LPDIRECT3DVERTEXBUFFER9		m_pVB{ nullptr };
 	EffectOptions m_tOption;
 	vector<ParticleInfo> m_vecParticles;

@@ -32,6 +32,8 @@ HRESULT CKatana::Initialize(void* pArg)
 		return E_FAIL;
 
 	Set_Texture();
+
+	return S_OK;
 }
 
 _int CKatana::Update_GameObject(const _float& fTimeDelta)

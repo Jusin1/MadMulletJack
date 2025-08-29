@@ -58,12 +58,12 @@ HRESULT CEffect_Pixel::Initialize(void *pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (pArg)
+    if (EffectOptions* pOption = reinterpret_cast<EffectOptions*>(pArg))
     {
-        m_tOption = *reinterpret_cast<EffectOptions *>(pArg);
+        ::memcpy(&m_tOption, pOption, sizeof(EffectOptions));
         // VB 준비
         SetOptions(m_tOption, /*reallocateVB*/true);
-        // 생성과 동시에 발사 원하면:
+        // 생성과 동시에 발사
         Trigger();
     }
     
@@ -72,48 +72,30 @@ HRESULT CEffect_Pixel::Initialize(void *pArg)
 
 _int CEffect_Pixel::Update_GameObject(const _float &fTimeDelta)
 {
-    if (!m_bAlive && m_iAliveCount <= 0)
+    if (m_iAliveCount <= 0)
         return DEAD;
 
-    // 반복 방출 스케줄
-    if (m_bAlive && m_iRepeatRemain > 0)
-    {
-        m_fRepeatTimer += fTimeDelta;
+    m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
-        if (m_fRepeatTimer >= m_tOption.fRepeatTime)
-        {
-            m_fRepeatTimer = 0.f;
-            Do_Once();
-            --m_iRepeatRemain;
-
-            if (m_iRepeatRemain <= 0)
-            {
-                m_bAlive = false;
-            }
-        }
-    }
-
-    if (nullptr != m_pRendererCom)
-        m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
     Particle_Update(fTimeDelta);
-
-    
-
     return NO_EVENT;
 }
 
 void CEffect_Pixel::Render_GameObject()
 {
-    if (m_iAliveCount <= 0 || !m_pVB) return;
+    if (m_iAliveCount <= 0 || !m_pVB)
+        return;
 
-    Ready_VB();
+    if (FAILED(Ready_VB()))
+    {
+        MSG_BOX("CEffect_Pixel::Render_GameObject, Failed");
+        return;
+    }
     m_pTransformCom->Apply_WorldMatrix();
 
     // 렌더상태
     m_pGraphicDev->SetStreamSource(0, m_pVB, 0, sizeof(VTXPIXELCOLOR));
-
     m_pGraphicDev->SetFVF(FVF_PIXEL_COLOR);
-
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
     Effect_SetRenderState();
 
@@ -132,7 +114,6 @@ void CEffect_Pixel::Render_GameObject()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 
-    
     m_pGraphicDev->DrawPrimitive(D3DPT_POINTLIST, 0, m_iAliveCount);
 
     m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
@@ -148,7 +129,7 @@ void CEffect_Pixel::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
 {
     m_tOption = tOption;
 
-    const int iCapacity = tOption.iPixelCount * (std::max)(1, tOption.iRepeatCount + 1) * 2 + 32;
+    const int iCapacity = tOption.iPixelCount + 32;
 
     m_vecParticles.clear();
     m_vecParticles.resize(iCapacity);
@@ -169,6 +150,7 @@ void CEffect_Pixel::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
             &m_pVB,
             nullptr)))
         {
+            MSG_BOX("CEffect_Pixel::SetOptions, Failed");
             m_iVBCapacity = 0;
         }
     }
@@ -176,35 +158,20 @@ void CEffect_Pixel::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
 
 void CEffect_Pixel::Trigger()
 {
-    m_iRepeatRemain = (std::max)(0, m_tOption.iRepeatCount);
-    m_fRepeatTimer = 0.f;
-    m_bAlive = true;
     Do_Once();
 }
 
 void CEffect_Pixel::Do_Once()
 {
-    const int iCount = (std::min)(m_tOption.iPixelCount, (_int)(m_vecParticles.size() - m_iAliveCount));
-    for (int i = 0; i < iCount; ++i)
+    const int iIndex = (std::min)(m_tOption.iPixelCount, (_int)(m_vecParticles.size() - m_iAliveCount));
+    for (int i = 0; i < iIndex; ++i)
     {
-        // 빈 슬롯 찾기
-        _int iSlot{ -1 };
-        for (int j = 0; j < m_vecParticles.size(); ++j)
-        {
-            if(!m_vecParticles[j].bAlive)
-            {
-                iSlot = j;
-                break;
-            }
-        }
+        ParticleInfo &tInfo = m_vecParticles[i];
 
-        // 빈 슬롯 없으면 나가기
-        if (iSlot < 0)
-            break;
+        if (tInfo.bAlive)
+            continue;
 
-        ParticleInfo &tInfo = m_vecParticles[iSlot];
-        tInfo.vPosition = _vec3{};
-
+        tInfo.vPosition = _vec3{ 0.f, 0.f, 0.f };
         // 방향/속도
         _vec3 vDir = randomDir_HalfSphere();
         _float fSpeed = randRange(m_tOption.fSpeed_Min, m_tOption.fSpeed_Max);
@@ -213,8 +180,8 @@ void CEffect_Pixel::Do_Once()
         tInfo.fDurationTime = 0.f;
         tInfo.fLifeTime = randRange(m_tOption.fLife_Min, m_tOption.fLife_Max);
         tInfo.fSize = randRange(m_tOption.fSize_Min, m_tOption.fSize_Max);
-        tInfo.colorStart = ToColor(m_tOption.colorStart);
-        tInfo.colorEnd = ToColor(m_tOption.colorEnd);
+        tInfo.colorStart = m_tOption.colorStart;
+        tInfo.colorEnd = m_tOption.colorEnd;
         tInfo.bAlive = true;
         ++m_iAliveCount;
     }
@@ -231,6 +198,8 @@ void CEffect_Pixel::Particle_Update(_float fDeltaTime)
         if (!tElement.bAlive)
             continue;
 
+        const float fNoiseFrequency = m_tOption.fNoiseFreq * 6.28f;
+
         // 가속 구성
         _vec3 fAccelVelocity{ 0,0,0 };
         switch (m_tOption.eMode)
@@ -242,6 +211,47 @@ void CEffect_Pixel::Particle_Update(_float fDeltaTime)
         case EffectMode::GRAVITY_ARC:
         {
             fAccelVelocity += _vec3{ 0, -9.8f, 0 };
+            fAccelVelocity += (-m_tOption.fDrag) * tElement.vVelocity;
+        } break;
+        case EffectMode::CURVE_NOISE:
+        {
+            _vec3 vSrc = tElement.vVelocity; 
+            _float fLength = ::D3DXVec3Length(&vSrc);
+            if (fLength > 1e-4f /*Epsilon*/)
+            {
+                vSrc /= fLength;
+                _vec3 vWorldUp{ 0, 1.f, 0 };
+                _vec3 vCrossResult;
+                ::D3DXVec3Cross(&vCrossResult, &vSrc, &vWorldUp);
+                if (::D3DXVec3LengthSq(&vCrossResult) < 1e-6f)
+                {
+                   ::D3DXVec3Cross(&vCrossResult, &vSrc, &vWorldUp);
+                }
+                ::D3DXVec3Normalize(&vCrossResult, &vCrossResult);
+                float fSin = sinf(tElement.fPhase + fNoiseFrequency * tElement.fDurationTime);
+                fAccelVelocity += vCrossResult * (m_tOption.fNoiseStrength * fSin);
+            }
+            fAccelVelocity += (-m_tOption.fDrag) * tElement.vVelocity;
+        } break;
+        case EffectMode::SPIRAL:
+        {
+            _vec3 vSrc = tElement.vVelocity;
+            _float fLength = ::D3DXVec3Length(&vSrc);
+            if (fLength > 1e-4f)
+            {
+                vSrc /= fLength;
+                _vec3 vWorldUp{ 0, 1.f, 0 };
+                _vec3 vCrossResult;
+                ::D3DXVec3Cross(&vCrossResult, &vSrc, &vWorldUp);
+                if (::D3DXVec3LengthSq(&vCrossResult) < 1e-6f)
+                {
+                    ::D3DXVec3Cross(&vCrossResult, &vSrc, &vWorldUp);
+                }
+                ::D3DXVec3Normalize(&vCrossResult, &vCrossResult);
+                _float fSin = sinf(tElement.fPhase + fNoiseFrequency * tElement.fDurationTime);
+                _float fCos = cosf(tElement.fPhase + fNoiseFrequency * tElement.fDurationTime);
+                fAccelVelocity += (vCrossResult * fSin + vWorldUp * fCos) * m_tOption.fSpiralAmp;
+            }
             fAccelVelocity += (-m_tOption.fDrag) * tElement.vVelocity;
         } break;
         }
@@ -260,12 +270,13 @@ void CEffect_Pixel::Particle_Update(_float fDeltaTime)
 
 HRESULT CEffect_Pixel::Ready_VB()
 {
-	if (!m_pVB || m_iAliveCount <= 0) return E_FAIL;
+	if (!m_pVB || m_iAliveCount <= 0)
+        return E_FAIL;
 
 	VTXPIXELCOLOR *vtx = nullptr;
 	m_pVB->Lock(0, sizeof(VTXPIXELCOLOR) * m_iVBCapacity, (void **)&vtx, D3DLOCK_DISCARD);
 
-	int iCount{ 0 };
+	int iIndex{ 0 };
 	for (ParticleInfo &tElement : m_vecParticles)
 	{
 		if (!tElement.bAlive)
@@ -273,12 +284,13 @@ HRESULT CEffect_Pixel::Ready_VB()
 
 		// 경과 시간 / 생명 시간으로 색깔 보간!
 		float fSrc = (std::min)(1.f, (std::max)(0.f, tElement.fDurationTime / tElement.fLifeTime));
-		vtx[iCount].vPosition = tElement.vPosition;
-		vtx[iCount].dwColor = ToColor(LerpColor(tElement.colorStart, tElement.colorEnd, fSrc));
-		vtx[iCount].fSize = tElement.fSize;
-		++iCount;
+		vtx[iIndex].vPosition = tElement.vPosition;
+		vtx[iIndex].dwColor = ToColor(LerpColor(tElement.colorStart, tElement.colorEnd, fSrc));
+		vtx[iIndex].fSize = tElement.fSize;
+		++iIndex;
 	}
 	m_pVB->Unlock();
+    return S_OK;
 }
 
 D3DXCOLOR CEffect_Pixel::LerpColor(const D3DXCOLOR &a, const D3DXCOLOR &b, _float _f)
@@ -299,7 +311,7 @@ float CEffect_Pixel::randRange(_float a, _float b) const
 D3DXVECTOR3 CEffect_Pixel::randomDir_HalfSphere() const
 {
 	float u = rand01() * 2.f - 1.f;      // cos theta in [-1,1]
-	float phi = rand01() * 3.14f;
+	float phi = rand01() * 6.28f;
 	float r = sqrtf((std::max)(0.f, 1.f - u * u));
 	D3DXVECTOR3 d(r * cosf(phi), fabsf(u), r * sinf(phi)); // y>=0
 	D3DXVec3Normalize(&d, &d);

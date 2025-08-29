@@ -105,6 +105,8 @@ namespace Engine
 	{
 		LINEAR = 0,
 		GRAVITY_ARC,
+		CURVE_NOISE,
+		SPIRAL,
 		NONE
 	};
 	constexpr size_t g_EffectModeCount{ static_cast<size_t>(EffectMode::NONE) };

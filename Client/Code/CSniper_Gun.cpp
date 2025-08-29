@@ -38,6 +38,8 @@ HRESULT CSniper_Gun::Initialize(void* pArg)
 	m_fCoolTime = 0.1f;
 
 	Set_Texture();
+
+	return S_OK;
 }
 
 _int CSniper_Gun::Update_GameObject(const _float& fTimeDelta)

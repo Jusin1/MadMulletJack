@@ -31,7 +31,7 @@ public:
 	_int Get_Precision() const { return m_iPrecision; }
 	void Set_Precision(_int _iPrecision) { m_iPrecision = _iPrecision; }
 	_float Get_CoolTime() const { return m_fCoolTime; }
-	void Set_CoolTime(_int _iSpeed) { m_fCoolTime = _iSpeed; }
+	void Set_CoolTime(_int _iSpeed) { m_fCoolTime = (_float)_iSpeed; }
 
 	_float Get_Range() const { return m_fRange; }
 	void Set_Range(_float _fRange) { m_fRange = _fRange; }
