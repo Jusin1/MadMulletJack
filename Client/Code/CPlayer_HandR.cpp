@@ -138,6 +138,8 @@ HRESULT CPlayer_HandR::Set_Texture()
 
     m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
 
+    m_tMoveInfo.eUIMove = MV_NON;
+
     switch (m_tInfo.ePlayerState)
     {
     case ATTACK:

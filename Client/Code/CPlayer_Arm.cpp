@@ -55,7 +55,6 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 
         else
         {
-            //CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
             m_bRenderOn = false;
         }
     }

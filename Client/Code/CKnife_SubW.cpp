@@ -53,22 +53,22 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 		// scene을 받아옴
 		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
 
-		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		_uint iPlayerUI_Idx = 0;
-		switch (eCurScene)
-		{
-		case SCENE_DEV:
-			iPlayerUI_Idx = 1;
-			break;
+		//// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
+		//_uint iPlayerUI_Idx = 0;
+		//switch (eCurScene)
+		//{
+		//case SCENE_DEV:
+		//	iPlayerUI_Idx = 1;
+		//	break;
 
-		case SCENE_TUTORIAL:
-			iPlayerUI_Idx = 1;
-			break;
-		}
+		//case SCENE_TUTORIAL:
+		//	iPlayerUI_Idx = 1;
+		//	break;
+		//}
 
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-			->Find_Object(eCurScene, L"UI_Layer", iPlayerUI_Idx))
+			->Find_Object(eCurScene, L"UI_Layer", 1))
 			->Find_Child_ByTag(L"HandRUI");
 
 		// handR 위치를 기준으로 pos 갱신 (offset 적용)

@@ -223,8 +223,6 @@ private:
 	_uint m_iCurScene;			// 현재 scene
 	_bool m_bIsZoomStage;		// zoom 가능 씬일 경우 적용되는 함수가 다르므로 bool값 줌
 
-	_float m_fMoveTime; // 움직임 시간
-
 private:
 	CUIBase* m_pPlayerUI = nullptr;
 	CUIBase* m_pHpBarUI = nullptr;

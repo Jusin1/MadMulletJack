@@ -26,7 +26,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
-	m_fAttackCoolTime(0.f), m_vPrePos({0.f,0.f,0.f})
+	m_fAttackCoolTime(0.f)
 {
 }
 
@@ -36,7 +36,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
 	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
-	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_vPrePos(rhs.m_vPrePos)
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime)
 {
 }
 
@@ -107,6 +107,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 		break;
 	}
 
+	// ui 키기
+	m_pPlayerUI->Set_Active(true);
+	m_pPlayerUI->Set_RenderOn(true);
+
+	m_pWeaponUI->Set_Active(true);
+	m_pWeaponUI->Set_RenderOn(true);
+
 	return S_OK;
 }
 
@@ -136,7 +143,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	if (m_bIsZoomStage)
 	{
 		ZoomLateUpdate(fTimeDelta);
@@ -195,7 +201,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	// 만약 체력이 0이 되면 state <- PLAYERDEAD
 	if (m_fHp <= 0)
 	{
-		// debug  deadtest
+		// test : 죽음 방지
 		/*Change_State(PLAYERDEAD);
 		Change_Move(PMV_NORMAL);*/
 	}
@@ -606,7 +612,7 @@ void CPlayer::IDLE_End()
 // jump
 void CPlayer::JUMP_Begin()
 {
-	Set_Velocity(5.5f);
+	Set_Velocity(7.f); // origin : 5.5, test .3
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
@@ -615,8 +621,17 @@ void CPlayer::JUMP_Begin()
 void CPlayer::JUMP_On(const _float& fTimeDelta)
 {
 	// 만약 wall slide에 부딫히면 -> state : idle, move : wall
-	if (Set_Collider_With_SlideWall())
+	/*if (Set_Collider_With_SlideWall())
+		return;*/
+
+	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE))
+	{
+		// state, move 바꿈
+		Change_Move(PMV_WALL);
+		Change_State(IDLE);
+
 		return;
+	}
 
 	if (!m_bJumping)
 		Set_State_Normal();
@@ -744,8 +759,6 @@ void CPlayer::ZOOM_Begin()
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
 
-	//m_vPrePos = Get_Pos();
-	//GetTransform()->Move_PosDir(1.f, Get_Look());
 }
 
 void CPlayer::ZOOM_On(const _float& fTimeDelta)
@@ -754,7 +767,7 @@ void CPlayer::ZOOM_On(const _float& fTimeDelta)
 
 void CPlayer::ZOOM_End()
 {
-	//GetTransform()->Set_Info(INFO_POS, m_vPrePos);
+
 }
 
 // reload
@@ -900,9 +913,6 @@ void CPlayer::ATTACK_ZOOM_Begin()
 	// sniper는 텍스처 유지라서
 	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
 		m_fStateTime = 1.f;
-
-	//m_vPrePos = Get_Pos();
-	//GetTransform()->Move_PosDir(1.f, Get_Look());
 }
 
 void CPlayer::ATTACK_ZOOM_On(const _float& fTimeDelta)
@@ -920,7 +930,6 @@ void CPlayer::ATTACK_ZOOM_On(const _float& fTimeDelta)
 
 void CPlayer::ATTACK_ZOOM_End()
 {
-	//GetTransform()->Set_Info(INFO_POS, m_vPrePos);
 }
 
 void CPlayer::ZOOMOUT_Begin()
@@ -1092,13 +1101,9 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 	// 좌 클릭시 : attack
 	if (IS_LBUTTON_DOWN)
 	{
-		if (m_bIsAttack)
+		if (m_tPlayerInfo.ePlayerState == ZOOM)
 		{
-			if (m_tPlayerInfo.ePlayerState == ZOOM)
-				Change_State(ATTACK_ZOOM);
-
-			else
-				Change_State(ATTACK);
+			Change_State(ATTACK_ZOOM);
 		}
 	}
 
@@ -1177,6 +1182,7 @@ void CPlayer::Move(const _float& fTimeDelta)
 	case PMV_WALL:
 	{
 		m_bIsAttack = true;
+		m_bJumping = true;
 		m_eMoveKey = MVKEY_NON;
 		Move_Wall(fTimeDelta);
 	}
@@ -1259,19 +1265,7 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 
 void CPlayer::Move_Wall(const _float& fTimeDelta)
 {
-	// slide wall이랑 충돌이면 :  전진 with fixY
-	if (Set_Collider_With_SlideWall())
-	{
-		m_pTransformCom->Move_Forward(fTimeDelta, m_fFixY);
-		return;
-	}
-		
-	// slide wall이랑 충돌이 아니면 : state->Jump, move->Normal
-	else
-	{
-		Change_Move(PMV_NORMAL);
-		Change_State(JUMP);
-	}
+	m_pTransformCom->Move_PosDir(fTimeDelta, {0.f,0.f,1.f});
 }
 
 void CPlayer::Move_JumpDash(const _float& fTimeDelta)
@@ -1313,12 +1307,13 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 	m_tPlayerInfo.eWeapon2 = _eWeapon2; // state 업데이트
 	CGlobal_Info::Get_Instance()->Set_PlayerInfo(m_tPlayerInfo); // global에게도 정보 업데이트
 
+	// 만약 wp2가 doping이면 state : doping
 	if (m_tPlayerInfo.eWeapon2 == WP_DOPING)
 		Change_State(DOPING);
 
 	// 충돌때 생성
 	// change 후 destroy
-	// CUIManager::GetInstance()->CreateItemUI();
+	//CUIManager::GetInstance()->CreateItemUI();
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
@@ -1356,12 +1351,13 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	break;
 	
 	case PMV_WALL:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 3.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 2.f;
+		//m_fFixY *= 2.f;
 		m_bIsFixY = true;
 		break;
 
 	case PMV_DASHJUMP:
-		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 10.f;
+		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 		m_bIsFixY = true;
 		break;
 
@@ -1421,14 +1417,15 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
-	
+
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
 	Set_Colllider_With_Monster(fTimeDelta);
-	
 	Set_Collider_With_SpecialTile();
 	//Set_Collider_With_Item();
+
+	Set_Collider_With_SlideWall();
 }
 
 void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
@@ -1488,13 +1485,17 @@ void CPlayer::Set_Collider_With_Clear()
 
 void CPlayer::Set_Collider_With_Wall()
 {
-	
-	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_HORWALL, this, CColiderManager::COLLISION_SPHERE_CUBE))
+	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_HORWALL, 
+		this, CColiderManager::COLLISION_SPHERE_CUBE,1.f))
 	{
+		GetTransform()->GetTransformInfo().fSpeed = 0.f;
 	}
-	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_VERWALL, this, CColiderManager::COLLISION_SPHERE_CUBE))
+	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_VERWALL, 
+		this, CColiderManager::COLLISION_SPHERE_CUBE, 1.f))
 	{
+		GetTransform()->GetTransformInfo().fSpeed = 0.f;
 	}
+
 
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, -0.01f))
 	{
@@ -1502,6 +1503,7 @@ void CPlayer::Set_Collider_With_Wall()
 		//m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance - _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
 	}
+
 }
 
 void CPlayer::Set_Collider_With_Door()
@@ -1592,18 +1594,26 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 	}
 }
 
-_bool CPlayer::Set_Collider_With_SlideWall()
+void CPlayer::Set_Collider_With_SlideWall()
 {
-	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE))
+	if (m_bJumping &&
+		(CColiderManager::GetInstance()->CollisionGroupPush
+		(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE)))
 	{
 		// state, move 바꿈
 		Change_Move(PMV_WALL);
 		Change_State(IDLE);
-
-		return true;
 	}
 
-	return false;
+	else if (m_tPlayerInfo.ePlayerMove == PMV_WALL &&
+		!(CColiderManager::GetInstance()->CollisionGroup
+		(CColiderManager::COLLISION_WALL_SLIDE, this, CColiderManager::COLLISION_SPHERE_CUBE, nullptr)))
+	{
+		Change_Move(PMV_NORMAL);
+		Change_State(JUMP);
+	}
+
+	return;
 }
 
 void CPlayer::Set_Collider_With_Item()

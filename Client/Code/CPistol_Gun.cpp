@@ -47,7 +47,7 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 	m_iPrecision = 10;
 	m_fCoolTime = 0.1f;
 	// 최대 불렛
-	m_iMaxBullet = 3; //origin : 9 / debug 3
+	m_iMaxBullet = 9; //origin : 9 / test 3
 	m_iBullet = m_iMaxBullet;
 
 	Set_Texture();
@@ -66,7 +66,7 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 		_uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
 
 		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		_uint iPlayerUI_Idx = 0;
+		/*_uint iPlayerUI_Idx = 0;
 		switch (iCurScene)
 		{
 		case SCENE_DEV:
@@ -76,11 +76,11 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 		case SCENE_TUTORIAL:
 			iPlayerUI_Idx = 1;
 			break;
-		}
+		}*/
 
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-			->Find_Object(iCurScene, L"UI_Layer", iPlayerUI_Idx))
+			->Find_Object(iCurScene, L"UI_Layer", 1))
 			->Find_Child_ByTag(L"HandRUI");
 
 		// handR 위치를 기준으로 pos 갱신 (offset 적용)

@@ -60,7 +60,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
     if (m_pTransformCom)
     {
         CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
-        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 10.f, tMyTransInfo.fRotationSpeed });
+        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 5.f, tMyTransInfo.fRotationSpeed });
     }
 
     return NO_EVENT;
