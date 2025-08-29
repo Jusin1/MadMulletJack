@@ -104,9 +104,7 @@ namespace Engine
 	enum class EffectMode : unsigned int
 	{
 		LINEAR = 0,
-		CURVE_NOISE,
 		GRAVITY_ARC,
-		SPIRAL,
 		NONE
 	};
 	constexpr size_t g_EffectModeCount{ static_cast<size_t>(EffectMode::NONE) };

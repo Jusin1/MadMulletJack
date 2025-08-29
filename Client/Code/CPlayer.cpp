@@ -1086,8 +1086,8 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			L"Effect_Layer",
 			nullptr);
 		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
-		pEffect->SetTargetPosition(_vec3{ 2.f, 1.f, 5.f });
-		pEffect->SetOptions(CEffect_Pixel::Get_Preset_Blood());
+		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+		pEffect->SetOptions(Get_Preset_Blood());
 		pEffect->Trigger();
 	}
 }

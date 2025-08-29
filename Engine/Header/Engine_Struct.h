@@ -139,18 +139,12 @@ namespace Engine
 		// 저항
 		float fDrag = 0.0f;
 
-		// 노이즈/스파이럴 파라미터
-		float fNoiseStrength = 15.f; // CURVE_NOISE: 가속 크기(도/초 수준)
-		float fNoiseFrequency = 20.f; // Hz
-		float fSpiralFrequency = 8.f;  // SPIRAL 회전 빈도
-		float fSpiralAmp = 6.f;  // SPIRAL 반경 가속
-
 		// 전기, 스파이크 = Add
 		// 피 = Alpha
 		BlendMode eBlendmode = BlendMode::ADDITIVE;
 
 		// 최대 파티클 = PixelCount * RepeatCount * 2 가 여유롭고 좋음
-		int fMax_ParticlesBufferSize = 512;
+		int fMax_ParticlesBufferSize{ 0 };
 
 	} EffectOptions;
 }

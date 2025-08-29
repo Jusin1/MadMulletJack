@@ -17,7 +17,6 @@ private:
 		D3DCOLOR    colorStart;
 		D3DCOLOR    colorEnd;
 		_float       fSize;
-		_float       fPhase;
 		_bool        bAlive;
 	} ParticleInfo;
 private:
@@ -36,34 +35,34 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float &fTimeDelta) {};
 	virtual			void		Render_GameObject();
 
-	const _vec3 &GetTargetPosition() const { return m_vTargetPosition; }
-	void SetTargetPosition(const _vec3 &vPos) { m_vTargetPosition = vPos; }
-	void SetTargetPosition(_vec3 *pPos) { m_vTargetPosition = *pPos; }
 	void SetOptions(const EffectOptions &tOption, _bool bRemakeVB = true);
 	void Trigger();
 
 	// ÇÁ¸®¼Â
-	static EffectOptions Get_Preset_BulletSpark();
-	static EffectOptions Get_Preset_Electric();
-	static EffectOptions Get_Preset_Blood();
+	
 private:
 	void Do_Once();
 	void Particle_Update(_float fDeltaTime);
 	HRESULT Ready_VB();
 	D3DXCOLOR LerpColor(const D3DXCOLOR &a, const D3DXCOLOR &b, _float _f);
 	_float  rand01() const;
-	_float  randRange(float a, float b) const;
+	_float  randRange(_float a, _float b) const;
 	D3DCOLOR ToColor(const D3DXCOLOR &c) { return D3DCOLOR_COLORVALUE(c.r, c.g, c.b, c.a); }
 	_vec3 randomDir_HalfSphere() const;
 	void Effect_SetRenderState();
+	DWORD FtoDW(_float f)
+	{
+		DWORD dwReturn;
+		::memcpy(&dwReturn, &f, sizeof(_float));
+		return dwReturn;
+	}
 private:
-	_bool m_bActive{ FALSE };
+	_bool m_bAlive{ FALSE };
 	_int m_iAliveCount{ 0 };
-	_int m_iRepeatCounting{ 0 };
+	_int m_iRepeatRemain{ 0 };
 	_int m_iVBCapacity{ 0 };
 	_float m_fRepeatTimer{ 0.f };
 	LPDIRECT3DVERTEXBUFFER9		m_pVB{ nullptr };
-	_vec3 m_vTargetPosition{ 0, 0, 0 };
 	EffectOptions m_tOption;
 	vector<ParticleInfo> m_vecParticles;
 };
