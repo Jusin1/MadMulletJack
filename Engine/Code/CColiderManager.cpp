@@ -271,7 +271,8 @@ _bool CColiderManager::CollisionGroupPush(COLLISION_GROUP eGroup, CGameObject* p
 				continue;
 			if (true == (dynamic_cast<CColider_Rect*>(DamageOwner)->Collision_Check((CColider_Rect*)Target, &vDistance)))
 			{
-				pGameObject->GetTransform()->Set_Info(INFO_POS, pGameObject->GetTransform()->Get_Info(INFO_POS) += (vDistance* fOffset));
+				_vec3 vPos = pGameObject->GetTransform()->Get_Info(INFO_POS);
+				pGameObject->GetTransform()->Set_Info(INFO_POS, vPos += (vDistance * fOffset));
 				return true;
 			}
 				
@@ -329,7 +330,6 @@ _bool CColiderManager::CollisionGroupPush(COLLISION_GROUP eGroup, CGameObject* p
 				pSphere->Collision_Check(pCube, &vDistance))
 			{
 				_vec3 vPos = pGameObject->GetTransform()->Get_Info(INFO_POS);
-				pGameObject->GetTransform()->Set_Info(INFO_POS, vPos += (vDistance * fOffset));
 				return true;
 			}
 		}

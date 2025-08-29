@@ -173,7 +173,7 @@ private:
 	void			Set_Collider_With_Wall();
 	void			Set_Collider_With_Door();
 	void			Set_Colllider_With_Monster(const _float& fTimeDelta);
-	_bool			Set_Collider_With_SlideWall();
+	void			Set_Collider_With_SlideWall();
 	void			Set_Collider_With_Item();			// item과 충돌시 -> test : 자판기랑 collision
 	_bool			Set_Collider_With_SpecialTile();	// 발차기 이벤트 나가는 tile || wall 충돌 검사
 
@@ -223,7 +223,7 @@ private:
 	_uint m_iCurScene;			// 현재 scene
 	_bool m_bIsZoomStage;		// zoom 가능 씬일 경우 적용되는 함수가 다르므로 bool값 줌
 
-	_vec3 m_vPrePos;
+	_float m_fMoveTime; // 움직임 시간
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;
