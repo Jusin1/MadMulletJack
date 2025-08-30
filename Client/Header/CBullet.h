@@ -22,6 +22,8 @@ public:
     virtual void    LateUpdate_GameObject(const _float& fTimeDelta);
     virtual void    Render_GameObject();
 
+    virtual HRESULT Spawn_Pooling(void *pArg = nullptr) override;
+    virtual HRESULT Despawn_Pooling() override;
 protected:
     HRESULT Set_Component();
     void    Set_Collider_With_Wall();

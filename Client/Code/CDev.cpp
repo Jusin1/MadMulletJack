@@ -4,6 +4,7 @@
 #include "CDataManager.h"
 #include "CFileManager.h"
 #include "CMapFactory.h"
+#include "CObjectPoolManager.h"
 #include "CObjectManager.h"
 #include "CPlayer.h"
 #include "CMonster.h"
@@ -74,7 +75,7 @@ HRESULT CDev::Ready_Scene()
         return E_FAIL;
 
     CPickingManager::GetInstance()->Ready_Picking();
-
+    CObjectPoolManager::GetInstance()->Ready_Pools();
     return S_OK;
 }
 

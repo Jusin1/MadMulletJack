@@ -264,7 +264,7 @@
     <ClCompile Include="..\Code\CObjectPoolManager.cpp">
       <Filter>00. Manager\15. ObjectPool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffect.cpp">
+    <ClCompile Include="..\Code\CEffect_World.cpp">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CObjectPool.cpp">
@@ -419,7 +419,7 @@
     <ClInclude Include="..\Header\CObjectPoolManager.h">
       <Filter>00. Manager\15. ObjectPool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffect.h">
+    <ClInclude Include="..\Header\CEffect_World.h">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CObjectPool.h">

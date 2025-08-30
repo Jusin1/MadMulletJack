@@ -111,14 +111,20 @@ namespace Engine
 		std::vector<MAPOBJECTDATA> vecChildrensData;
 	}PREFABDATA;
 
+	typedef struct tagBulletData
+	{
+		_vec3 vMuzzlePosition{0.f, 0.f, 0.f};
+		_vec3 vLookDir{ 0.f, 0.f, 0.f };
+	}BulletData;
+
 	typedef struct tagEffectOptions
 	{
 		EffectMode eMode = EffectMode::LINEAR;
 		int   iPixelCount = 64;
 
 		// 생명시간
-		float fLife_Min = 0.15f;
-		float fLife_Max = 0.35f;
+		float fLife_Min = 3.f;
+		float fLife_Max = 5.f;
 
 		// 크기
 		float fSize_Min = 4.f;

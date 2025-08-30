@@ -57,16 +57,9 @@ HRESULT CEffect_Pixel::Initialize(void *pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
-
-    if (EffectOptions* pOption = reinterpret_cast<EffectOptions*>(pArg))
-    {
-        ::memcpy(&m_tOption, pOption, sizeof(EffectOptions));
-        // VB 준비
-        SetOptions(m_tOption, /*reallocateVB*/true);
-        // 생성과 동시에 발사
-        Trigger();
-    }
     
+    SetOptions(EffectOptions{}, true);
+
     return S_OK;
 }
 
@@ -143,7 +136,7 @@ void CEffect_Pixel::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
         m_iVBCapacity = iCapacity;
 
         if (FAILED(m_pGraphicDev->CreateVertexBuffer(
-            sizeof(VTXPIXELCOLOR) * m_iVBCapacity,
+            sizeof(VTXPIXELCOLOR) * 128, /* 여유치 */
             D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
             FVF_PIXEL_COLOR,
             D3DPOOL_DEFAULT,
@@ -159,6 +152,36 @@ void CEffect_Pixel::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
 void CEffect_Pixel::Trigger()
 {
     Do_Once();
+}
+
+HRESULT CEffect_Pixel::Spawn_Pooling(void *pArg)
+{
+    if (FAILED(CGameObject::Spawn_Pooling()))
+        return E_FAIL;
+
+    if (EffectOptions *pOption = reinterpret_cast<EffectOptions *>(pArg))
+    {
+        ::memcpy(&m_tOption, pOption, sizeof(EffectOptions));
+        // VB 준비
+        SetOptions(m_tOption, false);
+        // 생성과 동시에 발사
+        Trigger();
+    }
+
+    return S_OK;
+}
+
+HRESULT CEffect_Pixel::Despawn_Pooling()
+{
+    if (FAILED(CGameObject::Despawn_Pooling()))
+        return E_FAIL;
+
+    m_iAliveCount = 0;
+    m_iVBCapacity = 0;
+    m_tOption = {};
+    m_vecParticles.clear();
+
+    return S_OK;
 }
 
 void CEffect_Pixel::Do_Once()

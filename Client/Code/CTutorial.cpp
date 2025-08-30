@@ -8,6 +8,7 @@
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CGameDataManager.h"
+#include "CObjectPoolManager.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
@@ -73,7 +74,7 @@ HRESULT CTutorial::Ready_Scene()
         return E_FAIL;
 
     CPickingManager::GetInstance()->Ready_Picking();
-
+    CObjectPoolManager::GetInstance()->Ready_Pools();
     return S_OK;
 }
 

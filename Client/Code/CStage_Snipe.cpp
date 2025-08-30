@@ -102,7 +102,7 @@ _int CStage_Snipe::Update_Scene(const _float &fTimeDelta)
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
-    auto p = CObjectManager::GetInstance();
+
     return iExit;
 }
 

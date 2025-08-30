@@ -36,8 +36,8 @@ EffectOptions Get_Preset_Electric()
     o.colorStart = D3DXCOLOR(0.5f, 0.8f, 1.0f, 1.0f);
     o.colorEnd = D3DXCOLOR(0.1f, 0.3f, 1.0f, 0.7f);
     o.eBlendmode = BlendMode::ADDITIVE;
-    o.fSpiralAmp = 3.f;
-    o.fSpiralFreq = 50.f;
+    o.fSpiralAmp = 100.f;
+    o.fSpiralFreq = 30.f;
     o.fDrag = 5.0f;
     return o;
 }

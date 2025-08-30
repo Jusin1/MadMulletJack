@@ -5,8 +5,10 @@
 #include "CTimerMgr.h"
 #include "CObjectManager.h"
 #include "CUIBase.h"
+#include "CEffect_World.h"
 #include "CDInputMgr.h"
 #include "CGlobal_Info.h"
+#include "CObjectPoolManager.h"
 #include "CMapFactory.h"
 #include "CVIBuffer_GridPanelBase.h"
 #include "CGameDataManager.h"
@@ -1081,36 +1083,54 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 	//test bj 0829
 	if (KEY_BUTTON_DOWN(DIK_K))
 	{
-		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
-			CManagement::GetInstance()->Get_CurrentSceneIdx(),
-			L"Effect_Layer",
-			nullptr);
-		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
-		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
-		pEffect->SetOptions(Get_Preset_Blood());
-		pEffect->Trigger();
+		EffectOptions Option = Get_Preset_Blood();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+			});
+
+		EFFECTINFO tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::FAN_SPREAD;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+		[](CGameObject *pGo)->void
+		{
+				static_cast<CEffect_World *>(pGo)->Set_TintColor(D3DCOLOR_COLORVALUE(135.f, 0.f, 0.f, 255.f));
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+		});
 	}
 	if (KEY_BUTTON_DOWN(DIK_U))
 	{
-		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
-			CManagement::GetInstance()->Get_CurrentSceneIdx(),
-			L"Effect_Layer",
-			nullptr);
-		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
-		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
-		pEffect->SetOptions(Get_Preset_Electric());
-		pEffect->Trigger();
+		EffectOptions Option = Get_Preset_Electric();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
+			});
+		EFFECTINFO tInfo;
+		tInfo.eType = WorldEffectType::ELCETRIC;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
+			});
 	}
 	if (KEY_BUTTON_DOWN(DIK_I))
 	{
-		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Proto_PixelEffect",
-			CManagement::GetInstance()->Get_CurrentSceneIdx(),
-			L"Effect_Layer",
-			nullptr);
-		CEffect_Pixel *pEffect = static_cast<CEffect_Pixel *>(pGo);
-		pEffect->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
-		pEffect->SetOptions(Get_Preset_BulletSpark());
-		pEffect->Trigger();
+		EffectOptions Option = Get_Preset_BulletSpark();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
+			});
+		EFFECTINFO tInfo;
+		tInfo.eType = WorldEffectType::EXPLOSION;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
+			});
 	}
 }
 

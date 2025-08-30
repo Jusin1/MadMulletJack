@@ -41,7 +41,11 @@ public:
 	bool GetFrameSize(UINT index, UINT& w, UINT& h) const;
 	void SetAnimInfo(int iStart, int iEnd, float fSpeed, _bool bLoop);
 
+	_uint Get_Height() const { return m_iHeight; }
+	_uint Get_Width() const { return m_iWidth; }
 private:
+	_uint								m_iWidth{ 0 };
+	_uint								m_iHeight{ 0 };
 	_uint								m_iNumTextures = 0; // 텍스쳐 수
 	vector<IDirect3DBaseTexture9*>		m_vecTexture; // 텍스쳐 컨테이너
 	TEXINFO								m_TextureInfo; // 프레임 정보
@@ -60,4 +64,5 @@ private:
 	virtual void	Free();
 
 };
+
 END

@@ -64,6 +64,7 @@
 
 // ÀÌÆåÆ®
 #include "CEffect_Pixel.h"
+#include "CEffect_World.h"
 
 // MapObject
 #include "CGridPanel.h"
@@ -148,7 +149,6 @@ HRESULT CLoader::Ready_Loading(SCENE eNextScene)
 
 	return S_OK;
 }
-
 
 
 HRESULT CLoader::Loading_Logo()
@@ -459,6 +459,10 @@ HRESULT CLoader::Loading_Dev()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_PixelEffect",
 		CEffect_Pixel::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_EffectWorld",
+		CEffect_World::Create(m_pGraphicDev))))
 		return E_FAIL;
 #pragma endregion
 
@@ -799,6 +803,13 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Road_Sign_4", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 4.png",1);
 	AddTexture(L"Proto_Road_Sign_5", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 5.png",1);
 	AddTexture(L"Proto_Road_Tree", L"../../Client/Bin/Resource/MapObject/Road/ARVORE 2.png",1);
+
+	// effect
+	AddTexture(L"Proto_Effect_Splatter", L"../../Client/Bin/Resource/Effect/BloodSpread/thin-splatter_%03d.png", 9);
+	AddTexture(L"Proto_Effect_Electric", L"../../Client/Bin/Resource/Effect/Electric/Eletricity_%03d.png", 17);
+	AddTexture(L"Proto_Effect_Explosion", L"../../Client/Bin/Resource/Effect/Explosion/Explosion_%02d.png", 16);
+	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
+	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
 
 	return S_OK;
 }

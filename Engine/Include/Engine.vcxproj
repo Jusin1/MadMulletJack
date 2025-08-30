@@ -164,7 +164,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CCullingManager.h" />
     <ClInclude Include="..\Header\CDataManager.h" />
-    <ClInclude Include="..\Header\CEffect.h" />
+    <ClInclude Include="..\Header\CEffect_World.h" />
     <ClInclude Include="..\Header\CEffect_Pixel.h" />
     <ClInclude Include="..\Header\CFileManager.h" />
     <ClInclude Include="..\Header\CGrounding.h" />
@@ -217,7 +217,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CCullingManager.cpp" />
     <ClCompile Include="..\Code\CDataManager.cpp" />
-    <ClCompile Include="..\Code\CEffect.cpp" />
+    <ClCompile Include="..\Code\CEffect_World.cpp" />
     <ClCompile Include="..\Code\CEffect_Pixel.cpp" />
     <ClCompile Include="..\Code\CFileManager.cpp" />
     <ClCompile Include="..\Code\CGrounding.cpp" />

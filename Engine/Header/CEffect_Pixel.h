@@ -36,12 +36,11 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float &fTimeDelta) {};
 	virtual			void		Render_GameObject();
 
+	virtual HRESULT Spawn_Pooling(void *pArg = nullptr) override;
+	virtual HRESULT Despawn_Pooling() override;
+private:
 	void SetOptions(const EffectOptions &tOption, _bool bRemakeVB = true);
 	void Trigger();
-
-	// ÇÁ¸®¼Â
-	
-private:
 	void Do_Once();
 	void Particle_Update(_float fDeltaTime);
 	HRESULT Ready_VB();

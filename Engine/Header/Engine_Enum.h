@@ -101,6 +101,17 @@ namespace Engine
 	};
 	constexpr size_t g_PrefabTypeCount{ static_cast<size_t>(PrefabType::NONE) };
 
+	enum class WorldEffectType : unsigned int
+	{
+		ELCETRIC,
+		EXPLOSION,
+		BLOOD_SPREAD,
+		HITTED,
+		FAN_SPREAD,
+		NONE
+	};
+	constexpr size_t g_WorldEffectTypeCount{ static_cast<size_t>(WorldEffectType::NONE) };
+
 	enum class EffectMode : unsigned int
 	{
 		LINEAR = 0,
@@ -118,5 +129,14 @@ namespace Engine
 		NONE
 	};
 	constexpr size_t g_BlendModeCount{ static_cast<size_t>(BlendMode::NONE) };
+
+	enum class PoolType : unsigned int
+	{
+		EFFECT_PIXEL,
+		EFFECT_WORLD,
+		BULLET,
+		NONE
+	};
+	constexpr size_t g_PoolTypeCount{ static_cast<size_t>(PoolType::NONE) };
 }
 #endif // Engine_Enum_h__

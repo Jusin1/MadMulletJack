@@ -50,7 +50,7 @@ const D3DXCOLOR g_Color_Gray{ 0.5f, 0.5f, 0.5f, 1.0f };
 #define IS_RBUTTON_UP CDInputMgr::GetInstance()->GetMouseButtonUp(1)
 #define IS_MBUTTON_UP CDInputMgr::GetInstance()->GetMouseButtonUp(2)
 
-#define MAX_POOLING 50
+#define MAX_POOLING 100
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
