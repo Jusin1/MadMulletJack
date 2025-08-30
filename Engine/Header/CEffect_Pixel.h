@@ -16,6 +16,8 @@ typedef struct tagParticleInfo
 	_float       fSize;
 	_float		 fPhase;
 	_bool        bAlive;
+	_float		 fAngle;
+	_float		 fRotateVel;
 } ParticleInfo;
 
 class ENGINE_DLL CEffect_Pixel : public CGameObject

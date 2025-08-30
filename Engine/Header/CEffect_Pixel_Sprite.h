@@ -11,7 +11,7 @@ struct SpriteParticleOptions
 {
 	EffectOptions tEffectOption;
 	SpriteParticleType eType;
-	_float m_fGroundY{ 0.f };
+	_float fGroundY{ 0.f };
 };
 
 class ENGINE_DLL CEffect_Pixel_Sprite : public CGameObject

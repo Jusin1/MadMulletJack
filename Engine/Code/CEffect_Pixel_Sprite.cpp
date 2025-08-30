@@ -219,7 +219,6 @@ void CEffect_Pixel_Sprite::SetUp_BillBoard()
 void CEffect_Pixel_Sprite::SetOptions(const EffectOptions &tOption, _bool bRemakeVB)
 {
     m_tOption = tOption;
-
     m_vecParticles.assign(m_iTextureCount, ParticleInfo{}); // 파티클 컨테이너 크기 = iPixelCount
     m_iAliveCount = 0;
 
@@ -299,6 +298,8 @@ void CEffect_Pixel_Sprite::Do_Once()
         tInfo.colorStart = m_tOption.colorStart;
         tInfo.colorEnd = m_tOption.colorEnd;
         tInfo.bAlive = true;
+        tInfo.fAngle = randRange(-3.14159f, 3.14159f);
+        tInfo.fRotateVel = randRange(-10.f, 10.f);
         ++m_iAliveCount;
     }
 }
@@ -373,6 +374,7 @@ void CEffect_Pixel_Sprite::Particle_Update(_float fDeltaTime)
 
         tElement.vVelocity += fAccelVelocity * fDeltaTime;
         tElement.vPosition += tElement.vVelocity * fDeltaTime;
+        tElement.fAngle += tElement.fRotateVel * fDeltaTime;
 
         tElement.fDurationTime += fDeltaTime;
         if (tElement.fDurationTime >= tElement.fLifeTime)
@@ -397,16 +399,27 @@ HRESULT CEffect_Pixel_Sprite::Ready_VB()
             continue;
 
         _float fHalf = tElement.fSize * 0.5f;
-        vtx[iIndex].vPosition = tElement.vPosition + _vec3{-fHalf, fHalf, 0.f};
+        _float fCos = cosf(tElement.fAngle);
+        _float fSin = sinf(tElement.fAngle);
+
+        _vec3 vLocalOffset_0{ -fHalf, fHalf, 0.f };
+        _vec3 vLocalOffset_1{ fHalf, fHalf, 0.f };
+        _vec3 vLocalOffset_2{ fHalf, -fHalf, 0.f };
+        _vec3 vLocalOffset_3{ -fHalf, -fHalf, 0.f };
+
+        auto GetRotate = [&](const _vec3 &v)->_vec3
+        { return _vec3(v.x * fCos - v.y * fSin, v.x * fSin + v.y * fCos, 0.f); };
+
+        vtx[iIndex].vPosition = tElement.vPosition + GetRotate(vLocalOffset_0);
         vtx[iIndex].vTexUV = { 0.f, 0.f };
         ++iIndex;
-        vtx[iIndex].vPosition = tElement.vPosition + _vec3{ fHalf, fHalf, 0.f };
+        vtx[iIndex].vPosition = tElement.vPosition + GetRotate(vLocalOffset_1);
         vtx[iIndex].vTexUV = { 1.f, 0.f };
         ++iIndex;
-        vtx[iIndex].vPosition = tElement.vPosition + _vec3{ fHalf, -fHalf, 0.f };
+        vtx[iIndex].vPosition = tElement.vPosition + GetRotate(vLocalOffset_2);
         vtx[iIndex].vTexUV = { 1.f, 1.f };
         ++iIndex;
-        vtx[iIndex].vPosition = tElement.vPosition + _vec3{ -fHalf, -fHalf, 0.f };
+        vtx[iIndex].vPosition = tElement.vPosition + GetRotate(vLocalOffset_3);
         vtx[iIndex].vTexUV = { 0.f, 1.f };
         ++iIndex;
     }
