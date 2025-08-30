@@ -25,7 +25,7 @@
 
 //test bj 0829
 #include "CEffect_Pixel.h"
-
+#include "CEffect_Pixel_Sprite.h"
 
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -1099,6 +1099,15 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 				static_cast<CEffect_World *>(pGo)->Set_TintColor(D3DCOLOR_COLORVALUE(135.f, 0.f, 0.f, 255.f));
 				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
 		});
+
+		SpriteParticleOptions Option2;
+		Option2.tEffectOption = Get_Preset_Blood();
+		Option2.eType = SpriteParticleType::DEADBODY;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+			});
 	}
 	if (KEY_BUTTON_DOWN(DIK_U))
 	{

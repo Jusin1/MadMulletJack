@@ -125,13 +125,14 @@ HRESULT CEffect_World::Spawn_Pooling(void *pArg)
 			MSG_BOX("CEffect_World::Spawn_Pooling, Type is invalid");
 			return E_FAIL;
 		}
-		_uint iWidth = m_pTextureCom->Get_Width();
-		_uint iHeight = m_pTextureCom->Get_Height();
-		_uint iWidth_Ratio = iWidth / 512;
-		_uint iHeight_Ratio = iHeight / 512;
+		_uint iWidth;
+		_uint iHeight;
+		m_pTextureCom->GetFrameSize(0, iWidth, iHeight);
+		_float iWidth_Ratio = (_float)iWidth / 512;
+		_float iHeight_Ratio = (_float)iHeight / 512;
 
 		// Transform
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Set_Scale(iWidth_Ratio, iHeight_Ratio, 1.f);
 		m_pTransformCom->RotationDegree(m_pTransformCom->Get_Info(INFO::INFO_LOOK), pData->fAngle);
 	}
 	else

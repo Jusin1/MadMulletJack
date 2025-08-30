@@ -65,6 +65,7 @@
 // ÀÌÆåÆ®
 #include "CEffect_Pixel.h"
 #include "CEffect_World.h"
+#include "CEffect_Pixel_Sprite.h"
 
 // MapObject
 #include "CGridPanel.h"
@@ -464,6 +465,10 @@ HRESULT CLoader::Loading_Dev()
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_EffectWorld",
 		CEffect_World::Create(m_pGraphicDev))))
 		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_PixelEffect_Sprite",
+		CEffect_Pixel_Sprite::Create(m_pGraphicDev))))
+		return E_FAIL;
 #pragma endregion
 
 	// ÃÑ¾Ë »ý¼º
@@ -810,6 +815,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Effect_Explosion", L"../../Client/Bin/Resource/Effect/Explosion/Explosion_%02d.png", 16);
 	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
+	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 8);
 
 	return S_OK;
 }

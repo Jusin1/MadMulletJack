@@ -112,6 +112,13 @@ namespace Engine
 	};
 	constexpr size_t g_WorldEffectTypeCount{ static_cast<size_t>(WorldEffectType::NONE) };
 
+	enum class SpriteParticleType : unsigned int
+	{
+		DEADBODY,
+		NONE
+	};
+	constexpr size_t g_SpriteParticleTypeCount{ static_cast<size_t>(SpriteParticleType::NONE) };
+
 	enum class EffectMode : unsigned int
 	{
 		LINEAR = 0,
@@ -134,6 +141,7 @@ namespace Engine
 	{
 		EFFECT_PIXEL,
 		EFFECT_WORLD,
+		EFFECT_PIXEL_SPRITE,
 		BULLET,
 		NONE
 	};

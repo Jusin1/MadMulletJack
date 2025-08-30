@@ -3,31 +3,27 @@
 
 BEGIN(Engine)
 
-typedef struct tagParticleInfo
-{
-	_vec3		vPosition;
-	_vec3		vVelocity;
-	// 경과 시간
-	_float       fDurationTime;
-	// 수명
-	_float       fLifeTime;
-	D3DXCOLOR    colorStart;
-	D3DXCOLOR    colorEnd;
-	_float       fSize;
-	_float		 fPhase;
-	_bool        bAlive;
-} ParticleInfo;
+class CTexture;
+class CVIBuffer_Rect;
+typedef struct tagParticleInfo ParticleInfo;
 
-class ENGINE_DLL CEffect_Pixel : public CGameObject
+struct SpriteParticleOptions
+{
+	EffectOptions tEffectOption;
+	SpriteParticleType eType;
+	_float m_fGroundY{ 0.f };
+};
+
+class ENGINE_DLL CEffect_Pixel_Sprite : public CGameObject
 {
 private:
-	explicit CEffect_Pixel(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CEffect_Pixel(const CEffect_Pixel &rhs);
-	virtual ~CEffect_Pixel();
+	explicit CEffect_Pixel_Sprite(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CEffect_Pixel_Sprite(const CEffect_Pixel_Sprite &rhs);
+	virtual ~CEffect_Pixel_Sprite();
 
 	virtual void Free() override;
 public:
-	static			CEffect_Pixel *Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static			CEffect_Pixel_Sprite *Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual			CGameObject *Clone(void *pArg) override;
 
 	virtual			HRESULT		Ready_GameObject();
@@ -39,15 +35,17 @@ public:
 	virtual HRESULT Spawn_Pooling(void *pArg = nullptr) override;
 	virtual HRESULT Despawn_Pooling() override;
 private:
+	HRESULT Texture_Clone();
+	HRESULT Set_TextureInit(SpriteParticleType _e);
+	HRESULT Change_Texture(const _tchar *LayerTag);
+	void SetUp_BillBoard();
 	void SetOptions(const EffectOptions &tOption, _bool bRemakeVB = true);
 	void Trigger();
 	void Do_Once();
 	void Particle_Update(_float fDeltaTime);
 	HRESULT Ready_VB();
-	D3DXCOLOR LerpColor(const D3DXCOLOR &a, const D3DXCOLOR &b, _float _f);
 	_float  rand01() const;
 	_float  randRange(_float a, _float b) const;
-	D3DCOLOR ToColor(const D3DXCOLOR &c) { return D3DCOLOR_COLORVALUE(c.r, c.g, c.b, c.a); }
 	_vec3 randomDir_HalfSphere() const;
 	void Effect_SetRenderState();
 	DWORD FtoDW(_float f)
@@ -57,11 +55,15 @@ private:
 		return dwReturn;
 	}
 private:
+	_int m_iTextureCount{ 0 };
 	_int m_iAliveCount{ 0 };
 	_int m_iVBCapacity{ 0 };
+	_float m_fY;
 	LPDIRECT3DVERTEXBUFFER9		m_pVB{ nullptr };
-	EffectOptions m_tOption;
+	LPDIRECT3DINDEXBUFFER9		m_pIB{ nullptr };
+	CTexture *m_pTextureCom{ nullptr };
 	vector<ParticleInfo> m_vecParticles;
+	EffectOptions m_tOption;
 };
 
 END
