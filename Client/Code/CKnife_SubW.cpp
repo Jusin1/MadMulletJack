@@ -53,19 +53,6 @@ _int CKnife_SubW::Update_GameObject(const _float& fTimeDelta)
 		// scene을 받아옴
 		SCENE eCurScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
 
-		//// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		//_uint iPlayerUI_Idx = 0;
-		//switch (eCurScene)
-		//{
-		//case SCENE_DEV:
-		//	iPlayerUI_Idx = 1;
-		//	break;
-
-		//case SCENE_TUTORIAL:
-		//	iPlayerUI_Idx = 1;
-		//	break;
-		//}
-
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
 			->Find_Object(eCurScene, L"UI_Layer", 1))
@@ -103,7 +90,7 @@ void CKnife_SubW::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	__super::Render_GameObject();
+	CUI::Render_GameObject();
 
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

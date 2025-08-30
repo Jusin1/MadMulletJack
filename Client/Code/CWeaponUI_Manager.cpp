@@ -46,7 +46,7 @@ HRESULT CWeaponUI_Manager::Initialize(void* pArg)
 		return E_FAIL;
 
 	Weapon_Change();
-	Weapon2_Off();
+	Weapon2_Change();
 
 	return S_OK;
 }
@@ -63,16 +63,18 @@ _int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// player가 attack instant이면
-	if (ATTACK_INSTANT == tPlayerInfo.ePlayerState)
+	if (m_eWeapon2 != tPlayerInfo.eWeapon2)
 	{
-		// 무기2 on
-		Weapon2_On();
+		Weapon2_Change();
 	}
-	// attack instant 가 아니라면
+
+	if (tPlayerInfo.ePlayerState == ATTACK_INSTANT)
+	{
+		SpawnInsEff();
+	}
 	else
 	{
-		// 무기2 off
-		Weapon2_Off();
+		DeleteEff(TEXT("Ins_Eff"));
 	}
 
 	__super::Update_GameObject(fTimeDelta);
@@ -148,8 +150,21 @@ void CWeaponUI_Manager::Weapon_Change()
 	}
 }
 
-void CWeaponUI_Manager::Weapon2_On()
+void CWeaponUI_Manager::Weapon2_Change()
 {
+	switch (m_eWeapon2)
+	{
+	case WP_KICK:
+		break;
+
+	case WP_KNIFE:
+		TagUI_SetActive(L"KnifeUI", false);
+		break;
+
+	case WP_BOOK:
+		break;
+	}
+
 	// weapon update
 	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
 
@@ -166,27 +181,8 @@ void CWeaponUI_Manager::Weapon2_On()
 		break;
 	}
 
-	
-}
-
-void CWeaponUI_Manager::Weapon2_Off()
-{
-	// weapon update
-	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
-
-	// 이번 weapon은 active true
-	switch (m_eWeapon2)
-	{
-	case WP_KICK:
-		break;
-
-	case WP_KNIFE:
-		TagUI_SetActive(L"KnifeUI", false);
-		break;
-
-	case WP_BOOK:
-		break;
-	}
+	// effect 생성
+	//SpawnInsEff();
 }
 
 void CWeaponUI_Manager::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
@@ -285,6 +281,41 @@ void CWeaponUI_Manager::DeletePisolAim(const _tchar* pTag)
 
 	pEff->Set_Dead(true);
 	Remove_Child(pEff);
+}
+
+void CWeaponUI_Manager::SpawnInsEff()
+{
+	// 중복 생성 방지
+	if (Find_Child_ByTag(L"Ins_Eff"))
+		return;
+
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
+
+
+	float fxW = 800.f, fxH = 800.f;
+
+	pFx->Set_UISizeAndPos(fxW, fxH, 150.f, -10.f);
+	pFx->RegisterTexture(L"Com_Texture_KnifeEff", L"Prototype_Component_Texture_SubWKnife_Eff", 0, 18, 10.f, false);
+	pFx->ChangeTexture(L"Com_Texture_KnifeEff");
+
+	pFx->Set_ObjTag(L"Ins_Eff");
+
+	Add_Child(pFx);
+}
+
+void CWeaponUI_Manager::DeleteEff(const _tchar* pTag)
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(pTag));
+	if (pEff && pEff->GetTextureCom()->Is_AnimFinished())
+	{
+		pEff->Set_Dead(true);
+		Remove_Child(pEff);
+	}
 }
 
 HRESULT CWeaponUI_Manager::Set_WeaponUI()

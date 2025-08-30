@@ -910,6 +910,12 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/attack/CLEAVER_Attack%03d.png", 2))))
 		return E_FAIL;
 
+	// Knife - effect
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\InsBlood017.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SubWKnife_Eff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/InsBlood%03d.png", 18))))
+		return E_FAIL;
+
 	// Sniper Gun
 	// 이거는 나중에 scene_sniper 에서만 load
 	// Sniper - Idle
