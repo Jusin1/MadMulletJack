@@ -46,18 +46,18 @@ _int CPlayer_Arm::Update_GameObject(const _float& fTimeDelta)
 {
     if (m_pTextureCom->Is_AnimFinished())
     {
-
         if (m_CurrentAnimTag == TEXT("Com_Texture_Arm_Op1"))
         {
             Change_Texture(TEXT("Com_Texture_Arm_Op2"));
             Set_UISizeAndPos(1000.f, 500.f, WINCX * 0.5f, WINCY * 0.5f + 300);
         }
 
-        else
+        /*else
         {
             m_bRenderOn = false;
-        }
+        }*/
     }
+
     return NO_EVENT;
 }
 
@@ -68,6 +68,8 @@ void CPlayer_Arm::LateUpdate_GameObject(const _float& fTimeDelta)
         m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
         Set_Texture();
     }*/
+
+    Move_UI(fTimeDelta);
 }
 
 void CPlayer_Arm::Render_GameObject()
@@ -108,12 +110,30 @@ HRESULT CPlayer_Arm::Texture_Clone()
 
     // Op2
     texInfo.m_iStart = 0;
-    texInfo.m_iEndTex = 3;
+    texInfo.m_iEndTex = 0;
     texInfo.m_fSpeed = 5.5f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Arm_Op2", SCENE_STATIC, L"Prototype_Component_Texture_UIArmOp2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Arm_Op2"), m_pTextureCom });
+
+    // FunkU
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 0;
+    texInfo.m_fSpeed = 0.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_Arm_FunckU", SCENE_STATIC, L"Prototype_Component_Texture_FuckU", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_Arm_FunckU"), m_pTextureCom });
+
+    // DrunkU
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 0.f;
+    texInfo.m_bLoop = true;
+    if (FAILED(Add_Components(L"Com_Texture_Arm_DrunckU", SCENE_STATIC, L"Prototype_Component_Texture_DrunkU", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_Arm_DrunckU"), m_pTextureCom });
 
     return S_OK;
 }
@@ -129,8 +149,36 @@ HRESULT CPlayer_Arm::Set_Texture()
         m_bRenderOn = true;
     }
 
+    if (tPlayerInfo.ePlayerState == ATTACK_INSTANT)
+    {
+        m_bRenderOn = true;
+        int i = rand() % 3;
+
+        if (i)
+        {
+            Change_Texture(TEXT("Com_Texture_Arm_FunckU"));
+            Set_UISizeAndPos(210.f, 610.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 400.f);
+        }
+
+        else if (i == 0)
+        {
+            Change_Texture(TEXT("Com_Texture_Arm_DrunckU"));
+            Set_UISizeAndPos(420.f, 610.f, WINCX * 0.5f - 400.f, WINCY * 0.5f + 300.f);
+        }
+        
+        else
+        {
+            return S_OK;
+        }
+
+
+        Set_New_TransInfo(200.f, 0.f);
+        m_tMoveInfo = { MV_UP,true, 1000.f,0.f };
+    }
+
     else {
         m_bRenderOn = false;
+        m_tMoveInfo.eUIMove = MV_NON;
     }
 
     return S_OK;
