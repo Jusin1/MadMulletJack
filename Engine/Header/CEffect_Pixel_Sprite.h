@@ -14,6 +14,8 @@ struct SpriteParticleOptions
 	_float fGroundY{ 0.f };
 };
 
+// TODO : Ground Bounding
+
 class ENGINE_DLL CEffect_Pixel_Sprite : public CGameObject
 {
 private:
