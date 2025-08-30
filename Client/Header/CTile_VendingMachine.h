@@ -27,6 +27,10 @@ public:
 private:
 	virtual CGameObject *Clone(void *pArg = nullptr) override;
 	HRESULT			Set_Component(void *pArg);
+
+	virtual _bool Picking(_vec3* PickingPoint) override;
+	virtual void PickingTrue() override;
+
 private:
 	bool m_bDestroyed{ false };
 	Engine::CColider_Sphere *m_pColliderSphere;

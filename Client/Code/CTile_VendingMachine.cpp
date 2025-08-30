@@ -9,6 +9,7 @@
 #include "CTexture.h"
 #include "CTile_VendingMachine.h"
 #include "CGlobal_Info.h"
+#include "CPickingManager.h"
 
 CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
@@ -76,6 +77,11 @@ _int CTile_VendingMachine::Update_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead) return DEAD;
 
+	if (!m_bDestroyed)
+	{
+		CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 에서 제거
+	}
+	
 	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_TILE_ELECTRIC, this);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 	m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -88,13 +94,15 @@ void CTile_VendingMachine::LateUpdate_GameObject(const _float &fTimeDelta)
 
 	if (!m_bDestroyed)
 	{
+		CPickingManager::GetInstance()->Add_PickingGroup(this);
+
 		// 테스트용 추후에 몬스터로
 		if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_PLAYER, this, CColiderManager::COLLISION_SPHERE, nullptr))
 		{
 			// player가 kick 하거나 총으로 쏘면
 			if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
 			{
-				// 음료수를 생성
+				// 음료수 생성
 
 				// destory
 				m_bDestroyed = true;
@@ -103,6 +111,18 @@ void CTile_VendingMachine::LateUpdate_GameObject(const _float &fTimeDelta)
 	}
 
 	__super::LateUpdate_GameObject(fTimeDelta);
+}
+
+_bool CTile_VendingMachine::Picking(_vec3* PickingPoint)
+{
+	return m_pBuffer->Picking(m_pTransformCom, PickingPoint);
+}
+
+void CTile_VendingMachine::PickingTrue()
+{
+	m_bDestroyed = true;
+
+	// 음료수 생성
 }
 
 void CTile_VendingMachine::Render_GameObject()

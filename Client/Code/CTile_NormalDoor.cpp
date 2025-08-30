@@ -6,6 +6,8 @@
 #include "CColider_Sphere.h"
 #include "CMapFactory.h"
 #include "CTile_NormalDoor.h"
+#include "CPickingManager.h"
+#include "CVIBuffer_Rect.h"
 
 CTile_NormalDoor::CTile_NormalDoor(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::NORMALDOOR)
@@ -84,8 +86,13 @@ _int CTile_NormalDoor::Update_GameObject(const _float &fTimeDelta)
 		PivotRotate();
 	}
 
-	CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
+	CPickingManager::GetInstance()->Remove_PickingGroup(this); // picking 추가
 
+	if (!m_bOpend)
+	{
+		CColiderManager::GetInstance()->Add_CollisionGroup(CColiderManager::COLLISION_DOOR, this);
+	}
+	
 	return __super::Update_GameObject(fTimeDelta);
 }
 
@@ -95,6 +102,8 @@ void CTile_NormalDoor::LateUpdate_GameObject(const _float &fTimeDelta)
 
 	if (!m_bOpend)
 	{
+		CPickingManager::GetInstance()->Add_PickingGroup(this); // 픽킹 그룹에 추가
+
 		if (CColiderManager::GetInstance()->CollisionGroup(
 			CColiderManager::COLLISION_PLAYER, this,
 			CColiderManager::COLLISION_SPHERE, nullptr))
@@ -258,4 +267,15 @@ void CTile_NormalDoor::PivotRotate()
 	
 	lambda_rotation(m_pDoors[0]->GetTransform(), m_matInitDoors[0], _vec3{-0.5f, 0.f, 0.f}, m_fAngle * -1.f);
 	lambda_rotation(m_pDoors[1]->GetTransform(), m_matInitDoors[1], _vec3{ 0.5f, 0.f, 0.f }, m_fAngle);
+}
+
+_bool CTile_NormalDoor::Picking(_vec3* PickingPoint)
+{
+	return m_pBuffer->Picking(m_pTransformCom, PickingPoint);
+}
+
+void CTile_NormalDoor::PickingTrue()
+{
+	if (m_fTargetAngle < 84.99f) m_fTargetAngle = 84.99f;
+	m_bOpend = true;
 }
