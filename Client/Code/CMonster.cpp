@@ -190,6 +190,8 @@ void CMonster::Set_Collider_With_Wall()
     }
 }
 
+
+
 HRESULT CMonster::Texture_Clone() { return S_OK; }
 
 HRESULT CMonster::Change_Texture(const _tchar* LayerTag)

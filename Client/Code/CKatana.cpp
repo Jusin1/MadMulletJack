@@ -5,14 +5,49 @@
 #include "CImageUI.h"
 #include "CMapFactory.h"
 #include "CPlayer_HandR.h"
-CKatana::CKatana(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMainWeapon(pGraphicDev)
-{
+#include "CColiderManager.h"
+#include "CColider_Sphere.h"
+#include "CTransform.h"
 
+CKatana::CKatana(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CMainWeapon(pGraphicDev)
+    , m_pPlayerTr(nullptr)
+    , m_pHitCol(nullptr)
+    , m_fHitTimer(0.f)
+    , m_iComboStep(0)
+    , m_bInCombo(false)
+    , m_fComboTimer(0.f)
+    , m_fComboWindow(5.f)
+    , m_vSlashFx()
+    , m_bSelfActive(true)
+    , m_mapTextures()
+    , m_CurrentAnimTag()
+    , m_pBase(nullptr)
+    , m_pSheathUI(nullptr)
+    , m_pKnifeHandleUI(nullptr)
+    , m_pKnifeUI(nullptr)
+    , m_pShineKnife(nullptr)
+{
 }
 
 CKatana::CKatana(const CKatana& rhs)
-	: CMainWeapon(rhs)
+    : CMainWeapon(rhs)
+    , m_pPlayerTr(nullptr)       
+    , m_pHitCol(nullptr)
+    , m_fHitTimer(0.f)
+    , m_iComboStep(0)
+    , m_bInCombo(false)
+    , m_fComboTimer(0.f)
+    , m_fComboWindow(5.f)           
+    , m_vSlashFx()
+    , m_bSelfActive(true)
+    , m_mapTextures()
+    , m_CurrentAnimTag()
+    , m_pBase(nullptr)
+    , m_pSheathUI(nullptr)
+    , m_pKnifeHandleUI(nullptr)
+    , m_pKnifeUI(nullptr)
+    , m_pShineKnife(nullptr)
 {
 }
 
@@ -22,10 +57,10 @@ CKatana::~CKatana()
 
 HRESULT CKatana::Ready_GameObject()
 {
-	if (FAILED(__super::Ready_GameObject()))
-		return E_FAIL;
+    if (FAILED(__super::Ready_GameObject()))
+        return E_FAIL;
 
-	return S_OK;
+    return S_OK;
 }
 
 HRESULT CKatana::Initialize(void* pArg)
@@ -40,7 +75,7 @@ HRESULT CKatana::Initialize(void* pArg)
     m_bRenderOn = false;
 
     auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
-    
+
 
     m_pKnifeHandleUI = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
@@ -60,7 +95,7 @@ HRESULT CKatana::Initialize(void* pArg)
         UIMoveInfo moveInfo;
         moveInfo.eUIMove = MV_UP;
         moveInfo.bStop = true;
-        moveInfo.fRange = 200.f;  // 손 range와 동일
+        moveInfo.fRange = 200.f;  
         moveInfo.fSumRange = 0.f;
         moveInfo.bRenderStop = false;
         m_pKnifeHandleUI->Set_UIMoveInfo(moveInfo);
@@ -89,7 +124,7 @@ HRESULT CKatana::Initialize(void* pArg)
         UIMoveInfo moveInfo;
         moveInfo.eUIMove = MV_UP;
         moveInfo.bStop = true;
-        moveInfo.fRange = 200.f;  
+        moveInfo.fRange = 200.f;
         moveInfo.fSumRange = 0.f;
         moveInfo.bRenderStop = false;
         m_pKnifeUI->Set_UIMoveInfo(moveInfo);
@@ -133,12 +168,25 @@ HRESULT CKatana::Initialize(void* pArg)
         UIMoveInfo moveInfo;
         moveInfo.eUIMove = MV_UP;
         moveInfo.bStop = true;
-        moveInfo.fRange = 220.f; 
+        moveInfo.fRange = 220.f;
         moveInfo.fSumRange = 0.f;
         moveInfo.bRenderStop = false;
         m_pSheathUI->Set_UIMoveInfo(moveInfo);
-       
+
         Add_Child(m_pSheathUI);
+    }
+
+    // ===== [추가: 무기 콜라이더 1회 생성] =====
+    {
+        Engine::CColider_Sphere::COLLINFO info{};
+        info.fRadius = 1.f;
+        info.vOffset = _vec3(0.f, 0.9f, 2.3f); // 플레이어 로컬 기준
+
+        if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC,
+            L"Proto_Colider_Sphere", (CComponent**)&m_pHitCol, &info)))
+            return E_FAIL;
+
+        if (m_pHitCol) m_pHitCol->Set_Active(false); // 평소 OFF
     }
 
     Set_Texture();
@@ -180,7 +228,7 @@ _int CKatana::Update_GameObject(const _float& fTimeDelta)
     {
         CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
     }
-    
+
 
     auto setMove = [](CImageUI* pUI, UIMOVE dir, float range, float speed)
         {
@@ -250,7 +298,27 @@ _int CKatana::Update_GameObject(const _float& fTimeDelta)
 
 void CKatana::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	__super::LateUpdate_GameObject(fTimeDelta);
+    __super::LateUpdate_GameObject(fTimeDelta);
+
+    if (!m_pPlayerTr) {
+        auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        m_pPlayerTr = dynamic_cast<CTransform*>(
+            CObjectManager::GetInstance()->Get_Component(sceneIdx, L"Player_Layer", L"Com_Transform", 0));
+        if (m_pHitCol && m_pPlayerTr)
+            m_pHitCol->Set_Transform(m_pPlayerTr);
+    }
+
+    if (m_fHitTimer > 0.f) {
+        m_fHitTimer -= fTimeDelta;
+        if (m_fHitTimer <= 0.f && m_pHitCol)
+            m_pHitCol->Set_Active(false);
+    }
+
+    if (m_pHitCol && m_pHitCol->Is_Active()) {
+        m_pHitCol->Update_ColliderSphere();
+        CColiderManager::GetInstance()->Add_CollisionGroup(
+            CColiderManager::COLLISION_WEAPON, this);
+    }
 }
 
 void CKatana::Render_GameObject()
@@ -291,19 +359,19 @@ HRESULT CKatana::Set_Texture()
 {
     m_bSelfActive = false;
     m_bRenderOn = true;
-	m_tMoveInfo.eUIMove = MV_NON;
+    m_tMoveInfo.eUIMove = MV_NON;
 
-	switch (m_tInfo.ePlayerState)
-	{
+    switch (m_tInfo.ePlayerState)
+    {
     case IDLE:
     case JUMP:
         m_bSelfActive = true;
         if (FAILED(Change_Texture(TEXT("Com_Texture_Katana_Idle"))))
             return E_FAIL;
-        Set_UISizeAndPos(1700.f, 1900.f, WINCX * 0.5f +  400.f, WINCY * 0.5f);
+        Set_UISizeAndPos(1700.f, 1900.f, WINCX * 0.5f + 400.f, WINCY * 0.5f);
         Set_New_TransInfo(5.f, 0.f);
         m_tMoveInfo = { MV_UpDown , false, 5.f,0.f };
-		break;
+        break;
     case ATTACK:
         m_bSelfActive = true;
         if (FAILED(Change_Texture(TEXT("Com_Texture_Katana_Attack"))))
@@ -313,28 +381,28 @@ HRESULT CKatana::Set_Texture()
         m_tMoveInfo = { MV_RIGHT , false, 1000.f,0.f };
         OnAttackInput();
         break;
-	}
+    }
 
-	return S_OK;
+    return S_OK;
 }
 
 HRESULT CKatana::Texture_Clone()
 {
-	CTexture::TEXINFO texInfo = {};
+    CTexture::TEXINFO texInfo = {};
 
-	// IDLE
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 1;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Katana_Idle", SCENE_STATIC, L"Prototype_Component_Texture_Katana_IDLE", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Katana_Idle"), m_pTextureCom });
+    // IDLE
+    texInfo.m_iStart = 0;
+    texInfo.m_iEndTex = 1;
+    texInfo.m_fSpeed = 2.f;
+    texInfo.m_bLoop = false;
+    if (FAILED(Add_Components(L"Com_Texture_Katana_Idle", SCENE_STATIC, L"Prototype_Component_Texture_Katana_IDLE", (CComponent**)&m_pTextureCom, &texInfo)))
+        return E_FAIL;
+    m_mapTextures.insert({ TEXT("Com_Texture_Katana_Idle"), m_pTextureCom });
 
     // Attack
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -343,7 +411,7 @@ HRESULT CKatana::Texture_Clone()
     // Attack2
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack2", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -352,29 +420,26 @@ HRESULT CKatana::Texture_Clone()
     // Attack3
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 1.f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack3", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack3", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_Katana_Attack3"), m_pTextureCom });
-	return S_OK;
-
-
+    return S_OK;
 }
 
 HRESULT CKatana::Change_Texture(const _tchar* pTextureTag)
 {
-	if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
+    if (FAILED(__super::Change_Component(pTextureTag, (CComponent**)&m_pTextureCom)))
+        return E_FAIL;
 
-	m_pTextureCom->Set_Zero_Frame();
-	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
-	return S_OK;
+    m_pTextureCom->Set_Zero_Frame();
+    m_CurrentAnimTag = pTextureTag;
+    return S_OK;
 }
 
 void CKatana::OnAttackInput()
 {
-    // 콤보 중이 아니면 1스텝 시작
     if (!m_bInCombo) {
         m_bInCombo = true;
         m_iComboStep = 1;
@@ -382,11 +447,26 @@ void CKatana::OnAttackInput()
         return;
     }
 
-    // 콤보 중이면 -> 다음 스텝
     if (m_fComboTimer <= m_fComboWindow && m_iComboStep < 3) {
         m_iComboStep++;
         StartComboStep(m_iComboStep);
     }
+}
+
+// ===== [추가: 공격 순간 히트창 ON] =====
+void CKatana::BeginHit(float seconds)
+{
+    if (!m_pHitCol) return;
+
+    if (!m_pPlayerTr) {
+        auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        m_pPlayerTr = dynamic_cast<CTransform*>(
+            CObjectManager::GetInstance()->Get_Component(sceneIdx, L"Player_Layer", L"Com_Transform", 0));
+        if (m_pPlayerTr) m_pHitCol->Set_Transform(m_pPlayerTr);
+    }
+
+    m_pHitCol->Set_Active(true);
+    m_fHitTimer = seconds;
 }
 
 void CKatana::StartComboStep(int step)
@@ -401,6 +481,7 @@ void CKatana::StartComboStep(int step)
         Set_New_TransInfo(3500.f, 0.f);
         m_tMoveInfo = { MV_RIGHT, false, 1000.f, 0.f };
         SpawnSlashFx(1);
+        BeginHit(0.08f);
         break;
     case 2:
         Change_Texture(TEXT("Com_Texture_Katana_Attack2"));
@@ -408,6 +489,7 @@ void CKatana::StartComboStep(int step)
         Set_New_TransInfo(7000.f, 0.f);
         m_tMoveInfo = { MV_RDOWN, false, 1000.f, 0.f };
         SpawnSlashFx(2);
+        BeginHit(0.08f);
         break;
     case 3:
         Change_Texture(TEXT("Com_Texture_Katana_Attack3"));
@@ -415,10 +497,11 @@ void CKatana::StartComboStep(int step)
         Set_New_TransInfo(7000.f, 0.f);
         m_tMoveInfo = { MV_LDOWN, false, 1000.f, 0.f };
         SpawnSlashFx(3);
+        BeginHit(0.10f); 
         break;
     }
     _uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-    _uint iPlayerUI_Idx = 1; 
+    _uint iPlayerUI_Idx = 1;
     CUIBase* pHandRBase = nullptr;
     if (auto pRoot = CObjectManager::GetInstance()->Find_Object(iCurScene, L"UI_Layer", iPlayerUI_Idx))
         pHandRBase = dynamic_cast<CUIBase*>(pRoot)->Find_Child_ByTag(L"HandRUI");
@@ -495,27 +578,27 @@ void CKatana::CleanupFinishedFx()
 
 CKatana* CKatana::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CKatana* pInstance = new CKatana(pGraphicDev);
-	if (FAILED(pInstance->Ready_GameObject()))
-	{
-		MSG_BOX("CSniper_Gun Create Failed");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
+    CKatana* pInstance = new CKatana(pGraphicDev);
+    if (FAILED(pInstance->Ready_GameObject()))
+    {
+        MSG_BOX("CSniper_Gun Create Failed");
+        Safe_Release(pInstance);
+    }
+    return pInstance;
 }
 
 CGameObject* CKatana::Clone(void* pArg)
 {
-	CKatana* pInstance = new CKatana(*this);
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("CSniper_Gun Clone Failed");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
+    CKatana* pInstance = new CKatana(*this);
+    if (FAILED(pInstance->Initialize(pArg)))
+    {
+        MSG_BOX("CSniper_Gun Clone Failed");
+        Safe_Release(pInstance);
+    }
+    return pInstance;
 }
 
 void CKatana::Free()
 {
-	__super::Free();
+    __super::Free();
 }

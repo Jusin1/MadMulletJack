@@ -11,6 +11,7 @@
 #include "CManagement.h"
 #include "CBullet.h"
 #include "CPickingManager.h"
+#include "CMonster_Head.h"
 
 #ifdef _DEBUG
 namespace {
@@ -98,6 +99,7 @@ void CMonster_Fat::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Set_OnTerrain(fTimeDelta);
     Set_Collider();
+    Set_Check_Weapon();
     __super::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -217,6 +219,103 @@ void CMonster_Fat::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
     case KillKind::Balls: cfg.killTextHead = L"급소";   break;
     case KillKind::Head:  cfg.killTextHead = L"헤드샷"; break;
     default:              cfg.killTextHead = L"처치"; break;
+    }
+}
+
+void CMonster_Fat::Set_Check_Weapon()
+{
+    static CGameObject* sWinner = nullptr;
+    static DWORD        sStamp = 0;
+    const DWORD now = GetTickCount();
+
+    if (sWinner && now - sStamp > 120) {
+        sWinner = nullptr;
+    }
+
+    if (sWinner && sWinner != this) {
+        return;
+    }
+
+    // 플레이어 위치 가져와서
+    CTransform* pPlayerTr = GetPlayerTransform();
+    if (!pPlayerTr) return;
+
+    const _vec3 ref = pPlayerTr->Get_Info(INFO_POS);
+    const auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    const float EPS = 1e-4f;
+
+    // 가장 가까운 애 판별
+    float bestDist2 = FLT_MAX;
+    CGameObject* bestObj = nullptr;
+
+    for (int i = 0;; ++i)
+    {
+        CGameObject* pObj = CObjectManager::GetInstance()->Find_Object(sceneIdx, L"Monster_Layer", i);
+        if (!pObj) break;
+
+        CMonster* pMon = dynamic_cast<CMonster*>(pObj);
+        if (!pMon || pMon->Get_Dead()) continue;
+
+        // 실제로 무기와 겹치는 몬스터만 후보
+        if (!CColiderManager::GetInstance()->CollisionGroup(
+            CColiderManager::COLLISION_WEAPON, pObj, CColiderManager::COLLISION_SPHERE, nullptr))
+            continue;
+
+        CTransform* pTr = pMon->GetTransform();
+        if (!pTr) continue;
+
+        const _vec3 pos = pTr->Get_Info(INFO_POS);
+        _vec3 diff = pos - ref;
+        const float d2 = D3DXVec3LengthSq(&diff);
+
+        if (d2 + EPS < bestDist2) {
+            bestDist2 = d2;
+            bestObj = pObj;
+        }
+        else if (fabsf(d2 - bestDist2) <= EPS) {
+            // 동점일 때 주소가 더 작은 쪽으로 고정
+            const uintptr_t key = reinterpret_cast<uintptr_t>(pObj);
+            const uintptr_t bestKey = reinterpret_cast<uintptr_t>(bestObj);
+            if (key < bestKey) bestObj = pObj;
+        }
+    }
+
+    if (bestObj != this) return; // 승자가 아니면 패스 
+
+    sWinner = this;
+    sStamp = now;
+    SetState(MON_STATE::HIT_KATANA);
+    {
+        HeadSpawnArg cfg{};
+        cfg.texTag = L"Com_Texture_SuitHead_Kill";
+        cfg.protoTag = L"Prototype_Component_Texture_Monster_Fat_KATANA_HEAD";
+        cfg.endFrame = 37;
+        cfg.animSpeed = 12.;
+        cfg.loop = false;
+
+        cfg.fallSpeed = 0.8f;
+        cfg.gravity = 3.5f;
+        cfg.backDrift = 0.0f;
+
+        const auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        if (auto* head = dynamic_cast<CMonster_Head*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_Monster_Head", sceneIdx, L"Monster_Layer", &cfg)))
+        {
+            _vec3 pos = GetHeadWorldPos();
+            _vec3 right = m_pTransformCom->Get_Info(INFO_RIGHT);
+            _vec3 look = m_pTransformCom->Get_Info(INFO_LOOK);
+
+            right.y = 0.f; if (D3DXVec3LengthSq(&right) > 1e-6f) D3DXVec3Normalize(&right, &right);
+            look.y = 0.f; if (D3DXVec3LengthSq(&look) > 1e-6f) D3DXVec3Normalize(&look, &look);
+
+            pos += right * 0.55f;
+            pos += look * 0.05f;
+            pos.y += 0.12f;
+
+            head->GetTransform()->Set_Info(INFO_POS, pos);
+            head->GetTransform()->Set_Scale(1.f, 1.f, 1.f);
+        }
     }
 }
 
@@ -352,7 +451,8 @@ HRESULT CMonster_Fat::Texture_Clone()
         { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Fat_HIT_ELECTRIC", 0, 14, 7.f,false },
         { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
         { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Fat_HIT_DOOR",     0, 31, 12.f,false },
-        { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",      0,  5, 6.f,false }
+        { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",      0,  5, 6.f,false },
+        { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Fat_KATANA_BODY", 0, 21, 6.f,false }
     };
 
     for (auto& a : anims)
@@ -391,6 +491,10 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
     case HIT_BENT:     tag = L"Com_Texture_Hit_VENT";    break;
+    case HIT_KATANA:
+        tag = L"Com_Texture_KatanaDeath";
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        break;
     case HIT_DOOR:
         tag = L"Com_Texture_Hit_Door";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
@@ -497,6 +601,7 @@ void CMonster_Fat::OnUpdateState(MON_STATE s, const _float& dt)
 
     case HIT_ELECTRIC:
     case HIT_BENT:
+    case HIT_KATANA:
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
         break;
     case HIT_DOOR:

@@ -197,8 +197,8 @@ HRESULT CDev::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
     InstancingObjects(L"Monster_Layer");
 
-    //if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Fat", SCENE_DEV, pLayerTag, nullptr)))
-    //    return E_FAIL;
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Fat", SCENE_DEV, pLayerTag, nullptr)))
+        return E_FAIL;
 
 
     return S_OK;

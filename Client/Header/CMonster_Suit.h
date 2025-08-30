@@ -3,7 +3,7 @@
 
 class CMonster_Suit : public CMonster
 {
-    enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, HIT_ELECTRIC, HIT_BENT, HIT_DOOR, KICKED, INSKILL, DEATH };
+    enum MON_STATE { IDLE, JUMP, CHASE, AIM, SHOT, AVOID, HIT, HIT_ELECTRIC, HIT_BENT, HIT_DOOR, KICKED, INSKILL, KATANA_DEATH, DEATH };
 
 public:
     enum HIT_PART { HIT_HEAD, HIT_BODY, HIT_BALLS, HIT_LEG, HIT_UNKNOWN };
@@ -37,6 +37,7 @@ protected:
 
     void            Set_Collider();
     void            GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const override;
+    void            Set_Check_Weapon();
 
 public:
     static  CMonster_Suit* Create(LPDIRECT3DDEVICE9 pGraphicDev);
