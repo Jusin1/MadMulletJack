@@ -4,6 +4,7 @@
 #include "CManagement.h"
 #include "CPlayer.h"
 #include "CUIManager.h"
+#include "CImageUI.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CMainWeapon(pGraphicDev), m_bIsInfinite(false), m_bIsZoom(false)

@@ -5,6 +5,7 @@
 #include "CObjectManager.h"
 #include "CMapFactory.h"
 #include "CImageUI.h"
+#include "Engine_Function.h"
 
 CPistol_Gun::CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -58,8 +59,6 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 
 _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 {
-	//CUIBase::Update_GameObject(fTimeDelta);
-
 	__super::Update_GameObject(fTimeDelta);
 
 	// 만약 지금 idle texture 라면
@@ -67,19 +66,6 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	{
 		// scene을 받아옴
 		_uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-
-		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		/*_uint iPlayerUI_Idx = 0;
-		switch (iCurScene)
-		{
-		case SCENE_DEV:
-			iPlayerUI_Idx = 1;
-			break;
-
-		case SCENE_TUTORIAL:
-			iPlayerUI_Idx = 1;
-			break;
-		}*/
 
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
@@ -98,6 +84,7 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	{
 		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+		DeleteEff();
 	}
 
 	return NO_EVENT;
@@ -110,7 +97,6 @@ void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CPistol_Gun::Render_GameObject()
 {
-	
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -242,7 +228,6 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 	else 
 	{
-		CImageUI* pEff = dynamic_cast<CImageUI*>(this->Find_Child_ByTag(TEXT("Effect")));
 		switch (m_tInfo.ePlayerState)
 		{
 		case OPENING:
@@ -258,15 +243,8 @@ HRESULT CPistol_Gun::Set_Texture() {
 			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
 
 			m_iBullet--;
-
-			//effect play
 			
-			if (pEff)
-			{
-				pEff->Set_Active(true);
-				pEff->Set_RenderOn(true);
-				pEff->Play(true);
-			}
+			SpawnEff();
 
 			break;
 
@@ -310,29 +288,36 @@ HRESULT CPistol_Gun::Change_Texture(const _tchar* pTextureTag)
 	return S_OK;
 }
 
-HRESULT CPistol_Gun::Set_Effect()
+void CPistol_Gun::SpawnEff()
 {
-	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
-	//_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
-	if (auto* effect = dynamic_cast<CImageUI*>(
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_UIImage", iCloneScene, L"UI_Layer"))) {
-		effect->Set_UIPosition(WINCX * 0.5, WINCY * 0.5, 130.f, 130.f);
-		effect->RegisterTexture(L"Com_Texture_Text", 
-			L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 10.f, false);
-		effect->ChangeTexture(L"Com_Texture_Text");
-		//effect->SetAdditive(false);
-		//effect->SetTintRGBA(255, 0, 0, 255);
-		//effect->SetColorMode(CImageUI::ColorMode::TintMultiply);
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
 
-		effect->Set_ObjTag(L"Effect");
-		Add_Child(effect);
+	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
 
-		return S_OK;
-	}
+	float fxW = 510.f, fxH = 300.f, offX = -350.f, offY = 160.f;
 
-	return E_FAIL;
+	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
+	pFx->RegisterTexture(L"Com_Texture_PistolEff", L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 10.f, false);
+	pFx->ChangeTexture(L"Com_Texture_PistolEff");
+
+	pFx->Set_ObjTag(L"Eff");
+
+	Add_Child(pFx);
+}
+
+void CPistol_Gun::DeleteEff()
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(TEXT("Eff")));
+	if (!pEff)
+		return;
+
+	pEff->Set_Dead(true);
+	Remove_Child(pEff);
 }
 
 CPistol_Gun* CPistol_Gun::Create(LPDIRECT3DDEVICE9 pGraphicDev)

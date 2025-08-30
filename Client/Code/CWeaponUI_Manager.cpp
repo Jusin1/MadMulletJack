@@ -83,17 +83,6 @@ _int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
-	PlayerStateInfo tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
-	if (tInfo.ePlayerState == ATTACK)
-	{
-		switch (tInfo.eWeapon)
-
-		{
-		case WP_PISTOL:
-			dynamic_cast<CImageUI*>(Find_Child_ByTag(TEXT("Pistol_Eff")))->Play(true);
-			break;
-		}
-	}
 }
 
 void CWeaponUI_Manager::Render_GameObject()
@@ -267,28 +256,6 @@ HRESULT CWeaponUI_Manager::Create_Knife(_uint _iSceneIdx)
 	return E_FAIL;
 }
 
-HRESULT CWeaponUI_Manager::Create_Effect(_uint _iSceneIdx)
-{
-	if (auto* effect = dynamic_cast<CImageUI*>(
-		CObjectManager::GetInstance()->Clone_GameObject(
-			L"Prototype_GameObject_UIImage", _iSceneIdx, L"UI_Layer"))) {
-		effect->Set_UIPosition(WINCX * 0.5, WINCY * 0.5, 130.f, 130.f);
-		effect->RegisterTexture(L"Com_Texture_Text",
-			L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 10.f, false);
-		effect->ChangeTexture(L"Com_Texture_Text");
-		//effect->SetAdditive(false);
-		//effect->SetTintRGBA(255, 0, 0, 255);
-		//effect->SetColorMode(CImageUI::ColorMode::TintMultiply);
-
-		effect->Set_ObjTag(L"Pistol_Eff");
-		Add_Child(effect);
-
-		return S_OK;
-	}
-
-	return E_FAIL;
-}
-
 HRESULT CWeaponUI_Manager::Set_WeaponUI()
 {
 	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
@@ -315,7 +282,7 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 	//	break;
 	//}
 
-	Create_Effect(iCloneScene);
+	
 
 	// test
 	Create_Pistol(iCloneScene);

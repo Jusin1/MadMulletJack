@@ -20,7 +20,8 @@ private:
 	virtual HRESULT Texture_Clone()	override;
 	virtual HRESULT Change_Texture(const _tchar* pTextureTag) override;
 
-	HRESULT Set_Effect();
+	void SpawnEff();
+	void DeleteEff();
 	
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐

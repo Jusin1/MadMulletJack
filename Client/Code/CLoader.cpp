@@ -879,6 +879,11 @@ HRESULT CLoader::Loading_UI()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Eff",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/effect/muzzle_tank_%03d.png", 10))))
 		return E_FAIL;
+	// pistol aim
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\pistol\PISTOL.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_AimEff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/PISTOL.png", 1))))
+		return E_FAIL;
 
 	// Katana - Hand_L
 	/*if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Katana_Hand_L",
