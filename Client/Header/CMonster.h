@@ -4,12 +4,25 @@
 #include "CComponentMgr.h"
 #include "Clinet_Define.h"
 #include "Client_Global.h"
+#include "CPlayer.h"
+#include "CManagement.h"
+#include "CObjectManager.h"
 
 // 추가예정
 // 1. 2개의 Door WorldPosition을 기준(z기준 min, max를 key값)으로 하는 unordered_multimap을 생성하고 해당 반경내에 있는 Monster들 캐싱
 // + room내에 있는 PANELDATA(벽 들) 또한 캐싱
 // 2. Player WorldPosition기준 캐싱된 unordered_map에 있는 Monster들만 반경 검사
 // 3. Player와 Monster 사이에 벽이 있는지 없는지 검사 후 추적 State
+
+namespace {
+    inline CPlayer* GetPlayerObj()
+    {
+        const auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        if (auto* obj = CObjectManager::GetInstance()->Find_Object(sceneIdx, L"Player_Layer", 0))
+            return dynamic_cast<CPlayer*>(obj);
+        return nullptr;
+    }
+}
 
 struct DeathUIConfig { // 몬스터 마다 메시지 교체용 구조체
     const wchar_t* killTextNormal = L"처치";

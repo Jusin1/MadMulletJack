@@ -10,7 +10,6 @@
 #include "CEffectUI.h"
 #include "CPlayer.h"
 
-
 ULONGLONG CMonster::s_lastKillTimeMs = 0; // 마지막 처치 시각(ms)
 int       CMonster::s_comboCount = 0; // 현재 콤보 횟수
 

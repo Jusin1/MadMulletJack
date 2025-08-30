@@ -35,7 +35,7 @@ namespace {
 #endif
 
 CMonster_Fat::CMonster_Fat(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev, MonsterType::SUIT)
+    : CMonster(pGraphicDev, MonsterType::SOLIDER)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
     , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
     , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
@@ -159,6 +159,7 @@ void CMonster_Fat::Set_Collider()
         {
             auto sphereWorldCenter = [](CColider_Sphere* s, CTransform* tr) -> _vec3 {
                 if (!s || !tr) return _vec3(0, 0, 0);
+                if (!s || !tr) return _vec3(0, 0, 0);
                 const auto d = s->Get_SphereDesc(); // {fRadius, vOffset}
                 return tr->Get_Info(INFO_POS)
                     + tr->Get_Info(INFO_RIGHT) * d.vOffset.x
@@ -205,21 +206,56 @@ void CMonster_Fat::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const
 
     cfg.bannerBoxW = 360.f;
     cfg.bannerBoxH = 50.f;
-
-
     cfg.rightTextNormal = L"2sec";
     cfg.rightTextHead = L"3sec";
 
-    // 기본 처치 텍스트
+    // 기본값
     cfg.killTextNormal = L"처치";
+    cfg.killTextHead = L"처치";
 
-    // ★ 헤드샷/급소 처치 문구 분기
+    // 부위 판정(헤드/급소) 우선 적용
     switch (m_lastKillKind)
     {
     case KillKind::Balls: cfg.killTextHead = L"급소";   break;
     case KillKind::Head:  cfg.killTextHead = L"헤드샷"; break;
-    default:              cfg.killTextHead = L"처치"; break;
+    default: /* 그대로 */ break;
     }
+
+    // 상태별 문구 적용 함수(스위치)
+    auto applyByState = [&](MON_STATE st) -> bool {
+        switch (st)
+        {
+        case HIT_KATANA:
+            cfg.killTextNormal = L"벽력일섬";
+            cfg.killTextHead = L"벽력일섬";
+            return true;
+
+        case HIT_ELECTRIC:
+            cfg.killTextNormal = L"찌릿찌릿";
+            cfg.killTextHead = L"찌릿찌릿";
+            return true;
+
+        case HIT_BENT:
+            cfg.killTextNormal = L"갈갈갈";
+            cfg.killTextHead = L"갈갈갈";
+            return true;
+
+        case HIT_DOOR:
+            cfg.killTextNormal = L"문 콕";
+            cfg.killTextHead = L"문 콕";
+            return true;
+
+        case INSKILL:
+            cfg.killTextNormal = L"처형";
+            cfg.killTextHead = L"처형";
+            return true;
+        default:
+            return false;
+        }
+        };
+    // 현재 상태 우선, 없으면 이전 상태로 보정
+    if (!applyByState(m_eMonState))
+        (void)applyByState(m_ePrevState);
 }
 
 void CMonster_Fat::Set_Check_Weapon()
@@ -273,7 +309,6 @@ void CMonster_Fat::Set_Check_Weapon()
             bestObj = pObj;
         }
         else if (fabsf(d2 - bestDist2) <= EPS) {
-            // 동점일 때 주소가 더 작은 쪽으로 고정
             const uintptr_t key = reinterpret_cast<uintptr_t>(pObj);
             const uintptr_t bestKey = reinterpret_cast<uintptr_t>(bestObj);
             if (key < bestKey) bestObj = pObj;
@@ -284,6 +319,9 @@ void CMonster_Fat::Set_Check_Weapon()
 
     sWinner = this;
     sStamp = now;
+    QueueDeathUI(false);
+    if (auto* p = GetPlayerObj())
+        p->Add_Hp(2.f);
     SetState(MON_STATE::HIT_KATANA);
     {
         HeadSpawnArg cfg{};
@@ -404,13 +442,14 @@ void CMonster_Fat::ApplyDamage(HIT_PART part, int dmg)
 
     if (lethal)
     {
-        // ★ 처치 종류 기록(배너 문구 분기)
         if (isBalls)      m_lastKillKind = KillKind::Balls;
         else if (isHead)  m_lastKillKind = KillKind::Head;
         else              m_lastKillKind = KillKind::Normal;
 
         // 배너는 죽을 때만 뜸
         QueueDeathUI(headshot);
+        if (auto* p = GetPlayerObj())
+            p->Add_Hp(headshot ? 2.f : 3.f);
 
         // 충돌/픽킹 차단
         m_bPickable = false;
@@ -429,7 +468,6 @@ void CMonster_Fat::ApplyDamage(HIT_PART part, int dmg)
         return;
     }
 
-    // 비치명타: 배너 금지(히트 애니만)
     m_bKillAfterHit = false;
     SetState(HIT);
 }
@@ -489,16 +527,29 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
     case AIM:   tag = L"Com_Texture_Aim";   break;
     case SHOT:  m_shotTimer = 0.f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
-    case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
-    case HIT_BENT:     tag = L"Com_Texture_Hit_VENT";    break;
-    case HIT_KATANA:
-        tag = L"Com_Texture_KatanaDeath";
-        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+    case HIT_ELECTRIC:
+        tag = L"Com_Texture_Hit_Eletric";
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
         break;
+
+    case HIT_BENT:
+        tag = L"Com_Texture_Hit_VENT";
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
+        break;
+
     case HIT_DOOR:
         tag = L"Com_Texture_Hit_Door";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         m_bPickable = false;
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
+        break;
+    case HIT_KATANA:
+        tag = L"Com_Texture_KatanaDeath";
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        TrySpawnDeathUI_Common();         
         break;
 
     case HIT:
@@ -513,6 +564,9 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
         tag = L"Com_Texture_Blocking"; break;
 
     case INSKILL:
+
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
         break;
 
     case DEATH:

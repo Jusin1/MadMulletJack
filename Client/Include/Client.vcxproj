@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\CMainWeapon.h" />
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
     <ClInclude Include="..\Header\CMonster.h" />
+    <ClInclude Include="..\Header\CMonster_Dron.h" />
     <ClInclude Include="..\Header\CMonster_Fat.h" />
     <ClInclude Include="..\Header\CMonster_Head.h" />
     <ClInclude Include="..\Header\CMonster_Soldier.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
+    <ClCompile Include="..\Code\CMonster_Dron.cpp" />
     <ClCompile Include="..\Code\CMonster_Fat.cpp" />
     <ClCompile Include="..\Code\CMonster_Head.cpp" />
     <ClCompile Include="..\Code\CMonster_Soldier.cpp" />

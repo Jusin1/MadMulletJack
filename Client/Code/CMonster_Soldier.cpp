@@ -85,9 +85,6 @@ HRESULT CMonster_Soldier::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
-    
-
-
     return S_OK;
 }
 
@@ -209,21 +206,56 @@ void CMonster_Soldier::GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) con
 
     cfg.bannerBoxW = 360.f;
     cfg.bannerBoxH = 50.f;
-
-
     cfg.rightTextNormal = L"2sec";
     cfg.rightTextHead = L"3sec";
 
-    // 기본 처치 텍스트
+    // 기본값
     cfg.killTextNormal = L"처치";
+    cfg.killTextHead = L"처치";
 
-    // ★ 헤드샷/급소 처치 문구 분기
+    // 부위 판정(헤드/급소) 우선 적용
     switch (m_lastKillKind)
     {
     case KillKind::Balls: cfg.killTextHead = L"급소";   break;
     case KillKind::Head:  cfg.killTextHead = L"헤드샷"; break;
-    default:              cfg.killTextHead = L"처치"; break;
+    default: /* 그대로 */ break;
     }
+
+    // 상태별 문구 적용 함수(스위치)
+    auto applyByState = [&](MON_STATE st) -> bool {
+        switch (st)
+        {
+        case HIT_KATANA:
+            cfg.killTextNormal = L"벽력일섬";
+            cfg.killTextHead = L"벽력일섬";
+            return true;
+
+        case HIT_ELECTRIC:
+            cfg.killTextNormal = L"찌릿찌릿";
+            cfg.killTextHead = L"찌릿찌릿";
+            return true;
+
+        case HIT_BENT:
+            cfg.killTextNormal = L"갈갈갈";
+            cfg.killTextHead = L"갈갈갈";
+            return true;
+
+        case HIT_DOOR:
+            cfg.killTextNormal = L"문 콕";
+            cfg.killTextHead = L"문 콕";
+            return true;
+
+        case INSKILL:
+            cfg.killTextNormal = L"처형";
+            cfg.killTextHead = L"처형";
+            return true;
+        default:
+            return false;
+        }
+        };
+    // 현재 상태 우선, 없으면 이전 상태로 보정
+    if (!applyByState(m_eMonState))
+        (void)applyByState(m_ePrevState);
 }
 
 void CMonster_Soldier::Set_Check_Weapon()
@@ -288,6 +320,9 @@ void CMonster_Soldier::Set_Check_Weapon()
 
     sWinner = this;
     sStamp = now;
+    QueueDeathUI(false);
+    if (auto* p = GetPlayerObj())
+        p->Add_Hp(2.f);
     SetState(MON_STATE::HIT_KATANA);
     {
         HeadSpawnArg cfg{};
@@ -415,7 +450,8 @@ void CMonster_Soldier::ApplyDamage(HIT_PART part, int dmg)
 
         // 배너는 죽을 때만 뜸
         QueueDeathUI(headshot);
-
+        if (auto* p = GetPlayerObj())
+            p->Add_Hp(headshot ? 2.f : 3.f);
         // 충돌/픽킹 차단
         m_bPickable = false;
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
@@ -493,12 +529,24 @@ void CMonster_Soldier::OnEnterState(MON_STATE s)
     case AIM:   tag = L"Com_Texture_Aim";   break;
     case SHOT:  m_shotTimer = 0.f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
-    case HIT_ELECTRIC: tag = L"Com_Texture_Hit_Eletric"; break;
-    case HIT_BENT:     tag = L"Com_Texture_Hit_VENT";    break;
+    case HIT_ELECTRIC:
+        tag = L"Com_Texture_Hit_Eletric";
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
+        break;
+
+    case HIT_BENT:
+        tag = L"Com_Texture_Hit_VENT";
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
+        break;
+
     case HIT_DOOR:
         tag = L"Com_Texture_Hit_Door";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         m_bPickable = false;
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
         break;
 
     case HIT:
@@ -511,12 +559,16 @@ void CMonster_Soldier::OnEnterState(MON_STATE s)
     case HIT_KATANA:
         tag = L"Com_Texture_KatanaDeath";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        TrySpawnDeathUI_Common();
         break;
 
     case KICKED:
         tag = L"Com_Texture_Blocking"; break;
 
     case INSKILL:
+
+        QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
         break;
 
     case DEATH:

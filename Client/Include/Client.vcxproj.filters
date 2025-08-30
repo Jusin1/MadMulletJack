@@ -268,6 +268,9 @@
     <Filter Include="02. GameObject\01. Character\02. Monster\Head">
       <UniqueIdentifier>{521126f9-7c58-49f0-aed5-8c86db261b48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Dron">
+      <UniqueIdentifier>{a983e969-a0ac-4d69-bb4c-3953690c6002}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -519,6 +522,9 @@
     <ClInclude Include="..\Header\CMonster_Head.h">
       <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Dron.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Dron</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -760,6 +766,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster_Head.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Dron.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Monster_Dron</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
