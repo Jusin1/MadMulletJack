@@ -22,6 +22,8 @@ private:
 
 	void SpawnEff();
 	void DeleteEff();
+	void SpwanSmoke();
+	void DeleteSmoke();
 	
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐

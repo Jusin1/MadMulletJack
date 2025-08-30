@@ -100,6 +100,7 @@ void CWeaponUI_Manager::Weapon_Change()
 
 	case WP_PISTOL:
 		TagUI_SetActive(L"PistolUI", false);
+		DeletePisolAim(L"Com_PistolAim");
 		break;
 
 	case WP_SHOTGUN:
@@ -128,6 +129,7 @@ void CWeaponUI_Manager::Weapon_Change()
 
 	case WP_PISTOL:
 		TagUI_SetActive(L"PistolUI", true);
+		Create_PistoAim();
 		break;
 
 	case WP_SHOTGUN:
@@ -254,6 +256,35 @@ HRESULT CWeaponUI_Manager::Create_Knife(_uint _iSceneIdx)
 	}
 
 	return E_FAIL;
+}
+
+HRESULT CWeaponUI_Manager::Create_PistoAim()
+{
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pAimEff = dynamic_cast<CImageUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (pAimEff)
+	{
+		pAimEff->Set_UISizeAndPos(50.f, 50.f, 0.f, 0.f);
+		pAimEff->RegisterTexture(L"Com_Texture_PistolAim", L"Prototype_Component_Texture_WapPistol_AimEff", 0, 0, 0.f, true);
+		pAimEff->Set_ObjTag(L"Com_PistolAim");
+		Add_Child(pAimEff); // 루트 UI에 등록
+
+		pAimEff->ChangeTexture(L"Com_Texture_PistolAim");
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+void CWeaponUI_Manager::DeletePisolAim(const _tchar* pTag)
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag((pTag)));
+	if (!pEff)
+		return;
+
+	pEff->Set_Dead(true);
+	Remove_Child(pEff);
 }
 
 HRESULT CWeaponUI_Manager::Set_WeaponUI()

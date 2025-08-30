@@ -33,6 +33,9 @@ private:
 	// weapon create func
 	HRESULT Create_Knife(_uint _iSceneIdx);
 
+	HRESULT Create_PistoAim();
+	void DeletePisolAim(const _tchar* pTag);
+
 	//getter setter func
 public:
 	WEAPON Get_Weapon() const { return m_eWeapon; }
