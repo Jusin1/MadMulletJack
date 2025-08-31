@@ -149,31 +149,32 @@ HRESULT CPlayer_Arm::Set_Texture()
         m_bRenderOn = true;
     }
 
-    if (tPlayerInfo.ePlayerState == ATTACK_INSTANT)
+    else if (tPlayerInfo.ePlayerState == ATTACK_INSTANT)
     {
         m_bRenderOn = true;
         int i = rand() % 3;
 
-        if (i)
+        switch (i)
         {
+        case 0:
             Change_Texture(TEXT("Com_Texture_Arm_FunckU"));
             Set_UISizeAndPos(210.f, 610.f, WINCX * 0.5f - 300.f, WINCY * 0.5f + 400.f);
-        }
+            break;
 
-        else if (i == 0)
-        {
+        case 1:
             Change_Texture(TEXT("Com_Texture_Arm_DrunckU"));
             Set_UISizeAndPos(420.f, 610.f, WINCX * 0.5f - 400.f, WINCY * 0.5f + 300.f);
-        }
-        
-        else
-        {
-            return S_OK;
-        }
+            break;
 
+        case 2:
+            return S_OK;
+            break;
+        }
 
         Set_New_TransInfo(200.f, 0.f);
         m_tMoveInfo = { MV_UP,true, 1000.f,0.f };
+
+        return S_OK;
     }
 
     else {

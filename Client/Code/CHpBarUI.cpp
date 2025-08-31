@@ -116,7 +116,7 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void	CHpBarUI::Render_GameObject()
 {
-	//CUIBase::Render_GameObject();
+	CUIBase::Render_GameObject();
 }
 
 HRESULT CHpBarUI::Set_HpBarUI()

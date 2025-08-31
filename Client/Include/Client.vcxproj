@@ -192,6 +192,7 @@
     <ClInclude Include="..\Header\CMonster_Suit.h" />
     <ClInclude Include="..\Header\CPlayerUI_Manager.h" />
     <ClInclude Include="..\Header\CPrefab.h" />
+    <ClInclude Include="..\Header\CShot_Gun.h" />
     <ClInclude Include="..\Header\CStage_2.h" />
     <ClInclude Include="..\Header\CStage_Boss.h" />
     <ClInclude Include="..\Header\CStage_Car.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\Code\CMonster_Suit.cpp" />
     <ClCompile Include="..\Code\CPlayerUI_Manager.cpp" />
     <ClCompile Include="..\Code\CPrefab.cpp" />
+    <ClCompile Include="..\Code\CShot_Gun.cpp" />
     <ClCompile Include="..\Code\CStage_2.cpp" />
     <ClCompile Include="..\Code\CStage_Boss.cpp" />
     <ClCompile Include="..\Code\CStage_Car.cpp" />
