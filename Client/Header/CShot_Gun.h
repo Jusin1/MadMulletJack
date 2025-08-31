@@ -1,12 +1,12 @@
 #pragma once
 #include "CGun.h"
-class CPistol_Gun :
-    public CGun
+class CShot_Gun :
+	public CGun
 {
 private:
-	explicit CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPistol_Gun(const CPistol_Gun& rhs);
-	virtual ~CPistol_Gun();
+	explicit CShot_Gun(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CShot_Gun(const CShot_Gun& rhs);
+	virtual ~CShot_Gun();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,15 +22,13 @@ private:
 
 	void SpawnEff();
 	void DeleteEff();
-	void SpwanSmoke();
-	void DeleteSmoke();
-	
+
 private:
 	map<const _tchar*, CTexture*> m_mapTextures;    // 애니메이션 텍스쳐
 	wstring m_CurrentAnimTag;                       // 현재 애니메이션 태그
 
 public:
-	static CPistol_Gun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CShot_Gun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

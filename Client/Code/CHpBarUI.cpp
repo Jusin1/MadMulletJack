@@ -39,9 +39,6 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Set_HpBarUI()))
-		return E_FAIL;
-
 	HitCount_Reset(); // hitcount <- 0 (scene 전환시 0으로 맞추기 위함)
 
 	//timer 할래말래
@@ -55,6 +52,36 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	// 자식들이 따라오게
 	Set_IsPosParentFix(true); // 부모 행렬 따라가게
 
+	m_vRectOriginOffset = { 33.5f, -200.f,0.f };
+	//scene에 따라 셋팅값 적용
+	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+	switch (iTargetScene)
+	{
+	case SCENE_DEV:
+	case SCENE_TUTORIAL:
+	case SCENE_STAGE_1:
+	//case SCENE_STAGE_2: // test
+		m_iSceneCase = 0;
+		m_vTextSet = { -420.f, -145.f ,2.f};
+		break;
+
+	case SCENE_STAGE_2: // test
+	case SCENE_SNIPE:
+	case SCENE_BOSS:
+	case SCENE_CAR:
+		m_iSceneCase = 1;
+		m_vTextSet = { -430.f, -50.f ,1.3};
+		break;
+	case SCENE_END:
+		m_iSceneCase = -1;
+		m_vRectOriginOffset = { 0.f, 0.f,0.f };
+		break;
+	}
+
+	// 셋팅값을 기준으로 ui들 생성
+	if (FAILED(Set_HpBarUI()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -62,7 +89,7 @@ _int	CHpBarUI::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	Move_UI(fTimeDelta);
+	//Move_UI(fTimeDelta);
 		
 	return NO_EVENT;
 }
@@ -71,35 +98,13 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	__super::LateUpdate_GameObject(fTimeDelta);
 
-	CPhone_HpBarUI* pPhone = dynamic_cast<CPhone_HpBarUI*>(this->Find_Child_ByTag(TEXT("PhoneUI")));
-	CMan_HpBarUI* pMan = dynamic_cast<CMan_HpBarUI*>(this->Find_Child_ByTag(TEXT("ManUI")));
+	CPhone_HpBarUI* pPhone	= dynamic_cast<CPhone_HpBarUI*>(this->Find_Child_ByTag(TEXT("PhoneUI")));
+	CMan_HpBarUI* pMan		= dynamic_cast<CMan_HpBarUI*>(this->Find_Child_ByTag(TEXT("ManUI")));
 	CBlackGackGround* pRect =  dynamic_cast<CBlackGackGround*>(this->Find_Child_ByTag(TEXT("RectUI")));
 	if (Is_Scene_Change()) // scene 이 바뀌면 
 	{
-		pPhone->Set_Texture(m_eScene); // texture를 바꿔라
-		pMan->Set_Texture(m_eScene); 
-
-		
-		switch (m_eScene)
-		{
-		case SCENE_DEV:
-		case SCENE_TUTORIAL:
-		case SCENE_STAGE_1:
-		case SCENE_STAGE_2:
-			m_vRectOriginOffset = { 33.5f, -200.f,0.f };
-			
-			break;
-
-		case SCENE_SNIPE:
-		case SCENE_BOSS:
-		case SCENE_CAR:
-			break;
-			m_vRectOriginOffset = { 0.f, 0.f,0.f };
-		case SCENE_END:
-
-			break;
-		}
-		pRect->Set_LocalOffset(m_vRectOriginOffset);
+		pPhone	->Set_Texture(m_eScene); // texture를 바꿔라
+		pMan	->Set_Texture(m_eScene); 
 	}
 
 	if (m_bHitChange) // hitcount가 바뀌면
@@ -111,7 +116,7 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void	CHpBarUI::Render_GameObject()
 {
-	//CUIBase::Render_GameObject();
+	CUIBase::Render_GameObject();
 }
 
 HRESULT CHpBarUI::Set_HpBarUI()
@@ -149,8 +154,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		pRect->Set_ObjTag(L"RectUI");
 		Add_Child(pRect);
 
-		vLocalOffset = { 30.f, -200.f,0.f };
-		pRect->Set_LocalOffset(vLocalOffset);
+		pRect->Set_LocalOffset(m_vRectOriginOffset);
 	}
 
 	CMan_HpBarUI* pManUI = dynamic_cast<CMan_HpBarUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_HpbarUI_Man", iSceneIdx, L"UI_Layer"));
@@ -168,20 +172,14 @@ HRESULT CHpBarUI::Set_HpBarUI()
 		txt1->SetFontTag(L"UIFont");
 		txt1->SetText(L"");
 		txt1->SetColor(g_Color_White);
-		txt1->SetScale(2.f);
+		txt1->SetScale(m_vTextSet.z);
 		txt1->SetCentered(true);
 		txt1->SetLetterSpacing(1.f);
-		txt1->SetPosFix(true);
-		//txt1->SetRotation(40.f);
-
-		txt1->Set_UIPosition(100.f, 100.f, 0.f, 0.f);
-
+		txt1->Set_UIPosition(m_vTextSet.x, m_vTextSet.y ,80.f , 80.f);
+		txt1->SetRotation(20.f);
 
 		txt1->Set_ObjTag(L"Text");
 		Add_Child(txt1);
-
-		vLocalOffset = { 30.f, -200.f,0.f };
-		txt1->Set_LocalOffset(vLocalOffset);
 	}
 
 	return S_OK;
@@ -202,10 +200,9 @@ _bool CHpBarUI::Is_Scene_Change()
 void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 {
 	// 내가 그리는 y값의 percent 만큼 그리기
-
 	m_fHpPercent = _fCurHp / _fMaxHp; // 지금은 여기 함수 안에서만 쓰여서 local 변수로 바꿔도 될듯.. 일단 남겨둠
 
-	if (_fCurHp < -1)
+	if (_fCurHp < 0)
 		return;
 
 	// percent 에 따라 색깔 (R:1-percent, G : percent , B =0)
@@ -219,10 +216,8 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 		pRect->Set_UISize(fSizeX, m_fRectY * m_fHpPercent);// rect 사이즈 줄어들게 .. 위치 변경은 아직
 
 		// 줄어든 사이즈
-		// 
-
 		_vec3 vNewOffset = {m_vRectOriginOffset.x ,
-							m_vRectOriginOffset.y - m_fRectY * (1 - m_fHpPercent) *0.5f,
+							m_vRectOriginOffset.y - m_fRectY * (1 - m_fHpPercent) * 0.5f,
 							0.f};
 		pRect->Set_LocalOffset(vNewOffset);
 	}
@@ -231,13 +226,43 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 	CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
 	if (txt1)
 	{
-		if (_fCurHp < 0)
-			txt1->SetText(L"0");
+		if (m_iSceneCase) // 1일때
+		{
+			int iHp = static_cast<int>(std::ceil(m_fHpPercent * 100.f));
+			std::wstring hpText = std::to_wstring(iHp) + L"%";
+			txt1->SetText(hpText.c_str());
+		}
+
 		else
 		{
 			int iHp = static_cast<int>(std::ceil(_fCurHp));
-			txt1->SetText(std::to_wstring(iHp).c_str());
+			switch (iHp)
+			{
+			case 1:
+				txt1->SetText(TEXT("01")); break;
+			case 2:
+				txt1->SetText(TEXT("02")); break;
+			case 3:
+				txt1->SetText(TEXT("03")); break;
+			case 4:
+				txt1->SetText(TEXT("04")); break;
+			case 5:
+				txt1->SetText(TEXT("05")); break;
+			case 6:
+				txt1->SetText(TEXT("06")); break;
+			case 7:
+				txt1->SetText(TEXT("07")); break;
+			case 8:
+				txt1->SetText(TEXT("08")); break;
+			case 9:
+				txt1->SetText(TEXT("09")); break;
+			case 10:
+				txt1->SetText(TEXT("10")); break;
+			default:
+				txt1->SetText(TEXT("00")); break;
+			}
 		}
+		
 	}
 }
 

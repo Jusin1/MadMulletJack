@@ -60,7 +60,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
     if (m_pTransformCom)
     {
         CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
-        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 10.f, tMyTransInfo.fRotationSpeed });
+        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 5.f, tMyTransInfo.fRotationSpeed });
     }
 
     return NO_EVENT;
@@ -87,27 +87,15 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM ||
         CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
     {
-        //_matrix   matCamWorld;
-        //m_pTransformCom->Get_World(&matCamWorld);
-
-        //_vec3 vLook;
-        //vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-        //m_pTransformCom->Move_PosDir(20.f, vLook);
-
-   /*     _matrix	matCamWorld;
-        D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
-
-
-  
-       _vec3	vLook;
-       memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
-
-            _vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook)  * 5.f;
-
-            m_vEye += vLength;
-            m_vAt += vLength;
-        }*/
+        // 카메라의 look 방향으로 전진
+        _vec3 vLook;
+        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        m_pTransformCom->Move_PosDir(1.f, vLook);
     }
+
+    // 카메라의 월드행렬 적용
+    if (FAILED(Apply_ViewPorjection()))
+        return;
 }
 
 void CCameraFPS::Mouse_Move()

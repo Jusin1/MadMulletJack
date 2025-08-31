@@ -21,8 +21,8 @@ private:
 	HRESULT Set_WeaponUI();
 	HRESULT Set_Weapon2UI();
 	void	Weapon_Change();
-	void	Weapon2_On();
-	void	Weapon2_Off();
+	void	Weapon2_Change();
+
 	void	TagUI_SetActive(const _tchar* pTag, _bool _bActive);
 
 	// weapon create func
@@ -33,6 +33,12 @@ private:
 	// weapon create func
 	HRESULT Create_Knife(_uint _iSceneIdx);
 
+	// effect
+	HRESULT Create_PistoAim();
+	void DeletePisolAim(const _tchar* pTag);
+
+	void SpawnInsEff();
+	void DeleteEff(const _tchar* pTag);
 
 	//getter setter func
 public:

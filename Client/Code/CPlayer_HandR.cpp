@@ -242,6 +242,8 @@ HRESULT CPlayer_HandR::Set_Texture()
 
     if (m_bKatanaComboAnim && m_tInfo.eWeapon == WP_KATANA)
         return S_OK;
+    m_tMoveInfo.eUIMove = MV_NON;
+
     switch (m_tInfo.ePlayerState)
     {
     case ATTACK:

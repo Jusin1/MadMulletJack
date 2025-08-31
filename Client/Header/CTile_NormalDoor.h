@@ -33,6 +33,9 @@ private:
     HRESULT Set_Component(void* pArg);
     void    PivotRotate();
 
+    virtual _bool Picking(_vec3* PickingPoint) override;
+    virtual void PickingTrue() override;
+
 private:
     bool    m_bOpend{ false };
     _matrix m_matInitDoors[2];

@@ -9,6 +9,7 @@
 #include "CSniper_Gun.h"
 #include "CMapFactory.h"
 #include "CKatana.h"
+#include "CImageUI.h"
 
 CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)
@@ -45,22 +46,13 @@ HRESULT CWeaponUI_Manager::Initialize(void* pArg)
 		return E_FAIL;
 
 	Weapon_Change();
-	Weapon2_Off();
+	Weapon2_Change();
 
 	return S_OK;
 }
 
 _int CWeaponUI_Manager::Update_GameObject(const _float& fTimeDelta)
 {
-	__super::Update_GameObject(fTimeDelta);
-
-	return NO_EVENT();
-}
-
-void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	
-
 	PlayerStateInfo tPlayerInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
 
 	// 만약 player의 weapon이 바뀌면 
@@ -71,18 +63,27 @@ void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 	// player가 attack instant이면
-	if (ATTACK_INSTANT == tPlayerInfo.ePlayerState)
+	if (m_eWeapon2 != tPlayerInfo.eWeapon2)
 	{
-		// 무기2 on
-		Weapon2_On();
-	}
-	// attack instant 가 아니라면
-	else
-	{
-		// 무기2 off
-		Weapon2_Off();
+		Weapon2_Change();
 	}
 
+	if (tPlayerInfo.ePlayerState == ATTACK_INSTANT)
+	{
+		SpawnInsEff();
+	}
+	else
+	{
+		DeleteEff(TEXT("Ins_Eff"));
+	}
+
+	__super::Update_GameObject(fTimeDelta);
+
+	return NO_EVENT();
+}
+
+void CWeaponUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
+{
 	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -101,6 +102,7 @@ void CWeaponUI_Manager::Weapon_Change()
 
 	case WP_PISTOL:
 		TagUI_SetActive(L"PistolUI", false);
+		DeletePisolAim(L"Com_PistolAim");
 		break;
 
 	case WP_SHOTGUN:
@@ -129,6 +131,7 @@ void CWeaponUI_Manager::Weapon_Change()
 
 	case WP_PISTOL:
 		TagUI_SetActive(L"PistolUI", true);
+		Create_PistoAim();
 		break;
 
 	case WP_SHOTGUN:
@@ -147,8 +150,21 @@ void CWeaponUI_Manager::Weapon_Change()
 	}
 }
 
-void CWeaponUI_Manager::Weapon2_On()
+void CWeaponUI_Manager::Weapon2_Change()
 {
+	switch (m_eWeapon2)
+	{
+	case WP_KICK:
+		break;
+
+	case WP_KNIFE:
+		TagUI_SetActive(L"KnifeUI", false);
+		break;
+
+	case WP_BOOK:
+		break;
+	}
+
 	// weapon update
 	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
 
@@ -165,27 +181,8 @@ void CWeaponUI_Manager::Weapon2_On()
 		break;
 	}
 
-	
-}
-
-void CWeaponUI_Manager::Weapon2_Off()
-{
-	// weapon update
-	m_eWeapon2 = CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon2;
-
-	// 이번 weapon은 active true
-	switch (m_eWeapon2)
-	{
-	case WP_KICK:
-		break;
-
-	case WP_KNIFE:
-		TagUI_SetActive(L"KnifeUI", false);
-		break;
-
-	case WP_BOOK:
-		break;
-	}
+	// effect 생성
+	//SpawnInsEff();
 }
 
 void CWeaponUI_Manager::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
@@ -257,6 +254,70 @@ HRESULT CWeaponUI_Manager::Create_Knife(_uint _iSceneIdx)
 	return E_FAIL;
 }
 
+HRESULT CWeaponUI_Manager::Create_PistoAim()
+{
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pAimEff = dynamic_cast<CImageUI*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (pAimEff)
+	{
+		pAimEff->Set_UISizeAndPos(50.f, 50.f, 0.f, 0.f);
+		pAimEff->RegisterTexture(L"Com_Texture_PistolAim", L"Prototype_Component_Texture_WapPistol_AimEff", 0, 0, 0.f, true);
+		pAimEff->Set_ObjTag(L"Com_PistolAim");
+		Add_Child(pAimEff); // 루트 UI에 등록
+
+		pAimEff->ChangeTexture(L"Com_Texture_PistolAim");
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+void CWeaponUI_Manager::DeletePisolAim(const _tchar* pTag)
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag((pTag)));
+	if (!pEff)
+		return;
+
+	pEff->Set_Dead(true);
+	Remove_Child(pEff);
+}
+
+void CWeaponUI_Manager::SpawnInsEff()
+{
+	// 중복 생성 방지
+	if (Find_Child_ByTag(L"Ins_Eff"))
+		return;
+
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
+
+
+	float fxW = 800.f, fxH = 800.f;
+
+	pFx->Set_UISizeAndPos(fxW, fxH, 150.f, -10.f);
+	pFx->RegisterTexture(L"Com_Texture_KnifeEff", L"Prototype_Component_Texture_SubWKnife_Eff", 0, 18, 10.f, false);
+	pFx->ChangeTexture(L"Com_Texture_KnifeEff");
+
+	pFx->Set_ObjTag(L"Ins_Eff");
+
+	Add_Child(pFx);
+}
+
+void CWeaponUI_Manager::DeleteEff(const _tchar* pTag)
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(pTag));
+	if (pEff && pEff->GetTextureCom()->Is_AnimFinished())
+	{
+		pEff->Set_Dead(true);
+		Remove_Child(pEff);
+	}
+}
+
 HRESULT CWeaponUI_Manager::Set_WeaponUI()
 {
 	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
@@ -282,6 +343,8 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 	//case SCENE_CAR:
 	//	break;
 	//}
+
+	
 
 	// test
 	Create_Pistol(iCloneScene);
@@ -313,15 +376,6 @@ HRESULT CWeaponUI_Manager::Set_Weapon2UI()
 	case SCENE_CAR:
 		break;
 	}
-
-	//CKnife_SubW* pKnifeUI = dynamic_cast<CKnife_SubW*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_SubWKnifeUI", iSceneIndex, L"UI_Layer"));
-	//if (pKnifeUI)
-	//{
-	//	pKnifeUI->Set_ObjTag(L"KnifeUI");
-	//	pKnifeUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
-	//	Add_Child(pKnifeUI); // 루트 UI에 등록
-	//}
-	
 
 	return S_OK;
 }

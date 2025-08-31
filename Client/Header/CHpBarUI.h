@@ -48,6 +48,9 @@ private:
 	_bool		m_bHitChange;
 	_float		m_fRectY; // rect 초기 사이즈 저장하기 위함
 	_vec3		m_vRectOriginOffset; // rect 위치 조정하기 위함
+	_vec3		m_vTextSet; // text 위치 조절하기 위한 값 
+
+	_int		m_iSceneCase;
 
 public:
 	static  CHpBarUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

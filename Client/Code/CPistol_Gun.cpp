@@ -4,6 +4,8 @@
 #include "CManagement.h"
 #include "CObjectManager.h"
 #include "CMapFactory.h"
+#include "CImageUI.h"
+#include "Engine_Function.h"
 
 CPistol_Gun::CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -47,7 +49,7 @@ HRESULT CPistol_Gun::Initialize(void* pArg)
 	m_iPrecision = 10;
 	m_fCoolTime = 0.1f;
 	// 최대 불렛
-	m_iMaxBullet = 3; //origin : 9 / debug 3
+	m_iMaxBullet = 9; //origin : 9 / test 3
 	m_iBullet = m_iMaxBullet;
 
 	Set_Texture();
@@ -65,22 +67,9 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 		// scene을 받아옴
 		_uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
 
-		// scene별 playerui 위치 셋팅 -> 디버깅하면 다 나와
-		_uint iPlayerUI_Idx = 0;
-		switch (iCurScene)
-		{
-		case SCENE_DEV:
-			iPlayerUI_Idx = 1;
-			break;
-
-		case SCENE_TUTORIAL:
-			iPlayerUI_Idx = 1;
-			break;
-		}
-
 		// handR을 받아옴
 		CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-			->Find_Object(iCurScene, L"UI_Layer", iPlayerUI_Idx))
+			->Find_Object(iCurScene, L"UI_Layer", 1))
 			->Find_Child_ByTag(L"HandRUI");
 
 		// handR 위치를 기준으로 pos 갱신 (offset 적용)
@@ -95,7 +84,14 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	{
 		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+		if (m_tInfo.ePlayerState == ATTACK)
+		{
+			DeleteEff();
+			SpwanSmoke();
+		}
 	}
+
+	DeleteSmoke();
 
 	return NO_EVENT;
 }
@@ -110,7 +106,6 @@ void CPistol_Gun::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 
 	m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
 	m_pTextureCom->MoveFrame();
@@ -254,6 +249,8 @@ HRESULT CPistol_Gun::Set_Texture() {
 			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
 
 			m_iBullet--;
+			
+			SpawnEff();
 
 			break;
 
@@ -295,6 +292,75 @@ HRESULT CPistol_Gun::Change_Texture(const _tchar* pTextureTag)
 	m_pTextureCom->Set_Zero_Frame();
 	m_CurrentAnimTag = pTextureTag; // 현재 상태 저장
 	return S_OK;
+}
+
+void CPistol_Gun::SpawnEff()
+{
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
+
+	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
+
+	float fxW = 300.f, fxH = 300.f, offX = -300.f, offY = 160.f;
+	//float fxW = 240.f, fxH = 264.f, offX = -180.f, offY = 100.f;
+
+
+	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
+	pFx->RegisterTexture(L"Com_Texture_PistolEff", L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 50.f, false);
+	pFx->ChangeTexture(L"Com_Texture_PistolEff");
+
+	pFx->Set_ObjTag(L"Eff");
+
+	Add_Child(pFx);
+}
+
+void CPistol_Gun::DeleteEff()
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(TEXT("Eff")));
+	if (!pEff)
+		return;
+
+	pEff->Set_Dead(true);
+	Remove_Child(pEff);
+}
+
+void CPistol_Gun::SpwanSmoke()
+{
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
+
+	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
+
+	float fxW = 400.f, fxH = 400.f, offX = -60.f, offY = 10.f;
+	//float fxW = 240.f, fxH = 264.f, offX = -180.f, offY = 100.f;
+
+
+	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
+	pFx->RegisterTexture(L"Com_Texture_PistolSmoke", L"Prototype_Component_Texture_WapPistol_EffSmoke", 0, 15, 30.f, false);
+	pFx->ChangeTexture(L"Com_Texture_PistolSmoke");
+
+	pFx->Set_ObjTag(L"Eff_Smoke");
+
+	Add_Child(pFx);
+}
+
+void CPistol_Gun::DeleteSmoke()
+{
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(TEXT("Eff_Smoke")));
+
+	if (pEff && pEff->GetTextureCom()->Is_AnimFinished())
+	{
+		pEff->Set_Dead(true);
+		Remove_Child(pEff);
+	}
 }
 
 CPistol_Gun* CPistol_Gun::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -271,6 +271,9 @@
     <Filter Include="02. GameObject\01. Character\02. Monster\Monster_Dron">
       <UniqueIdentifier>{a983e969-a0ac-4d69-bb4c-3953690c6002}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\02. Shot_Gun">
+      <UniqueIdentifier>{e9cc2184-a240-4924-88ba-403c5a58d8c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -525,6 +528,9 @@
     <ClInclude Include="..\Header\CMonster_Dron.h">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Dron</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CShot_Gun.h">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\02. Shot_Gun</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -769,6 +775,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster_Dron.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Monster_Dron</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShot_Gun.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\02. Shot_Gun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
