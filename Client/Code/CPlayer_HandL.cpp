@@ -119,7 +119,7 @@ HRESULT CPlayer_HandL::Texture_Clone()
     // reload - shotgun
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 2;
-    texInfo.m_fSpeed = 0.5f;
+    texInfo.m_fSpeed = 2.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_HandL_Re_Shotgun", SCENE_STATIC, L"Prototype_Component_Texture_UIHandLReShotgun", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -181,6 +181,7 @@ HRESULT CPlayer_HandL::Set_Texture()
     switch (m_tInfo.ePlayerState) {
     case OPENING:
     {
+
         if (m_tInfo.eWeapon == WP_RIFLE) {
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"))))
                 return E_FAIL;
@@ -225,13 +226,13 @@ HRESULT CPlayer_HandL::Set_Texture()
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Re_Shotgun"))))
                 return E_FAIL;
 
-            Set_UISizeAndPos(240.f, 600.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f);
+            Set_UISizeAndPos(400.f, 800.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 290.f); //idle pos
 
-            Set_New_TransInfo(200.f, -40.f);
+            Set_New_TransInfo(1200.f, -20.f);
             m_pTransformCom->Rotation({ 0.f, 0.f,1.f }, 1); // rotation texture
-            m_fRotSum += D3DXToRadian (-40.f) * 1;
+            m_fRotSum += D3DXToRadian(-20.f) * 1;
 
-            m_tMoveInfo = { MV_RIGHT, false, 0.f, 0.f };
+            m_tMoveInfo = { MV_RIGHT, true, 350.f, 0.f };
         }
 
         else {

@@ -83,7 +83,10 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 		return E_FAIL;
 
 	if (m_tInfo.eWeapon == WEAPON::WP_KATANA)
-		TagUI_SetActive(L"HandRUI", true);
+	{
+		if(FAILED(TagUI_SetActive(L"HandRUI", true)))
+			return E_FAIL;
+	}
 
 	// state¿¡ µû¶ó onoff
 	switch (m_tInfo.ePlayerState)
@@ -93,7 +96,8 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 		break;
 
 	case KICK:
-		TagUI_SetActive(L"FootUI", true);
+		if (FAILED(TagUI_SetActive(L"FootUI", true)))
+			return E_FAIL;
 		break;
 
 	case ATTACK:
@@ -138,6 +142,16 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 
 	case CLEAR:
 		m_bActive = false;
+		break;
+	case ATTEND:
+		if (FAILED(TagUI_SetActive(L"HandRUI", false)))
+			return E_FAIL;
+		break;
+	case ATTACK_ZOOM:
+		break;
+	case ZOOMOUT:
+		break;
+	case KATANA:
 		break;
 	}
 

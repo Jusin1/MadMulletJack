@@ -57,8 +57,15 @@ _int CShot_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	return NO_EVENT;
+}
+
+void CShot_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	__super::LateUpdate_GameObject(fTimeDelta);
+
 	// 만약 지금 idle texture 라면
-	if (m_CurrentAnimTag == TEXT("Com_Texture_ShotGun_Idle"))
+	if (m_CurrentAnimTag == TEXT("Com_Texture_ShotG_Idle"))
 	{
 		// scene을 받아옴
 		_uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
@@ -71,9 +78,10 @@ _int CShot_Gun::Update_GameObject(const _float& fTimeDelta)
 		// handR 위치를 기준으로 pos 갱신 (offset 적용)
 		if (pHandR)
 		{
-			Set_UIPos(pHandR->GetTransform()->Get_Info(INFO_POS), -120.f, 350.f);
+			Set_UIPos(pHandR->GetTransform()->Get_Info(INFO_POS), -190.f, 350.f);
 		}
 	}
+
 
 	// 만약 지금 idle texture가 아니고 ani가 끝났다면
 	else if (m_pTextureCom->Is_AnimFinished())
@@ -83,12 +91,7 @@ _int CShot_Gun::Update_GameObject(const _float& fTimeDelta)
 		DeleteEff();
 	}
 
-	return NO_EVENT;
-}
-
-void CShot_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	__super::LateUpdate_GameObject(fTimeDelta);
+	return;
 }
 
 void CShot_Gun::Render_GameObject()
@@ -115,7 +118,39 @@ void CShot_Gun::Render_GameObject()
 
 HRESULT CShot_Gun::Texture_Clone()
 {
-	CTexture::TEXINFO texInfo = {};
+	CTexture::TEXINFO info{};
+	struct AnimDef { const wchar_t* tag; const wchar_t* proto; int start; int end; float speed; bool loop; };
+	AnimDef anims[] = {
+		// normal
+		{ L"Com_Texture_ShotG_Idle",			L"Prototype_Component_Texture_WapShot_Idle",		0, 5, 8.f,  true },
+		{ L"Com_Texture_ShotG_Att",				L"Prototype_Component_Texture_WapShot_Att",			0, 2,10.f,  false },
+		{ L"Com_Texture_ShotG_AttEnd",			L"Prototype_Component_Texture_WapShot_AttEnd",			0, 13,20.f,  false },
+		{ L"Com_Texture_ShotG_Op",				L"Prototype_Component_Texture_WapShot_Op",			0, 13,25.f,  false },
+		{ L"Com_Texture_ShotG_Re",				L"Prototype_Component_Texture_WapShot_Reload",		0, 14, 20.f,  false },
+
+		// car scene - not zoom
+		{ L"Com_Texture_ShotGC_Idle",			L"Prototype_Component_Texture_WapShotC_Idle",		0, 2,10.f,  true },
+		{ L"Com_Texture_ShotGC_Att",			L"Prototype_Component_Texture_WapShotC_Att",		0, 2, 7.f,false },
+		// car scene - zoom
+		{ L"Com_Texture_ShotGC_Zoom",			L"Prototype_Component_Texture_WapShotC_Zoom",		0,  3,10.f,true },
+		{ L"Com_Texture_ShotGC_ZoomAtt",		L"Prototype_Component_Texture_WapShotC_ZoomAtt",	0, 4,10.f,false },
+		{ L"Com_Texture_ShotGC_ZoomIng",		L"Prototype_Component_Texture_WapShotC_Zooming",	0, 6,10.f,false },
+		{ L"Com_Texture_ShotGC_ZoomOut",		L"Prototype_Component_Texture_WapShotC_ZoomOut",	0, 6, 7.f,false }
+	};
+
+	for (auto& a : anims)
+	{
+		ZeroMemory(&info, sizeof(info));
+		info.m_iStart = a.start;
+		info.m_iEndTex = a.end;
+		info.m_fSpeed = a.speed;
+		info.m_bLoop = a.loop;
+
+		if (FAILED(Add_Components(a.tag, SCENE_STATIC, a.proto, (CComponent**)&m_pTextureCom, &info)))
+			return E_FAIL;
+
+		m_mapTextures.insert({ a.tag, m_pTextureCom });
+	}
 
 	return S_OK;
 }
@@ -134,32 +169,47 @@ HRESULT CShot_Gun::Set_Texture() {
 		{
 		case IDLE:
 			break;
+
 		case ATTACK:
 			break;
+
 		case ZOOMING:
+			break;
+
+		case ZOOM:
+			break;
+
+		case OPENING:
+			break;
+
+		case PLAYERDEAD:
+			break;
+
+		case ATTEND:
+			break;
+
+		case ATTACK_ZOOM:
+			break;
+
+		case ZOOMOUT:
 			break;
 		}
 	}
 
 	else
 	{
+		//IDLE, JUMP, KICK, ATTACK,
+		//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, ATTEND, ATTACK_ZOOM, ZOOMOUT, KATANA, PLAYER_END
 		switch (m_tInfo.ePlayerState)
 		{
-		case OPENING:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
-				return E_FAIL;
-			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f);
-
-			break;
-
 		case ATTACK:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
+			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Att"))))
 				return E_FAIL;
-			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
+			Set_UISizeAndPos(415.f, 617.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 290.f);
 
 			m_iBullet--;
 
-			SpawnEff();
+			SpawnEff({370.f,270.f,-350.f,310.f});
 
 			break;
 
@@ -168,11 +218,21 @@ HRESULT CShot_Gun::Set_Texture() {
 			break;
 
 		case RELOAD:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Re"))))
+			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Re"))))
 				return E_FAIL;
-			Set_UISizeAndPos(360.f, 660.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
+			Set_UISizeAndPos(287.f, 560.f, WINCX * 0.5f + 330.f, WINCY * 0.5f + 200.f);
 
 			Reload_Bullet();
+
+			break;
+
+		case OPENING:
+			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Op"))))
+				return E_FAIL;
+			Set_UISizeAndPos(548.f, 960.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
+
+			/*Set_New_TransInfo(700.f, 0.f);
+			m_tMoveInfo = { MV_UP, true, 200.f, 0.f };*/
 
 			break;
 
@@ -180,11 +240,17 @@ HRESULT CShot_Gun::Set_Texture() {
 			m_bActive = false;
 			break;
 
-		default:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
+		case ATTEND:
+			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_AttEnd"))))
 				return E_FAIL;
-			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
-			//pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
+			//1332 * 1856
+			Set_UISizeAndPos(532.f, 742.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 100.f);
+			break;
+
+		default:
+			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Idle"))))
+				return E_FAIL;
+			Set_UISizeAndPos(325.f, 520.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f); // pos를 정하고
 
 			break;
 		}
@@ -203,7 +269,7 @@ HRESULT CShot_Gun::Change_Texture(const _tchar* pTextureTag)
 	return S_OK;
 }
 
-void CShot_Gun::SpawnEff()
+void CShot_Gun::SpawnEff(_vec4 _vSizeOffset)
 {
 	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
@@ -214,11 +280,9 @@ void CShot_Gun::SpawnEff()
 
 	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
 
-	float fxW = 510.f, fxH = 300.f, offX = -350.f, offY = 160.f;
-
-	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
-	pFx->RegisterTexture(L"Com_Texture_PistolEff", L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 20.f, false);
-	pFx->ChangeTexture(L"Com_Texture_PistolEff");
+	pFx->Set_UISizeAndPos(_vSizeOffset.x, _vSizeOffset.y, base.x + _vSizeOffset.z, base.y + _vSizeOffset.w);
+	pFx->RegisterTexture(L"Com_Texture_ShotGEff", L"Prototype_Component_Texture_WapShot_Eff", 0, 9, 20.f, false);
+	pFx->ChangeTexture(L"Com_Texture_ShotGEff");
 
 	pFx->Set_ObjTag(L"Eff");
 

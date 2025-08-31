@@ -25,6 +25,7 @@
 #include "CSniper_Gun.h"
 #include "CKnife_SubW.h"
 #include "CKatana.h"
+#include "CShot_Gun.h"
 #include "CWeaponUI_Manager.h"
 
 // Hpbar UI
@@ -907,6 +908,17 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 	// ShotGun
+	// ShotGun - aimUI
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\ShotG_Aim.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_AimEff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/ShotG_Aim.png", 1))))
+		return E_FAIL;
+	// ShotGun - eff
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\effect\muzzle_shotgun_008.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_Eff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/effect/muzzle_shotgun_%03d.png", 9))))
+		return E_FAIL;
+
 	// ShotGun - idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/idle/SHOTGUN_IDLE%03d.png", 5))))
@@ -982,6 +994,11 @@ HRESULT CLoader::Loading_UI()
 
 	// Sniper Gun
 	// 이거는 나중에 scene_sniper 에서만 load
+	// Sniper aimUI
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\sniper\SNIPER_WEP.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_AimEff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/SNIPER_WEP.png", 1))))
+		return E_FAIL;
 	// Sniper - Idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/idle/sniperG_Idle%03d.png", 3))))
@@ -1554,6 +1571,11 @@ HRESULT CLoader::Loading_UI()
 	// Sniper
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunSniperUI",
 		CSniper_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ShotGun
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunShotGUI",
+		CShot_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// SubWeapon UI
