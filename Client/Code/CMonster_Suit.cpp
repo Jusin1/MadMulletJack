@@ -130,6 +130,14 @@ void CMonster_Suit::Set_Collider()
         return;
     }
 
+    // 🔹 플레이어와 멀리 떨어진 경우 충돌 스킵
+    CTransform* pPlayerTr = GetPlayerTransform();
+    if (pPlayerTr) {
+        _vec3 diff = pPlayerTr->Get_Info(INFO_POS) - m_pTransformCom->Get_Info(INFO_POS);
+        float dist2 = D3DXVec3LengthSq(&diff);
+        if (dist2 > 30.f * 30.f) return; 
+    }
+
     m_pColiderCom->Update_ColliderSphere();
 
     if (m_eMonState != INSKILL)
