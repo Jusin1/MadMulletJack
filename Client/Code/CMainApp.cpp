@@ -28,6 +28,7 @@
 #include "CComponentMgr.h"
 #include "CPicking.h"
 #include "CPickingManager.h"
+#include "CObjectPoolManager.h"
 #include "CUIManager.h"
 #include "CMapFactory.h"
 #include "CFrameMgr.h"
@@ -478,6 +479,7 @@ void CMainApp::Free()
 	CUIManager::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
+	CObjectPoolManager::GetInstance()->DestroyInstance();
 	CGameDataManager::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();

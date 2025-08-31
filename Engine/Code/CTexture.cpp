@@ -113,6 +113,7 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType,
 
             // 2) 텍스처 생성 (병렬, Device는 MULTITHREADED 필수)
             IDirect3DBaseTexture9* pTex = nullptr;
+            D3DXIMAGE_INFO info;
             HRESULT hr = D3DXCreateTextureFromFileInMemoryEx(
                 c->self->m_pGraphicDev,
                 bytes.data(), (UINT)bytes.size(),
@@ -121,10 +122,12 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType,
                 D3DFMT_A8R8G8B8,            // 변환 비용 최소화
                 D3DPOOL_MANAGED,
                 D3DX_FILTER_NONE, D3DX_FILTER_NONE,
-                0, nullptr, nullptr,
+                0, &info, nullptr,
                 (LPDIRECT3DTEXTURE9*)&pTex);
 
             if (SUCCEEDED(hr)) {
+                c->self->m_iWidth = info.Width;
+                c->self->m_iHeight = info.Height;
                 c->self->m_vecTexture[i] = pTex;   // 자기 인덱스에 저장
             }
         }

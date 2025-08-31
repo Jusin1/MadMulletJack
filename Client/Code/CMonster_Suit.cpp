@@ -2,6 +2,7 @@
 #include "CMonster_Suit.h"
 #include "CGameDataManager.h"
 #include "CColiderManager.h"
+#include "CObjectPoolManager.h"
 #include "CComponentMgr.h"
 #include "CObjectManager.h"
 #include "CEffectUI.h"
@@ -649,7 +650,15 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
             m_shotTimer = 0.f;
             m_pTextureCom->Set_Zero_Frame();
             m_pTextureCom->Resume_Anim();
-            auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+            BulletData tData;
+            tData.vMuzzlePosition = m_pTransformCom->Get_Info(INFO_POS);
+            tData.vLookDir = m_pTransformCom->Get_Info(INFO_LOOK);
+            D3DXVec3Normalize(&tData.vLookDir, &tData.vLookDir);
+            tData.vMuzzlePosition += tData.vLookDir * 2.f;
+            tData.vMuzzlePosition.y += 0.14f;
+            CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
+            /*auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
             if (auto* bullet = dynamic_cast<CBullet*>(CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_Bullet", sceneIdx, L"Monster_Layer")))
             {
@@ -659,7 +668,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
                 vMuzzle += vLook * 2.f;
                 vMuzzle.y += 0.14f;
                 bullet->Fire(vMuzzle, vLook);
-            }
+            }*/
         }
     }
     break;

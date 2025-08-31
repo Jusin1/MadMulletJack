@@ -4,6 +4,7 @@
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
 #include "CObjectManager.h"
+#include "CObjectPoolManager.h"
 #include "CEffectUI.h"
 #include "CGrounding.h"
 #include "CPicking.h"

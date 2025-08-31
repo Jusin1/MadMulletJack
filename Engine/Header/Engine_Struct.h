@@ -44,6 +44,14 @@ namespace Engine
 
 	const _ulong	FVF_CUBE_COLOR = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
+	typedef struct tagVertexPixelColor
+	{
+		_vec3		vPosition;
+		_float		fSize;
+		D3DCOLOR	dwColor;
+	}VTXPIXELCOLOR;
+	const _ulong	FVF_PIXEL_COLOR = D3DFVF_XYZ | D3DFVF_PSIZE | D3DFVF_DIFFUSE;
+
 	typedef struct tagIndex16
 	{
 		_ushort  _0;
@@ -102,6 +110,51 @@ namespace Engine
 		TRANSFORMDATA ParentTransform;
 		std::vector<MAPOBJECTDATA> vecChildrensData;
 	}PREFABDATA;
+
+	typedef struct tagBulletData
+	{
+		_vec3 vMuzzlePosition{0.f, 0.f, 0.f};
+		_vec3 vLookDir{ 0.f, 0.f, 0.f };
+	}BulletData;
+
+	typedef struct tagEffectOptions
+	{
+		EffectMode eMode = EffectMode::LINEAR;
+		int   iPixelCount = 64;
+
+		// 생명시간
+		float fLife_Min = 3.f;
+		float fLife_Max = 5.f;
+
+		// 크기
+		float fSize_Min = 4.f;
+		float fSize_Max = 10.f;
+
+		// 속도
+		float fSpeed_Min = 5.f;
+		float fSpeed_Max = 12.f;
+
+		// 페이드 아웃 색깔
+		D3DXCOLOR colorStart = D3DXCOLOR(1, 1, 1, 1);
+		D3DXCOLOR colorEnd = D3DXCOLOR(1, 1, 1, 0);
+		
+		// 저항
+		float fDrag = 0.0f;
+
+		// 노이즈/스파이럴 파라미터
+		float fNoiseStrength = 15.f; // CURVE_NOISE: 가속 크기(도/초 수준)
+		float fNoiseFreq = 20.f; // Hz
+		float fSpiralFreq = 8.f;  // SPIRAL 회전 빈도
+		float fSpiralAmp = 6.f;  // SPIRAL 반경 가속
+
+		// 전기, 스파이크 = Add
+		// 피 = Alpha
+		BlendMode eBlendmode = BlendMode::ADDITIVE;
+
+		// 최대 파티클 = PixelCount * RepeatCount * 2 가 여유롭고 좋음
+		int fMax_ParticlesBufferSize{ 0 };
+
+	} EffectOptions;
 }
 
 #endif // Engine_Struct_h__

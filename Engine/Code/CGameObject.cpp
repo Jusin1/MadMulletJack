@@ -89,6 +89,15 @@ void CGameObject::Compute_CamDistance(_vec3 WorldPos)
 
 }
 
+HRESULT CGameObject::Despawn_Pooling()
+{
+    if (m_pTransformCom)
+    {
+        m_pTransformCom->Set_Info(INFO::INFO_POS, _vec3{ -999.f, 999.f, -999.f });
+    }
+    return S_OK;
+}
+
 
 // 컴포넌츠 추가 - 복제 기반
 HRESULT CGameObject::Add_Components(const _tchar* pComponentTag, _uint iSceneIdx, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg)

@@ -9,10 +9,12 @@
 // 모든 게임오브젝트와 계층을 관리
 BEGIN(Engine)
 
+class CObjectPool;
+
 class ENGINE_DLL CObjectManager :public CBase
 {
 	DECLARE_SINGLETON(CObjectManager)
-
+	friend CObjectPool;
 private:
 	explicit CObjectManager();
 	virtual ~CObjectManager();
@@ -34,6 +36,8 @@ public:
 	std::vector<MAPOBJECTDATA> ExportObjectData(_uint iSceneID, const _tchar* pLayerTag);
 	std::vector<PREFABDATA> ExportPrefabData();
 	std::vector<PREFABDATA> Export_InstancedPrefabData(_uint iSceneID);
+
+	
 private:
 	CGameObject* Find_Prototype(const _tchar* pProtoTypeTag);  // 원본 찾기
 	CLayer* Find_Layer(_uint iSceneIdx, const _tchar* pLayerTag); // 레이어 찾기
@@ -46,8 +50,6 @@ private: // 그룹을 지어 씬 별로 객체 추가
 	_uint			m_iSceneNum = 0;
 	map<const _tchar*, CLayer*>*	m_pLayers = nullptr;	
 	typedef map<const _tchar*, class CLayer*>	LAYERS;
-
-
 public:
 	virtual void Free() override;
 };

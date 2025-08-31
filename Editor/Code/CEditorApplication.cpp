@@ -21,6 +21,7 @@
 // Manager
 //=========================
 #include "CGraphicDev.h"
+#include "CObjectPoolManager.h"
 #include "CMapFactory.h"
 #include "CObjectManager.h"
 #include "CComponentMgr.h"
@@ -69,6 +70,7 @@ void CEditorApplication::Free()
 {
 	Engine::CComponentMgr::GetInstance()->DestroyInstance();
 	Engine::CManagement::GetInstance()->DestroyInstance();
+	Engine::CObjectPoolManager::GetInstance()->DestroyInstance();
 	Engine::CObjectManager::GetInstance()->DestroyInstance();
 	Engine::CDInputMgr::GetInstance()->DestroyInstance();
 	Engine::CPicking::GetInstance()->DestroyInstance();

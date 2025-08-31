@@ -264,11 +264,17 @@
     <ClCompile Include="..\Code\CObjectPoolManager.cpp">
       <Filter>00. Manager\15. ObjectPool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffect.cpp">
+    <ClCompile Include="..\Code\CEffect_World.cpp">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CObjectPool.cpp">
       <Filter>00. Manager\15. ObjectPool\Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect_Pixel.cpp">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect_Pixel_Sprite.cpp">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,11 +422,17 @@
     <ClInclude Include="..\Header\CObjectPoolManager.h">
       <Filter>00. Manager\15. ObjectPool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffect.h">
+    <ClInclude Include="..\Header\CEffect_World.h">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CObjectPool.h">
       <Filter>00. Manager\15. ObjectPool\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffect_Pixel.h">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffect_Pixel_Sprite.h">
+      <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

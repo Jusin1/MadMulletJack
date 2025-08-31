@@ -16,16 +16,14 @@ private:
 
 	virtual void Free() override;
 public:
-	CGameObject *Spawn(std::function<void(CGameObject *)> _callback = nullptr);
-	void Despawn(CGameObject *_pObject);
-	void Initialize();
-	void Late_Update();
-	void Update(const float _fDeltaTime);
-	void Render(HDC hDC);
+	void Update(const _float _fDeltaTime);
+	void Late_Update(const _float _fDeltaTime);
+	void All_Despawn();
 public:
-
+	CGameObject *Spawn(PoolType _ePoolType, void *pArg = nullptr, std::function<void(CGameObject *)> _callback = nullptr);
+	HRESULT Ready_Pools();
 private:
-
+	std::array<CObjectPool *, g_PoolTypeCount> m_arrayPools{ nullptr };
 };
 
 END

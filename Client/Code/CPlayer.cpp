@@ -5,8 +5,10 @@
 #include "CTimerMgr.h"
 #include "CObjectManager.h"
 #include "CUIBase.h"
+#include "CEffect_World.h"
 #include "CDInputMgr.h"
 #include "CGlobal_Info.h"
+#include "CObjectPoolManager.h"
 #include "CMapFactory.h"
 #include "CVIBuffer_GridPanelBase.h"
 #include "CGameDataManager.h"
@@ -20,6 +22,11 @@
 #include "CWeaponUI_Manager.h"
 #include "CUIManager.h"
 #include "CMainWeapon.h"
+
+//test bj 0829
+#include "CEffect_Pixel.h"
+#include "CEffect_Pixel_Sprite.h"
+
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev), m_tPlayerInfo({ OPENING, PMV_NORMAL, WP_PISTOL , WP_KICK }), m_tPrePlayerInfo({ PLAYER_END ,PMV_END, WP_END,WP2_END }),
@@ -1084,6 +1091,68 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 		m_bIsZoomStage = !m_bIsZoomStage;
 	}
+
+	//test bj 0829
+	if (KEY_BUTTON_DOWN(DIK_K))
+	{
+		EffectOptions Option = Get_Preset_Blood();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+			});
+
+		EFFECTINFO tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::FAN_SPREAD;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+		[](CGameObject *pGo)->void
+		{
+				static_cast<CEffect_World *>(pGo)->Set_TintColor(D3DCOLOR_COLORVALUE(135.f, 0.f, 0.f, 255.f));
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+		});
+
+		SpriteParticleOptions Option2;
+		Option2.tEffectOption = Get_Preset_Blood();
+		Option2.eType = SpriteParticleType::DEADBODY;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+			});
+	}
+	if (KEY_BUTTON_DOWN(DIK_U))
+	{
+		EffectOptions Option = Get_Preset_Electric();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
+			});
+		EFFECTINFO tInfo;
+		tInfo.eType = WorldEffectType::ELCETRIC;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
+			});
+	}
+	if (KEY_BUTTON_DOWN(DIK_I))
+	{
+		EffectOptions Option = Get_Preset_BulletSpark();
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
+			});
+		EFFECTINFO tInfo;
+		tInfo.eType = WorldEffectType::EXPLOSION;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
+			});
+	}
 }
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
@@ -1741,4 +1810,6 @@ const TCHAR* CPlayer::MoveToString(PLAYERMOVE eMove)
 	case PMV_END: return TEXT("Move: Unknown\n");
 	case PMV_FALL: return TEXT("Move: Fall\n");
 	}
+
+	return nullptr;
 }

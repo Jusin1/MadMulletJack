@@ -1,5 +1,7 @@
 #include "CObjectManager.h"
 #include "CFileManager.h"
+#include "CObjectPool.h"
+#include "CObjectPoolManager.h"
 #include "CLayer.h"
 
 
@@ -25,7 +27,6 @@ HRESULT CObjectManager::Readay_ObjectManager(_uint iSceneNum)
 	m_pLayers = new LAYERS[iSceneNum];
 
 	m_iSceneNum = iSceneNum;
-
 	return S_OK;
 }
 
@@ -102,6 +103,8 @@ void CObjectManager::Update(_float fTimeDelta)
 			Pair.second->Update_Layer(fTimeDelta);
 		}
 	}
+
+	CObjectPoolManager::GetInstance()->Update(fTimeDelta);
 }
 
 void CObjectManager::Late_Update(_float fTimeDelta)
@@ -113,6 +116,8 @@ void CObjectManager::Late_Update(_float fTimeDelta)
 			Pair.second->LateUpdate_Layer(fTimeDelta);
 		}
 	}
+	
+	CObjectPoolManager::GetInstance()->Late_Update(fTimeDelta);
 }
 
 // 특정 씬 제거
@@ -126,6 +131,7 @@ void CObjectManager::Clear(_uint iLevelIndex)
 		Safe_Release(Pair.second);
 
 	m_pLayers[iLevelIndex].clear();
+	CObjectPoolManager::GetInstance()->All_Despawn();
 }
 
 // 특정 레이어 제거
@@ -265,7 +271,5 @@ void CObjectManager::Free()
 
 	m_objMap.clear();
 
-
 	Safe_Delete_Array(m_pLayers);
-
 }

@@ -265,9 +265,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CImageUI.cpp" />
+    <ClCompile Include="..\Code\Client_Global.cpp" />
     <ClCompile Include="..\Code\CLisaUI.cpp" />
     <ClCompile Include="..\Code\CHeartUI.cpp" />
-    <ClCompile Include="..\Code\Clinet_Global.cpp" />
     <ClCompile Include="..\Code\CLoader.cpp" />
     <ClCompile Include="..\Code\CLoading_Scene.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
@@ -323,7 +323,6 @@
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Code\CWeaponUI_Manager.cpp" />
-    <ClCompile Include="..\Header\Client_Global.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

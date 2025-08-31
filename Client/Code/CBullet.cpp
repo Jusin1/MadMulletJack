@@ -120,6 +120,37 @@ void CBullet::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+HRESULT CBullet::Spawn_Pooling(void *pArg)
+{
+    if (FAILED(CGameObject::Spawn_Pooling()))
+        return E_FAIL;
+
+    if (m_pTextureCom)
+        m_pTextureCom->Set_Zero_Frame();
+
+    if (BulletData *pData = reinterpret_cast<BulletData *>(pArg))
+    {
+        Fire(pData->vMuzzlePosition, pData->vLookDir);
+    }
+    else
+    {
+        MSG_BOX("CBullet::Spawn_Pooling, no data");
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
+HRESULT CBullet::Despawn_Pooling()
+{
+    if (FAILED(CGameObject::Despawn_Pooling()))
+        return E_FAIL;
+
+    m_fLifeTime = 0.00f;
+
+    return S_OK;
+}
+
 HRESULT CBullet::Set_Component()
 {
     if (FAILED(Add_Components(L"Com_Buffer", SCENE_STATIC,
