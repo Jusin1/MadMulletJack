@@ -20,7 +20,6 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
-#include "CUIManager.h"
 #include "CMainWeapon.h"
 
 //test bj 0829
@@ -354,18 +353,6 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 
 void CPlayer::CountTimeZoom(const _float& fTimeDelta)
 {
-	////  attack cool ≈∏¿” ¿¸«ÿ¡‹
-	//if (m_fAttackCoolTime != 0)
-	//{
-	//	m_bIsAttack = false;
-	//	m_fAttackCoolTime -= fTimeDelta;
-	//	if (m_fAttackCoolTime <= 0.f)
-	//	{
-	//		m_fAttackCoolTime = 0.f;
-	//		m_bIsAttack = true;
-	//	}
-	//}
-
 	// hpbarø°∞‘ hp ¿¸«ÿ¡‹
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
 
@@ -847,8 +834,8 @@ void CPlayer::OPENING_Begin()
 	case WP_PISTOL:
 		m_fStateTime = 0.5f;
 		break;
-
 	case WP_SHOTGUN:
+		m_fStateTime = 0.5f;
 		break;
 	case WP_RIFLE:
 		break;
@@ -905,11 +892,16 @@ void CPlayer::Clear_Begin()
 void CPlayer::ATTEND_Begin()
 {
 	m_bIsAttack = false;
+	if(m_tPlayerInfo.eWeapon == WP_SHOTGUN)
+		m_fStateTime = 10.f;
 
 }
 
 void CPlayer::ATTEND_On(const _float& fTimeDelta)
 {
+	//if(m_tPlayerInfo.eWeapon == WP_SHOTGUN && StateTime_IsEnd(fTimeDelta))
+	//	Change_State(IDLE);
+		
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
 		Change_State(IDLE);
 }
@@ -1084,6 +1076,8 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_NON);
 	if (KEY_BUTTON_DOWN(DIK_X))
 		Change_Weapon(WP_PISTOL);
+	if (KEY_BUTTON_DOWN(DIK_Q))
+		Change_Weapon(WP_SHOTGUN);
 
 	if (KEY_BUTTON_DOWN(DIK_B))
 	{
@@ -1171,11 +1165,16 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 	
 
 	// ¡¬ ≈¨∏ØΩ√ : attack
-	if (IS_LBUTTON_DOWN)
+	if (m_bIsAttack && IS_LBUTTON_DOWN)
 	{
 		if (m_tPlayerInfo.ePlayerState == ZOOM)
 		{
 			Change_State(ATTACK_ZOOM);
+		}
+
+		else
+		{
+			Change_State(ATTACK);
 		}
 	}
 
