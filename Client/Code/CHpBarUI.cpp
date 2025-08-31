@@ -7,6 +7,7 @@
 #include "CTextUI.h"
 #include "CManagement.h"
 #include "CMapFactory.h"
+#include  "CImageUI.h"
 
 CHpBarUI::CHpBarUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CUI(pGraphicDev), m_iHitCount(0), m_fHpPercent(0.f), m_eScene(SCENE_END), m_bHitChange(false),
@@ -185,6 +186,40 @@ HRESULT CHpBarUI::Set_HpBarUI()
 	return S_OK;
 }
 
+void CHpBarUI::Create_CountEff(const _tchar* _tProTag)
+{
+	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+	CImageUI* pFx = dynamic_cast<CImageUI*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+	if (!pFx) return;
+
+	pFx->Set_UISizeAndPos(100.f, 100.f, 0.f , -300.f);
+	pFx->RegisterTexture(L"Com_Texture_HpCountEff", _tProTag, 0, 0, 1.f, false);
+	pFx->ChangeTexture(L"Com_Texture_HpCountEff");
+
+
+	pFx->Set_ObjTag(L"Eff_Count");
+
+	Add_Child(pFx);
+
+	return;
+}
+
+void CHpBarUI::Delete_CountEff()
+{
+	CUIBase* pEff = Find_Child_ByTag(TEXT("Eff_Count"));
+
+	if (!pEff)
+		return;
+
+	pEff->Set_Dead(true);
+	Remove_Child(pEff);
+
+	return;
+}
+
 _bool CHpBarUI::Is_Scene_Change()
 {
 	if (m_eScene != (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx())
@@ -226,24 +261,38 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 	CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
 	if (txt1)
 	{
-		if (m_iSceneCase) // 1일때
-		{
-			int iHp = static_cast<int>(std::ceil(m_fHpPercent * 100.f));
-			std::wstring hpText = std::to_wstring(iHp) + L"%";
-			txt1->SetText(hpText.c_str());
-		}
+		//if (m_iSceneCase) // 1일때
+		//{
+		//	int iHp = static_cast<int>(std::ceil(m_fHpPercent * 100.f));
+		//	std::wstring hpText = std::to_wstring(iHp) + L"%";
+		//	txt1->SetText(hpText.c_str());
+		//}
 
-		else
+		//else
 		{
 			int iHp = static_cast<int>(std::ceil(_fCurHp));
+
+			//if(iHp > 3)
+				Delete_CountEff();
+
+			// 숫자 셋팅
 			switch (iHp)
 			{
 			case 1:
-				txt1->SetText(TEXT("01")); break;
+				txt1->SetText(TEXT("01")); 
+				Create_CountEff(L"Prototype_Component_Texture_UIHpBarPhoneEff1");
+				break;
+				
 			case 2:
-				txt1->SetText(TEXT("02")); break;
+				txt1->SetText(TEXT("02")); 
+				Create_CountEff(L"Prototype_Component_Texture_UIHpBarPhoneEff2");
+				break;
+				
 			case 3:
-				txt1->SetText(TEXT("03")); break;
+				txt1->SetText(TEXT("03"));
+				Create_CountEff(L"Prototype_Component_Texture_UIHpBarPhoneEff3");
+				break;	
+				
 			case 4:
 				txt1->SetText(TEXT("04")); break;
 			case 5:

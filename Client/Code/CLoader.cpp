@@ -1157,8 +1157,14 @@ HRESULT CLoader::Loading_UI()
 
 	// HpBar
 	// HpB effect
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneN",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_%03d.png", 3))))
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff3",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_000.png", 1))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_001.png", 1))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_002.png", 1))))
 		return E_FAIL;
 	// HpB - PhoneN
 	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
