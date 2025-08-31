@@ -73,6 +73,9 @@ namespace Engine
 	enum class MonsterType : unsigned int
 	{
 		SUIT,
+		SOLIDER,
+		FAT,
+		DRONE,
 		NONE
 	};
 	constexpr size_t g_MonsterTypeCount{ static_cast<size_t>(MonsterType::NONE) };
