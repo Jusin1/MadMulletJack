@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "CImageUI.h"
 
-CImageUI::CImageUI(LPDIRECT3DDEVICE9 dev) : CUI(dev) {}
+CImageUI::CImageUI(LPDIRECT3DDEVICE9 dev) : CUI(dev), m_bPosFix(true){}
 CImageUI::CImageUI(const CImageUI& rhs)
     : CUI(rhs)
     , m_tint(rhs.m_tint), m_additive(rhs.m_additive)
     , m_repX(rhs.m_repX), m_repY(rhs.m_repY)
     , m_play(rhs.m_play), m_colorMode(rhs.m_colorMode)
-    , m_curTag(rhs.m_curTag) {
+    , m_curTag(rhs.m_curTag), m_bPosFix(rhs.m_bPosFix) {
 }
 CImageUI::~CImageUI() {}
 
@@ -25,7 +25,14 @@ HRESULT CImageUI::Initialize(void* pArg)
 _int CImageUI::Update_GameObject(const _float& dt)
 {
     m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
+    if (m_bPosFix)
+    {
+        m_pTransformCom->Set_Info(INFO_POS, _vec3(m_fX, -m_fY, 0.f));
+    }
+
+    else
+        Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+    
     if (m_play && m_pTextureCom) m_pTextureCom->MoveFrame();
     __super::Update_GameObject(dt);
     return NO_EVENT;

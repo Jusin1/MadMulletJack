@@ -43,7 +43,9 @@ public:
     void   SetAlpha(BYTE a);                             
     void   SetAdditive(bool on);
     void   SetUVRepeat(float rx, float ry);
-    void   SetColorMode(ColorMode m);                 
+    void   SetColorMode(ColorMode m);     
+    
+    void Set_IsPosFix(_bool _bPosFix) { m_bPosFix = _bPosFix; }
 
 public: // 애니메이션
     void   Play(bool on);
@@ -58,5 +60,8 @@ protected:
     ColorMode     m_colorMode = ColorMode::TintMultiply;
 
     std::wstring  m_curTag;
+
+    // 달라진 pos로 그리기 위한 bool
+    _bool m_bPosFix;
 };
 
