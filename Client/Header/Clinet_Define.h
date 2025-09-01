@@ -23,6 +23,8 @@ enum UIMOVE {
 
 enum UISTATE {UI_CREATE,UI_ACTIVE,UI_NOACTIVE, UI_RENDERON, UI_RENDEROFF, UI_STATEEND ,UI_END }; // 굳이..?
 
+enum class PLAYEREFF {DASH, BLOODR, BLOODG}; // player 화면 effect
+
 struct PlayerStateInfo {
     // 플레이어의 state들을 가지고 있는 구조체. -> 이 info로 상태 좌지우지
 	PLAYERSTATE ePlayerState;

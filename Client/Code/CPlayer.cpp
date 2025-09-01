@@ -197,6 +197,12 @@ void CPlayer::Render_GameObject()
 /////////////// public func
 void CPlayer::Add_Hp(_float _fAddHp)
 {
+	// 만약 hp가 증가하면
+	if (_fAddHp > 0)
+	{
+		// cure effect 생성
+	}
+
 	// 체력을 더함
 	m_fHp += _fAddHp;
 
@@ -1098,7 +1104,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 		EFFECTINFO tInfo;
 		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::FAN_SPREAD;
+		tInfo.eType = WorldEffectType::HITTED;
 		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
 		[](CGameObject *pGo)->void
 		{
@@ -1387,6 +1393,9 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 {
+	// dash effect 제거
+	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::DASH); // dash effect 제거
+
 	// 상태 업데이트
 	m_tPrePlayerInfo.ePlayerMove = m_tPlayerInfo.ePlayerMove; // 전 state 저장
 	m_tPlayerInfo.ePlayerMove = ePlayerMove; // state 업데이트
@@ -1405,6 +1414,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	case PMV_DASHATT:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 	break;
 
 	case PMV_DASH:
@@ -1413,10 +1423,14 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		// 만약 전 state가 slide였다면 speed 좀 줄여줌
 		if (m_tPrePlayerInfo.ePlayerMove == PMV_SLIDE)
 			GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 1.f;
+
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
+
 	break;
 
 	case PMV_SLIDE:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 3.f;
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 	break;
 	
 	case PMV_WALL:

@@ -612,6 +612,127 @@ void CUIManager::DestroyReloadUI()
 }
 
 
+void CUIManager::Create_PlayerEff(PLAYEREFF _eEffect)
+{
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+    // 만약 player eff ui 가 만들어지지 않았다면
+    if (!m_pPlayerEffUI)
+    {
+        m_pPlayerEffUI = dynamic_cast<CUIBase*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    }
+
+    auto* effect = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+
+    //if (!effect) return;
+
+    // 셋팅 값 초기화
+    _vec4           vSizeOffset = {};
+    const wchar_t* proto = L"";
+    const wchar_t* childTag = L"";
+    _uint           iIdx = 0;
+    _float          fSpeed = 0.f;
+    _bool           bLoop = false;
+
+    // 값 셋팅
+    switch (_eEffect)
+    {
+    case PLAYEREFF::DASH:
+        vSizeOffset = { 2048.f, 1248.f, 0.f,0.f }; //2048 1248
+        proto = L"Prototype_Component_Texture_Effect_Dash";
+        childTag = L"DashEff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = true;
+        break;
+
+    case PLAYEREFF::BLOODR: //2048 1152
+        vSizeOffset = { 1024.f,526.f, 0.f,0.f }; //2048 1152
+        proto = L"Prototype_Component_Texture_Effect_BloodR";
+        childTag = L"BloodREff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = false;
+        break;
+
+    case PLAYEREFF::BLOODG:
+        vSizeOffset = { 1024.f,526.f, 0.f,0.f }; //2048 1152
+        proto = L"Prototype_Component_Texture_Effect_BloodG";
+        childTag = L"BloodGEff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = false;
+        break;
+    }
+
+    // 중복 방어 : 만약 해당 tag가 child로 있다면 return
+    if (m_pPlayerEffUI->Find_Child_ByTag(childTag))
+        return;
+
+    effect->Set_UISizeAndPos(vSizeOffset.x, vSizeOffset.y, vSizeOffset.z, vSizeOffset.w);
+    effect->RegisterTexture(L"Com_Texture_PLayerEff", proto, 0, iIdx, fSpeed, bLoop);
+    effect->ChangeTexture(L"Com_Texture_PLayerEff");
+
+    effect->Set_ObjTag(childTag);
+
+    m_pPlayerEffUI->Add_Child(effect);
+}
+
+void CUIManager::Create_CureEff()
+{
+}
+
+
+void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
+{
+    if (!m_pPlayerEffUI) return;
+
+    const wchar_t* childTag = L"";
+    CImageUI* pEff = nullptr;
+    // 값 셋팅
+    switch (_eEffect)
+    {
+    case PLAYEREFF::DASH:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"DashEff"));
+        if (!pEff)
+            return;
+
+        break;
+
+    case PLAYEREFF::BLOODR:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodREff"));
+        if (!pEff)
+            return;
+        if (!pEff->GetTextureCom()->Is_AnimFinished())
+            return;
+
+        break;
+
+    case PLAYEREFF::BLOODG:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodGEff"));
+        if (!pEff)
+            return;
+        if (!pEff->GetTextureCom()->Is_AnimFinished())
+            return;
+
+        break;
+    }
+
+    pEff->Set_Dead(true);                   // 객체 dead 처리
+    m_pPlayerEffUI-> Remove_Child(pEff);    // child에서 제거
+}
+
+void CUIManager::Destory_CureEff()
+{
+}
+
+void CUIManager::Destory_PlayerEff_ALL()
+{
+}
 
 bool CUIManager::PhoneSlidesDone() const
 {
