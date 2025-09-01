@@ -2,6 +2,7 @@
 #include "CStage_Boss.h"
 #include "CBackGround.h"
 #include "CDataManager.h"
+#include "CBoss.h"
 #include "CFileManager.h"
 #include "CMapFactory.h"
 #include "CObjectManager.h"
@@ -77,6 +78,12 @@ HRESULT CStage_Boss::Ready_Scene()
 
     CPickingManager::GetInstance()->Ready_Picking();
 
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_BOSS, L"Boss_Layer")))
+        return E_FAIL;
+    /*static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 20.f, 20.f, 3.f, TRUE);*/
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ -1.f, 0.f, -1.f }, _vec3{ 19.f, 0.f, 19.f }, 2.f);
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())
+        ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Player_Layer")->front());
     return S_OK;
 }
 
@@ -175,7 +182,7 @@ HRESULT CStage_Boss::Ready_Camera_Layer(const _tchar *pLayerTag)
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Camera_FPS", SCENE_BOSS, pLayerTag, &CamInfo)))
         return E_FAIL;
 
-
+    
     return S_OK;
 }
 

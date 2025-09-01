@@ -1,0 +1,570 @@
+#include "pch.h"
+#include <random>
+#include "CPickingManager.h"
+#include "CCullingManager.h"
+#include "CObjectPoolManager.h"
+#include "Client_Global.h"
+#include "Engine_Define.h"
+#include "CBoss.h"
+
+CBoss::CBoss(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CCharacter(pGraphicDev)
+{
+}
+
+CBoss::CBoss(const CBoss &rhs)
+	: CCharacter(rhs)
+{
+	rng.seed(0xBADA55);
+}
+
+CBoss::~CBoss()
+{
+}
+
+void CBoss::Free()
+{
+	CCharacter::Free();
+}
+
+CBoss *CBoss::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CBoss *pInstance = new CBoss(pGraphicDev);
+	if (FAILED(pInstance->Ready_GameObject()))
+	{
+		MSG_BOX("CBoss Create Failed");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject *CBoss::Clone(void *pArg)
+{
+	CBoss *pInstance = new CBoss(*this);
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("CBoss Clone Failed");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+HRESULT CBoss::Set_Component()
+{
+	CColider_Sphere::COLLINFO CollSphereInfo{};
+	CollSphereInfo.fRadius = 0.5f;
+	CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
+
+	if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC, L"Proto_Colider_Sphere",
+		(CComponent **)&m_pColiderSphere, &CollSphereInfo)))
+		return E_FAIL;
+
+	m_pColiderSphere->Set_Transform(m_pTransformCom);
+
+	if (FAILED(Texture_Clone()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CBoss::Set_Collider()
+{
+
+}
+
+void CBoss::SetUp_BillBoard()
+{
+	_matrix _matView;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &_matView);
+	D3DXMatrixInverse(&_matView, nullptr, &_matView);
+
+	_vec3 vRight = *(_vec3 *)&_matView.m[0][0];
+	_vec3 vUp = *(_vec3 *)&_matView.m[1][0];
+	_vec3 vLook = *(_vec3 *)&_matView.m[2][0];
+
+	m_pTransformCom->Set_Info(INFO_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_Info(INFO_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
+}
+
+_bool CBoss::Picking(_vec3 *PickingPoint)
+{
+	if (m_bDead || !m_bPickable) return false;
+	if (m_pColiderSphere && !m_pColiderSphere->Is_Active()) return false;
+	return TRUE;
+}
+
+void CBoss::PickingTrue()
+{
+	m_bPickingTrue = TRUE;
+}
+
+HRESULT CBoss::Ready_GameObject()
+{
+	if (FAILED(CCharacter::Ready_GameObject()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CBoss::Initialize(void *pArg)
+{
+	if(FAILED(CCharacter::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Set_Component()))
+		return E_FAIL;
+
+	m_bPickable = true;
+
+	return S_OK;
+}
+
+_int CBoss::Update_GameObject(const _float &fTimeDelta)
+{
+	if (m_bDead)
+		return DEAD;
+
+	CPickingManager::GetInstance()->Remove_PickingGroup(this);
+
+	m_fHoverTime += fTimeDelta;
+	for (_float &fCooldown : m_fCooldown)
+	{
+		fCooldown = (std::max)(0.f, fCooldown - fTimeDelta);
+	}
+
+	UpdateState(fTimeDelta);
+	UpdateSpeed(fTimeDelta);
+	
+	_vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+	vPos.x += m_fVelocity_X * fTimeDelta;
+	vPos.y = m_fBase_Y + Hover_Y();
+	vPos.z += m_fVelocity_Z * fTimeDelta;
+	m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
+	CCharacter::Update_GameObject(fTimeDelta);
+	return NO_EVENT;
+}
+
+void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
+{
+	CCharacter::LateUpdate_GameObject(fTimeDelta);
+	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
+	Compute_CamDistance(Get_Position());
+
+	SetUp_BillBoard();
+
+	if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius))
+		if (m_pRendererCom) m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+
+	if (m_bPickable && !m_bDead)
+		CPickingManager::GetInstance()->Add_PickingGroup(this);
+
+	Set_Collider();
+}
+
+void CBoss::Render_GameObject()
+{
+	CCharacter::Render_GameObject();
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	m_pTransformCom->Apply_WorldMatrix();
+	
+	/*if (m_pTextureCom)
+	{
+		m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
+		m_pTextureCom->MoveFrame();
+	}*/
+
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	m_pBufferCom->Render_Buffer();
+
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+#ifdef _DEBUG
+	if (g_ColiderRender)
+	{
+		if (m_pColiderSphere)
+			m_pColiderSphere->Render_ColliderSphere();
+	}
+#endif
+}
+
+void CBoss::Set_RectPath(const _vec3 &vCenter, _float fHalfX, _float fHalfZ, _float fY, _bool bRandom)
+{
+	m_ePathMode = bRandom ? PathMode::RECT_RANDOM : PathMode::RECT;
+
+	m_vRectCenter = vCenter;
+	m_fHalfX = fHalfX;
+	m_fHalfZ = fHalfZ;
+
+	m_vecWaypoints.clear();
+
+	m_vecWaypoints.push_back({ m_vRectCenter.x - m_fHalfX, fY ,m_vRectCenter.z - m_fHalfZ });
+	m_vecWaypoints.push_back({ m_vRectCenter.x + m_fHalfX, fY ,m_vRectCenter.z - m_fHalfZ });
+	m_vecWaypoints.push_back({ m_vRectCenter.x + m_fHalfX, fY ,m_vRectCenter.z + m_fHalfZ });
+	m_vecWaypoints.push_back({ m_vRectCenter.x - m_fHalfX, fY ,m_vRectCenter.z + m_fHalfZ });
+	m_iWaypoint = 0;
+	m_bPathReady = TRUE;
+
+	m_pTransformCom->Set_Info(INFO::INFO_POS, m_vecWaypoints[0]);
+	m_fBase_Y = fY;
+}
+
+void CBoss::Set_LinearLR(const _vec3 &vLeft, const _vec3 &vRight, _float fY)
+{
+	m_ePathMode = PathMode::LR;
+	m_vLeft = vLeft;
+	m_vRight = vRight;
+	m_iDirLR = 1;
+	m_pTransformCom->Set_Info(INFO::INFO_POS, Lerp(m_vLeft, m_vRight, 0.5f));
+	m_fBase_Y = fY;
+	m_vTarget = vRight;
+	m_bPathReady = TRUE;
+}
+
+void CBoss::UpdateSpeed(const float _fDeltaTime)
+{
+	m_fVelocity_X = m_tDamping_X.Step(m_fVelocity_X, m_fTargetVel_X, _fDeltaTime);
+	m_fVelocity_Z = m_tDamping_Z.Step(m_fVelocity_Z, m_fTargetVel_Z, _fDeltaTime);
+
+	_float fMaxSpeed = (m_eCurrentState == State::DASH) ?
+		m_tRigidbodyConfig.fDash_Speed :
+		m_tRigidbodyConfig.fMoveSpeed;
+	if (m_eCurrentState == State::MOVE)
+		fMaxSpeed *= m_tRigidbodyConfig.fCornerSlowDown;
+
+	_float fCurSpeed = std::sqrt(m_fVelocity_X * m_fVelocity_X + m_fVelocity_Z * m_fVelocity_Z);
+
+	if (fCurSpeed > fMaxSpeed)
+	{
+		_float k = fMaxSpeed / fCurSpeed;
+		m_fVelocity_X *= k;
+		m_fVelocity_Z *= k;
+	}
+}
+
+void CBoss::ChangeState(State _e)
+{
+	if (m_eCurrentState == _e)
+		return;
+
+	switch (m_eCurrentState)
+	{
+	case State::IDLE:		Exit_Idle();    break;
+	case State::MOVE:		Exit_Move();    break;
+	case State::DASH:		Exit_Dash();    break;
+	case State::BULLET:		Exit_Bullet();	break;
+	case State::MISSILE:	Exit_Missile(); break;
+	}
+
+	m_eCurrentState = _e;
+	m_fStateDuration = 0.f;
+
+	switch (m_eCurrentState)
+	{
+	case State::IDLE:		Enter_Idle();		break;
+	case State::MOVE:		Enter_Move();		break;
+	case State::DASH:		Enter_Dash();		break;
+	case State::BULLET:		Enter_Bullet();		break;
+	case State::MISSILE:	Enter_Missile();	break;
+	}
+}
+void CBoss::UpdateState(const float _fDeltaTime)
+{
+	switch (m_eCurrentState)
+	{
+	case State::IDLE:		Update_Idle(_fDeltaTime);		break;
+	case State::MOVE:		Update_Move(_fDeltaTime);		break;
+	case State::DASH:		Update_Dash(_fDeltaTime);		break;
+	case State::BULLET:		Update_Bullet(_fDeltaTime);		break;
+	case State::MISSILE:	Update_Missile(_fDeltaTime);	break;
+	}
+}
+void CBoss::Enter_Idle()
+{
+	// TODO - IDLE Anim
+
+	m_fStayTime_Idle = Rand_Float(
+		m_tRigidbodyConfig.fIdle_Min,
+		m_tRigidbodyConfig.fIdle_Max);
+
+	m_fTargetVel_X = 0.f;
+	m_fTargetVel_Z = 0.f;
+}
+
+void CBoss::Update_Idle(_float fDeltaTime)
+{
+	m_fStateDuration += fDeltaTime;
+
+	if (m_fStateDuration >= m_fStayTime_Idle)
+	{
+		if (Is_Cooldown_Ready(0)) { ChangeState(State::DASH);    return; }
+		if (Is_Cooldown_Ready(1)) { ChangeState(State::MISSILE); return; }
+		if (Is_Cooldown_Ready(2)) { ChangeState(State::BULLET);  return; }
+
+		ChangeState(State::MOVE);
+	}
+}
+
+void CBoss::Exit_Idle()
+{
+	m_fStayTime_Idle = 0.f;
+}
+
+void CBoss::Enter_Move()
+{
+	// TODO - MOVE Anim
+
+	if (m_ePathMode == PathMode::LR)
+		m_vTarget = (m_iDirLR > 0) ? m_vRight : m_vLeft;
+	else
+		m_vTarget = m_vecWaypoints.empty() ?
+		m_pTransformCom->Get_Info(INFO::INFO_POS) :
+		m_vecWaypoints[m_iWaypoint];
+}
+
+void CBoss::Update_Move(_float fDeltaTime)
+{
+	m_fStateDuration += fDeltaTime;
+
+	Set_Velocity_Towards(m_vTarget, m_tRigidbodyConfig.fMoveSpeed);
+
+	if (Arrived(m_vTarget))
+		Choose_Waypoint();
+}
+
+void CBoss::Exit_Move()
+{
+}
+
+void CBoss::Enter_Dash()
+{
+	m_iPhase = 0;
+	m_fStateDuration = 0.f;
+	m_vDashDir = Dash_Direction();
+}
+
+void CBoss::Update_Dash(_float fDeltaTime)
+{
+	m_fStateDuration += fDeltaTime;
+	if (m_iPhase == 0)
+	{
+		m_fTargetVel_X = 0.f;
+		m_fTargetVel_Z = 0.f;
+
+		if (m_fStateDuration >= m_tRigidbodyConfig.fDash_WindUp)
+		{
+			m_iPhase = 1;
+			m_fStateDuration = 0.f;
+			// TODO - DASH effect
+		}
+	}
+	else if (m_iPhase == 1)
+	{
+		m_fTargetVel_X = m_vDashDir.x * m_tRigidbodyConfig.fDash_Speed;
+		m_fTargetVel_Z = m_vDashDir.z * m_tRigidbodyConfig.fDash_Speed;
+
+		if (m_fStateDuration >= m_tRigidbodyConfig.fDash_Duration)
+		{
+			m_iPhase = 2;
+			m_fStateDuration = 0.f;
+		}
+	}
+	else
+	{
+		m_fTargetVel_X = 0.f;
+		m_fTargetVel_Z = 0.f;
+
+		if (m_fStateDuration >= m_tRigidbodyConfig.fDash_Recover)
+		{
+			Set_Cooldown(0, m_tRigidbodyConfig.fDash_Cooldown);
+			ChangeState(State::IDLE);
+		}
+	}
+}
+
+void CBoss::Exit_Dash()
+{
+}
+
+void CBoss::Enter_Bullet()
+{
+	m_fStateDuration = 0.f;
+	m_iPhase = 0;
+	m_iShots = 0;
+}
+
+void CBoss::Update_Bullet(_float fDeltaTime)
+{
+	m_fStateDuration += fDeltaTime;
+	if (m_iPhase == 0)
+	{
+		Follow_PathSpeed(0.65f);
+		if (m_fStateDuration >= m_tRigidbodyConfig.fBul_WindUp)
+		{
+			m_iPhase = 1;
+			m_fStateDuration = 0.f;
+		}
+	}
+	else if (m_iPhase == 1)
+	{
+		Follow_PathSpeed(0.75f);
+		if (m_iShots < m_tRigidbodyConfig.iBul_Burst &&
+			m_fStateDuration >= m_tRigidbodyConfig.fBul_Interval)
+		{
+			m_fStateDuration = 0.f;
+
+			_vec3 vTo = m_pPlayer->GetTransform()->Get_Info(INFO::INFO_POS) - m_pTransformCom->Get_Info(INFO::INFO_POS);
+			::D3DXVec3Normalize(&vTo, &vTo);
+
+			_float fBaseYaw = std::atan2(vTo.z, vTo.x);
+			_float fOffDegree = (m_iShots - (m_tRigidbodyConfig.iBul_Burst - 1) * 0.5f) * m_tRigidbodyConfig.fBul_SpreadDeg;
+			_float fYaw = fBaseYaw + fOffDegree * (D3DX_PI / 180.f);
+			_vec3 vDir(std::cos(fYaw), 0.f, std::sin(fYaw));
+
+			// Todo - SpawnBullet
+			BulletData tData;
+			tData.vMuzzlePosition = m_pTransformCom->Get_Info(INFO_POS);
+			tData.vLookDir = vDir;
+			tData.vMuzzlePosition += tData.vLookDir * 2.f;
+			CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
+
+			++m_iShots;
+		}
+		if (m_iShots >= m_tRigidbodyConfig.iBul_Burst)
+		{
+			m_iPhase = 2;
+			m_fStateDuration = 0.f;
+		}
+	}
+	else
+	{
+		Follow_PathSpeed(0.65f);
+
+		if (m_fStateDuration >= m_tRigidbodyConfig.fBul_Recover)
+		{
+			Set_Cooldown(2, m_tRigidbodyConfig.fBul_Cooldown);
+			ChangeState(State::IDLE);
+		}
+	}
+}
+
+void CBoss::Exit_Bullet()
+{
+}
+
+void CBoss::Enter_Missile()
+{
+	m_fStateDuration = 0.f;
+	m_iPhase = 0;
+	m_iVolley = 0;
+}
+
+void CBoss::Update_Missile(_float fDeltaTime)
+{
+	// TODO - ¸¸µé¾î¾ß´ï
+	ChangeState(State::IDLE);
+}
+
+void CBoss::Exit_Missile()
+{
+}
+
+_float CBoss::Hover_Y() const
+{
+	return m_tRigidbodyConfig.fHoverAmp * std::sinf(m_fHoverTime * (2.f * D3DX_PI) * m_tRigidbodyConfig.fHoverFreq);
+}
+
+void CBoss::Set_Velocity_Towards(const _vec3 &vTarget, _float fSpeed)
+{
+	_vec3 vTo = vTarget - m_pTransformCom->Get_Info(INFO::INFO_POS);
+	_float fDelta = Lenght_XZ(vTo);
+	if (fDelta < 1e-4f) { m_fTargetVel_X = m_fTargetVel_Z = 0.f; return; }
+	_float fSpd = fSpeed;
+	if (fDelta < 1.2f) fSpd *= (fDelta / 1.2f);
+	_vec3 vNorm = Norm_XZ(vTo);
+	m_fTargetVel_X = vNorm.x * fSpd;
+	m_fTargetVel_Z = vNorm.z * fSpd;
+}
+
+void CBoss::Follow_PathSpeed(_float fScale)
+{
+	fScale = std::clamp(fScale, 0.f, 1.f);
+	if (m_ePathMode == PathMode::LR)
+	{
+		if (Arrived(m_vTarget))
+			m_vTarget = (m_iDirLR > 0) ? m_vRight : m_vLeft;
+	}
+	else
+	{
+		if (Arrived(m_vTarget))
+			Choose_Waypoint();
+	}
+	Set_Velocity_Towards(m_vTarget, m_tRigidbodyConfig.fMoveSpeed * fScale);
+}
+
+void CBoss::Choose_Waypoint()
+{
+	if (m_ePathMode == PathMode::LR)
+	{
+		m_iDirLR *= -1;
+		m_vTarget = (m_iDirLR > 0) ? m_vRight : m_vLeft;
+		return;
+	}
+	if (m_vecWaypoints.empty())
+	{
+		m_vTarget = m_pTransformCom->Get_Info(INFO::INFO_POS);
+		return;
+	}
+
+	if (m_ePathMode == PathMode::RECT)
+	{
+		m_iWaypoint = (m_iWaypoint + 1) % (int)m_vecWaypoints.size();
+	}
+	else if (m_ePathMode == PathMode::RECT_RANDOM)
+	{
+		_int iNext;
+		do { iNext = Rand_Int(0, (int)m_vecWaypoints.size() - 1); }
+		while (iNext == m_iWaypoint);
+		m_iWaypoint = iNext;
+	}
+
+	m_vTarget = m_vecWaypoints[m_iWaypoint];
+}
+
+_vec3 CBoss::Dash_Direction()
+{
+	if (m_ePathMode == PathMode::LR)
+	{
+		_vec3 vDir = ((m_iDirLR > 0) ? m_vRight : m_vLeft) - ((m_iDirLR > 0) ? m_vLeft : m_vRight);
+		return Norm_XZ(vDir);
+	}
+
+	_vec3 vDir = m_vTarget - m_pTransformCom->Get_Info(INFO::INFO_POS);
+
+	if (Lenght_XZ(vDir) < 1e-4f)
+		vDir = _vec3(1, 0, 0);
+
+	return Norm_XZ(vDir);
+}
+
+_bool CBoss::Arrived(const _vec3 &v)
+{
+	return Lenght_XZ(v - m_pTransformCom->Get_Info(INFO::INFO_POS)) <= m_tRigidbodyConfig.fArriveRadius;
+}
+
+_float CBoss::Lerp(_float fA, _float fB, _float fT)
+{
+	return fA + (fB - fA) * fT;
+}
+
+_vec3 CBoss::Lerp(_vec3 vA, _vec3 vB, _float fT)
+{
+	return vA + (vB - vA) * fT;
+}
+\

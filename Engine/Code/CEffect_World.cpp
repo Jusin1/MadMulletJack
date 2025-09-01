@@ -173,11 +173,16 @@ HRESULT CEffect_World::Texture_Clone()
 	};
 	AnimationDeffinition anims[] =
 	{
-		{ L"Electric",	L"Proto_Effect_Electric",   0,	17,	15.f,	false },
-		{ L"Explosion",	L"Proto_Effect_Explosion",	0,	16,	10.f,	false },
-		{ L"Splatter",	L"Proto_Effect_Splatter",   0,  9,	5.f,	false },
-		{ L"Hitted",	L"Proto_Effect_Hitted",		0,	6,	5.f,	false },
-		{ L"Spread",	L"Proto_Effect_Spread",		0,	12,	10.f,	false }
+		{ L"Electric",	L"Proto_Effect_Electric",			0,	17,	15.f,	false },
+		{ L"Explosion",	L"Proto_Effect_Explosion",			0,	16,	10.f,	false },
+		{ L"Splatter",	L"Proto_Effect_Splatter",			0,  9,	5.f,	false },
+		{ L"Hitted",	L"Proto_Effect_Hitted",				0,	6,	5.f,	false },
+		{ L"Spread",    L"Proto_Effect_Spread",				0,  12, 10.f,   false },
+		{ L"Smoke",		L"Proto_Effect_Smoke",				0,	22,	15.f,	false },
+		{ L"BE",		L"Proto_Effect_BloodExplosion",		0,	22,	15.f,	false },
+		{ L"BE2",		L"Proto_Effect_BloodExplosion2",	0,	16,	10.f,	false },
+		{ L"BE3",		L"Proto_Effect_BloodExplosion3",	0,	64,	30.f,	false },
+		{ L"BE4",		L"Proto_Effect_BloodExplosion4",	0,	16,	10.f,	false },
 	};
 
 	for (AnimationDeffinition &Element : anims)
@@ -251,6 +256,16 @@ HRESULT CEffect_World::Set_TextureInit(WorldEffectType _e)
 		return Change_Texture(L"Hitted");
 	case Engine::WorldEffectType::FAN_SPREAD:
 		return Change_Texture(L"Spread");
+	case Engine::WorldEffectType::SMOKE:
+		return Change_Texture(L"Smoke");
+	case Engine::WorldEffectType::BLOOD_EXPLOSION:
+		return Change_Texture(L"BE");
+	case Engine::WorldEffectType::BLOOD_EXPLOSION2:
+		return Change_Texture(L"BE2");
+	case Engine::WorldEffectType::BLOOD_EXPLOSION3:
+		return Change_Texture(L"BE3");
+	case Engine::WorldEffectType::BLOOD_EXPLOSION4:
+		return Change_Texture(L"BE4");
 	}
 
 	return E_FAIL;

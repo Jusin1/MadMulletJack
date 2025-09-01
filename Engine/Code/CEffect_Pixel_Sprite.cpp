@@ -178,7 +178,7 @@ HRESULT CEffect_Pixel_Sprite::Texture_Clone()
     };
     AnimationDeffinition ttt[] =
     {
-        { L"DeadBody",	L"Proto_Effect_DeadBody",   0,	8,	1.f,	false },
+        { L"DeadBody",	L"Proto_Effect_DeadBody",   0,	16,	1.f,	false },
     };
 
     for (AnimationDeffinition &Element : ttt)

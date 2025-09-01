@@ -111,6 +111,11 @@ namespace Engine
 		BLOOD_SPREAD,
 		HITTED,
 		FAN_SPREAD,
+		SMOKE,
+		BLOOD_EXPLOSION,
+		BLOOD_EXPLOSION2,
+		BLOOD_EXPLOSION3,
+		BLOOD_EXPLOSION4,
 		NONE
 	};
 	constexpr size_t g_WorldEffectTypeCount{ static_cast<size_t>(WorldEffectType::NONE) };

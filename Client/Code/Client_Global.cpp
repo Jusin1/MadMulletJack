@@ -49,8 +49,8 @@ EffectOptions Get_Preset_Blood()
     o.iPixelCount = 60;
     o.fLife_Min = 0.5f;
     o.fLife_Max = 1.3f;
-    o.fSize_Min = 1.f;
-    o.fSize_Max = 5.f;
+    o.fSize_Min = 3.f;
+    o.fSize_Max = 8.f;
     o.fSpeed_Min = .7f;
     o.fSpeed_Max = 2.5f;
     o.colorStart = D3DXCOLOR(0.7f, 0.05f, 0.08f, 1.f);

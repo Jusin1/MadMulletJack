@@ -1099,17 +1099,53 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
 			[&](CGameObject *pGo)->void
 			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.65f, 1.f });
 			});
 
 		EFFECTINFO tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.11f, 0.54f, 1.11f });
+			});
+
+		tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION2;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.111f, 0.48f, 1.111f });
+			});
+
+		tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION3;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.112f, 0.46f, 1.112f });
+			});
+
+		tInfo;
+		tInfo.fAngle = 20.f;
+		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION4;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[&](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.113f, 0.47f, 1.113f });
+			});
+
+		tInfo;
 		tInfo.fAngle = 20.f;
 		tInfo.eType = WorldEffectType::FAN_SPREAD;
 		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
 		[](CGameObject *pGo)->void
 		{
 				static_cast<CEffect_World *>(pGo)->Set_TintColor(D3DCOLOR_COLORVALUE(135.f, 0.f, 0.f, 255.f));
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.1f, 0.53f, 1.1f });
 		});
 
 		SpriteParticleOptions Option2;
@@ -1151,6 +1187,13 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 			[](CGameObject *pGo)->void
 			{
 				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
+			});
+		tInfo;
+		tInfo.eType = WorldEffectType::SMOKE;
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+			[](CGameObject *pGo)->void
+			{
+				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.01f, 0.51f, 2.01f });
 			});
 	}
 }

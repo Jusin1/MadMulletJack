@@ -60,6 +60,7 @@
 #include "CMonster_Soldier.h"
 #include "CMonster_Head.h"
 #include "CMonster_Dron.h"
+#include "CBoss.h"
 
 // ÃÑ¾Ë
 #include "CBullet.h"
@@ -788,13 +789,21 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Road_Sign_5", L"../../Client/Bin/Resource/MapObject/Road/TRAFFIC SIGN 5.png",1);
 	AddTexture(L"Proto_Road_Tree", L"../../Client/Bin/Resource/MapObject/Road/ARVORE 2.png",1);
 
+
+	AddTexture(L"Proto_Effect_MonsterHead", L"../../Client/Bin/Resource/Effect/MonsterHead/MonsterHead_%03d.png", 12);
 	// effect
 	AddTexture(L"Proto_Effect_Splatter", L"../../Client/Bin/Resource/Effect/BloodSpread/thin-splatter_%03d.png", 9);
 	AddTexture(L"Proto_Effect_Electric", L"../../Client/Bin/Resource/Effect/Electric/Eletricity_%03d.png", 17);
 	AddTexture(L"Proto_Effect_Explosion", L"../../Client/Bin/Resource/Effect/Explosion/Explosion_%02d.png", 16);
 	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
-	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 8);
+	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 15);
+
+	AddTexture(L"Proto_Effect_Smoke", L"../../Client/Bin/Resource/Effect/Smoke/SM_%03d.png", 22);
+	AddTexture(L"Proto_Effect_BloodExplosion", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE/BE_%03d.png", 22);
+	AddTexture(L"Proto_Effect_BloodExplosion2", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE2/BE2_%03d.png", 16);
+	AddTexture(L"Proto_Effect_BloodExplosion3", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE3/BE3_%03d.png", 64);
+	AddTexture(L"Proto_Effect_BloodExplosion4", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE4/BE4_%03d.png", 16);
 
 	return S_OK;
 }
@@ -1428,6 +1437,10 @@ HRESULT CLoader::Loading_UI()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Drone",
 		CMonster_Dron::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Boss",
+		CBoss::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// UI
