@@ -172,7 +172,7 @@ HRESULT CPlayer_Arm::Set_Texture()
         }
 
         Set_New_TransInfo(200.f, 0.f);
-        m_tMoveInfo = { MV_UP,true, 1000.f,0.f };
+        m_tMoveInfo = { MV_UP,true, 200.f,0.f };
 
         return S_OK;
     }

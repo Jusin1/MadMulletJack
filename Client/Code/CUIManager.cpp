@@ -651,7 +651,7 @@ void CUIManager::Create_PlayerEff(PLAYEREFF _eEffect)
         break;
 
     case PLAYEREFF::BLOODR: //2048 1152
-        vSizeOffset = { 1024.f,526.f, 0.f,0.f }; //2048 1152
+        vSizeOffset = { 2048.f,1152.f, 0.f,0.f }; //2048 1152
         proto = L"Prototype_Component_Texture_Effect_BloodR";
         childTag = L"BloodREff";
         iIdx = 6;

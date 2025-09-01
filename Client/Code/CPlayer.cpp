@@ -21,6 +21,7 @@
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
 #include "CMainWeapon.h"
+#include "CMonster_Dron.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -1501,6 +1502,8 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
 
+	Set_Collider_With_Bullet(fTimeDelta);
+
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
@@ -1509,6 +1512,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	//Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
+	
 }
 
 void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
@@ -1542,13 +1546,16 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		Add_Hp(fHit * -1.f);
 		// hit count 증가
 		dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Up();
+
+		// effect 추가
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::BLOODR);
 	}
 
 	// hit 시간 누적
 	m_fHitTime += fTimeDelta;
 
 	// 누적 시간이 5초 이상이면
-	if (m_fHitTime >= 5.f)
+	if (m_fHitTime >= 0.5f)
 	{
 		// 0초로 초기화
 		m_fHitTime = 0.f;
@@ -1600,6 +1607,9 @@ void CPlayer::Set_Collider_With_Door()
 
 void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 {
+	// effect 삭제
+	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
+
 	CGameObject* pColiObj;
 	_vec3 vDistance;
 	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, &vDistance, pColiObj))
@@ -1607,6 +1617,10 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 		if (!m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
+			// dron monster 일 경우 충돌시 피격
+
+
+
 			// monster pos
 			_vec3 vMonPos = pColiObj->GetTransform()->Get_Info(INFO_POS);
 			// 내가 몬스터를 바라보는 방향벡터
@@ -1641,9 +1655,8 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				// Dash attack이 아니면 hit
 				else
 				{
-					// 부딫힌 obj의 attack을 가져옴
-					//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
-					HitFromObject(fTimeDelta, 1.f);
+					if(dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
+						HitFromObject(fTimeDelta, 1.f);
 					PushBack(vDistance);
 				}
 			}
@@ -1651,9 +1664,8 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			// 앞에 없다면 hit
 			else
 			{
-				// 부딫힌 obj의 attack을 가져옴
-				//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
-				HitFromObject(fTimeDelta, 1.f);
+				if (dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
+					HitFromObject(fTimeDelta, 1.f);
 				PushBack(vDistance);
 			}
 		}
@@ -1703,6 +1715,21 @@ _bool CPlayer::Set_Collider_With_SpecialTile()
 	}
 
 	return false;
+}
+
+void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
+{
+	CGameObject* pColliObj;
+ 	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
+	//나중에 item으로 바꿔야함 test
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
+	{
+		if (!pColliObj) // 예외처리
+			return;
+
+		pColliObj->Set_Dead(true); // bullet dead 처리
+		HitFromObject(fTimeDelta, 1.f);
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()

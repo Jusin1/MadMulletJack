@@ -176,6 +176,7 @@ private:
 	void			Set_Collider_With_SlideWall();
 	void			Set_Collider_With_Item();			// item과 충돌시 -> test : 자판기랑 collision
 	_bool			Set_Collider_With_SpecialTile();	// 발차기 이벤트 나가는 tile || wall 충돌 검사
+	void			Set_Collider_With_Bullet(const _float& fTimeDelta);
 
 	void			HitFromObject(const _float& fTimeDelta, _float fHit); // hit만큼 목숨 깍아줌
 
