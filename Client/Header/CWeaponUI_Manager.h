@@ -29,16 +29,17 @@ private:
 	HRESULT Create_Pistol(_uint _iSceneIdx);
 	HRESULT Create_Sniper(_uint _iSceneIdx);
 	HRESULT Create_Katana(_uint _iSceneIdx);
+	HRESULT Create_ShotGun(_uint _iSceneIdx);
 	
 	// weapon create func
 	HRESULT Create_Knife(_uint _iSceneIdx);
 
 	// effect
-	HRESULT Create_PistoAim();
-	void DeletePisolAim(const _tchar* pTag);
+	HRESULT Create_AimUI(const _tchar* pProtoTag, _float _fsizeX, _float _fSizeY);
+	void	Delete_AimUI(const _tchar* pTag); // 그냥 delete
 
 	void SpawnInsEff();
-	void DeleteEff(const _tchar* pTag);
+	void DeleteEff(const _tchar* pTag); // ani가 끝나면 delete
 
 	//getter setter func
 public:

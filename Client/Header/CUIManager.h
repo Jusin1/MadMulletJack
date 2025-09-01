@@ -105,6 +105,15 @@ public:
     void DestroyReloadUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
+    // player effect
+    void Create_PlayerEff(PLAYEREFF _eEffect); // dash, blood, cure(함수 호출로?)
+    void Create_CureEff();
+    void Update_CureEff(const _float& fTimeDelta);
+
+    void Destory_PlayerEff(PLAYEREFF _eEffect);
+    void Destory_CureEff();
+    void Destory_PlayerEff_ALL();
+
     void Update(const _float& dt);
 
     // Slide
@@ -184,6 +193,10 @@ private:
     CUIBase* m_pItemUI = nullptr;
     CUIBase* m_pEffectUI = nullptr;
     CUIBase* m_pReloadUI = nullptr;
+
+    // player effect
+    CUIBase* m_pPlayerEffUI = nullptr;
+    CUIBase* m_pCureEffUI   = nullptr;
 
     // Clear text
     CTextUI* m_pVictoryText = nullptr;

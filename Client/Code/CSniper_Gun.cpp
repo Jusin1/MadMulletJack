@@ -46,6 +46,15 @@ _int CSniper_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	Move_UI(fTimeDelta);
+
+	return NO_EVENT;
+}
+
+void CSniper_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	__super::LateUpdate_GameObject(fTimeDelta);
+
 	// 만약 지금 idle texture가 아니고 ani가 끝났다면
 	if (m_CurrentAnimTag != TEXT("Com_Texture_Sniper_Idle") &&
 		m_pTextureCom->Is_AnimFinished())
@@ -53,15 +62,6 @@ _int CSniper_Gun::Update_GameObject(const _float& fTimeDelta)
 		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
 	}
-
-	return NO_EVENT;
-}
-
-void CSniper_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	Move_UI(fTimeDelta);
-
-	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CSniper_Gun::Render_GameObject()

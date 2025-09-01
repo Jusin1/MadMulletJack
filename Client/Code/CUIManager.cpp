@@ -612,6 +612,227 @@ void CUIManager::DestroyReloadUI()
 }
 
 
+void CUIManager::Create_PlayerEff(PLAYEREFF _eEffect)
+{
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+    // 만약 player eff ui 가 만들어지지 않았다면
+    if (!m_pPlayerEffUI)
+    {
+        m_pPlayerEffUI = dynamic_cast<CUIBase*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    }
+
+    auto* effect = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+
+    //if (!effect) return;
+
+    // 셋팅 값 초기화
+    _vec4           vSizeOffset = {};
+    const wchar_t* proto = L"";
+    const wchar_t* childTag = L"";
+    _uint           iIdx = 0;
+    _float          fSpeed = 0.f;
+    _bool           bLoop = false;
+
+    // 값 셋팅
+    switch (_eEffect)
+    {
+    case PLAYEREFF::DASH:
+        vSizeOffset = { 2048.f, 1248.f, 0.f,0.f }; //2048 1248
+        proto = L"Prototype_Component_Texture_Effect_Dash";
+        childTag = L"DashEff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = true;
+        break;
+
+    case PLAYEREFF::BLOODR: //2048 1152
+        vSizeOffset = { 2048.f,1152.f, 0.f,0.f }; //2048 1152
+        proto = L"Prototype_Component_Texture_Effect_BloodR";
+        childTag = L"BloodREff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = false;
+        break;
+
+    case PLAYEREFF::BLOODG:
+        vSizeOffset = { 1024.f,526.f, 0.f,0.f }; //2048 1152
+        proto = L"Prototype_Component_Texture_Effect_BloodG";
+        childTag = L"BloodGEff";
+        iIdx = 6;
+        fSpeed = 10.f;
+        bLoop = false;
+        break;
+    }
+
+    // 중복 방어 : 만약 해당 tag가 child로 있다면 return
+    if (m_pPlayerEffUI->Find_Child_ByTag(childTag))
+        return;
+
+    effect->Set_UISizeAndPos(vSizeOffset.x, vSizeOffset.y, vSizeOffset.z, vSizeOffset.w);
+    effect->RegisterTexture(L"Com_Texture_PLayerEff", proto, 0, iIdx, fSpeed, bLoop);
+    effect->ChangeTexture(L"Com_Texture_PLayerEff");
+
+    effect->Set_ObjTag(childTag);
+
+    m_pPlayerEffUI->Add_Child(effect);
+}
+
+void CUIManager::Create_CureEff()
+{
+    // Prototype_Component_Texture_Effect_Cure
+
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+
+    // 만약 player eff ui 가 만들어지지 않았다면
+    if (!m_pCureEffUI)
+    {
+        m_pCureEffUI = dynamic_cast<CUIBase*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    }
+
+    // 중복 방어 : children이 비워있을 때만 생성
+    if (!m_pCureEffUI->GetChildren().empty())
+        return;
+
+    // 20개 만들어
+
+    for (int i = 0; i < 20; i++)
+    {
+        auto* effect = dynamic_cast<CImageUI*>(
+            CObjectManager::GetInstance()->Clone_GameObject(
+                L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
+
+        // texture 셋팅
+        effect->RegisterTexture(L"Com_Texture_PLayerEff", L"Prototype_Component_Texture_Effect_Cure", 0, 0, 0.f, false);
+        effect->ChangeTexture(L"Com_Texture_PLayerEff");
+
+        // 위치 셋팅
+        _float fPosX, fPosY;
+        _uint iDis = 1.f;
+        
+        if (rand() % 2)
+        {
+            iDis = -1.f;
+        }
+
+        fPosX = float(rand() % 500);
+        //fPosY = float(rand() % 301 + WINCY * 0.5f); // wincy ~ wincy + 300 사이에서 생성
+        fPosY = 0.f;
+       
+        effect->Set_UISizeAndPos(128.f, 128.f, fPosX * iDis, fPosY);
+        
+        // move 셋팅
+        _float fRange = float(rand() % 400) + 200.f; // 100 에서 300 사이
+        effect->Set_UIMoveInfo({ MV_UP,true, fRange , 0.f,true }); // 위로 랜덤한 만큼 움직이고  render off
+        effect->Set_New_TransInfo(1000.f, 0.f);
+
+        m_pCureEffUI->Add_Child(effect);
+    }
+
+    // y값은 wincy보다 아래로
+    // x값은 0  ~ wincx
+    // 위치 잡아 주고
+
+    // speed 일정
+    // mv_up / range 랜덤
+    // render off true
+    // ui move 적용
+}
+
+void CUIManager::Update_CureEff(const _float& fTimeDelta)
+{
+    if (!m_pCureEffUI ||
+        m_pCureEffUI->GetChildren().empty()) // 예외처리
+        return;
+
+    for (auto pChild : m_pCureEffUI->GetChildren())
+    {
+        CUI* pUI = dynamic_cast<CUI*>(pChild);
+        pUI->Move_UI(fTimeDelta);
+
+        if (pUI->Get_UIMoveInfo().IsRangeEnd())
+        {
+            pUI->Set_Dead(true);
+            m_pCureEffUI->Remove_Child(pUI);
+        }
+    }
+}
+
+
+void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
+{
+    if (!m_pPlayerEffUI) return;
+
+    const wchar_t* childTag = L"";
+    CImageUI* pEff = nullptr;
+    // 값 셋팅
+    switch (_eEffect)
+    {
+    case PLAYEREFF::DASH:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"DashEff"));
+        if (!pEff)
+            return;
+
+        break;
+
+    case PLAYEREFF::BLOODR:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodREff"));
+        if (!pEff)
+            return;
+        if (!pEff->GetTextureCom()->Is_AnimFinished())
+            return;
+
+        break;
+
+    case PLAYEREFF::BLOODG:
+        pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodGEff"));
+        if (!pEff)
+            return;
+        if (!pEff->GetTextureCom()->Is_AnimFinished())
+            return;
+
+        break;
+    }
+
+    pEff->Set_Dead(true);                   // 객체 dead 처리
+    m_pPlayerEffUI-> Remove_Child(pEff);    // child에서 제거
+}
+
+void CUIManager::Destory_CureEff()
+{
+    if (!m_pCureEffUI) return;
+
+    // 자식들 죽이기
+    for (auto& pChild : m_pCureEffUI->GetChildren())
+    {
+        pChild->Set_Dead(true);                   // 객체 dead 처리
+        m_pCureEffUI->Remove_Child(pChild);      // child에서 제거
+    }
+
+    m_pCureEffUI->Set_Dead(true);
+    m_pCureEffUI = nullptr;
+}
+
+void CUIManager::Destory_PlayerEff_ALL()
+{
+    if (!m_pPlayerEffUI) return;
+
+    // 자식들 죽이기
+    for (auto& pChild : m_pPlayerEffUI->GetChildren())
+    {
+        pChild->Set_Dead(true);                   // 객체 dead 처리
+        m_pPlayerEffUI->Remove_Child(pChild);      // child에서 제거
+    }
+
+    m_pPlayerEffUI->Set_Dead(true);
+    m_pPlayerEffUI = nullptr;
+}
 
 bool CUIManager::PhoneSlidesDone() const
 {
@@ -903,6 +1124,11 @@ void CUIManager::ClearAllUI()
     Safe_Release(m_pRightHand);
     Safe_Release(m_pPhoneScreen);
     Safe_Release(m_pPhoeScreenBackGround);
+
+    // eunbi player effect ui delete
+    Destory_PlayerEff_ALL();
+    Safe_Release(m_pPlayerEffUI);
+    Safe_Release(m_pCureEffUI  );
 
     // --- 상점 UI ---
     Safe_Release(m_pShopRoot);

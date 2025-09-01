@@ -61,6 +61,13 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	return NO_EVENT;
+}
+
+void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	__super::LateUpdate_GameObject(fTimeDelta);
+
 	// 만약 지금 idle texture 라면
 	if (m_CurrentAnimTag == TEXT("Com_Texture_Pistol_Idle"))
 	{
@@ -84,21 +91,9 @@ _int CPistol_Gun::Update_GameObject(const _float& fTimeDelta)
 	{
 		// state 끝났다고 알려줌
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-		if (m_tInfo.ePlayerState == ATTACK)
-		{
-			DeleteEff();
-			SpwanSmoke();
-		}
 	}
 
 	DeleteSmoke();
-
-	return NO_EVENT;
-}
-
-void CPistol_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	__super::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CPistol_Gun::Render_GameObject()
@@ -250,7 +245,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 			m_iBullet--;
 			
-			SpawnEff();
+			SpawnEff({ 300.f, 300.f,-300.f, 160.f });
 
 			break;
 
@@ -269,6 +264,12 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 		case PLAYERDEAD:
 			m_bActive = false;
+			break;
+
+		case ATTEND:
+			CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+			DeleteEff();
+			SpwanSmoke({ 400.f, 400.f, -50.f, 20.f });
 			break;
 
 		default:
@@ -294,7 +295,7 @@ HRESULT CPistol_Gun::Change_Texture(const _tchar* pTextureTag)
 	return S_OK;
 }
 
-void CPistol_Gun::SpawnEff()
+void CPistol_Gun::SpawnEff(_vec4 _vSizeOffset)
 {
 	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
@@ -305,11 +306,7 @@ void CPistol_Gun::SpawnEff()
 
 	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
 
-	float fxW = 300.f, fxH = 300.f, offX = -300.f, offY = 160.f;
-	//float fxW = 240.f, fxH = 264.f, offX = -180.f, offY = 100.f;
-
-
-	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
+	pFx->Set_UISizeAndPos(_vSizeOffset.x, _vSizeOffset.y, base.x + _vSizeOffset.z, base.y + _vSizeOffset.w);
 	pFx->RegisterTexture(L"Com_Texture_PistolEff", L"Prototype_Component_Texture_WapPistol_Eff", 0, 10, 50.f, false);
 	pFx->ChangeTexture(L"Com_Texture_PistolEff");
 
@@ -328,7 +325,7 @@ void CPistol_Gun::DeleteEff()
 	Remove_Child(pEff);
 }
 
-void CPistol_Gun::SpwanSmoke()
+void CPistol_Gun::SpwanSmoke(_vec4 _vSizeOffset)
 {
 	auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
@@ -339,11 +336,7 @@ void CPistol_Gun::SpwanSmoke()
 
 	const _vec3 base = m_pTransformCom->Get_Info(INFO_POS);
 
-	float fxW = 400.f, fxH = 400.f, offX = -60.f, offY = 10.f;
-	//float fxW = 240.f, fxH = 264.f, offX = -180.f, offY = 100.f;
-
-
-	pFx->Set_UISizeAndPos(fxW, fxH, base.x + offX, base.y + offY);
+	pFx->Set_UISizeAndPos(_vSizeOffset.x, _vSizeOffset.y, base.x + _vSizeOffset.z, base.y + _vSizeOffset.w);
 	pFx->RegisterTexture(L"Com_Texture_PistolSmoke", L"Prototype_Component_Texture_WapPistol_EffSmoke", 0, 15, 30.f, false);
 	pFx->ChangeTexture(L"Com_Texture_PistolSmoke");
 

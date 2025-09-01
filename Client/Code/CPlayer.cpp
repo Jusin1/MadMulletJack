@@ -20,8 +20,8 @@
 #include "CManagement.h"
 #include "CTutorialTracker.h"
 #include "CWeaponUI_Manager.h"
-#include "CUIManager.h"
 #include "CMainWeapon.h"
+#include "CMonster_Dron.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -198,6 +198,13 @@ void CPlayer::Render_GameObject()
 /////////////// public func
 void CPlayer::Add_Hp(_float _fAddHp)
 {
+	// 만약 hp가 증가하면
+	if (_fAddHp > 0)
+	{
+		// cure effect create
+		CUIManager::GetInstance()->Create_CureEff();
+	}
+
 	// 체력을 더함
 	m_fHp += _fAddHp;
 
@@ -345,6 +352,8 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		}
 	}
 
+	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
+
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
 
@@ -354,18 +363,6 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 
 void CPlayer::CountTimeZoom(const _float& fTimeDelta)
 {
-	////  attack cool 타임 전해줌
-	//if (m_fAttackCoolTime != 0)
-	//{
-	//	m_bIsAttack = false;
-	//	m_fAttackCoolTime -= fTimeDelta;
-	//	if (m_fAttackCoolTime <= 0.f)
-	//	{
-	//		m_fAttackCoolTime = 0.f;
-	//		m_bIsAttack = true;
-	//	}
-	//}
-
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
 
@@ -769,6 +766,9 @@ void CPlayer::ZOOM_Begin()
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
 
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
+		m_pHpBarUI->Set_Active(false);
+
 }
 
 void CPlayer::ZOOM_On(const _float& fTimeDelta)
@@ -847,8 +847,8 @@ void CPlayer::OPENING_Begin()
 	case WP_PISTOL:
 		m_fStateTime = 0.5f;
 		break;
-
 	case WP_SHOTGUN:
+		m_fStateTime = 0.5f;
 		break;
 	case WP_RIFLE:
 		break;
@@ -900,16 +900,22 @@ void CPlayer::Clear_Begin()
 
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("승 리"));
 	CUIManager::GetInstance()->DestroyReloadUI();
+	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 }
 
 void CPlayer::ATTEND_Begin()
 {
 	m_bIsAttack = false;
+	if(m_tPlayerInfo.eWeapon == WP_SHOTGUN)
+		m_fStateTime = 10.f;
 
 }
 
 void CPlayer::ATTEND_On(const _float& fTimeDelta)
 {
+	//if(m_tPlayerInfo.eWeapon == WP_SHOTGUN && StateTime_IsEnd(fTimeDelta))
+	//	Change_State(IDLE);
+		
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
 		Change_State(IDLE);
 }
@@ -1084,6 +1090,8 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_NON);
 	if (KEY_BUTTON_DOWN(DIK_X))
 		Change_Weapon(WP_PISTOL);
+	if (KEY_BUTTON_DOWN(DIK_Q))
+		Change_Weapon(WP_SHOTGUN);
 
 	if (KEY_BUTTON_DOWN(DIK_B))
 	{
@@ -1214,11 +1222,16 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 	
 
 	// 좌 클릭시 : attack
-	if (IS_LBUTTON_DOWN)
+	if (m_bIsAttack && IS_LBUTTON_DOWN)
 	{
 		if (m_tPlayerInfo.ePlayerState == ZOOM)
 		{
 			Change_State(ATTACK_ZOOM);
+		}
+
+		else
+		{
+			Change_State(ATTACK);
 		}
 	}
 
@@ -1431,6 +1444,9 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 {
+	// dash effect 제거
+	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::DASH); // dash effect 제거
+
 	// 상태 업데이트
 	m_tPrePlayerInfo.ePlayerMove = m_tPlayerInfo.ePlayerMove; // 전 state 저장
 	m_tPlayerInfo.ePlayerMove = ePlayerMove; // state 업데이트
@@ -1449,6 +1465,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	case PMV_DASHATT:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 	break;
 
 	case PMV_DASH:
@@ -1457,10 +1474,14 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		// 만약 전 state가 slide였다면 speed 좀 줄여줌
 		if (m_tPrePlayerInfo.ePlayerMove == PMV_SLIDE)
 			GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 1.f;
+
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
+
 	break;
 
 	case PMV_SLIDE:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 3.f;
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 	break;
 	
 	case PMV_WALL:
@@ -1531,6 +1552,8 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
 
+	Set_Collider_With_Bullet(fTimeDelta);
+
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
@@ -1539,6 +1562,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	//Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
+	
 }
 
 void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
@@ -1572,13 +1596,16 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		Add_Hp(fHit * -1.f);
 		// hit count 증가
 		dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Up();
+
+		// effect 추가
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::BLOODR);
 	}
 
 	// hit 시간 누적
 	m_fHitTime += fTimeDelta;
 
 	// 누적 시간이 5초 이상이면
-	if (m_fHitTime >= 5.f)
+	if (m_fHitTime >= 0.5f)
 	{
 		// 0초로 초기화
 		m_fHitTime = 0.f;
@@ -1630,6 +1657,9 @@ void CPlayer::Set_Collider_With_Door()
 
 void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 {
+	// effect 삭제
+	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
+
 	CGameObject* pColiObj;
 	_vec3 vDistance;
 	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, &vDistance, pColiObj))
@@ -1637,6 +1667,10 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 		if (!m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
+			// dron monster 일 경우 충돌시 피격
+
+
+
 			// monster pos
 			_vec3 vMonPos = pColiObj->GetTransform()->Get_Info(INFO_POS);
 			// 내가 몬스터를 바라보는 방향벡터
@@ -1671,9 +1705,8 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				// Dash attack이 아니면 hit
 				else
 				{
-					// 부딫힌 obj의 attack을 가져옴
-					//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
-					HitFromObject(fTimeDelta, 1.f);
+					if(dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
+						HitFromObject(fTimeDelta, 1.f);
 					PushBack(vDistance);
 				}
 			}
@@ -1681,9 +1714,8 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			// 앞에 없다면 hit
 			else
 			{
-				// 부딫힌 obj의 attack을 가져옴
-				//HitFromObject(dynamic_cast<CCharacter*>(pColiObj)->Get_Attack());
-				HitFromObject(fTimeDelta, 1.f);
+				if (dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
+					HitFromObject(fTimeDelta, 1.f);
 				PushBack(vDistance);
 			}
 		}
@@ -1733,6 +1765,21 @@ _bool CPlayer::Set_Collider_With_SpecialTile()
 	}
 
 	return false;
+}
+
+void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
+{
+	CGameObject* pColliObj;
+ 	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
+	//나중에 item으로 바꿔야함 test
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
+	{
+		if (!pColliObj) // 예외처리
+			return;
+
+		pColliObj->Set_Dead(true); // bullet dead 처리
+		HitFromObject(fTimeDelta, 1.f);
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()

@@ -29,6 +29,9 @@ private:
 
 private:
 	HRESULT Set_HpBarUI();
+
+	void Create_CountEff(const _tchar* _tProTag);
+	void Delete_CountEff();
 	
 	//getter setter func
 public:

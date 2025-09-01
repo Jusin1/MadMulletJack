@@ -20,9 +20,9 @@ private:
 	virtual HRESULT Texture_Clone()	override;
 	virtual HRESULT Change_Texture(const _tchar* pTextureTag) override;
 
-	void SpawnEff();
+	void SpawnEff(_vec4 _vSizeOffset);
 	void DeleteEff();
-	void SpwanSmoke();
+	void SpwanSmoke(_vec4 _vSizeOffset);
 	void DeleteSmoke();
 	
 private:

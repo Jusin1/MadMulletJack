@@ -25,6 +25,7 @@
 #include "CSniper_Gun.h"
 #include "CKnife_SubW.h"
 #include "CKatana.h"
+#include "CShot_Gun.h"
 #include "CWeaponUI_Manager.h"
 
 // Hpbar UI
@@ -995,6 +996,17 @@ HRESULT CLoader::Loading_UI()
 		return E_FAIL;
 
 	// ShotGun
+	// ShotGun - aimUI
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\ShotG_Aim.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_AimEff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/ShotG_Aim.png", 1))))
+		return E_FAIL;
+	// ShotGun - eff
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\effect\muzzle_shotgun_008.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_Eff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/effect/muzzle_shotgun_%03d.png", 9))))
+		return E_FAIL;
+
 	// ShotGun - idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/idle/SHOTGUN_IDLE%03d.png", 5))))
@@ -1070,6 +1082,11 @@ HRESULT CLoader::Loading_UI()
 
 	// Sniper Gun
 	// 이거는 나중에 scene_sniper 에서만 load
+	// Sniper aimUI
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\sniper\SNIPER_WEP.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_AimEff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/SNIPER_WEP.png", 1))))
+		return E_FAIL;
 	// Sniper - Idle
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapSniper_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/sniper/idle/sniperG_Idle%03d.png", 3))))
@@ -1207,7 +1224,36 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack3/Attack3Hand.png", 1))))
 		return E_FAIL;
 
+	// player effect
+	// dash effect
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\Effect\CircleLines_005.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Effect_Dash",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Effect/CircleLines_%03d.png", 6))))
+		return E_FAIL;
+	// bloodR effect
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Effect_BloodR",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Effect/BLOOD%03d.png", 6))))
+		return E_FAIL;
+	// bloodG effect
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Effect_BloodG",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Effect/BLOOD_G%03d.png", 6))))
+		return E_FAIL;
+	// cure effect
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Effect_Cure",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Effect/cure.png", 1))))
+		return E_FAIL;
+
 	// HpBar
+	// HpB effect
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff3",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_000.png", 1))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff2",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_001.png", 1))))
+		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneEff1",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/UI_HpBar/LifeNumber/LIfe_Number_002.png", 1))))
+		return E_FAIL;
 	// HpB - PhoneN
 	//C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\UI\UI_HpBar\Phone
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_UIHpBarPhoneN",
@@ -1646,6 +1692,11 @@ HRESULT CLoader::Loading_UI()
 	// Sniper
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunSniperUI",
 		CSniper_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ShotGun
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunShotGUI",
+		CShot_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// SubWeapon UI
