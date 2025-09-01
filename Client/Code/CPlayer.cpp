@@ -116,6 +116,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	case SCENE_CAR:
 		m_bIsZoomStage = true;
+		m_pHpBarUI->Set_Active(false);
 		break;
 	}
 
@@ -207,7 +208,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	if (_fAddHp > 0)
 	{
 		// cure effect create
-		//CUIManager::GetInstance()->Create_CureEff();
+		CUIManager::GetInstance()->Create_CureEff();
 	}
 
 	// 체력을 더함
@@ -357,7 +358,7 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		}
 	}
 
-	//CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
+	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
 
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
@@ -823,6 +824,9 @@ void CPlayer::DOPING_Begin()
 
 	// hit count reset
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
+
+	// text effect 추가
+	CUIManager::GetInstance()->CreateEffectUI(TEXT("생명 소다"));
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -910,8 +914,11 @@ void CPlayer::Clear_Begin()
 	m_pWeaponUI->Set_Active(false);
 
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("승 리"));
+
+	// ui 정리
 	CUIManager::GetInstance()->DestroyReloadUI();
 	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
+	CUIManager::GetInstance()->Destory_CureEff();
 }
 
 void CPlayer::ATTEND_Begin()
@@ -923,10 +930,7 @@ void CPlayer::ATTEND_Begin()
 }
 
 void CPlayer::ATTEND_On(const _float& fTimeDelta)
-{
-	//if(m_tPlayerInfo.eWeapon == WP_SHOTGUN && StateTime_IsEnd(fTimeDelta))
-	//	Change_State(IDLE);
-		
+{	
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
 		Change_State(IDLE);
 }
@@ -1740,10 +1744,6 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 		if (!m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
-			// dron monster 일 경우 충돌시 피격
-
-
-
 			// monster pos
 			_vec3 vMonPos = pColiObj->GetTransform()->Get_Info(INFO_POS);
 			// 내가 몬스터를 바라보는 방향벡터
@@ -1775,7 +1775,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 					}
 				}
 
-				// Dash attack이 아니면 hit
+				// Dash attack이 아니면 hit || push
 				else
 				{
 					if(dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
@@ -1784,7 +1784,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				}
 			}
 
-			// 앞에 없다면 hit
+			// 앞에 없다면 hit || push
 			else
 			{
 				if (dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
