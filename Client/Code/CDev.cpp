@@ -81,10 +81,6 @@ HRESULT CDev::Ready_Scene()
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_DEV, L"Boss_Layer")))
         return E_FAIL;
-    /*static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 20.f, 20.f, 3.f, TRUE);*/
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 20.f, 0.f, 20.f }, _vec3{ 25.f, 0.f, 25.f }, 2.f);
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())
-        ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Player_Layer")->front());
 
     return S_OK;
 }
