@@ -632,6 +632,7 @@ void CPlayer::JUMP_Begin()
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
+	m_bIsAttack = true;
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -866,6 +867,7 @@ void CPlayer::OPENING_Begin()
 		m_fStateTime = 0.5f;
 		break;
 	case WP_MINIGUN:
+		m_fStateTime = 0.5f;
 		break;
 
 	case WP_KATANA:
@@ -924,15 +926,26 @@ void CPlayer::Clear_Begin()
 void CPlayer::ATTEND_Begin()
 {
 	m_bIsAttack = false;
-	if(m_tPlayerInfo.eWeapon == WP_SHOTGUN)
-		m_fStateTime = 10.f;
+
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
+		m_pHpBarUI->Set_RenderOn(false);
 
 }
 
 void CPlayer::ATTEND_On(const _float& fTimeDelta)
 {	
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Change_State(IDLE);
+	{
+		if (m_tPlayerInfo.eWeapon != WP_SNIPER &&
+			m_tPrePlayerInfo.ePlayerState == ATTACK_ZOOM)
+		{
+			Change_State(ZOOM);
+		}
+
+		else
+			Change_State(IDLE);
+	}
+		
 }
 
 void CPlayer::ATTEND_End()
@@ -941,6 +954,8 @@ void CPlayer::ATTEND_End()
 
 void CPlayer::ATTACK_ZOOM_Begin()
 {
+	m_pHpBarUI->Set_Active(false);
+
 	// sniper는 텍스처 유지라서
 	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
 		m_fStateTime = 1.f;
@@ -1299,8 +1314,23 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 		}
 
 
+		//// 좌 클릭시 : attack
+		//if (m_bIsAttack && IS_LBUTTON_DOWN)
+		//{
+		//	if (m_tPlayerInfo.ePlayerState == ZOOM)
+		//	{
+		//		Change_State(ATTACK_ZOOM);
+		//	}
+
+		//	else
+		//	{
+		//		Change_State(ATTACK);
+		//	}
+		//}
+
+		//minigun test
 		// 좌 클릭시 : attack
-		if (m_bIsAttack && IS_LBUTTON_DOWN)
+		if (m_bIsAttack && IS_LBUTTON_HOLD)
 		{
 			if (m_tPlayerInfo.ePlayerState == ZOOM)
 			{
@@ -1324,6 +1354,8 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 	}
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
+	if (KEY_BUTTON_DOWN(DIK_M))
+		Change_Weapon(WP_MINIGUN);
 }
 
 ////////////////// move func
