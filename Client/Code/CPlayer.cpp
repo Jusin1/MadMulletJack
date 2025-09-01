@@ -714,7 +714,7 @@ void CPlayer::ATTACK_End()
 
 	case WP_SHOTGUN:
 		break;
-	case WP_RIFLE:
+	case WP_MINIGUN:
 		break;
 
 	case WP_KATANA:
@@ -861,7 +861,7 @@ void CPlayer::OPENING_Begin()
 	case WP_SHOTGUN:
 		m_fStateTime = 0.5f;
 		break;
-	case WP_RIFLE:
+	case WP_MINIGUN:
 		break;
 
 	case WP_KATANA:
@@ -1219,14 +1219,50 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 {
+	if (m_bIsKeyInput && (IS_RBUTTON_DOWN))
+	{
+		if (m_tPlayerInfo.ePlayerState == IDLE)
+			Change_State(ZOOMING);
+
+		else if (m_tPlayerInfo.ePlayerState == ZOOM)
+			Change_State(ZOOMOUT);
+	}
+
 	// 자동차씬인 경우 무조건 전진
 	if (CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_CAR)
 	{
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
+		// 좌우 키
+		if (KEY_BUTTON_HOLD(DIK_A))
+		{
+			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
+			// camera state -> left
+		}
+		if (KEY_BUTTON_HOLD(DIK_D))
+		{
+			m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+			// camera state -> right
+		}
+
+		// 좌 클릭시 : attack
+		if (m_bIsAttack && IS_LBUTTON_HOLD)
+		{
+			if (m_tPlayerInfo.ePlayerState == ZOOM)
+			{
+				Change_State(ATTACK_ZOOM);
+			}
+
+			else
+			{
+				Change_State(ATTACK);
+			}
+		}
 	}
 
 	// sniper scene 움직임
 	else {
+		// 움직임 키
 		switch (m_eMoveKey) {
 
 		case MVKEY_NON:
@@ -1257,34 +1293,23 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 			}
 			break;
 		}
-	}
-	
-	// 우 클릭시
-	// 현재가 zooming -> idle
-	// 현재가 idle -> zoom
-	if (m_bIsKeyInput && (IS_RBUTTON_DOWN))
-	{
-		if (m_tPlayerInfo.ePlayerState == IDLE)
-			Change_State(ZOOMING);
 
-		else if(m_tPlayerInfo.ePlayerState == ZOOM)
-			Change_State(ZOOMOUT);
-	}
-	
 
-	// 좌 클릭시 : attack
-	if (m_bIsAttack && IS_LBUTTON_DOWN)
-	{
-		if (m_tPlayerInfo.ePlayerState == ZOOM)
+		// 좌 클릭시 : attack
+		if (m_bIsAttack && IS_LBUTTON_DOWN)
 		{
-			Change_State(ATTACK_ZOOM);
-		}
+			if (m_tPlayerInfo.ePlayerState == ZOOM)
+			{
+				Change_State(ATTACK_ZOOM);
+			}
 
-		else
-		{
-			Change_State(ATTACK);
+			else
+			{
+				Change_State(ATTACK);
+			}
 		}
 	}
+	
 
 	// debug
 	if (KEY_BUTTON_DOWN(DIK_B))
@@ -1293,7 +1318,6 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 
 		m_bIsZoomStage = !m_bIsZoomStage;
 	}
-
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
 }
@@ -1603,8 +1627,6 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
 
-	Set_Collider_With_Bullet(fTimeDelta);
-
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
@@ -1613,7 +1635,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	//Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
-	
+	Set_Collider_With_Bullet(fTimeDelta);
 }
 
 void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
@@ -1656,7 +1678,7 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 	m_fHitTime += fTimeDelta;
 
 	// 누적 시간이 5초 이상이면
-	if (m_fHitTime >= 0.5f)
+	if (m_fHitTime >= 0.1f)
 	{
 		// 0초로 초기화
 		m_fHitTime = 0.f;
