@@ -179,6 +179,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CVIBuffer_GridPanel_Horizon.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel_Normal.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel_Vertical.h" />
+    <ClInclude Include="..\Header\Sound_Manager.h" />
     <ClInclude Include="..\Header\VIBuffer_Color.h" />
     <ClInclude Include="..\Header\VIBuffer_Cube.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
@@ -233,6 +234,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CVIBuffer_GridPanel_Horizon.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanel_Normal.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanel_Vertical.cpp" />
+    <ClCompile Include="..\Code\Sound_Manager.cpp" />
     <ClCompile Include="..\Code\VIBuffer_Color.cpp" />
     <ClCompile Include="..\Code\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />

@@ -139,6 +139,9 @@
     <Filter Include="00. Manager\15. ObjectPool\Pool">
       <UniqueIdentifier>{89f1cefd-313a-4453-a7b8-23bcbd511d70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\16. SoundManager">
+      <UniqueIdentifier>{f5c5c091-fad3-4b1a-8eda-50a0036380e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -275,6 +278,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect_Pixel_Sprite.cpp">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sound_Manager.cpp">
+      <Filter>00. Manager\16. SoundManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEffect_Pixel_Sprite.h">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Sound_Manager.h">
+      <Filter>00. Manager\16. SoundManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
