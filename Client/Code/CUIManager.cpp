@@ -732,6 +732,17 @@ void CUIManager::Destory_CureEff()
 
 void CUIManager::Destory_PlayerEff_ALL()
 {
+    if (!m_pPlayerEffUI) return;
+
+    // 자식들 죽이기
+    for (auto& pChild : m_pPlayerEffUI->GetChildren())
+    {
+        pChild->Set_Dead(true);                   // 객체 dead 처리
+        m_pPlayerEffUI->Remove_Child(pChild);      // child에서 제거
+    }
+
+    m_pPlayerEffUI->Set_Dead(true);
+    m_pPlayerEffUI = nullptr;
 }
 
 bool CUIManager::PhoneSlidesDone() const

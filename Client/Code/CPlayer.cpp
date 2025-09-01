@@ -763,6 +763,9 @@ void CPlayer::ZOOM_Begin()
 	m_bIsKeyInput = true;
 	m_bIsAttack = true;
 
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
+		m_pHpBarUI->Set_Active(false);
+
 }
 
 void CPlayer::ZOOM_On(const _float& fTimeDelta)
@@ -1091,6 +1094,8 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_SNIPER);
 
 		m_bIsZoomStage = !m_bIsZoomStage;
+
+		CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 	}
 
 	//test bj 0829
