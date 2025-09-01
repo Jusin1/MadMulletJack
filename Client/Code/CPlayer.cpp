@@ -99,18 +99,23 @@ HRESULT CPlayer::Initialize(void* pArg)
 	switch (CMapFactory::GetInstance()->GetTargetSceneIndex())
 	{
 	case SCENE_DEV:
-
+	case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:
 		m_bIsZoomStage = false;
 		break;
 
-	case SCENE_TUTORIAL:
 	case SCENE_SNIPE:
-	case SCENE_BOSS:
-	case SCENE_CAR:
 		m_bIsZoomStage = true;
 		Change_Weapon(WP_SNIPER);
+		break;
+
+	case SCENE_BOSS:
+		m_bIsZoomStage = false;
+		break;
+
+	case SCENE_CAR:
+		m_bIsZoomStage = true;
 		break;
 	}
 
@@ -602,6 +607,12 @@ void CPlayer::IDLE_Begin()
 {
 	m_bIsKeyInput = true;
 	m_bIsAttack	= true;
+
+	// zoom stage에서 move key 값 설정
+	if (m_bIsZoomStage)
+	{
+		m_eMoveKey = MVKEY_NORMAL;
+	}
 }
 
 void CPlayer::IDLE_On(const _float& fTimeDelta)
@@ -1208,6 +1219,46 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 {
+	// 자동차씬인 경우 무조건 전진
+	if (CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_CAR)
+	{
+		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+	}
+
+	// sniper scene 움직임
+	else {
+		switch (m_eMoveKey) {
+
+		case MVKEY_NON:
+			break;
+
+		case MVKEY_NORMAL: // 상하좌우
+
+			if (KEY_BUTTON_HOLD(DIK_W))
+			{
+				m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_S))
+			{
+				m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_A))
+			{
+				m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
+				// camera state -> left
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_D))
+			{
+				m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+				// camera state -> right
+			}
+			break;
+		}
+	}
+	
 	// 우 클릭시
 	// 현재가 zooming -> idle
 	// 현재가 idle -> zoom

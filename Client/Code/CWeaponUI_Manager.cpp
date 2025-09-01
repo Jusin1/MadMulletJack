@@ -348,34 +348,43 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
 	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
 
-	//switch (iTargetScene)
-	//{
-	//case SCENE_DEV:
-	//case SCENE_TUTORIAL:
-	//case SCENE_STAGE_1:
-	//case SCENE_STAGE_2:
-	//	if (FAILED(Create_Pistol(iCloneScene)))
-	//		return E_FAIL;
+	switch (iTargetScene)
+	{
+	case SCENE_DEV:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Katana(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Sniper(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//	break;
+	case SCENE_TUTORIAL:
+	case SCENE_STAGE_1:
+	case SCENE_STAGE_2:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Katana(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//case SCENE_SNIPE:
-	//	if (FAILED(Create_Sniper(iCloneScene)))
-	//		return E_FAIL;
-	//	break;
+	case SCENE_SNIPE:
+		if (FAILED(Create_Sniper(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//case SCENE_BOSS:
-	//case SCENE_CAR:
-	//	break;
-	//}
-
-	
-
-	// test
-	Create_Pistol(iCloneScene);
-	Create_Sniper(iCloneScene);
-	Create_Katana(iCloneScene);
-	Create_ShotGun(iCloneScene);
+	case SCENE_BOSS:
+	case SCENE_CAR:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		break;
+	}
 
 	return S_OK;
 }
