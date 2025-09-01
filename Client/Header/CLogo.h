@@ -2,6 +2,7 @@
 #include "CScene.h"
 #include "Clinet_Define.h"
 
+class CVideo;
 class CLogo :  public CScene
 {
 public:
@@ -25,7 +26,6 @@ public:
 
 private:
 	bool m_bOpenScene;
-
 protected:
 	virtual void			Free();
 };

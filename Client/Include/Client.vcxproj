@@ -233,6 +233,7 @@
     <ClInclude Include="..\Header\CTutorialUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
+    <ClInclude Include="..\Header\CVideo.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
     <ClInclude Include="..\Header\CWeaponUI_Manager.h" />
@@ -322,6 +323,7 @@
     <ClCompile Include="..\Code\CTutorialUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
+    <ClCompile Include="..\Code\CVideo.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Code\CWeaponUI_Manager.cpp" />

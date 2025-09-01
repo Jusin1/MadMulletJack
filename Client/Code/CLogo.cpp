@@ -13,6 +13,7 @@
 #include "CButtonUI.h"
 #include "CTextUI.h"
 #include "Sound_Manager.h"
+#include "CVideo.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev),
@@ -34,8 +35,6 @@ HRESULT CLogo::Ready_Scene()
 
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
-
-
     return S_OK;
 }
 
@@ -71,7 +70,6 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 }
 void CLogo::Render_Scene()
 {
-
 }
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
