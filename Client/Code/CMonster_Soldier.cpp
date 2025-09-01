@@ -6,6 +6,7 @@
 #include "CObjectManager.h"
 #include "CObjectPoolManager.h"
 #include "CEffectUI.h"
+#include "Engine_Define.h"
 #include "CGrounding.h"
 #include "CPicking.h"
 #include "CGlobal_Info.h"

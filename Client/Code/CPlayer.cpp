@@ -202,7 +202,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	if (_fAddHp > 0)
 	{
 		// cure effect create
-		CUIManager::GetInstance()->Create_CureEff();
+		//CUIManager::GetInstance()->Create_CureEff();
 	}
 
 	// 체력을 더함
@@ -352,7 +352,7 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		}
 	}
 
-	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
+	//CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
 
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
