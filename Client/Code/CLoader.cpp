@@ -35,6 +35,7 @@
 
 // Effect UI
 #include "CEffectUI.h"
+#include "CVideo.h"
 
 #pragma region 게임 진입 UI들
 #include "CHeartUI.h"
@@ -170,6 +171,8 @@ HRESULT CLoader::Loading_Logo()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/BackGround.png", 1))))
 		return E_FAIL;
 
+
+
 	// Logo
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Logo",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/LOGO_%03d.png", 20))))
@@ -184,6 +187,10 @@ HRESULT CLoader::Loading_Logo()
 	// BackGround
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BackGround",
 		CBackGround::Create(m_pGraphicDev))))
+		return E_FAIL;
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(
+		L"Prototype_GameObject_VideoUI",
+		CVideo::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// ImageUI

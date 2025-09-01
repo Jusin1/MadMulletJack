@@ -1,15 +1,12 @@
+// Sound_Manager.h
 #pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
-#include "fmod.h"
 #include "fmod.hpp"
-#include "fmod_errors.h"
-#include <io.h>
+#include <unordered_map>
+#include <filesystem>
+#include <string>
 #pragma comment(lib,"fmod_vc.lib")
-
-#define SOUND_MIN     0.0f
-#define SOUND_DEFAULT 0.5f
-#define SOUND_WEIGHT  0.1f
 
 BEGIN(Engine)
 
@@ -24,31 +21,32 @@ public:
     HRESULT Initialize();
 
 public:
-    void PlaySoundW(TCHAR* pSoundKey, const _uint& eID, const float& fVolume, bool loop = false);
-    void PlayBGM(TCHAR* pSoundKey, const float& fVolume, bool loop = true); // 기본은 반복
+    // 인자는 const TCHAR* 가 안전합니다.
+    void PlaySoundW(const TCHAR* pSoundKey, const _uint& eID, const float& fVolume, bool loop = false);
+    void PlayBGM(const TCHAR* pSoundKey, const float& fVolume, bool loop = true);
 
     void StopSound(const _uint& eID);
     void StopAll();
 
     void SetChannelVolume(const _uint& eID, const float& fVolume);
-
     int  VolumeUp(const _uint& eID, const _float& _vol);
     int  VolumeDown(const _uint& eID, const _float& _vol);
-
     int  Pause(const _uint& eID);
 
 private:
-    void LoadSoundFile();
+    void LoadSoundFile(); // 재귀 로딩
+    FMOD::Sound* FindSound(const std::wstring& key) const;
+    static std::string WToUTF8(const std::wstring& s);
 
 private:
-    float m_volume    = SOUND_DEFAULT;
-    float m_BGMvolume = SOUND_DEFAULT;
-
-private:
-    std::map<TCHAR*, FMOD::Sound*> m_mapSound;
+    float m_volume = 0.5f;
+    float m_BGMvolume = 0.5f;
 
     enum { MAXCHANNEL = 32 };
-    FMOD::Channel* m_pChannelArr[MAXCHANNEL];  // 채널 배열
+    FMOD::Channel* m_pChannelArr[MAXCHANNEL]{};
+
+    // 포인터 키 대신 안전한 wstring 키 사용
+    std::unordered_map<std::wstring, FMOD::Sound*> m_sounds;
 
     FMOD::System* m_pSystem = nullptr;
     bool m_bPause = false;

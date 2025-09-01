@@ -74,15 +74,29 @@ void CLogo::Render_Scene()
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    // BackGround
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_BackGround", SCENE_LOGO, pLayerTag, nullptr)))
-        return E_FAIL;
+
+
     return S_OK;
 }
 
 
 HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+    // 1) 클론하면서 파일 경로 넘김
+    auto* video = dynamic_cast<CVideo*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_VideoUI",
+            SCENE_LOGO, pLayerTag,
+            (void*)L"../Bin/Resource/Video/df.mp4"  
+        ));
+    if (!video) return E_FAIL;
+    video->Set_UISizeAndPos((float)WINCX, (float)WINCY, WINCX * 0.5f, WINCY * 0.5f);
+    video->SetKeepAspect(false);     // 레터박스
+    video->Set_Active(true);
+    video->Set_RenderOn(true);
+
+
+
     if (auto* img2 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", SCENE_LOGO, pLayerTag)))
