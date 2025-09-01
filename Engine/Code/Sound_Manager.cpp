@@ -3,210 +3,171 @@
 IMPLEMENT_SINGLETON(CSound_Manager)
 
 CSound_Manager::CSound_Manager()
-	: CBase()
-	, m_pSystem(nullptr)
+    : CBase()
+    , m_pSystem(nullptr)
 {
-	ZeroMemory(m_pChannelArr, sizeof(m_pChannelArr));
+    ZeroMemory(m_pChannelArr, sizeof(m_pChannelArr));
 }
 
 CSound_Manager::~CSound_Manager()
 {
-	Free();
+    Free();
 }
-
 
 HRESULT CSound_Manager::Initialize()
 {
-	// 사운드를 담당하는 대표객체를 생성하는 함수
-	//FMOD_System_Create(&m_pSystem);
-	FMOD::System_Create(&m_pSystem);
+    FMOD::System_Create(&m_pSystem);
+    if (!m_pSystem) return E_FAIL;
 
-	// 1. 시스템 포인터, 2. 사용할 가상채널 수 , 초기화 방식) 
-	//FMOD_System_Init(m_pSystem, MAXCHANNEL, FMOD_INIT_NORMAL, NULL);
-	m_pSystem->init(32, FMOD_INIT_NORMAL, nullptr);
+    m_pSystem->init(MAXCHANNEL, FMOD_INIT_NORMAL, nullptr);
 
-	if (m_pSystem == nullptr)
-		return E_FAIL;
-
-	LoadSoundFile();
-
-	return S_OK;
+    LoadSoundFile();
+    return S_OK;
 }
 
-void CSound_Manager::PlaySoundW(TCHAR * pSoundKey, const _uint& eID, const float& fVolume)
+void CSound_Manager::PlaySoundW(TCHAR* pSoundKey, const _uint& eID, const float& fVolume, bool loop)
 {
-	std::map<TCHAR*, FMOD::Sound*>::iterator iter;
+    auto iter = std::find_if(m_mapSound.begin(), m_mapSound.end(),
+        [&](auto& pair)->bool { return !lstrcmp(pSoundKey, pair.first); });
 
-	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
-	iter = std::find_if(m_mapSound.begin(), m_mapSound.end(),
-		[&](auto& iter)->bool
-	{
-		return !lstrcmp(pSoundKey, iter.first);
-	});
+    if (iter == m_mapSound.end()) return;
 
-	if (iter == m_mapSound.end())
-		return;
-
-	FMOD_BOOL bPlay = FALSE;
-
-	m_pSystem->playSound(iter->second, 0, false, &m_pChannelArr[eID]);
-
-
-
-	//if (FMOD_Channel_IsPlaying(m_pChannelArr[eID], &bPlay))
-	//{
-	//	FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID]);
-	//}
-
-	m_pChannelArr[eID]->setVolume(fVolume);
-	//FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
-
-	m_pSystem->update();
-	//FMOD_System_Update(m_pSystem);
+    if (FMOD_OK == m_pSystem->playSound(iter->second, 0, false, &m_pChannelArr[eID]))
+    {
+        if (m_pChannelArr[eID])
+        {
+            m_pChannelArr[eID]->setVolume(fVolume);
+            m_pChannelArr[eID]->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+        }
+    }
+    m_pSystem->update();
 }
 
-void CSound_Manager::PlayBGM(TCHAR * pSoundKey, const float& fVolume)
+void CSound_Manager::PlayBGM(TCHAR* pSoundKey, const float& fVolume, bool loop)
 {
-	std::map<TCHAR*, FMOD::Sound*>::iterator iter;
+    auto iter = std::find_if(m_mapSound.begin(), m_mapSound.end(),
+        [&](auto& pair)->bool { return !lstrcmp(pSoundKey, pair.first); });
 
-	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
-	iter = std::find_if(m_mapSound.begin(), m_mapSound.end(), [&](auto& iter)->bool
-	{
-		return !lstrcmp(pSoundKey, iter.first);
-	});
+    if (iter == m_mapSound.end()) return;
 
-	if (iter == m_mapSound.end())
-		return;
-	m_pSystem->playSound(iter->second, 0, false, &m_pChannelArr[0]);
-
-	//FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[0]);
-
-	m_pChannelArr[0]->setMode(FMOD_LOOP_NORMAL);
-	m_pChannelArr[0]->setVolume(fVolume);
-	//FMOD_Channel_SetMode(m_pChannelArr[0], FMOD_LOOP_NORMAL);
-
-	//FMOD_Channel_SetVolume(m_pChannelArr[0], fVolume);
-	m_pSystem->update();
-	//FMOD_System_Update(m_pSystem);
+    if (FMOD_OK == m_pSystem->playSound(iter->second, 0, false, &m_pChannelArr[0]))
+    {
+        if (m_pChannelArr[0])
+        {
+            m_pChannelArr[0]->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+            m_pChannelArr[0]->setVolume(fVolume);
+        }
+    }
+    m_pSystem->update();
 }
 
 void CSound_Manager::StopSound(const _uint& eID)
 {
-	m_pChannelArr[eID]->stop();
-	//FMOD_Channel_Stop(m_pChannelArr[eID]);
+    if (m_pChannelArr[eID])
+    {
+        m_pChannelArr[eID]->stop();
+        m_pChannelArr[eID] = nullptr;  // 안전하게 초기화
+    }
+    m_pSystem->update();
 }
 
 void CSound_Manager::StopAll()
 {
-	for (int i = 0; i < SOUND_MAX; ++i)
-	{
-		m_pChannelArr[i]->stop();
-		//FMOD_Channel_Stop(m_pChannelArr[i]);
-	}
+    for (int i = 0; i < MAXCHANNEL; ++i)
+    {
+        if (m_pChannelArr[i])
+        {
+            m_pChannelArr[i]->stop();
+            m_pChannelArr[i] = nullptr;
+        }
+    }
+    m_pSystem->update();
 }
 
 void CSound_Manager::SetChannelVolume(const _uint& eID, const float& fVolume)
 {
-	m_pChannelArr[eID]->setVolume(fVolume);
-	m_pSystem->update();
+    if (m_pChannelArr[eID])
+        m_pChannelArr[eID]->setVolume(fVolume);
+
+    m_pSystem->update();
 }
 
-int CSound_Manager::VolumeUp(const _uint & eID, const _float & _vol)
+int CSound_Manager::VolumeUp(const _uint& eID, const _float& _vol)
 {
-	if (m_volume < SOUND_MAX) {
-		m_volume += _vol;
-	}
-
-	m_pChannelArr[eID]->setVolume(m_volume);
-	//FMOD_Channel_SetVolume(m_pChannelArr[eID], m_volume);
-
-	return 0;
+    m_volume = min(1.0f, m_volume + _vol);
+    if (m_pChannelArr[eID])
+        m_pChannelArr[eID]->setVolume(m_volume);
+    return 0;
 }
 
-int CSound_Manager::VolumeDown(const _uint & eID, const _float & _vol)
+int CSound_Manager::VolumeDown(const _uint& eID, const _float& _vol)
 {
-	if (m_volume > SOUND_MIN) {
-		m_volume -= _vol;
-	}
-
-	m_pChannelArr[eID]->setVolume(m_volume);
-	//FMOD_Channel_SetVolume(m_pChannelArr[eID], m_volume);
-
-	return 0;
+    m_volume = max(0.0f, m_volume - _vol);
+    if (m_pChannelArr[eID])
+        m_pChannelArr[eID]->setVolume(m_volume);
+    return 0;
 }
 
-int CSound_Manager::Pause(const _uint & eID)
+int CSound_Manager::Pause(const _uint& eID)
 {
-	m_bPause = !m_pChannelArr[eID]->getPaused(&m_bPause);
-	m_pChannelArr[eID]->setPaused(m_bPause);
+    if (!m_pChannelArr[eID]) return 0;
 
-	//FMOD_Channel_SetPaused(m_pChannelArr[eID], m_bPause);
-
-	return 0;
+    bool paused = false;
+    if (m_pChannelArr[eID]->getPaused(&paused) == FMOD_OK)
+    {
+        paused = !paused;
+        m_pChannelArr[eID]->setPaused(paused);
+    }
+    return 0;
 }
 
 void CSound_Manager::LoadSoundFile()
 {
-	// _finddata_t : <io.h>에서 제공하며 파일 정보를 저장하는 구조체
-	_finddata_t fd;
+    _finddata_t fd;
+    intptr_t handle = _findfirst("../../Client/Bin/Resource/Sounds/*", &fd);
+    if (handle == -1) return;
 
-	// _findfirst : <io.h>에서 제공하며 사용자가 설정한 경로 내에서 가장 첫 번째 파일을 찾는 함수
-	//intptr_t handle = _findfirst("../../Client/Bin/Resources/Sounds/*.*", &fd);
-	intptr_t handle = _findfirst("../../Client/Bin/Resource/Sounds/*", &fd);
-	
-	if (handle == -1)
-		return;
+    int iResult = 0;
+    char szCurPath[128] = "../../Client/Bin/Resource/Sounds/";
+    char szFullPath[128] = "";
 
-	int iResult = 0;
+    while (iResult != -1)
+    {
+        strcpy_s(szFullPath, szCurPath);
+        strcat_s(szFullPath, fd.name);
 
-	char szCurPath[128] = "../../Client/Bin/Resource/Sounds/";
-	char szFullPath[128] = "";
+        FMOD::Sound* pSound = nullptr;
+        if (FMOD_OK == m_pSystem->createSound(szFullPath, FMOD_LOOP_OFF, 0, &pSound))
+        {
+            size_t iLength = strlen(fd.name) + 1;
+            TCHAR* pSoundKey = new TCHAR[iLength];
+            ZeroMemory(pSoundKey, sizeof(TCHAR) * iLength);
 
-	while (iResult != -1)
-	{
-		strcpy_s(szFullPath, szCurPath);	// "../Sound/"
-		strcat_s(szFullPath, fd.name);		// "../ Sound/Success.wav"
-		
-		//FMOD_SOUND* pSound = nullptr; 
-		FMOD::Sound* pSound = nullptr;
+            MultiByteToWideChar(CP_ACP, 0, fd.name, (int)iLength, pSoundKey, (int)iLength);
+            m_mapSound.emplace(pSoundKey, pSound);
+        }
+        iResult = _findnext(handle, &fd);
+    }
 
-		FMOD_RESULT eRes = m_pSystem->createSound(szFullPath, FMOD_LOOP_OFF, 0, &pSound);
-		//FMOD_RESULT eRes = FMOD_System_CreateSound(m_pSystem, szFullPath, FMOD_HARDWARE, 0, &pSound);
-
-		if (eRes == FMOD_OK)
-		{
-			size_t iLength = strlen(fd.name) + 1;
-			TCHAR* pSoundKey = new TCHAR[iLength];
-			ZeroMemory(pSoundKey, sizeof(TCHAR) * iLength);
-
-			// 아스키 코드 문자열을 유니코드 문자열로 변환시켜주는 함수
-			MultiByteToWideChar(CP_ACP, 0, fd.name, (int)iLength, pSoundKey, (int)iLength);
-
-			m_mapSound.emplace(pSoundKey, pSound);
-		}
-
-		//_findnext : <io.h>에서 제공하며 다음 위치의 파일을 찾는 함수, 더이상 없다면 -1을 리턴
-		iResult = _findnext(handle, &fd);
-	}
-
-	m_pSystem->update();
-	//FMOD_System_Update(m_pSystem);
-
-	_findclose(handle);
+    m_pSystem->update();
+    _findclose(handle);
 }
 
 void CSound_Manager::Free()
 {
-	for (auto& Mypair : m_mapSound)
-	{
-		delete[] Mypair.first;
-		Mypair.second->release();
-		//FMOD_Sound_Release(Mypair.second);
-	}
-	m_mapSound.clear();
+    StopAll();
 
-	m_pSystem->release();
-	m_pSystem->close();
-	//FMOD_System_Release(m_pSystem);
-	//FMOD_System_Close(m_pSystem);
+    for (auto& Mypair : m_mapSound)
+    {
+        delete[] Mypair.first;
+        if (Mypair.second) Mypair.second->release();
+    }
+    m_mapSound.clear();
+
+    if (m_pSystem)
+    {
+        m_pSystem->close();
+        m_pSystem->release();
+        m_pSystem = nullptr;
+    }
 }

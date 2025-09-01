@@ -7,60 +7,54 @@
 #include <io.h>
 #pragma comment(lib,"fmod_vc.lib")
 
-#define SOUND_MAX 1.0f
-#define SOUND_MIN 0.0f
+#define SOUND_MIN     0.0f
 #define SOUND_DEFAULT 0.5f
-#define SOUND_WEIGHT 0.1f
+#define SOUND_WEIGHT  0.1f
 
 BEGIN(Engine)
 
 class ENGINE_DLL CSound_Manager : public CBase
 {
-	DECLARE_SINGLETON(CSound_Manager)
+    DECLARE_SINGLETON(CSound_Manager)
 public:
-	CSound_Manager();
-	virtual ~CSound_Manager();
-
-public:
-	HRESULT Initialize();
+    CSound_Manager();
+    virtual ~CSound_Manager();
 
 public:
-	void PlaySoundW(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
-	void PlayBGM(TCHAR * pSoundKey, const float& fVolume);
+    HRESULT Initialize();
 
-	void StopSound(const _uint& eID);
-	void StopAll();
+public:
+    void PlaySoundW(TCHAR* pSoundKey, const _uint& eID, const float& fVolume, bool loop = false);
+    void PlayBGM(TCHAR* pSoundKey, const float& fVolume, bool loop = true); // 기본은 반복
 
-	void SetChannelVolume(const _uint& eID, const float& fVolume);
+    void StopSound(const _uint& eID);
+    void StopAll();
 
-	int  VolumeUp(const _uint& eID, const _float& _vol);
-	int  VolumeDown(const _uint& eID, const _float& _vol);
+    void SetChannelVolume(const _uint& eID, const float& fVolume);
 
-	int  Pause(const _uint& eID);
+    int  VolumeUp(const _uint& eID, const _float& _vol);
+    int  VolumeDown(const _uint& eID, const _float& _vol);
+
+    int  Pause(const _uint& eID);
 
 private:
-	void LoadSoundFile();
+    void LoadSoundFile();
 
 private:
-	float m_volume = SOUND_DEFAULT;
-	float m_BGMvolume = SOUND_DEFAULT;
-	FMOD_BOOL m_bool;
+    float m_volume    = SOUND_DEFAULT;
+    float m_BGMvolume = SOUND_DEFAULT;
 
 private:
-	// 사운드 리소스 정보를 갖는 객체 
-	std::map<TCHAR*, FMOD::Sound*> m_mapSound;
+    std::map<TCHAR*, FMOD::Sound*> m_mapSound;
 
-	enum { MAXCHANNEL = 32 };
-	// FMOD_CHANNEL : 재생하고 있는 사운드를 관리할 객체 
-	FMOD::Channel* m_pChannelArr[MAXCHANNEL];
+    enum { MAXCHANNEL = 32 };
+    FMOD::Channel* m_pChannelArr[MAXCHANNEL];  // 채널 배열
 
-	// 사운드 ,채널 객체 및 장치를 관리하는 객체 
-	FMOD::System * m_pSystem;
-	_bool		m_bPause = false;
+    FMOD::System* m_pSystem = nullptr;
+    bool m_bPause = false;
 
 public:
-	// CBase을(를) 통해 상속됨
-	virtual void Free() override;
+    virtual void Free() override;
 };
 
 END

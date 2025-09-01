@@ -12,6 +12,7 @@
 #include "CDynamicCamera.h"
 #include "CButtonUI.h"
 #include "CTextUI.h"
+#include "Sound_Manager.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev),
@@ -58,8 +59,16 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 {
     CScene::LateUpdate_Scene(fTimeDelta);
     SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+    // 테스트용 UI 띄우기
+    if (GetAsyncKeyState('P') & 0x0001) // P 한번만
+    {
+        CSound_Manager::GetInstance()->PlayBGM((TCHAR*)TEXT("mx_stage_01.wav"), 1.0f);
+    }
+    if (GetAsyncKeyState('F') & 0x0001) // F 한번만
+    {
+        CSound_Manager::GetInstance()->StopAll();
+    }
 }
-
 void CLogo::Render_Scene()
 {
 
