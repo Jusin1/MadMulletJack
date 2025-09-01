@@ -354,4 +354,5 @@ CGameObject* CHpBarUI::Clone(void* pArg)
 void CHpBarUI::Free()
 {
 	__super::Free();
+	Delete_CountEff();
 }

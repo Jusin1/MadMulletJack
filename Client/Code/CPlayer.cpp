@@ -201,7 +201,8 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	// 만약 hp가 증가하면
 	if (_fAddHp > 0)
 	{
-		// cure effect 생성
+		// cure effect create
+		CUIManager::GetInstance()->Create_CureEff();
 	}
 
 	// 체력을 더함
@@ -350,6 +351,8 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 			m_bIsAttack = true;
 		}
 	}
+
+	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
 
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
@@ -897,6 +900,7 @@ void CPlayer::Clear_Begin()
 
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("승 리"));
 	CUIManager::GetInstance()->DestroyReloadUI();
+	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 }
 
 void CPlayer::ATTEND_Begin()
@@ -1094,8 +1098,6 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		Change_Weapon(WP_SNIPER);
 
 		m_bIsZoomStage = !m_bIsZoomStage;
-
-		CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 	}
 
 	//test bj 0829
