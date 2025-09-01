@@ -35,6 +35,7 @@
 #include "CFileManager.h"
 #include "CDataManager.h"
 #include "CCullingManager.h"
+#include "Sound_Manager.h"
 
 //============
 // Scene
@@ -64,6 +65,10 @@ HRESULT CMainApp::Ready_MainApp()
 
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
+		return E_FAIL;
+
+	// 사운드 초기화
+	if(FAILED(CSound_Manager::GetInstance()->Initialize()))
 		return E_FAIL;
 
 	// 픽킹 초기화
@@ -475,6 +480,7 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pGraphicDev);
 	CColiderManager::GetInstance()->DestroyInstance();
+	CSound_Manager::GetInstance()->DestroyInstance();
 	CPicking::GetInstance()->DestroyInstance();
 	CUIManager::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();

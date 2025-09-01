@@ -122,6 +122,14 @@ void CMonster_Fat::Set_Collider()
         return;
     }
 
+    // 플레이어와 멀리 떨어진 경우 충돌 스킵
+    CTransform* pPlayerTr = GetPlayerTransform();
+    if (pPlayerTr) {
+        _vec3 diff = pPlayerTr->Get_Info(INFO_POS) - m_pTransformCom->Get_Info(INFO_POS);
+        float dist2 = D3DXVec3LengthSq(&diff);
+        if (dist2 > 30.f * 30.f) return;
+    }
+
     m_pColiderCom->Update_ColliderSphere();
 
     if (m_eMonState != INSKILL)
@@ -526,7 +534,7 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
     case IDLE:  tag = L"Com_Texture_Idle";  break;
     case CHASE: tag = L"Com_Texture_Chase"; break;
     case AIM:   tag = L"Com_Texture_Aim";   break;
-    case SHOT:  m_shotTimer = 0.f; tag = L"Com_Texture_Shot"; break;
+    case SHOT:  m_shotTimer = 0.7f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC:
         tag = L"Com_Texture_Hit_Eletric";
@@ -626,7 +634,8 @@ void CMonster_Fat::OnUpdateState(MON_STATE s, const _float& dt)
         if (m_pPlayerTr) m_pTransformCom->LookAt(m_pPlayerTr->Get_Info(INFO_POS));
 
         m_shotTimer += dt;
-        if (m_pTextureCom->Is_AnimFinished()) m_pTextureCom->Stop_Anim();
+        if (m_pTextureCom->Is_AnimFinished())
+            m_pTextureCom->Stop_Anim();
 
         if (m_shotTimer >= 0.7f) {
             m_shotTimer = 0.f;
@@ -637,20 +646,15 @@ void CMonster_Fat::OnUpdateState(MON_STATE s, const _float& dt)
             tData.vMuzzlePosition = m_pTransformCom->Get_Info(INFO_POS);
             tData.vLookDir = m_pTransformCom->Get_Info(INFO_LOOK);
             D3DXVec3Normalize(&tData.vLookDir, &tData.vLookDir);
-            tData.vMuzzlePosition += tData.vLookDir * 2.f;
+            tData.vMuzzlePosition += tData.vLookDir * 1.2f;
             tData.vMuzzlePosition.y += 0.14f;
+
+            _vec3 vDir = tData.vLookDir;
+            vDir.y -= 0.03f;
+            D3DXVec3Normalize(&vDir, &vDir);
+            tData.vLookDir = vDir;
+
             CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
-            /*auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
-            if (auto* bullet = dynamic_cast<CBullet*>(CObjectManager::GetInstance()->Clone_GameObject(
-                L"Prototype_GameObject_Bullet", sceneIdx, L"Monster_Layer")))
-            {
-                _vec3 vMuzzle = m_pTransformCom->Get_Info(INFO_POS);
-                _vec3 vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-                D3DXVec3Normalize(&vLook, &vLook);
-                vMuzzle += vLook * 2.f;
-                vMuzzle.y += 0.14f;
-                bullet->Fire(vMuzzle, vLook);
-            }*/
         }
     }
     break;
