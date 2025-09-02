@@ -82,8 +82,8 @@ HRESULT CStage_Car::Ready_Scene()
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer")))
         return E_FAIL;
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 16.f, 16.f, 4.f, FALSE);
-    /*static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 20.f, 0.f, 20.f }, _vec3{ 25.f, 0.f, 25.f }, 2.f);*/
+    
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 3.f, 0.f, 10.f }, _vec3{ 8.f, 0.f, 10.f }, 4.f);
     static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())
         ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front());
 
