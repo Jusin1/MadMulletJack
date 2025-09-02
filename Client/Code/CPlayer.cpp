@@ -1181,29 +1181,6 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
 			});
 	}
-	if (KEY_BUTTON_DOWN(DIK_I))
-	{
-		EffectOptions Option = Get_Preset_BulletSpark();
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
-			});
-		EFFECTINFO tInfo;
-		tInfo.eType = WorldEffectType::EXPLOSION;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 2.f });
-			});
-		tInfo;
-		tInfo.eType = WorldEffectType::SMOKE;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.01f, 0.51f, 2.01f });
-			});
-	}
 }
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
@@ -1769,17 +1746,17 @@ _bool CPlayer::Set_Collider_With_SpecialTile()
 
 void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
 {
-	CGameObject* pColliObj;
+	CGameObject *pColliObj{ nullptr };
  	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
 	//나중에 item으로 바꿔야함 test
-	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
-	{
-		if (!pColliObj) // 예외처리
-			return;
+	//if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
+	//{
+	//	if (!pColliObj) // 예외처리
+	//		return;
 
-		pColliObj->Set_Dead(true); // bullet dead 처리
-		HitFromObject(fTimeDelta, 1.f);
-	}
+	//	pColliObj->Set_Dead(true); // bullet dead 처리
+	//	HitFromObject(fTimeDelta, 1.f);
+	//}
 }
 
 HRESULT CPlayer::Texture_Clone()

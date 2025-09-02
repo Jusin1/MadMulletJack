@@ -1,9 +1,9 @@
 #include "pch.h"
-#include <random>
 #include "CPickingManager.h"
 #include "CCullingManager.h"
 #include "CObjectPoolManager.h"
 #include "Client_Global.h"
+#include "CMissile.h"
 #include "Engine_Define.h"
 #include "CBoss.h"
 
@@ -15,7 +15,6 @@ CBoss::CBoss(LPDIRECT3DDEVICE9 pGraphicDev)
 CBoss::CBoss(const CBoss &rhs)
 	: CCharacter(rhs)
 {
-	rng.seed(0xBADA55);
 }
 
 CBoss::~CBoss()
@@ -91,12 +90,38 @@ _bool CBoss::Picking(_vec3 *PickingPoint)
 {
 	if (m_bDead || !m_bPickable) return false;
 	if (m_pColiderSphere && !m_pColiderSphere->Is_Active()) return false;
-	return TRUE;
+	_vec3 pOut;
+	return m_pBufferCom->Picking(m_pTransformCom, &pOut);
 }
 
 void CBoss::PickingTrue()
 {
 	m_bPickingTrue = TRUE;
+	EffectOptions tOption{Get_Preset_BulletSpark()};
+	tOption.fLife_Min = 0.3f;
+	tOption.fLife_Max = 0.7f;
+	tOption.fSize_Min = 3.f;
+	tOption.fSize_Max = 5.f;
+	CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption,
+		[&](CGameObject *pGo)->void
+		{
+			pGo->GetTransform()->Set_Info(INFO_POS, Get_Position());
+	});
+	
+}
+
+void CBoss::Spawn_Missile()
+{
+	_vec3 vPos = Get_Position();
+
+	MissileData tData;
+	tData.vLaunchPos = vPos;
+	tData.vTargetPos = m_pPlayer->Get_Position();
+	CObjectPoolManager::GetInstance()->Spawn(PoolType::MISSILE, &tData,
+		[vPos](CGameObject *pGo)->void
+		{
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos);
+		});
 }
 
 HRESULT CBoss::Ready_GameObject()
@@ -149,6 +174,7 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	CCharacter::LateUpdate_GameObject(fTimeDelta);
+	m_pColiderSphere->Update_ColliderSphere();
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	Compute_CamDistance(Get_Position());
 
@@ -221,7 +247,7 @@ void CBoss::Set_LinearLR(const _vec3 &vLeft, const _vec3 &vRight, _float fY)
 	m_vLeft = vLeft;
 	m_vRight = vRight;
 	m_iDirLR = 1;
-	m_pTransformCom->Set_Info(INFO::INFO_POS, Lerp(m_vLeft, m_vRight, 0.5f));
+	m_pTransformCom->Set_Info(INFO::INFO_POS, Lerp_Vec3(m_vLeft, m_vRight, 0.5f));
 	m_fBase_Y = fY;
 	m_vTarget = vRight;
 	m_bPathReady = TRUE;
@@ -320,6 +346,10 @@ void CBoss::Enter_Move()
 {
 	// TODO - MOVE Anim
 
+	m_fStayTime_Move = Rand_Float(
+		m_tRigidbodyConfig.fMove_Min,
+		m_tRigidbodyConfig.fMove_Max);
+
 	if (m_ePathMode == PathMode::LR)
 		m_vTarget = (m_iDirLR > 0) ? m_vRight : m_vLeft;
 	else
@@ -332,6 +362,15 @@ void CBoss::Update_Move(_float fDeltaTime)
 {
 	m_fStateDuration += fDeltaTime;
 
+	if (m_fStateDuration >= m_fStayTime_Move)
+	{
+		if (Is_Cooldown_Ready(0)) { ChangeState(State::DASH);    return; }
+		if (Is_Cooldown_Ready(1)) { ChangeState(State::MISSILE); return; }
+		if (Is_Cooldown_Ready(2)) { ChangeState(State::BULLET);  return; }
+
+		ChangeState(State::IDLE);
+	}
+
 	Set_Velocity_Towards(m_vTarget, m_tRigidbodyConfig.fMoveSpeed);
 
 	if (Arrived(m_vTarget))
@@ -340,6 +379,7 @@ void CBoss::Update_Move(_float fDeltaTime)
 
 void CBoss::Exit_Move()
 {
+	m_fStayTime_Move = 0.f;
 }
 
 void CBoss::Enter_Dash()
@@ -425,12 +465,13 @@ void CBoss::Update_Bullet(_float fDeltaTime)
 			_float fBaseYaw = std::atan2(vTo.z, vTo.x);
 			_float fOffDegree = (m_iShots - (m_tRigidbodyConfig.iBul_Burst - 1) * 0.5f) * m_tRigidbodyConfig.fBul_SpreadDeg;
 			_float fYaw = fBaseYaw + fOffDegree * (D3DX_PI / 180.f);
-			_vec3 vDir(std::cos(fYaw), 0.f, std::sin(fYaw));
+			_vec3 vDir(std::cos(fYaw), vTo.y, std::sin(fYaw));
 
 			// Todo - SpawnBullet
 			BulletData tData;
 			tData.vMuzzlePosition = m_pTransformCom->Get_Info(INFO_POS);
 			tData.vLookDir = vDir;
+			tData.fSpeed = 42.f;
 			tData.vMuzzlePosition += tData.vLookDir * 2.f;
 			CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
 
@@ -463,12 +504,73 @@ void CBoss::Enter_Missile()
 	m_fStateDuration = 0.f;
 	m_iPhase = 0;
 	m_iVolley = 0;
+	m_iShots = 0;
 }
 
 void CBoss::Update_Missile(_float fDeltaTime)
 {
-	// TODO - 만들어야댐
-	ChangeState(State::IDLE);
+	Follow_PathSpeed(0.65f);
+
+	m_fStateDuration += fDeltaTime;
+
+	switch (m_iPhase)
+	{
+	case 0: // WindUp
+		if (m_fStateDuration >= m_tRigidbodyConfig.fMis_WindUp)
+		{
+			m_iPhase = 1;
+			m_fStateDuration = 0.f;
+			m_iShots = 0;
+		}
+		break;
+
+	case 1: // Fire volley (한 볼리 안에서 N발, 간격 fMis_Interval)
+		if (m_iShots < m_tRigidbodyConfig.iMis_PerVolley &&
+			m_fStateDuration >= m_tRigidbodyConfig.fMis_Interval)
+		{
+			m_fStateDuration = 0.f;
+
+			// 한 발 발사
+			Spawn_Missile();
+			++m_iShots;
+		}
+
+		// 볼리 완료 → 다음 단계로
+		if (m_iShots >= m_tRigidbodyConfig.iMis_PerVolley)
+		{
+			m_iPhase = 2;
+			m_fStateDuration = 0.f;
+		}
+		break;
+
+	case 2: // Volley gap (다음 볼리까지 휴지)
+		if (m_fStateDuration >= m_tRigidbodyConfig.fMis_VolleyGap)
+		{
+			m_fStateDuration = 0.f;
+			++m_iVolley;
+
+			if (m_iVolley < m_tRigidbodyConfig.iMis_Volley)
+			{
+				// 다음 볼리 시작
+				m_iPhase = 1;
+				m_iShots = 0;
+			}
+			else
+			{
+				// 모든 볼리 끝 → 리커버
+				m_iPhase = 3;
+			}
+		}
+		break;
+
+	case 3: // Recover
+		if (m_fStateDuration >= m_tRigidbodyConfig.fMis_Recover)
+		{
+			Set_Cooldown(1, m_tRigidbodyConfig.fMis_Cooldown);
+			ChangeState(State::IDLE);
+		}
+		break;
+	}
 }
 
 void CBoss::Exit_Missile()
@@ -557,14 +659,3 @@ _bool CBoss::Arrived(const _vec3 &v)
 {
 	return Lenght_XZ(v - m_pTransformCom->Get_Info(INFO::INFO_POS)) <= m_tRigidbodyConfig.fArriveRadius;
 }
-
-_float CBoss::Lerp(_float fA, _float fB, _float fT)
-{
-	return fA + (fB - fA) * fT;
-}
-
-_vec3 CBoss::Lerp(_vec3 vA, _vec3 vB, _float fT)
-{
-	return vA + (vB - vA) * fT;
-}
-\

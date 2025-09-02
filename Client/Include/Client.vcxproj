@@ -127,7 +127,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../Reference/Library;../../Engine/Include</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Library;../../Engine/Include;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,7 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../Reference/Library;../../Engine/Include</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Library;../../Engine/Include;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMainWeapon.h" />
     <ClInclude Include="..\Header\CMan_HpBarUI.h" />
+    <ClInclude Include="..\Header\CMissile.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonster_Dron.h" />
     <ClInclude Include="..\Header\CMonster_Fat.h" />
@@ -233,6 +234,7 @@
     <ClInclude Include="..\Header\CTutorialUI.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CUIBase.h" />
+    <ClInclude Include="..\Header\CWarningCircle.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CUIManager.h" />
     <ClInclude Include="..\Header\CWeaponUI_Manager.h" />
@@ -276,6 +278,7 @@
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainWeapon.cpp" />
     <ClCompile Include="..\Code\CMan_HpBarUI.cpp" />
+    <ClCompile Include="..\Code\CMissile.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonster_Dron.cpp" />
     <ClCompile Include="..\Code\CMonster_Fat.cpp" />
@@ -322,6 +325,7 @@
     <ClCompile Include="..\Code\CTutorialUI.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CUIBase.cpp" />
+    <ClCompile Include="..\Code\CWarningCircle.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CUIManager.cpp" />
     <ClCompile Include="..\Code\CWeaponUI_Manager.cpp" />

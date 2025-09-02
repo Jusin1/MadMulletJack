@@ -177,6 +177,18 @@ void CDummyPlacementObject::MakeMonsterObject(MonsterType _e, MAPOBJECTDATA *pDa
 	{
 		pData->dwColor = g_Color_White;
 	} break;
+	case MonsterType::SOLIDER:
+	{
+		pData->dwColor = g_Color_Yellow;
+	} break;
+	case MonsterType::FAT:
+	{
+		pData->dwColor = g_Color_Purple;
+	} break;
+	case MonsterType::DRONE:
+	{
+		pData->dwColor = g_Color_Orange;
+	} break;
 	default:
 		MSG_BOX("CDummyPlacementObject::MonsterColor, wrong type");
 		break;

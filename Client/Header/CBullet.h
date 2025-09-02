@@ -24,11 +24,13 @@ public:
 
     virtual HRESULT Spawn_Pooling(void *pArg = nullptr) override;
     virtual HRESULT Despawn_Pooling() override;
+
+    void Set_Speed(_float s) { m_fSpeed = s; }
 protected:
     HRESULT Set_Component();
     void    Set_Collider_With_Wall();
     void    SetUp_BillBoard();
-
+    void    Spawn_Destroy_Effect(const _vec3 &vPos);
 protected:
     virtual HRESULT Texture_Clone();
     virtual HRESULT Change_Texture(const _tchar* LayerTag);

@@ -277,6 +277,9 @@
     <Filter Include="02. GameObject\01. Character\03. Boss">
       <UniqueIdentifier>{b94ab2a1-063e-4c04-ba57-971e1e11b134}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Missile">
+      <UniqueIdentifier>{e981e757-8176-4d92-ac18-c7b733ca879c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -537,6 +540,12 @@
     <ClInclude Include="..\Header\CBoss.h">
       <Filter>02. GameObject\01. Character\03. Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMissile.h">
+      <Filter>02. GameObject\09. Missile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWarningCircle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -784,6 +793,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBoss.cpp">
       <Filter>02. GameObject\01. Character\03. Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMissile.cpp">
+      <Filter>02. GameObject\09. Missile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWarningCircle.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

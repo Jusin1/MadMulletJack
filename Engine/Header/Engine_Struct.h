@@ -115,6 +115,7 @@ namespace Engine
 	{
 		_vec3 vMuzzlePosition{0.f, 0.f, 0.f};
 		_vec3 vLookDir{ 0.f, 0.f, 0.f };
+		_float fSpeed{ 21.f };
 	}BulletData;
 
 	typedef struct tagEffectOptions

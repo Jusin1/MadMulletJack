@@ -17,19 +17,21 @@ struct RigidBodyConfig
 	_float fDash_Speed = 22.f;
 	_float fDash_Duration = 0.30f;
 	_float fDash_Recover = 0.22f;
-	_float fDash_Cooldown = 2.0f;
+	_float fDash_Cooldown = 10.0f;
 
 	// Missile
 	_float fMis_WindUp = 0.22f;
 	_float fMis_Interval = 0.22f;
-	_int   iMis_Volley = 3;
+	_int   iMis_Volley = 2;
+	_int   iMis_PerVolley = 3;
 	_float fMis_Recover = 0.28f;
-	_float fMis_Cooldown = 3.2f;
+	_float fMis_VolleyGap = 0.3f;
+	_float fMis_Cooldown = 5.2f;
 
 	// Bullet
 	_float fBul_WindUp = 0.14f;
-	_int   iBul_Burst = 6;
-	_float fBul_SpreadDeg = 7.f;
+	_int   iBul_Burst = 11;
+	_float fBul_SpreadDeg = 3.f;
 	_float fBul_Speed = 18.f;
 	_float fBul_Recover = 0.22f;
 	_float fBul_Interval = 0.1f;
@@ -38,6 +40,10 @@ struct RigidBodyConfig
 	// Idle
 	_float fIdle_Min = 0.45f;
 	_float fIdle_Max = 1.10f;
+
+	// Move
+	_float fMove_Min = 2.f;
+	_float fMove_Max = 3.f;
 };
 
 struct SmoothDamp
@@ -102,6 +108,8 @@ private:
 	virtual _bool Picking(_vec3 *PickingPoint) override;
 	virtual void  PickingTrue() override;
 
+	void Spawn_Missile();
+
 	void UpdateSpeed(const float _fDeltaTime);
 	void ChangeState(State _e);
 	void UpdateState(const float _fDeltaTime);
@@ -139,18 +147,6 @@ private:
 	_vec3 Dash_Direction();
 	_bool Arrived(const _vec3 &v);
 
-	// ¼öÇÐÂÊ
-	_float Lerp(_float fA, _float fB, _float fT);
-	_vec3 Lerp(_vec3 vA, _vec3 vB, _float fT);
-	_float Lenght_XZ(const _vec3 &v) { return std::sqrtf(v.x * v.x + v.z * v.z); }
-	_vec3 Norm_XZ(const _vec3 &v)
-	{
-		_float fLength = Lenght_XZ(v);
-		if (fLength < 1e-6f) return D3DXVECTOR3(0, 0, 0);
-		return D3DXVECTOR3(v.x / fLength, 0.f, v.z / fLength);
-	}
-	_float Rand_Float(_float fA, _float fB) { return std::uniform_real_distribution<_float>(fA, fB)(rng); }
-	_int Rand_Int(_int iA, _int iB) { return std::uniform_int_distribution<_int>(iA, iB)(rng); }
 	void Set_Cooldown(_int iIndex, _float fTime) { m_fCooldown[iIndex] = (std::max)(m_fCooldown[iIndex], fTime); }
 	_bool Is_Cooldown_Ready(_int iIndex) const { return m_fCooldown[iIndex] <= 0.f; }
 private:
@@ -161,6 +157,7 @@ private:
 	_bool m_bPathReady{ FALSE };
 	_float m_fStateDuration{ 0.f };
 	_float m_fStayTime_Idle{ 0.f };
+	_float m_fStayTime_Move{ 0.f };
 	_float m_fHoverTime{ 0.f };
 	_float m_fBase_Y{ 0.f };
 
@@ -199,7 +196,6 @@ private:
 	// dash, bullet, missle
 	_float m_fCooldown[3]{ 0.f, 0.f, 0.f };
 	RigidBodyConfig m_tRigidbodyConfig{};
-	std::mt19937 rng;
 	
 	CTexture *m_pTextureCom;
 	CColider_Sphere *m_pColiderSphere;

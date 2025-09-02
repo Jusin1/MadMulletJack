@@ -78,8 +78,6 @@ HRESULT CMonster_Soldier::Initialize(void* pArg)
     SetState(IDLE);
     SetupHitSpheres();
 
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(5.f, 0.f, 13.f));
-
     _float fOut{ 0.f };
     m_pGroundingCom->Initialize_CurrentIndex(
         CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
@@ -837,7 +835,7 @@ CMonster_Soldier* CMonster_Soldier::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     CMonster_Soldier* pInstance = new CMonster_Soldier(pGraphicDev);
     if (FAILED(pInstance->Ready_GameObject()))
     {
-        MSG_BOX("CMonster_Suit Create Failed");
+        MSG_BOX("CMonster_Soldier Create Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
@@ -848,7 +846,7 @@ CGameObject* CMonster_Soldier::Clone(void* pArg)
     CMonster_Soldier* pInstance = new CMonster_Soldier(*this);
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CMonster_Suit Clone Failed");
+        MSG_BOX("CMonster_Soldier Clone Failed");
         Safe_Release(pInstance);
     }
     return pInstance;

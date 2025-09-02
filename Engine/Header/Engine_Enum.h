@@ -100,6 +100,7 @@ namespace Engine
 		ROAD,
 		SING_PILLAR_2,
 		TILESET_1,
+		Missile,
 		NONE
 	};
 	constexpr size_t g_PrefabTypeCount{ static_cast<size_t>(PrefabType::NONE) };
@@ -116,6 +117,7 @@ namespace Engine
 		BLOOD_EXPLOSION2,
 		BLOOD_EXPLOSION3,
 		BLOOD_EXPLOSION4,
+		BIG_EXPLOSION,
 		NONE
 	};
 	constexpr size_t g_WorldEffectTypeCount{ static_cast<size_t>(WorldEffectType::NONE) };
@@ -151,6 +153,8 @@ namespace Engine
 		EFFECT_WORLD,
 		EFFECT_PIXEL_SPRITE,
 		BULLET,
+		MISSILE,
+		WARNING_CIRCLE,
 		NONE
 	};
 	constexpr size_t g_PoolTypeCount{ static_cast<size_t>(PoolType::NONE) };

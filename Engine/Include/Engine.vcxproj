@@ -173,6 +173,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CObjectPool.h" />
     <ClInclude Include="..\Header\CObjectPoolManager.h" />
     <ClInclude Include="..\Header\CPicking.h" />
+    <ClInclude Include="..\Header\CVIBuffer_Circle.h" />
     <ClInclude Include="..\Header\CVIBuffer_Cube_Color.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanelBase.h" />
     <ClInclude Include="..\Header\CVIBuffer_GridPanel_Editor.h" />
@@ -228,6 +229,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CObjectPool.cpp" />
     <ClCompile Include="..\Code\CObjectPoolManager.cpp" />
     <ClCompile Include="..\Code\CPicking.cpp" />
+    <ClCompile Include="..\Code\CVIBuffer_Circle.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_Cube_Color.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanelBase.cpp" />
     <ClCompile Include="..\Code\CVIBuffer_GridPanel_Editor.cpp" />

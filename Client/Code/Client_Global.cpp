@@ -2,7 +2,52 @@
 #include "Engine_Define.h"
 #include "Client_Global.h"
 
+std::mt19937_64 g_Rng{ 0xDEADBEEFCAFEBABEULL };
 _bool g_ColiderRender = true;
+constexpr float g_Epsilon = 1e-6f;
+
+inline float Rand_Float(float fA, float fB)
+{
+    return std::uniform_real_distribution<float>(fA, fB)(g_Rng);
+}
+
+inline int Rand_Int(int iA, int iB)
+{
+    return std::uniform_int_distribution<int>(iA, iB)(g_Rng);
+}
+
+inline float Lerp_Float(float fA, float fB, float fT)
+{
+    return fA + (fB - fA) * fT;
+}
+
+inline D3DXVECTOR3 Lerp_Vec3(D3DXVECTOR3 vA, D3DXVECTOR3 vB, float fT)
+{
+    return vA + (vB - vA) * fT;
+}
+
+inline float Lenght_XZ(const D3DXVECTOR3 &v)
+{
+    return std::sqrtf(v.x * v.x + v.z * v.z);
+}
+
+inline D3DXVECTOR3 Norm_XZ(const D3DXVECTOR3 &v)
+{
+    float fLength = Lenght_XZ(v);
+    if (fLength < g_Epsilon)
+        return D3DXVECTOR3(0, 0, 0);
+    return D3DXVECTOR3(v.x / fLength, 0.f, v.z / fLength);
+
+}
+
+inline D3DXVECTOR3 Normalize_Safe(const D3DXVECTOR3 &v, const D3DXVECTOR3 &fallback)
+{
+    float fLength = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    if (fLength < g_Epsilon)
+        return fallback;
+    return _vec3(v.x / fLength, v.y / fLength, v.z / fLength);
+}
+
 
 EffectOptions Get_Preset_BulletSpark()
 {

@@ -236,6 +236,9 @@ CGuiBase *CGui_MapEditorPanel::MonstertypeDropbox_Create()
 {
 	vector<string> Names{ g_MonsterTypeCount };
 	Names[0] = "Suit";
+	Names[1] = "Soldier";
+	Names[2] = "Fat";
+	Names[3] = "Drone";
 
 	return CGui_Dropbox<MonsterType>::Create("MonsterType", MonsterType::SUIT, Names);
 }
@@ -270,6 +273,7 @@ CGuiBase *CGui_MapEditorPanel::PrefabtypeDropbox_Create()
 	Names[1] = "ROAD";
 	Names[2] = "SIGN_PILLAR_2";
 	Names[3] = "Tileset_1";
+	Names[4] = "Missile";
 
 	return CGui_Dropbox<PrefabType>::Create("PrefabType", PrefabType::SIGN_PILLAR, Names);
 }

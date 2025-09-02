@@ -81,6 +81,10 @@ HRESULT CDev::Ready_Scene()
 
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_DEV, L"Boss_Layer")))
         return E_FAIL;
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 5.f, 5.f, 7.f, FALSE);
+    /*static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 20.f, 0.f, 20.f }, _vec3{ 25.f, 0.f, 25.f }, 2.f);*/
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Boss_Layer")->front())
+        ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_DEV, L"Player_Layer")->front());
 
     return S_OK;
 }
@@ -205,11 +209,6 @@ HRESULT CDev::Ready_Player_Layer(const _tchar *pLayerTag)
 HRESULT CDev::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
     InstancingObjects(L"Monster_Layer");
-
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Fat", SCENE_DEV, pLayerTag, nullptr)))
-        return E_FAIL;
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Monster_Drone", SCENE_DEV, pLayerTag, nullptr)))
-        return E_FAIL;
     return S_OK;
 }
 

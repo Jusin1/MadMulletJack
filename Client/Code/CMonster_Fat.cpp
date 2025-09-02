@@ -76,7 +76,6 @@ HRESULT CMonster_Fat::Initialize(void* pArg)
     m_jumpCD = 1.f + (rand() % 2001) / 1000.f;
     SetState(IDLE);
     SetupHitSpheres();
-    m_pTransformCom->Set_Info(INFO_POS, _vec3(0.f, 0.f, 1.f));
 
     _float fOut{ 0.f };
     m_pGroundingCom->Initialize_CurrentIndex(
@@ -834,7 +833,7 @@ CMonster_Fat* CMonster_Fat::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     CMonster_Fat* pInstance = new CMonster_Fat(pGraphicDev);
     if (FAILED(pInstance->Ready_GameObject()))
     {
-        MSG_BOX("CMonster_Suit Create Failed");
+        MSG_BOX("CMonster_Fat Create Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
@@ -845,7 +844,7 @@ CGameObject* CMonster_Fat::Clone(void* pArg)
     CMonster_Fat* pInstance = new CMonster_Fat(*this);
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CMonster_Suit Clone Failed");
+        MSG_BOX("CMonster_Fat Clone Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
