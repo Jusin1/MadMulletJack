@@ -123,6 +123,8 @@ void CObjectManager::Late_Update(_float fTimeDelta)
 // 특정 씬 제거
 void CObjectManager::Clear(_uint iLevelIndex)
 {
+	CObjectPoolManager::GetInstance()->All_Despawn();
+
 	if (iLevelIndex >= m_iSceneNum ||
 		nullptr == m_pLayers)
 		return;
@@ -131,7 +133,6 @@ void CObjectManager::Clear(_uint iLevelIndex)
 		Safe_Release(Pair.second);
 
 	m_pLayers[iLevelIndex].clear();
-	CObjectPoolManager::GetInstance()->All_Despawn();
 }
 
 // 특정 레이어 제거

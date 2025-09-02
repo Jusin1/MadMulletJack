@@ -7,6 +7,8 @@
 #include "CMapFactory.h"
 #include "CObjectManager.h"
 #include "CPlayer.h"
+#include "CBoss.h"
+#include "CObjectPoolManager.h"
 #include "CMonster.h"
 #include "CGameDataManager.h"
 #include "CDynamicCamera.h"
@@ -77,11 +79,11 @@ HRESULT CStage_Boss::Ready_Scene()
         return E_FAIL;
 
     CPickingManager::GetInstance()->Ready_Picking();
-
+    CObjectPoolManager::GetInstance()->Ready_Pools();
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_BOSS, L"Boss_Layer")))
         return E_FAIL;
-    /*static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 20.f, 20.f, 3.f, TRUE);*/
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ -1.f, 0.f, -1.f }, _vec3{ 19.f, 0.f, 19.f }, 2.f);
+    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 20.f, 20.f, 3.f, FALSE);
+    //static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ -1.f, 0.f, -1.f }, _vec3{ 19.f, 0.f, 19.f }, 2.f);
     static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())
         ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Player_Layer")->front());
     return S_OK;
@@ -109,7 +111,6 @@ _int CStage_Boss::Update_Scene(const _float &fTimeDelta)
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
-    auto p = CObjectManager::GetInstance();
     return iExit;
 }
 
@@ -222,6 +223,7 @@ void CStage_Boss::SetData(_uint _iSceneIndex)
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Env_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Monster_Layer");
+
     for (int i = 0; i < g_PrefabTypeCount; ++i)
     {
         CFileManager::GetInstance()->LoadPrefabDataFile(static_cast<PrefabType>(i));

@@ -8,6 +8,7 @@
 #include "CVIBuffer_GridPanel_Horizon.h"
 #include "CVIBuffer_GridPanel_Vertical.h"
 #include "CVIBuffer_GridPanel_Normal.h"
+#include "CVIBuffer_Circle.h"
 #include "CGrounding.h"
 #include "CRenderer.h"
 
@@ -263,6 +264,9 @@ HRESULT CMainApp::Ready_Prototype_Component() // 모든 컴포넌트 최초 등록
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Buffer_GridPanel_Normal",
 		Engine::CVIBuffer_GridPanel_Normal::Create(m_pGraphicDev))))
 		return E_FAIL;
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Proto_Buffer_Circle",
+		Engine::CVIBuffer_Circle::Create(m_pGraphicDev))))
+		return E_FAIL;
 
 	//======================
 	// Collider
@@ -443,6 +447,27 @@ void CMainApp::Ready_MapFactorFunc()
 		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Suit", iTargetScene, L"Monster_Layer", pData);
 	};
 	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::SUIT), _func);
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Soldier", iTargetScene, L"Monster_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::SOLIDER), _func);
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Fat", iTargetScene, L"Monster_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::FAT), _func);
+	_func =
+		[](void *pData = nullptr)->CGameObject *
+	{
+		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Drone", iTargetScene, L"Monster_Layer", pData);
+	};
+	pMapFactory->Register(ObjectCategory::MONSTER, static_cast<_uint>(MonsterType::DRONE), _func);
 #pragma endregion
 
 #pragma region Prefab
@@ -452,7 +477,7 @@ void CMainApp::Ready_MapFactorFunc()
 		_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
 		return CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_DefaultPrefab", iTargetScene, L"Prefab_Layer", pData);
 	};
-	for (int i = 0; i < g_PrefabTypeCount; ++i)
+	for (int i = 0; i < g_PrefabTypeCount-1; ++i)
 	{
 		pMapFactory->Register(ObjectCategory::PREFAB, i, _func);
 	}

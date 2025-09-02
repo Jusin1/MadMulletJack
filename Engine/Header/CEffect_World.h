@@ -9,6 +9,7 @@ class CVIBuffer_Rect;
 typedef struct tagEffectInfo
 {
 	_float fAngle{ 0.f };
+	_float fSize{ 1.f };
 	WorldEffectType eType{ WorldEffectType::NONE };
 }EFFECTINFO;
 

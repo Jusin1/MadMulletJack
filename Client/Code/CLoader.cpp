@@ -67,11 +67,13 @@
 
 // ÃÑ¾Ë
 #include "CBullet.h"
+#include "CMissile.h"
 
 // ÀÌÆåÆ®
 #include "CEffect_Pixel.h"
 #include "CEffect_World.h"
 #include "CEffect_Pixel_Sprite.h"
+#include "CWarningCircle.h"
 
 // MapObject
 #include "CGridPanel.h"
@@ -526,11 +528,20 @@ HRESULT CLoader::Loading_Dev()
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Proto_PixelEffect_Sprite",
 		CEffect_Pixel_Sprite::Create(m_pGraphicDev))))
 		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_WarningCircle",
+		CWarningCircle::Create(m_pGraphicDev))))
+		return E_FAIL;
 #pragma endregion
 
 	// ÃÑ¾Ë »ý¼º
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Bullet",
 		CBullet::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// ¹Ì»çÀÏ »ý¼º
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Missile",
+		CMissile::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("¸ðµ¨ ·Îµù Áß."));
@@ -892,6 +903,19 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Effect_BloodExplosion2", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE2/BE2_%03d.png", 16);
 	AddTexture(L"Proto_Effect_BloodExplosion3", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE3/BE3_%03d.png", 64);
 	AddTexture(L"Proto_Effect_BloodExplosion4", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE4/BE4_%03d.png", 16);
+	AddTexture(L"Proto_Effect_BigExplosion", L"../../Client/Bin/Resource/Effect/BigExplosion/BigExplsion_%03d.png", 26);
+
+	// Boss
+	AddTexture(L"Proto_Boss_Attack_Gun", L"../../Client/Bin/Resource/Boss/attack_gun/Boss_robot_shot%03d.png", 16);
+	AddTexture(L"Proto_Boss_Attack_Missile", L"../../Client/Bin/Resource/Boss/attack_missiles/robot_missiles%03d.png", 16);
+	AddTexture(L"Proto_Boss_Bloked", L"../../Client/Bin/Resource/Boss/defense/x-defense%02d.png", 15);
+	AddTexture(L"Proto_Boss_Idle", L"../../Client/Bin/Resource/Boss/Idle/robot_idle%02d.png", 6);
+
+	// Broken_Boss
+	AddTexture(L"Proto_BrokenBoss_Attack_Gun", L"../../Client/Bin/Resource/Boss/0Broken/attack_gun/shot_%03d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Attack_Missile", L"../../Client/Bin/Resource/Boss/0Broken/attack_missiles/missiles%02d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Bloked", L"../../Client/Bin/Resource/Boss/0Broken/defense/blockX%02d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Idle", L"../../Client/Bin/Resource/Boss/0Broken/Idle/idle B_%02d.png", 6);
 
 	return S_OK;
 }

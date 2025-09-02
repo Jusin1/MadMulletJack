@@ -4,7 +4,10 @@
 #include "CRenderer.h"
 #include "CColiderManager.h"
 #include "CColider_Sphere.h"
+#include "CObjectPoolManager.h"
+#include "Client_Global.h"
 #include "CCullingManager.h"
+#include "CEffect_World.h"
 #include "CVIBuffer_Rect.h"
 #include "CManagement.h"
 
@@ -86,7 +89,7 @@ _int CBullet::Update_GameObject(const _float& fTimeDelta)
 void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     __super::LateUpdate_GameObject(fTimeDelta);
-
+    m_pColiderCom->Update_ColliderSphere();
     Update_Position(m_pTransformCom->Get_Info(INFO_POS));
     Compute_CamDistance(Get_Position());
 
@@ -133,6 +136,10 @@ HRESULT CBullet::Spawn_Pooling(void *pArg)
 
     if (BulletData *pData = reinterpret_cast<BulletData *>(pArg))
     {
+        CTransform::TRANSFORMINFO TransformInfo{};
+        TransformInfo.fSpeed = pData->fSpeed;
+        TransformInfo.fRotationSpeed = 0.f;
+        m_pTransformCom->SetTransformInfo(TransformInfo);
         Fire(pData->vMuzzlePosition, pData->vLookDir);
     }
     else
@@ -183,15 +190,17 @@ void CBullet::Set_Collider_With_Wall()
         CColiderManager::COLLISION_HORWALL, this,
         CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
     {
-        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-        m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS) += vDistance;
+        Spawn_Destroy_Effect(vPos);
+        Set_Dead(TRUE);        
     }
     if (CColiderManager::GetInstance()->CollisionGroup(
         CColiderManager::COLLISION_VERWALL, this,
         CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
     {
-        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-        m_pTransformCom->Set_Info(INFO_POS, vPos += vDistance);
+        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS) += vDistance;
+        Spawn_Destroy_Effect(vPos);
+        Set_Dead(TRUE);
     }
 }
 
@@ -211,6 +220,27 @@ void CBullet::SetUp_BillBoard()
     m_pTransformCom->Set_Info(INFO_RIGHT, vRight * m_pTransformCom->Get_Scale().x);
     m_pTransformCom->Set_Info(INFO_UP, vUp * m_pTransformCom->Get_Scale().y);
     m_pTransformCom->Set_Info(INFO_LOOK, m_vMoveDir * m_pTransformCom->Get_Scale().z);
+}
+
+void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
+{
+    EffectOptions tOption{ Get_Preset_BulletSpark() };
+    tOption.fLife_Min = 0.3f;
+    tOption.fLife_Max = 0.5f;
+    tOption.fSize_Min = 2.f;
+    tOption.fSize_Max = 3.3f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption,
+        [&vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO_POS, vPos);
+        });
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::EXPLOSION;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [&vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.1f, 0.f });
+        });
 }
 
 void    CBullet::Set_Collider(const _float& fTimeDelta)

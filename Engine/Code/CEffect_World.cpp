@@ -132,7 +132,7 @@ HRESULT CEffect_World::Spawn_Pooling(void *pArg)
 		_float iHeight_Ratio = (_float)iHeight / 512;
 
 		// Transform
-		m_pTransformCom->Set_Scale(iWidth_Ratio, iHeight_Ratio, 1.f);
+		m_pTransformCom->Set_Scale(iWidth_Ratio * pData->fSize, iHeight_Ratio * pData->fSize, 1.f);
 		m_pTransformCom->RotationDegree(m_pTransformCom->Get_Info(INFO::INFO_LOOK), pData->fAngle);
 	}
 	else
@@ -183,6 +183,7 @@ HRESULT CEffect_World::Texture_Clone()
 		{ L"BE2",		L"Proto_Effect_BloodExplosion2",	0,	16,	10.f,	false },
 		{ L"BE3",		L"Proto_Effect_BloodExplosion3",	0,	64,	30.f,	false },
 		{ L"BE4",		L"Proto_Effect_BloodExplosion4",	0,	16,	10.f,	false },
+		{ L"BigExplosion", L"Proto_Effect_BigExplosion",	0,	26, 13.f,	false},
 	};
 
 	for (AnimationDeffinition &Element : anims)
@@ -266,9 +267,11 @@ HRESULT CEffect_World::Set_TextureInit(WorldEffectType _e)
 		return Change_Texture(L"BE3");
 	case Engine::WorldEffectType::BLOOD_EXPLOSION4:
 		return Change_Texture(L"BE4");
+	case Engine::WorldEffectType::BIG_EXPLOSION:
+		return Change_Texture(L"BigExplosion");
 	}
 
-	return E_FAIL;
+	return E_FAIL; 
 }
 
 HRESULT CEffect_World::Change_Texture(const _tchar *LayerTag)

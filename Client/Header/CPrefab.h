@@ -35,7 +35,7 @@ public:
 
 	PrefabType GetType() const { return m_eType; }
 	void SetPrefabType(PrefabType _e) { m_eType = _e; }
-
+	
 	void Set_Dead_All();
 
 	ObjectCategory GetCategory() const { return m_eCategory; }

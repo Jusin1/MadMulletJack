@@ -16,14 +16,13 @@ CObjectPoolManager::~CObjectPoolManager()
 
 void CObjectPoolManager::Free()
 {
-	for (CObjectPool *pElement : m_arrayPools)
-	{
-		Safe_Release(pElement);
-	}
+	All_Clear();
 }
 
 HRESULT CObjectPoolManager::Ready_Pools()
 {
+	All_Clear();
+
 	if(!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)])
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)] = CObjectPool::Create(L"Proto_PixelEffect");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_WORLD)])
@@ -32,6 +31,10 @@ HRESULT CObjectPoolManager::Ready_Pools()
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL_SPRITE)] = CObjectPool::Create(L"Proto_PixelEffect_Sprite");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::BULLET)])
 		m_arrayPools[static_cast<_uint>(PoolType::BULLET)] = CObjectPool::Create(L"Prototype_GameObject_Bullet");
+	if (!m_arrayPools[static_cast<_uint>(PoolType::MISSILE)])
+		m_arrayPools[static_cast<_uint>(PoolType::MISSILE)] = CObjectPool::Create(L"Prototype_GameObject_Missile", 50);
+	if (!m_arrayPools[static_cast<_uint>(PoolType::WARNING_CIRCLE)])
+		m_arrayPools[static_cast<_uint>(PoolType::WARNING_CIRCLE)] = CObjectPool::Create(L"Prototype_GameObject_WarningCircle", 30);
 
 	return S_OK;
 }
@@ -77,6 +80,15 @@ void CObjectPoolManager::All_Despawn()
 		if(pElement)
 			pElement->All_Despawn();
 	}
+}
+
+void CObjectPoolManager::All_Clear()
+{
+	for (CObjectPool *pElement : m_arrayPools)
+	{
+		Safe_Release(pElement);
+	}
+	m_arrayPools.fill(nullptr);
 }
 
 CGameObject *CObjectPoolManager::Spawn(PoolType _ePoolType, void *pArg, std::function<void(CGameObject *)> _callback)

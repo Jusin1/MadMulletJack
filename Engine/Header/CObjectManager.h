@@ -14,7 +14,6 @@ class CObjectPool;
 class ENGINE_DLL CObjectManager :public CBase
 {
 	DECLARE_SINGLETON(CObjectManager)
-	friend CObjectPool;
 private:
 	explicit CObjectManager();
 	virtual ~CObjectManager();
@@ -28,7 +27,7 @@ public:
 	void Late_Update(_float fTImeDelta);
 	void Clear(_uint iSceneIdx); // 특정 씬 정리
 	void Clear_Layer(_uint iSceneIdx, const _tchar* pLayerTag); // 특정 Layer 정리
-
+	CGameObject *Find_Prototype(const _tchar *pProtoTypeTag);  // 원본 찾기
 public:
 	CGameObject* Find_Object(_uint iSceneIdx, const _tchar* pLayerTag, _uint iIdx = 0); // 오브젝트 찾기
 	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar* pLayerTag); // 레이어 안의 오브젝트 찾기
@@ -39,7 +38,6 @@ public:
 
 	
 private:
-	CGameObject* Find_Prototype(const _tchar* pProtoTypeTag);  // 원본 찾기
 	CLayer* Find_Layer(_uint iSceneIdx, const _tchar* pLayerTag); // 레이어 찾기
 
 private:

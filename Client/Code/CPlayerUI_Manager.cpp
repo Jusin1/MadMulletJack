@@ -45,7 +45,7 @@ _int CPlayerUI_Manager::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
-	return NO_EVENT();
+	return NO_EVENT;
 }
 
 void CPlayerUI_Manager::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -176,6 +176,8 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 		break;
 
 	}
+
+	return S_OK;
 }
 
 HRESULT CPlayerUI_Manager::TagUI_SetActive(const _tchar* pTag, _bool _bActive)
