@@ -31,6 +31,8 @@ protected:
     void    Set_Collider_With_Wall();
     void    SetUp_BillBoard();
     void    Spawn_Destroy_Effect(const _vec3 &vPos);
+    void    Set_Collider(const _float& fTimeDelta);
+
 protected:
     virtual HRESULT Texture_Clone();
     virtual HRESULT Change_Texture(const _tchar* LayerTag);

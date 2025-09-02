@@ -117,20 +117,6 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
 void CDev::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
-    // 테스트용 UI 띄우기
-    if (GetAsyncKeyState('P')) 
-    {
-        //CUIManager::GetInstance()->CreateReloadUI();
-        CUIManager::GetInstance()->CreateEffectUI(L"스테이지 시작"); // 상호작용 UI
-        //CSound_Manager::GetInstance()->PlaySoundW((TCHAR*)TEXT("mx_stage_01.wav"), SOUND_BGM, 1);
-        //CUIManager::GetInstance()->CreateItemUI(); // ItemUI
-    }
-    if (GetAsyncKeyState('F')) // 삭제
-    {
-        //CUIManager::GetInstance()->DestroyReloadUI();
-        //CSound_Manager::GetInstance()->StopSound(SOUND_BGM);
-        //CUIManager::GetInstance()->();
-    }
 }
 
 void CDev::Render_Scene()

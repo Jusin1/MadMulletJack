@@ -277,6 +277,12 @@
     <Filter Include="02. GameObject\01. Character\03. Boss">
       <UniqueIdentifier>{b94ab2a1-063e-4c04-ba57-971e1e11b134}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Video">
+      <UniqueIdentifier>{a9ba351f-61c1-43f4-a5cc-21edaec7bcf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\03. Mini_Gun">
+      <UniqueIdentifier>{dd8ef5a8-06d9-45aa-a680-d479c47ab247}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\09. Missile">
       <UniqueIdentifier>{e981e757-8176-4d92-ac18-c7b733ca879c}</UniqueIdentifier>
     </Filter>
@@ -540,6 +546,12 @@
     <ClInclude Include="..\Header\CBoss.h">
       <Filter>02. GameObject\01. Character\03. Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMini_Gun.h">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\03. Mini_Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVideo.h">
+      <Filter>04. Video</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CMissile.h">
       <Filter>02. GameObject\09. Missile</Filter>
     </ClInclude>
@@ -793,6 +805,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBoss.cpp">
       <Filter>02. GameObject\01. Character\03. Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMini_Gun.cpp">
+      <Filter>02. GameObject\06. UI\Weapon\00. MainWap\00. Gun\03. Mini_Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVideo.cpp">
+      <Filter>04. Video</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMissile.cpp">
       <Filter>02. GameObject\09. Missile</Filter>

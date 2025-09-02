@@ -700,37 +700,36 @@ void CUIManager::Create_CureEff()
     if (!m_pCureEffUI->GetChildren().empty())
         return;
 
-    // 20개 만들어
+    // 20개 만들어 // test : 2개
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 30; i++)
     {
         auto* effect = dynamic_cast<CImageUI*>(
             CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
         // texture 셋팅
-        effect->RegisterTexture(L"Com_Texture_PLayerEff", L"Prototype_Component_Texture_Effect_Cure", 0, 0, 0.f, false);
+        effect->RegisterTexture(L"Com_Texture_PLayerEff", L"Prototype_Component_Texture_Effect_Cure", 0, 0, 1.f, false);
         effect->ChangeTexture(L"Com_Texture_PLayerEff");
 
         // 위치 셋팅
         _float fPosX, fPosY;
-        _uint iDis = 1.f;
-        
-        if (rand() % 2)
-        {
-            iDis = -1.f;
-        }
 
-        fPosX = float(rand() % 500);
-        //fPosY = float(rand() % 301 + WINCY * 0.5f); // wincy ~ wincy + 300 사이에서 생성
-        fPosY = 0.f;
+        fPosX = (rand() % 100) * 10.f;
+        if (i % 2 == 0)
+        {
+            fPosX *= -1.f;
+        }
+        fPosY = float(rand() % 301 + WINCY) + 10.f; // wincy ~ wincy + 300 사이에서 생성
+        //fPosY = 0.f;
        
-        effect->Set_UISizeAndPos(128.f, 128.f, fPosX * iDis, fPosY);
+        effect->Set_UISizeAndPos(50.f, 50.f, WINCX * 0.5 + fPosX, fPosY);
         
         // move 셋팅
-        _float fRange = float(rand() % 400) + 200.f; // 100 에서 300 사이
+        _float fRange = float(rand() % 500) + 200.f; // 100 에서 300 사이
         effect->Set_UIMoveInfo({ MV_UP,true, fRange , 0.f,true }); // 위로 랜덤한 만큼 움직이고  render off
-        effect->Set_New_TransInfo(1000.f, 0.f);
+        effect->Set_New_TransInfo(500.f, 0.f);
+        effect->Set_IsPosFix(false);
 
         m_pCureEffUI->Add_Child(effect);
     }
@@ -751,10 +750,14 @@ void CUIManager::Update_CureEff(const _float& fTimeDelta)
         m_pCureEffUI->GetChildren().empty()) // 예외처리
         return;
 
-    for (auto pChild : m_pCureEffUI->GetChildren())
+    list<CUIBase*> plistChildren = m_pCureEffUI->GetChildren();
+
+    for (auto pChild : plistChildren)
     {
         CUI* pUI = dynamic_cast<CUI*>(pChild);
+        _float y;
         pUI->Move_UI(fTimeDelta);
+        //pUI->Update_Position(pUI->GetTransform()->Get_Info(INFO_POS));
 
         if (pUI->Get_UIMoveInfo().IsRangeEnd())
         {
@@ -808,13 +811,6 @@ void CUIManager::Destory_CureEff()
 {
     if (!m_pCureEffUI) return;
 
-    // 자식들 죽이기
-    for (auto& pChild : m_pCureEffUI->GetChildren())
-    {
-        pChild->Set_Dead(true);                   // 객체 dead 처리
-        m_pCureEffUI->Remove_Child(pChild);      // child에서 제거
-    }
-
     m_pCureEffUI->Set_Dead(true);
     m_pCureEffUI = nullptr;
 }
@@ -822,13 +818,6 @@ void CUIManager::Destory_CureEff()
 void CUIManager::Destory_PlayerEff_ALL()
 {
     if (!m_pPlayerEffUI) return;
-
-    //// 자식들 죽이기
-    //for (auto& pChild : m_pPlayerEffUI->GetChildren())
-    //{
-    //    pChild->Set_Dead(true);                   // 객체 dead 처리
-    //    m_pPlayerEffUI->Remove_Child(pChild);      // child에서 제거
-    //}
 
     m_pPlayerEffUI->Set_Dead(true);
     m_pPlayerEffUI = nullptr;
@@ -1126,7 +1115,6 @@ void CUIManager::ClearAllUI()
     Safe_Release(m_pPhoeScreenBackGround);
 
     // eunbi player effect ui delete
-    Destory_PlayerEff_ALL();
     Safe_Release(m_pPlayerEffUI);
     Destory_CureEff();
     Safe_Release(m_pCureEffUI  );

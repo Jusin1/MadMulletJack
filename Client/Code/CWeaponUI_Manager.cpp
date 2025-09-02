@@ -12,6 +12,7 @@
 #include "CImageUI.h"
 #include "CShot_Gun.h"
 #include "CUIManager.h"
+#include "CMini_Gun.h"
 
 CWeaponUI_Manager::CWeaponUI_Manager(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_eWeapon(WP_END), m_eWeapon2(WP2_END)
@@ -112,7 +113,8 @@ void CWeaponUI_Manager::Weapon_Change()
 		TagUI_SetActive(L"ShotGunUI", false);
 		break;
 
-	case WP_RIFLE:
+	case WP_MINIGUN:
+		TagUI_SetActive(L"MiniGunUI", false);
 		break;
 
 	case WP_KATANA:
@@ -143,7 +145,9 @@ void CWeaponUI_Manager::Weapon_Change()
 		Create_AimUI(L"Prototype_Component_Texture_WapShot_AimEff",30.f,30.f);
 		break;
 
-	case WP_RIFLE:
+	case WP_MINIGUN:
+		TagUI_SetActive(L"MiniGunUI", true);
+		Create_AimUI(L"Prototype_Component_Texture_WapPistol_AimEff", 50.f, 50.f);
 		break;
 
 	case WP_KATANA:
@@ -261,6 +265,20 @@ HRESULT CWeaponUI_Manager::Create_ShotGun(_uint _iSceneIdx)
 	return E_FAIL;
 }
 
+HRESULT CWeaponUI_Manager::Create_MiniGun(_uint _iSceneIdx)
+{
+	CMini_Gun* pMiniGunUI = dynamic_cast<CMini_Gun*>(CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_GunMiniGUI", _iSceneIdx, L"UI_Layer"));
+	if (pMiniGunUI)
+	{
+		pMiniGunUI->Set_ObjTag(L"MiniGunUI");
+		pMiniGunUI->Set_WapState(CWeapon::WAPSTATE::WEAPON); //state를 weapon으로 등록
+		Add_Child(pMiniGunUI); // 루트 UI에 등록
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
 HRESULT CWeaponUI_Manager::Create_Knife(_uint _iSceneIdx)
 {
 	// knife 생성 및 list에 넣기
@@ -347,35 +365,48 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 {
 	_uint iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex(); // stage
 	_uint iCloneScene = CManagement::GetInstance()->Get_CurrentSceneIdx(); // loading
+	//Create_MiniGun
+	switch (iTargetScene)
+	{
+	case SCENE_DEV:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Katana(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Sniper(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_MiniGun(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//switch (iTargetScene)
-	//{
-	//case SCENE_DEV:
-	//case SCENE_TUTORIAL:
-	//case SCENE_STAGE_1:
-	//case SCENE_STAGE_2:
-	//	if (FAILED(Create_Pistol(iCloneScene)))
-	//		return E_FAIL;
+	case SCENE_TUTORIAL:
+	case SCENE_STAGE_1:
+	case SCENE_STAGE_2:
+	case SCENE_BOSS:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_Katana(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//	break;
+	case SCENE_SNIPE:
+		if (FAILED(Create_Sniper(iCloneScene)))
+			return E_FAIL;
+		break;
 
-	//case SCENE_SNIPE:
-	//	if (FAILED(Create_Sniper(iCloneScene)))
-	//		return E_FAIL;
-	//	break;
-
-	//case SCENE_BOSS:
-	//case SCENE_CAR:
-	//	break;
-	//}
-
-	
-
-	// test
-	Create_Pistol(iCloneScene);
-	Create_Sniper(iCloneScene);
-	Create_Katana(iCloneScene);
-	Create_ShotGun(iCloneScene);
+	case SCENE_CAR:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_MiniGun(iCloneScene)))
+			return E_FAIL;
+		break;
+	}
 
 	return S_OK;
 }

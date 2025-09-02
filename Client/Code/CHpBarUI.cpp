@@ -59,14 +59,14 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	switch (iTargetScene)
 	{
 	case SCENE_DEV:
-	case SCENE_TUTORIAL:
+	//case SCENE_TUTORIAL: //test
 	case SCENE_STAGE_1:
-	//case SCENE_STAGE_2: // test
+	case SCENE_STAGE_2: // test
 		m_iSceneCase = 0;
 		m_vTextSet = { -420.f, -145.f ,2.f};
 		break;
 
-	case SCENE_STAGE_2: // test
+	case SCENE_TUTORIAL: // test
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
 	case SCENE_CAR:
@@ -261,14 +261,14 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 	CTextUI* txt1 = dynamic_cast<CTextUI*>(this->Find_Child_ByTag(TEXT("Text")));
 	if (txt1)
 	{
-		//if (m_iSceneCase) // 1일때
-		//{
-		//	int iHp = static_cast<int>(std::ceil(m_fHpPercent * 100.f));
-		//	std::wstring hpText = std::to_wstring(iHp) + L"%";
-		//	txt1->SetText(hpText.c_str());
-		//}
+		if (m_iSceneCase) // 1일때
+		{
+			int iHp = static_cast<int>(std::ceil(m_fHpPercent * 100.f));
+			std::wstring hpText = std::to_wstring(iHp) + L"%";
+			txt1->SetText(hpText.c_str());
+		}
 
-		//else
+		else
 		{
 			int iHp = static_cast<int>(std::ceil(_fCurHp));
 

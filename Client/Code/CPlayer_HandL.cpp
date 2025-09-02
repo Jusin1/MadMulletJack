@@ -182,7 +182,7 @@ HRESULT CPlayer_HandL::Set_Texture()
     case OPENING:
     {
 
-        if (m_tInfo.eWeapon == WP_RIFLE) {
+        if (m_tInfo.eWeapon == WP_MINIGUN) {
             if (FAILED(Change_Texture(TEXT("Com_Texture_HandL_Op_Rif"))))
                 return E_FAIL;
 

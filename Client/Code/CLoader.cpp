@@ -26,6 +26,7 @@
 #include "CKnife_SubW.h"
 #include "CKatana.h"
 #include "CShot_Gun.h"
+#include "CMini_Gun.h"
 #include "CWeaponUI_Manager.h"
 
 // Hpbar UI
@@ -35,6 +36,7 @@
 
 // Effect UI
 #include "CEffectUI.h"
+#include "CVideo.h"
 
 #pragma region 게임 진입 UI들
 #include "CHeartUI.h"
@@ -172,6 +174,8 @@ HRESULT CLoader::Loading_Logo()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/BackGround.png", 1))))
 		return E_FAIL;
 
+
+
 	// Logo
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Logo",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI_Logo/LOGO_%03d.png", 20))))
@@ -186,6 +190,10 @@ HRESULT CLoader::Loading_Logo()
 	// BackGround
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_BackGround",
 		CBackGround::Create(m_pGraphicDev))))
+		return E_FAIL;
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(
+		L"Prototype_GameObject_VideoUI",
+		CVideo::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// ImageUI
@@ -1082,6 +1090,28 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/zoomout/zoomout%03d.png", 6))))
 		return E_FAIL;
 
+	// minigun
+	// minigun effect
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\effect.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapMiniG_Eff",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/effect.png", 1))))
+		return E_FAIL;
+	// minigun - idle
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\idle\mini_Idle001.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapMiniG_Idle",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/idle/idle%03d.png", 2))))
+		return E_FAIL;
+	// minigun - attack
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\attack\attack015.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapMiniG_Att",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/attack/attack%03d.png",7))))
+		return E_FAIL;
+	// minigun - zooming
+	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\zoom\zooming003.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapMiniG_Zooming",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/zoom/zooming%03d.png", 4))))
+		return E_FAIL;
+
 	// Knife
 	// Knife - idle
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\cleaver\idle\CLEAVER_IDLE002.png"
@@ -1721,6 +1751,11 @@ HRESULT CLoader::Loading_UI()
 	// ShotGun
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunShotGUI",
 		CShot_Gun::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// minigun
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_GunMiniGUI",
+		CMini_Gun::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	// SubWeapon UI

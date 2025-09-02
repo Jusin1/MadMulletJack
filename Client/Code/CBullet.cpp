@@ -102,7 +102,8 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
             m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
     }
 
-    Set_Collider_With_Wall();
+    // Ãæµ¹
+    Set_Collider(fTimeDelta);
 }
 
 void CBullet::Render_GameObject()
@@ -240,6 +241,15 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
         {
             pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.1f, 0.f });
         });
+}
+
+void    CBullet::Set_Collider(const _float& fTimeDelta)
+{
+    m_pColiderCom->Update_ColliderSphere();
+
+    Set_Collider_With_Wall();
+
+    return;
 }
 
 HRESULT CBullet::Texture_Clone()

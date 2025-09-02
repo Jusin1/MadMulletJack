@@ -12,6 +12,8 @@
 #include "CDynamicCamera.h"
 #include "CButtonUI.h"
 #include "CTextUI.h"
+#include "Sound_Manager.h"
+#include "CVideo.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev),
@@ -33,8 +35,6 @@ HRESULT CLogo::Ready_Scene()
 
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
-
-
     return S_OK;
 }
 
@@ -58,24 +58,45 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 {
     CScene::LateUpdate_Scene(fTimeDelta);
     SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+    // 테스트용 UI 띄우기
+    if (GetAsyncKeyState('P') & 0x0001) // P 한번만
+    {
+        CSound_Manager::GetInstance()->PlayBGM((TCHAR*)TEXT("mx_stage_01.wav"), 1.0f);
+    }
+    if (GetAsyncKeyState('F') & 0x0001) // F 한번만
+    {
+        CSound_Manager::GetInstance()->StopAll();
+    }
 }
-
 void CLogo::Render_Scene()
 {
-
 }
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    // BackGround
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_BackGround", SCENE_LOGO, pLayerTag, nullptr)))
-        return E_FAIL;
+
+
     return S_OK;
 }
 
 
 HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+    // 1) 클론하면서 파일 경로 넘김
+    auto* video = dynamic_cast<CVideo*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_VideoUI",
+            SCENE_LOGO, pLayerTag,
+            (void*)L"../Bin/Resource/Video/df.mp4"  
+        ));
+    if (!video) return E_FAIL;
+    video->Set_UISizeAndPos((float)WINCX, (float)WINCY, WINCX * 0.5f, WINCY * 0.5f);
+    video->SetKeepAspect(false);     // 레터박스
+    video->Set_Active(true);
+    video->Set_RenderOn(true);
+
+
+
     if (auto* img2 = dynamic_cast<CImageUI*>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", SCENE_LOGO, pLayerTag)))

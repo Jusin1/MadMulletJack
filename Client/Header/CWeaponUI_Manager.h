@@ -30,6 +30,7 @@ private:
 	HRESULT Create_Sniper(_uint _iSceneIdx);
 	HRESULT Create_Katana(_uint _iSceneIdx);
 	HRESULT Create_ShotGun(_uint _iSceneIdx);
+	HRESULT Create_MiniGun(_uint _iSceneIdx);
 	
 	// weapon create func
 	HRESULT Create_Knife(_uint _iSceneIdx);
