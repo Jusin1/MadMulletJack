@@ -134,6 +134,16 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	/*if (m_bDead)
 		return DEAD;*/
+
+
+	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+
+	std::wstring dbg = L"Player Pos: (" +
+		std::to_wstring(vPos.x) + L", " +
+		std::to_wstring(vPos.y) + L", " +
+		std::to_wstring(vPos.z) + L")\n";
+
+	OutputDebugString(dbg.c_str());
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_bIsZoomStage)
@@ -249,7 +259,6 @@ void CPlayer::NormalLateUpdate(const _float& fTimeDelta)
 	// y값 조정 ( fixYf로 이동하지 않을때)
 	if (!m_bIsFixY)
 	{
-		// jump를 하거나 terrain을 타거나
 		Set_OnTerrain(fTimeDelta);
 	}
 
@@ -470,7 +479,7 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 	case JUMP:
 		JUMP_End();break;
 
-	case KICK:
+	case KICK:\
 		KICK_End();break;
 
 	case ATTACK:

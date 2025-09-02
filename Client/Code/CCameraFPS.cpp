@@ -108,7 +108,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
         CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMOUT))
     {
         Mouse_Move();
-        Mouse_Fix();
+        //Mouse_Fix();
     }
 
     // 줌 상태 유지 하려면... 줌 한 시간 만큼 look 방향으로 이동 시켜주기
@@ -118,7 +118,7 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     	// 카메라의 look 방향으로 전진
     	_vec3 vLook;
         vLook = GetTransform()->Get_Info(INFO_LOOK);
-    	GetTransform()->Move_PosDir(m_fZoomTime, vLook);
+    	GetTransform()->Move_PosDir(m_fZoomTime * 5.2f, vLook);
     }
 
     

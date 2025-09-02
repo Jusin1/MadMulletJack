@@ -6,15 +6,14 @@
 #include "CMapFactory.h"
 #include "CObjectManager.h"
 #include "CPlayer.h"
-#include "CMonster.h"
+#include "CMonster_Suit.h"
 #include "CGameDataManager.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPickingManager.h"
 #include "CUIManager.h"
 #include "CGlobal_Info.h"
-#include "CTutorialTracker.h"
-#include "CTutorialUI.h"
+#include "CLoading_Scene.h"
 
 CStage_Snipe::CStage_Snipe(LPDIRECT3DDEVICE9 pGraphiCStage_Snipe)
     : Engine::CScene(pGraphiCStage_Snipe)
@@ -99,6 +98,36 @@ _int CStage_Snipe::Update_Scene(const _float &fTimeDelta)
     {
         bPrevF1 = false;
     }
+
+    // 몬스터 스폰 (한 번만)
+    if (!m_bSpawned)
+    {
+        for (auto& pos : m_vSpawnPositions)
+        {
+            CMonster_Suit* pMonster = dynamic_cast<CMonster_Suit*>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_Monster_Suit",
+                    SCENE_SNIPE,
+                    L"Monster_Layer",
+                    &pos));
+            if (pMonster)
+            {
+                // 몬스터에게 Stage 포인터 넘겨서 죽을 때 카운트 올리도록 할 수도 있음
+            }
+        }
+        m_bSpawned = true;
+    }
+
+    // 8마리 이상 죽으면 다음 씬으로
+    if (m_iKillCount >= 8)
+    {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
+            return E_FAIL;
+        return iExit;
+    }
+
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
@@ -186,7 +215,12 @@ HRESULT CStage_Snipe::Ready_Player_Layer(const _tchar *pLayerTag)
 
 HRESULT CStage_Snipe::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
-    InstancingObjects(L"Monster_Layer");
+    // 스폰 좌표 지정
+    m_vSpawnPositions.push_back(_vec3(22.f, 27.f, 29.f));
+    //m_vSpawnPositions.push_back(_vec3(-12.f, 0.f, 8.f));
+    //m_vSpawnPositions.push_back(_vec3(15.f, 0.f, -3.f));
+    //m_vSpawnPositions.push_back(_vec3(5.f, 0.f, -10.f));
+    // 원하는 만큼 좌표 추가
 
     return S_OK;
 }
