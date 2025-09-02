@@ -186,6 +186,7 @@ HRESULT CTutorial::Ready_Player_Layer(const _tchar* pLayerTag)
 HRESULT CTutorial::Ready_Monster_Layer(const _tchar* pLayerTag)
 {
     InstancingObjects(L"Monster_Layer");
+    
     return S_OK;
 }
 
@@ -205,7 +206,7 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
             CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_TutorialUI", SCENE_TUTORIAL, L"UI_Layer"));
     }
-
+    
     return S_OK;
 }
 

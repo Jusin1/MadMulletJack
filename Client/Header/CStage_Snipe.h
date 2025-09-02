@@ -35,6 +35,12 @@ private:
 public:
 	static CStage_Snipe *Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
+
+private:
+	std::vector<_vec3> m_vSpawnPositions; // 스폰 좌표들
+	int m_iKillCount = 0;                 // 처치 수
+	bool m_bSpawned = false;              // 몬스터 스폰 여부
+
 protected:
 	virtual void			Free();
 };
