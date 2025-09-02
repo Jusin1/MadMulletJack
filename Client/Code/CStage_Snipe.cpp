@@ -215,12 +215,7 @@ HRESULT CStage_Snipe::Ready_Player_Layer(const _tchar *pLayerTag)
 
 HRESULT CStage_Snipe::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
-    // 스폰 좌표 지정
-    m_vSpawnPositions.push_back(_vec3(22.f, 27.f, 29.f));
-    //m_vSpawnPositions.push_back(_vec3(-12.f, 0.f, 8.f));
-    //m_vSpawnPositions.push_back(_vec3(15.f, 0.f, -3.f));
-    //m_vSpawnPositions.push_back(_vec3(5.f, 0.f, -10.f));
-    // 원하는 만큼 좌표 추가
+    InstancingObjects(L"Monster_Layer");
 
     return S_OK;
 }
