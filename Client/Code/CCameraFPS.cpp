@@ -63,7 +63,9 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         // 카메라의 look 방향으로 전진
         _vec3 vLook;
         vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-        m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
+
+        if(CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
         m_fZoomTime += fTimeDelta;
     }
 
@@ -73,7 +75,8 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         _vec3 vLook;
         vLook = m_pTransformCom->Get_Info(INFO_LOOK);
         vLook *= -1.f;
-        m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
         m_fZoomTime = 0.f;
     }
     
@@ -197,7 +200,6 @@ void CCameraFPS::Mouse_Fix()
 
 HRESULT CCameraFPS::Set_PlayerPos()
 {
-    // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
             Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));

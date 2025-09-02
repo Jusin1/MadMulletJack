@@ -1073,7 +1073,7 @@ HRESULT CLoader::Loading_UI()
 	// minigun - attack
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\attack\attack015.png"
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapMiniG_Att",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/attack/attack%03d.png",12))))
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/miniGun/attack/attack%03d.png",7))))
 		return E_FAIL;
 	// minigun - zooming
 	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\miniGun\zoom\zooming003.png"

@@ -6,6 +6,7 @@
 #include "CImageUI.h"
 #include "Engine_Function.h"
 #include "CDInputMgr.h"
+#include "CObjectPoolManager.h"
 
 CMini_Gun::CMini_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev), m_fScale(0.f), m_fEffCoolTime(0.f), m_fEffRenderTime(0.f)
@@ -84,6 +85,8 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 				{
 					m_fEffRenderTime = 0.f;
 					m_fEffCoolTime = 0.05f;
+
+					
 				}
 
 			}
@@ -104,15 +107,15 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMING:
 		// size를 점점 키우기
-		m_fScale += fTimeDelta * 0.5;
+		m_fScale += fTimeDelta;
 
-		if (m_fScale >= 1.2f)
+		if (m_fScale >= 1.1f)
 		{
 			CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-			GetTransform()->Set_Scale(1.2f, 1.2f, 1.f);
+			GetTransform()->Set_Scale(1.1f, 1.1f, 0.f);
 		}	
 		else
-			//GetTransform()->Set_Scale( m_fScale,m_fScale,1.f );
+			//GetTransform()->Set_Scale( m_fScale,m_fScale,0.f );
 
 		break;
 
@@ -127,15 +130,15 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMOUT:
 		// size 줄이기 -> 실패
-		m_fScale -= fTimeDelta * 0.5;
+		m_fScale -= fTimeDelta;
 
 		if (m_fScale <= 1.f)
 		{
 			CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-			GetTransform()->Set_Scale(1.f, 1.f, 1.f);
+			GetTransform()->Set_Scale(1.f, 1.f, 0.f);
 		}
 		else
-			//GetTransform()->Set_Scale(m_fScale, m_fScale, 1.f);
+			//GetTransform()->Set_Scale(m_fScale, m_fScale, 0.f);
 
 		break;
 	}
@@ -187,7 +190,7 @@ HRESULT CMini_Gun::Texture_Clone()
 	AnimDef anims[] = {
 		// normal
 		{ L"Com_Texture_MiniG_Idle",			L"Prototype_Component_Texture_WapMiniG_Idle",		0, 2, 10.f,  true },
-		{ L"Com_Texture_MiniG_Att",				L"Prototype_Component_Texture_WapMiniG_Att",			0, 12,30.f,  true },
+		{ L"Com_Texture_MiniG_Att",				L"Prototype_Component_Texture_WapMiniG_Att",			0, 7,30.f,  true },
 		{ L"Com_Texture_MiniG_Zooming",				L"Prototype_Component_Texture_WapMiniG_Zooming",			0, 4,10.f,  true }
 	};
 
@@ -216,6 +219,10 @@ HRESULT CMini_Gun::Set_Texture() {
 	m_tMoveInfo.eUIMove = MV_NON; // 기본으로 안 움직이게
 
 	Set_UISizeAndPos(1093.f, 614.f, WINCX * 0.5f, WINCY * 0.5f + 200.f); //1366 768
+	
+	// bullet 발사
+	BulletData tData;
+	Engine::CTransform* pPlayerTransformCom = nullptr;
 
 	switch (m_tInfo.ePlayerState)
 	{
@@ -229,7 +236,27 @@ HRESULT CMini_Gun::Set_Texture() {
 			return E_FAIL;
 		m_fEffRenderTime = 0.05f;
 		m_fEffCoolTime = 0.f;
-		SpawnEff({ 300.f,150.f,0.f,250.f });
+		SpawnEff({ 400.f,150.f,0.f,300.f });
+
+		
+		tData.vMuzzlePosition = { 100.f, 100.f , 0.f };
+
+		// player의 look  벡터 가져옴
+		pPlayerTransformCom =
+			dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+				Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+		if (pPlayerTransformCom == nullptr)
+			return NO_EVENT;
+
+		//_vec3 vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
+		//D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
+		//tData.vLookDir = vPlayerLook;
+
+		tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
+
+		CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
+
+
 		break;
 
 	case ZOOMING:
@@ -239,7 +266,7 @@ HRESULT CMini_Gun::Set_Texture() {
 	case ZOOM:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_MiniG_Idle"))))
 			return E_FAIL;
-		Set_UISizeAndPos(1311.f, 737.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
+		Set_UISizeAndPos(1093.f * 1.1f, 614.f * 1.1f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
 		// 유지
 		break;
 
@@ -265,9 +292,9 @@ HRESULT CMini_Gun::Set_Texture() {
 			return E_FAIL;
 		m_fEffRenderTime = 0.05f;
 		m_fEffCoolTime = 0.f;
-		Set_UISizeAndPos(1311.f, 737.f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
+		Set_UISizeAndPos(1093.f * 1.1f, 614.f * 1.1f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
 
-		SpawnEff({ 360.f,180.f,0.f,220.f });
+		SpawnEff({ 440.f,165.f,0.f,320.f });
 		break;
 
 	case ZOOMOUT:
