@@ -59,6 +59,9 @@ _bool CPickingManager::Picking()
         return false;
     }
 
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WP_MINIGUN)
+        return false;
+
     if (m_bMouseInUI) return false;
     if (!(GetAsyncKeyState(VK_LBUTTON) & 0x0001)) return false;
 

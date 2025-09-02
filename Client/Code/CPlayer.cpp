@@ -205,11 +205,11 @@ void CPlayer::Render_GameObject()
 void CPlayer::Add_Hp(_float _fAddHp)
 {
 	// 만약 hp가 증가하면
-	if (_fAddHp > 0)
-	{
-		// cure effect create
-		CUIManager::GetInstance()->Create_CureEff();
-	}
+	//if (_fAddHp > 0)
+	//{
+	//	// cure effect create
+	//	CUIManager::GetInstance()->Create_CureEff();
+	//}
 
 	// 체력을 더함
 	m_fHp += _fAddHp;
@@ -826,8 +826,9 @@ void CPlayer::DOPING_Begin()
 	// hit count reset
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
 
-	// text effect 추가
+	// effect 추가
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("생명 소다"));
+	CUIManager::GetInstance()->Create_CureEff();
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
