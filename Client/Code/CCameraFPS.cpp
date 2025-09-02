@@ -11,14 +11,14 @@ CCameraFPS::CCameraFPS(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CCamera(pGraphicDev),
     m_bFix(false), m_bShaking(true),
     m_bRecoil(false), m_bZoom(false), m_eCamMode(CAM_NORMAL),
-    m_fOffset(0.f)
+    m_fOffset(0.f), m_fZoomTime(0.f)
 {
 }
 
 CCameraFPS::CCameraFPS(const CCameraFPS& rhs) : CCamera(rhs),
 m_bFix(rhs.m_bFix), m_bShaking(rhs.m_bShaking),
 m_bRecoil(rhs.m_bRecoil), m_bZoom(rhs.m_bZoom), m_eCamMode(rhs.m_eCamMode),
-m_fOffset(rhs.m_fOffset)
+m_fOffset(rhs.m_fOffset), m_fZoomTime(rhs.m_fZoomTime)
 {
 
 }
@@ -43,25 +43,51 @@ HRESULT CCameraFPS::Initialize(void* pArg)
     if (FAILED(CCamera::Initialize(pArg)))
         return E_FAIL;
 
+    // transform info 수정
+    if (m_pTransformCom)
+    {
+        CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
+        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 8.f, tMyTransInfo.fRotationSpeed });
+    }
+
     return S_OK;
 }
 
 _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
 {
     CCamera::Update_GameObject(fTimeDelta);
+
+    // zoom 상태일때
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMING)
+    {
+        // 카메라의 look 방향으로 전진
+        _vec3 vLook;
+        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+
+        if(CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
+        m_fZoomTime += fTimeDelta;
+    }
+
+    else if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMOUT)
+    {
+        // 카메라의 look 방향으로 전진
+        _vec3 vLook;
+        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        vLook *= -1.f;
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
+        m_fZoomTime = 0.f;
+    }
     
     // 플레이어의 위치를 가져와서 셋팅
-    Set_PlayerPos();
+    else 
+        Set_PlayerPos();
 
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;
 
-    // transform info 수정
-    if (m_pTransformCom)
-    {
-        CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
-        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 5.f, tMyTransInfo.fRotationSpeed });
-    }
+   
 
     return NO_EVENT;
 }
@@ -77,21 +103,25 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     // fix가 아니고 clear가 아닐때
     // 카메라 월드행렬 완성
     if (false == m_bFix &&
-        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR)
+        (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR &&
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMING &&
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMOUT))
     {
         Mouse_Move();
         Mouse_Fix();
     }
 
-    // zoom 상태일때
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM ||
+    // 줌 상태 유지 하려면... 줌 한 시간 만큼 look 방향으로 이동 시켜주기
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM || 
         CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
     {
-        // 카메라의 look 방향으로 전진
-        _vec3 vLook;
-        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-        m_pTransformCom->Move_PosDir(1.f, vLook);
+    	// 카메라의 look 방향으로 전진
+    	_vec3 vLook;
+        vLook = GetTransform()->Get_Info(INFO_LOOK);
+    	GetTransform()->Move_PosDir(m_fZoomTime, vLook);
     }
+
+    
 
     // 카메라의 월드행렬 적용
     if (FAILED(Apply_ViewPorjection()))
@@ -170,7 +200,6 @@ void CCameraFPS::Mouse_Fix()
 
 HRESULT CCameraFPS::Set_PlayerPos()
 {
-    // 플레이어의 위치를 가져와서 셋팅 -> z는 살짝 뒤로
     Engine::CTransform* pPlayerTransformCom =
         dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
             Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));

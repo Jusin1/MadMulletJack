@@ -99,18 +99,24 @@ HRESULT CPlayer::Initialize(void* pArg)
 	switch (CMapFactory::GetInstance()->GetTargetSceneIndex())
 	{
 	case SCENE_DEV:
-
+	case SCENE_TUTORIAL:
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:
 		m_bIsZoomStage = false;
 		break;
 
-	case SCENE_TUTORIAL:
 	case SCENE_SNIPE:
-	case SCENE_BOSS:
-	case SCENE_CAR:
 		m_bIsZoomStage = true;
 		Change_Weapon(WP_SNIPER);
+		break;
+
+	case SCENE_BOSS:
+		m_bIsZoomStage = false;
+		break;
+
+	case SCENE_CAR:
+		m_bIsZoomStage = true;
+		m_pHpBarUI->Set_Active(false);
 		break;
 	}
 
@@ -202,7 +208,7 @@ void CPlayer::Add_Hp(_float _fAddHp)
 	if (_fAddHp > 0)
 	{
 		// cure effect create
-		//CUIManager::GetInstance()->Create_CureEff();
+		CUIManager::GetInstance()->Create_CureEff();
 	}
 
 	// 체력을 더함
@@ -352,7 +358,7 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		}
 	}
 
-	//CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
+	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
 
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
@@ -602,6 +608,12 @@ void CPlayer::IDLE_Begin()
 {
 	m_bIsKeyInput = true;
 	m_bIsAttack	= true;
+
+	// zoom stage에서 move key 값 설정
+	if (m_bIsZoomStage)
+	{
+		m_eMoveKey = MVKEY_NORMAL;
+	}
 }
 
 void CPlayer::IDLE_On(const _float& fTimeDelta)
@@ -620,6 +632,7 @@ void CPlayer::JUMP_Begin()
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
+	m_bIsAttack = true;
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -703,7 +716,7 @@ void CPlayer::ATTACK_End()
 
 	case WP_SHOTGUN:
 		break;
-	case WP_RIFLE:
+	case WP_MINIGUN:
 		break;
 
 	case WP_KATANA:
@@ -812,6 +825,9 @@ void CPlayer::DOPING_Begin()
 
 	// hit count reset
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
+
+	// text effect 추가
+	CUIManager::GetInstance()->CreateEffectUI(TEXT("생명 소다"));
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -850,7 +866,8 @@ void CPlayer::OPENING_Begin()
 	case WP_SHOTGUN:
 		m_fStateTime = 0.5f;
 		break;
-	case WP_RIFLE:
+	case WP_MINIGUN:
+		m_fStateTime = 0.5f;
 		break;
 
 	case WP_KATANA:
@@ -899,25 +916,36 @@ void CPlayer::Clear_Begin()
 	m_pWeaponUI->Set_Active(false);
 
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("승 리"));
+
+	// ui 정리
 	CUIManager::GetInstance()->DestroyReloadUI();
 	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
+	CUIManager::GetInstance()->Destory_CureEff();
 }
 
 void CPlayer::ATTEND_Begin()
 {
 	m_bIsAttack = false;
-	if(m_tPlayerInfo.eWeapon == WP_SHOTGUN)
-		m_fStateTime = 10.f;
+
+	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
+		m_pHpBarUI->Set_RenderOn(false);
 
 }
 
 void CPlayer::ATTEND_On(const _float& fTimeDelta)
-{
-	//if(m_tPlayerInfo.eWeapon == WP_SHOTGUN && StateTime_IsEnd(fTimeDelta))
-	//	Change_State(IDLE);
-		
+{	
 	if (CGlobal_Info::Get_Instance()->IS_STATE_END())
-		Change_State(IDLE);
+	{
+		if (m_tPlayerInfo.eWeapon != WP_SNIPER &&
+			m_tPrePlayerInfo.ePlayerState == ATTACK_ZOOM)
+		{
+			Change_State(ZOOM);
+		}
+
+		else
+			Change_State(IDLE);
+	}
+		
 }
 
 void CPlayer::ATTEND_End()
@@ -926,6 +954,8 @@ void CPlayer::ATTEND_End()
 
 void CPlayer::ATTACK_ZOOM_Begin()
 {
+	m_pHpBarUI->Set_Active(false);
+
 	// sniper는 텍스처 유지라서
 	if (m_tPlayerInfo.eWeapon == WP_SNIPER)
 		m_fStateTime = 1.f;
@@ -1208,32 +1238,112 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 {
-	// 우 클릭시
-	// 현재가 zooming -> idle
-	// 현재가 idle -> zoom
 	if (m_bIsKeyInput && (IS_RBUTTON_DOWN))
 	{
 		if (m_tPlayerInfo.ePlayerState == IDLE)
 			Change_State(ZOOMING);
 
-		else if(m_tPlayerInfo.ePlayerState == ZOOM)
+		else if (m_tPlayerInfo.ePlayerState == ZOOM)
 			Change_State(ZOOMOUT);
 	}
-	
 
-	// 좌 클릭시 : attack
-	if (m_bIsAttack && IS_LBUTTON_DOWN)
+	// 자동차씬인 경우 무조건 전진
+	if (CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_CAR)
 	{
-		if (m_tPlayerInfo.ePlayerState == ZOOM)
+		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+
+		// 좌우 키
+		if (KEY_BUTTON_HOLD(DIK_A))
 		{
-			Change_State(ATTACK_ZOOM);
+			m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
+			// camera state -> left
+		}
+		if (KEY_BUTTON_HOLD(DIK_D))
+		{
+			m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+			// camera state -> right
 		}
 
-		else
+		// 좌 클릭시 : attack
+		if (m_bIsAttack && IS_LBUTTON_HOLD)
 		{
-			Change_State(ATTACK);
+			if (m_tPlayerInfo.ePlayerState == ZOOM)
+			{
+				Change_State(ATTACK_ZOOM);
+			}
+
+			else
+			{
+				Change_State(ATTACK);
+			}
 		}
 	}
+
+	// sniper scene 움직임
+	else {
+		// 움직임 키
+		switch (m_eMoveKey) {
+
+		case MVKEY_NON:
+			break;
+
+		case MVKEY_NORMAL: // 상하좌우
+
+			if (KEY_BUTTON_HOLD(DIK_W))
+			{
+				m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_S))
+			{
+				m_pTransformCom->Move_Backward(fTimeDelta, m_vPosition.y);
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_A))
+			{
+				m_pTransformCom->Move_Left(fTimeDelta, m_vPosition.y);
+				// camera state -> left
+			}
+
+			if (KEY_BUTTON_HOLD(DIK_D))
+			{
+				m_pTransformCom->Move_Right(fTimeDelta, m_vPosition.y);
+				// camera state -> right
+			}
+			break;
+		}
+
+
+		//// 좌 클릭시 : attack
+		//if (m_bIsAttack && IS_LBUTTON_DOWN)
+		//{
+		//	if (m_tPlayerInfo.ePlayerState == ZOOM)
+		//	{
+		//		Change_State(ATTACK_ZOOM);
+		//	}
+
+		//	else
+		//	{
+		//		Change_State(ATTACK);
+		//	}
+		//}
+
+		//minigun test
+		// 좌 클릭시 : attack
+		if (m_bIsAttack && IS_LBUTTON_HOLD)
+		{
+			if (m_tPlayerInfo.ePlayerState == ZOOM)
+			{
+				Change_State(ATTACK_ZOOM);
+			}
+
+			else
+			{
+				Change_State(ATTACK);
+			}
+		}
+	}
+	
 
 	// debug
 	if (KEY_BUTTON_DOWN(DIK_B))
@@ -1242,9 +1352,10 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 
 		m_bIsZoomStage = !m_bIsZoomStage;
 	}
-
 	if (KEY_BUTTON_DOWN(DIK_O))
 		Change_State(OPENING);
+	if (KEY_BUTTON_DOWN(DIK_M))
+		Change_Weapon(WP_MINIGUN);
 }
 
 ////////////////// move func
@@ -1552,8 +1663,6 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
 
-	Set_Collider_With_Bullet(fTimeDelta);
-
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
@@ -1562,7 +1671,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	//Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
-	
+	Set_Collider_With_Bullet(fTimeDelta);
 }
 
 void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
@@ -1605,7 +1714,7 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 	m_fHitTime += fTimeDelta;
 
 	// 누적 시간이 5초 이상이면
-	if (m_fHitTime >= 0.5f)
+	if (m_fHitTime >= 0.1f)
 	{
 		// 0초로 초기화
 		m_fHitTime = 0.f;
@@ -1667,10 +1776,6 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 		if (!m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
-			// dron monster 일 경우 충돌시 피격
-
-
-
 			// monster pos
 			_vec3 vMonPos = pColiObj->GetTransform()->Get_Info(INFO_POS);
 			// 내가 몬스터를 바라보는 방향벡터
@@ -1702,7 +1807,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 					}
 				}
 
-				// Dash attack이 아니면 hit
+				// Dash attack이 아니면 hit || push
 				else
 				{
 					if(dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
@@ -1711,7 +1816,7 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				}
 			}
 
-			// 앞에 없다면 hit
+			// 앞에 없다면 hit || push
 			else
 			{
 				if (dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우

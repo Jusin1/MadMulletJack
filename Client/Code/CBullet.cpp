@@ -98,6 +98,9 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
         if (m_pRendererCom)
             m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
     }
+
+    // Ãæµ¹
+    Set_Collider(fTimeDelta);
 }
 
 void CBullet::Render_GameObject()
@@ -208,6 +211,15 @@ void CBullet::SetUp_BillBoard()
     m_pTransformCom->Set_Info(INFO_RIGHT, vRight * m_pTransformCom->Get_Scale().x);
     m_pTransformCom->Set_Info(INFO_UP, vUp * m_pTransformCom->Get_Scale().y);
     m_pTransformCom->Set_Info(INFO_LOOK, m_vMoveDir * m_pTransformCom->Get_Scale().z);
+}
+
+void    CBullet::Set_Collider(const _float& fTimeDelta)
+{
+    m_pColiderCom->Update_ColliderSphere();
+
+    Set_Collider_With_Wall();
+
+    return;
 }
 
 HRESULT CBullet::Texture_Clone()

@@ -28,6 +28,7 @@ protected:
     HRESULT Set_Component();
     void    Set_Collider_With_Wall();
     void    SetUp_BillBoard();
+    void    Set_Collider(const _float& fTimeDelta);
 
 protected:
     virtual HRESULT Texture_Clone();

@@ -381,6 +381,9 @@ HRESULT CKatana::Set_Texture()
         m_tMoveInfo = { MV_RIGHT , false, 1000.f,0.f };
         OnAttackInput();
         break;
+
+    case ATTEND:
+        CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
     }
 
     return S_OK;

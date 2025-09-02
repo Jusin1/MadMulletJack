@@ -46,6 +46,7 @@ private:
     _bool      m_bZoom;
     FPSCAMMODE   m_eCamMode;
     _float m_fOffset;
+    _float m_fZoomTime;
 
 public:
     static CCameraFPS* Create(LPDIRECT3DDEVICE9 pGraphicDev);

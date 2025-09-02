@@ -264,6 +264,13 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 		case PLAYERDEAD:
 			m_bActive = false;
+			DeleteEff();
+			DeleteSmoke();
+			break;
+
+		case CLEAR:
+			DeleteEff();
+			DeleteSmoke();
 			break;
 
 		case ATTEND:
@@ -273,6 +280,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 			break;
 
 		default:
+			DeleteEff();
 			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
 				return E_FAIL;
 			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
