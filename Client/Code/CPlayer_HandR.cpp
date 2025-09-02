@@ -108,7 +108,8 @@ HRESULT CPlayer_HandR::Texture_Clone()
         return E_FAIL;
     m_mapTextures.insert({ TEXT("Com_Texture_HandR_Dead"), m_pTextureCom });
 
-    // Opening - Pistol
+    // 
+    // ing - Pistol
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 3;
     texInfo.m_fSpeed = 1.5f;

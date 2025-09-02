@@ -222,7 +222,7 @@ HRESULT CMini_Gun::Set_Texture() {
 	
 	// bullet 발사
 	BulletData tData;
-	Engine::CTransform* pPlayerTransformCom = nullptr;
+	Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook;
 
 	switch (m_tInfo.ePlayerState)
 	{
@@ -239,7 +239,7 @@ HRESULT CMini_Gun::Set_Texture() {
 		SpawnEff({ 400.f,150.f,0.f,300.f });
 
 		
-		tData.vMuzzlePosition = { 100.f, 100.f , 0.f };
+		tData.vMuzzlePosition = { WINCX  * 0.5f , WINCY * 0.5f , 0.f };
 
 		// player의 look  벡터 가져옴
 		pPlayerTransformCom =
@@ -248,11 +248,11 @@ HRESULT CMini_Gun::Set_Texture() {
 		if (pPlayerTransformCom == nullptr)
 			return NO_EVENT;
 
-		//_vec3 vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
-		//D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
-		//tData.vLookDir = vPlayerLook;
+		vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
+		D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
+		tData.vLookDir = vPlayerLook;
 
-		tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
+		//tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
 
 		CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
 

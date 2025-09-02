@@ -628,7 +628,7 @@ void CUIManager::Create_PlayerEff(PLAYEREFF _eEffect)
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
-    //if (!effect) return;
+    if (!effect) return;
 
     // 셋팅 값 초기화
     _vec4           vSizeOffset = {};
@@ -779,14 +779,14 @@ void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
     {
     case PLAYEREFF::DASH:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"DashEff"));
-        if (!pEff)
+        if (pEff == nullptr)
             return;
 
         break;
 
     case PLAYEREFF::BLOODR:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodREff"));
-        if (!pEff)
+        if (pEff == nullptr)
             return;
         if (!pEff->GetTextureCom()->Is_AnimFinished())
             return;
@@ -795,7 +795,7 @@ void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
 
     case PLAYEREFF::BLOODG:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodGEff"));
-        if (!pEff)
+        if (pEff ==nullptr)
             return;
         if (!pEff->GetTextureCom()->Is_AnimFinished())
             return;

@@ -22,6 +22,7 @@
 #include "CWeaponUI_Manager.h"
 #include "CMainWeapon.h"
 #include "CMonster_Dron.h"
+#include "CCameraFPS.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -100,9 +101,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	{
 	case SCENE_DEV:
 	case SCENE_TUTORIAL:
+		m_bIsZoomStage = false;
+		Change_Weapon(WP_PISTOL);
+		break;
 	case SCENE_STAGE_1:
+		m_bIsZoomStage = false;
+		Change_Weapon(WP_SHOTGUN);
+		break;
 	case SCENE_STAGE_2:
 		m_bIsZoomStage = false;
+		Change_Weapon(WP_KATANA);
 		break;
 
 	case SCENE_SNIPE:
@@ -112,11 +120,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	case SCENE_BOSS:
 		m_bIsZoomStage = false;
+		Change_Weapon(WP_PISTOL);
 		break;
 
 	case SCENE_CAR:
 		m_bIsZoomStage = true;
 		m_pHpBarUI->Set_Active(false);
+		Change_Weapon(WP_MINIGUN);
 		break;
 	}
 
@@ -632,7 +642,7 @@ void CPlayer::JUMP_Begin()
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
-	m_bIsAttack = true;
+	//m_bIsAttack = true;
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -1079,6 +1089,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		}
 
 		if (m_tPlayerInfo.ePlayerState != RELOAD &&		// 전에가 reload가 아니고
+			m_tPlayerInfo.ePlayerState != JUMP &&
 			(m_tPlayerInfo.eWeapon != WP_NON &&			// weapon1이 있을 때
 			m_tPlayerInfo.eWeapon != WP_KATANA &&
 			m_tPlayerInfo.eWeapon != WP_END ))

@@ -228,7 +228,3 @@ void CLoading_Scene::update_progress_ui(float p)
 		m_txtPct->SetText(buf);
 	}
 }
-
-
-
-

@@ -205,7 +205,7 @@ _int CKatana::Update_GameObject(const _float& fTimeDelta)
     if (m_CurrentAnimTag == TEXT("Com_Texture_Katana_Idle"))
     {
         _uint iCurScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
-        _uint iPlayerUI_Idx = 0;
+       /* _uint iPlayerUI_Idx = 0;
         switch (iCurScene)
         {
         case SCENE_DEV:
@@ -215,9 +215,9 @@ _int CKatana::Update_GameObject(const _float& fTimeDelta)
         case SCENE_TUTORIAL:
             iPlayerUI_Idx = 1;
             break;
-        }
+        }*/
         CUIBase* pHandR = dynamic_cast<CUIBase*>(CObjectManager::GetInstance()
-            ->Find_Object(iCurScene, L"UI_Layer", iPlayerUI_Idx))
+            ->Find_Object(iCurScene, L"UI_Layer", 1))
             ->Find_Child_ByTag(L"HandRUI");
         if (pHandR)
         {
@@ -382,8 +382,20 @@ HRESULT CKatana::Set_Texture()
         OnAttackInput();
         break;
 
+    case OPENING:
+        break;
+
     case ATTEND:
         CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+
+    default:
+        m_bSelfActive = true;
+        if (FAILED(Change_Texture(TEXT("Com_Texture_Katana_Idle"))))
+            return E_FAIL;
+        Set_UISizeAndPos(1700.f, 1900.f, WINCX * 0.5f + 400.f, WINCY * 0.5f);
+        Set_New_TransInfo(5.f, 0.f);
+        m_tMoveInfo = { MV_UpDown , false, 5.f,0.f };
+        break;
     }
 
     return S_OK;

@@ -59,23 +59,23 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	switch (iTargetScene)
 	{
 	case SCENE_DEV:
-	//case SCENE_TUTORIAL: //test
+	case SCENE_TUTORIAL: //test
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2: // test
 		m_iSceneCase = 0;
 		m_vTextSet = { -420.f, -145.f ,2.f};
 		break;
 
-	case SCENE_TUTORIAL: // test
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
-	case SCENE_CAR:
+	
 		m_iSceneCase = 1;
-		m_vTextSet = { -430.f, -50.f ,1.3};
+		m_vTextSet = { -430.f, -50.f ,1.2};
 		break;
+
+	case SCENE_CAR:
 	case SCENE_END:
-		m_iSceneCase = -1;
-		m_vRectOriginOffset = { 0.f, 0.f,0.f };
+		m_bActive = false;
 		break;
 	}
 

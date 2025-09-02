@@ -170,6 +170,7 @@
     <ClInclude Include="..\Header\CGameDataManager.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
+    <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CItemUI.h" />
     <ClInclude Include="..\Header\CKatana.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
@@ -265,6 +266,7 @@
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
+    <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CItemUI.cpp" />
     <ClCompile Include="..\Code\CKatana.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">

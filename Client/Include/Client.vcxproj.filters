@@ -286,6 +286,9 @@
     <Filter Include="02. GameObject\09. Missile">
       <UniqueIdentifier>{e981e757-8176-4d92-ac18-c7b733ca879c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. Item">
+      <UniqueIdentifier>{e34a6c9a-d00a-49aa-a46e-6ef0629aae4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -558,6 +561,9 @@
     <ClInclude Include="..\Header\CWarningCircle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CItem.h">
+      <Filter>02. GameObject\10. Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -817,6 +823,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWarningCircle.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItem.cpp">
+      <Filter>02. GameObject\10. Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
