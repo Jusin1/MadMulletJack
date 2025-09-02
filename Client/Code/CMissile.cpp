@@ -113,6 +113,8 @@ _int CMissile::Update_GameObject(const _float &fTimeDelta)
 
 void CMissile::LateUpdate_GameObject(const _float &fTimeDelta)
 {
+    if (m_bDead) return;
+
     CGameObject::LateUpdate_GameObject(fTimeDelta);
     m_pColiderCom->Update_ColliderSphere();
     Update_Position(m_pTransformCom->Get_Info(INFO_POS));
@@ -123,6 +125,8 @@ void CMissile::LateUpdate_GameObject(const _float &fTimeDelta)
 
 void CMissile::Render_GameObject()
 {
+    if (m_bDead) return;
+
     CGameObject::Render_GameObject();
     m_pTransformCom->Apply_WorldMatrix();
     m_pBufferCom->Render_Buffer();

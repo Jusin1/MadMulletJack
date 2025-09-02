@@ -19,6 +19,7 @@ public:
 	void Update(const _float _fDeltaTime);
 	void Late_Update(const _float _fDeltaTime);
 	void All_Despawn();
+	void All_Clear();
 public:
 	CGameObject *Spawn(PoolType _ePoolType, void *pArg = nullptr, std::function<void(CGameObject *)> _callback = nullptr);
 	HRESULT Ready_Pools();

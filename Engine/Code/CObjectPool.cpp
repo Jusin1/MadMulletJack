@@ -12,6 +12,7 @@ CObjectPool::CObjectPool(_uint _iReserve)
 
 CObjectPool::~CObjectPool()
 {
+	Free();
 }
 
 

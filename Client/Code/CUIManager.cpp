@@ -585,7 +585,7 @@ void CUIManager::DestroyEnterUI()
     // 씬 교체 (로딩씬으로)
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_TUTORIAL));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_BOSS));
     ClearAllUI();
     m_exitingEnter = false; 
 }
@@ -823,12 +823,12 @@ void CUIManager::Destory_PlayerEff_ALL()
 {
     if (!m_pPlayerEffUI) return;
 
-    // 자식들 죽이기
-    for (auto& pChild : m_pPlayerEffUI->GetChildren())
-    {
-        pChild->Set_Dead(true);                   // 객체 dead 처리
-        m_pPlayerEffUI->Remove_Child(pChild);      // child에서 제거
-    }
+    //// 자식들 죽이기
+    //for (auto& pChild : m_pPlayerEffUI->GetChildren())
+    //{
+    //    pChild->Set_Dead(true);                   // 객체 dead 처리
+    //    m_pPlayerEffUI->Remove_Child(pChild);      // child에서 제거
+    //}
 
     m_pPlayerEffUI->Set_Dead(true);
     m_pPlayerEffUI = nullptr;
@@ -1128,6 +1128,7 @@ void CUIManager::ClearAllUI()
     // eunbi player effect ui delete
     Destory_PlayerEff_ALL();
     Safe_Release(m_pPlayerEffUI);
+    Destory_CureEff();
     Safe_Release(m_pCureEffUI  );
 
     // --- 상점 UI ---

@@ -26,7 +26,7 @@ public:
 	int Get_Capacity() const { return m_Objects.size(); }
 	CGameObject *Get_ActiveAt(_int i);
 private:
-	int m_iActiveCount;
+	int m_iActiveCount{ 0 };
 	wstring m_PrototypeTag;
 	wstring m_LayerTag;
 	vector<CGameObject *> m_Objects;

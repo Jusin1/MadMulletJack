@@ -286,7 +286,7 @@
       <Filter>00. Manager\03. Management</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVIBuffer_Circle.cpp">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer</Filter>
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\03. Circle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -446,11 +446,11 @@
     <ClInclude Include="..\Header\Sound_Manager.h">
       <Filter>00. Manager\16. SoundManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CVIBuffer_Circle.h">
-      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CEffect_World.h">
       <Filter>00. Manager\03. Management\02. GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer_Circle.h">
+      <Filter>00. Manager\03. Management\03. Component\00. VIBuffer\03. Circle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

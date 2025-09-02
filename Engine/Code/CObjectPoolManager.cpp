@@ -16,14 +16,13 @@ CObjectPoolManager::~CObjectPoolManager()
 
 void CObjectPoolManager::Free()
 {
-	for (CObjectPool *pElement : m_arrayPools)
-	{
-		Safe_Release(pElement);
-	}
+	All_Clear();
 }
 
 HRESULT CObjectPoolManager::Ready_Pools()
 {
+	All_Clear();
+
 	if(!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)])
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)] = CObjectPool::Create(L"Proto_PixelEffect");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_WORLD)])
@@ -81,6 +80,15 @@ void CObjectPoolManager::All_Despawn()
 		if(pElement)
 			pElement->All_Despawn();
 	}
+}
+
+void CObjectPoolManager::All_Clear()
+{
+	for (CObjectPool *pElement : m_arrayPools)
+	{
+		Safe_Release(pElement);
+	}
+	m_arrayPools.fill(nullptr);
 }
 
 CGameObject *CObjectPoolManager::Spawn(PoolType _ePoolType, void *pArg, std::function<void(CGameObject *)> _callback)

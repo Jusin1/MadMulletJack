@@ -897,6 +897,18 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Effect_BloodExplosion4", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE4/BE4_%03d.png", 16);
 	AddTexture(L"Proto_Effect_BigExplosion", L"../../Client/Bin/Resource/Effect/BigExplosion/BigExplsion_%03d.png", 26);
 
+	// Boss
+	AddTexture(L"Proto_Boss_Attack_Gun", L"../../Client/Bin/Resource/Boss/attack_gun/Boss_robot_shot%03d.png", 16);
+	AddTexture(L"Proto_Boss_Attack_Missile", L"../../Client/Bin/Resource/Boss/attack_missiles/robot_missiles%03d.png", 16);
+	AddTexture(L"Proto_Boss_Bloked", L"../../Client/Bin/Resource/Boss/defense/x-defense%02d.png", 15);
+	AddTexture(L"Proto_Boss_Idle", L"../../Client/Bin/Resource/Boss/Idle/robot_idle%02d.png", 6);
+
+	// Broken_Boss
+	AddTexture(L"Proto_BrokenBoss_Attack_Gun", L"../../Client/Bin/Resource/Boss/0Broken/attack_gun/shot_%03d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Attack_Missile", L"../../Client/Bin/Resource/Boss/0Broken/attack_missiles/missiles%02d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Bloked", L"../../Client/Bin/Resource/Boss/0Broken/defense/blockX%02d.png", 15);
+	AddTexture(L"Proto_BrokenBoss_Idle", L"../../Client/Bin/Resource/Boss/0Broken/Idle/idle B_%02d.png", 6);
+
 	return S_OK;
 }
 

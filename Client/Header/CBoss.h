@@ -103,7 +103,8 @@ private:
 	HRESULT	Set_Component();
 	void Set_Collider();
 	void SetUp_BillBoard();
-	HRESULT Texture_Clone() { return S_OK; }
+	HRESULT Texture_Clone();
+	HRESULT Change_Texture(const _tchar *AnimTag);
 
 	virtual _bool Picking(_vec3 *PickingPoint) override;
 	virtual void  PickingTrue() override;

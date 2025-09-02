@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "CPickingManager.h"
 #include "CCullingManager.h"
+#include "CManagement.h"
+#include "CDataManager.h"
+#include "CObjectManager.h"
 #include "CObjectPoolManager.h"
+#include "CMapFactory.h"
 #include "Client_Global.h"
 #include "CMissile.h"
 #include "Engine_Define.h"
@@ -86,6 +90,74 @@ void CBoss::SetUp_BillBoard()
 	m_pTransformCom->Set_Info(INFO_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
 }
 
+HRESULT CBoss::Texture_Clone()
+{
+	int iTargetScene = CMapFactory::GetInstance()->GetTargetSceneIndex();
+
+	if (iTargetScene < 0)
+	{
+		MSG_BOX("CBoss::Texture_Clone, iTargetScene is invalid");
+		return E_FAIL;
+	}
+
+	CTexture::TEXINFO info{};
+	struct AnimDef { const wchar_t *tag; const wchar_t *proto; int start; int end; float speed; bool loop; };
+	if (iTargetScene == SCENE_CAR)
+	{
+		AnimDef anims[] = {
+			{ L"Bullet",		L"Proto_BrokenBoss_Attack_Gun",		0,	15, 10.f,	false },
+			{ L"Missile",		L"Proto_BrokenBoss_Attack_Missile", 0,	15,	10.f,	false },
+			{ L"Block",			L"Proto_BrokenBoss_Bloked",			0,  15,	30.f,	false },
+			{ L"Idle",			L"Proto_BrokenBoss_Idle",			0,  7,	7.f,	true },
+		};
+
+		for (auto &a : anims)
+		{
+			ZeroMemory(&info, sizeof(info));
+			info.m_iStart = a.start;
+			info.m_iEndTex = a.end;
+			info.m_fSpeed = a.speed;
+			info.m_bLoop = a.loop;
+
+			if (FAILED(Add_Components(a.tag, SCENE_STATIC, a.proto, (CComponent **)&m_pTextureCom, &info)))
+				return E_FAIL;
+		}
+	}
+	else
+	{
+		AnimDef anims[] = {
+			{ L"Bullet",		L"Proto_Boss_Attack_Gun",		0,	16, 10.f,	false },
+			{ L"Missile",		L"Proto_Boss_Attack_Missile",	0,	16,	10.f,	false },
+			{ L"Block",			L"Proto_Boss_Bloked",			0,  15,	30.f,	false },
+			{ L"Idle",			L"Proto_Boss_Idle",				0,  6,	6.f,	true },
+		};
+
+		for (auto &a : anims)
+		{
+			ZeroMemory(&info, sizeof(info));
+			info.m_iStart = a.start;
+			info.m_iEndTex = a.end;
+			info.m_fSpeed = a.speed;
+			info.m_bLoop = a.loop;
+
+			if (FAILED(Add_Components(a.tag, SCENE_STATIC, a.proto, (CComponent **)&m_pTextureCom, &info)))
+				return E_FAIL;
+		}
+	}
+	
+	return S_OK;
+}
+
+HRESULT CBoss::Change_Texture(const _tchar *AnimTag)
+{
+	if (FAILED(CGameObject::Change_Component(AnimTag, (CComponent **)&m_pTextureCom)))
+		return E_FAIL;
+
+	if (m_pTextureCom) m_pTextureCom->Set_Zero_Frame();
+
+	return S_OK;
+}
+
 _bool CBoss::Picking(_vec3 *PickingPoint)
 {
 	if (m_bDead || !m_bPickable) return false;
@@ -107,7 +179,7 @@ void CBoss::PickingTrue()
 		{
 			pGo->GetTransform()->Set_Info(INFO_POS, Get_Position());
 	});
-	
+	Change_Texture(L"Block");
 }
 
 void CBoss::Spawn_Missile()
@@ -196,11 +268,11 @@ void CBoss::Render_GameObject()
 
 	m_pTransformCom->Apply_WorldMatrix();
 	
-	/*if (m_pTextureCom)
+	if (m_pTextureCom)
 	{
 		m_pTextureCom->Set_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex);
 		m_pTextureCom->MoveFrame();
-	}*/
+	}
 
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -321,6 +393,7 @@ void CBoss::Enter_Idle()
 
 	m_fTargetVel_X = 0.f;
 	m_fTargetVel_Z = 0.f;
+	Change_Texture(L"Idle");
 }
 
 void CBoss::Update_Idle(_float fDeltaTime)
@@ -387,6 +460,7 @@ void CBoss::Enter_Dash()
 	m_iPhase = 0;
 	m_fStateDuration = 0.f;
 	m_vDashDir = Dash_Direction();
+	Change_Texture(L"Idle");
 }
 
 void CBoss::Update_Dash(_float fDeltaTime)
@@ -437,6 +511,7 @@ void CBoss::Enter_Bullet()
 	m_fStateDuration = 0.f;
 	m_iPhase = 0;
 	m_iShots = 0;
+	Change_Texture(L"Bullet");
 }
 
 void CBoss::Update_Bullet(_float fDeltaTime)
@@ -505,6 +580,7 @@ void CBoss::Enter_Missile()
 	m_iPhase = 0;
 	m_iVolley = 0;
 	m_iShots = 0;
+	Change_Texture(L"Missile");
 }
 
 void CBoss::Update_Missile(_float fDeltaTime)
