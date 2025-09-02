@@ -212,6 +212,11 @@ HRESULT CBoss::Initialize(void *pArg)
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
+	if (RigidBodyConfig *pConfig = reinterpret_cast<RigidBodyConfig *>(pArg))
+	{
+		::memcpy(&m_tRigidbodyConfig, pConfig, sizeof(RigidBodyConfig));
+	}
+
 	m_bPickable = true;
 
 	return S_OK;
@@ -221,6 +226,7 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
 		return DEAD;
+	_float PlayerPosition_Z = m_pPlayer->Get_Position().z;
 
 	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
@@ -677,6 +683,11 @@ void CBoss::Follow_PathSpeed(_float fScale)
 	{
 		if (Arrived(m_vTarget))
 			m_vTarget = (m_iDirLR > 0) ? m_vRight : m_vLeft;
+		_float fSrc = Get_Position().z - m_pParent->Get_Position().z;
+		if (fSrc < m_fDistance)
+		{
+			m_vTarget.z += (m_fDistance + 1.f - fSrc);
+		}
 	}
 	else
 	{

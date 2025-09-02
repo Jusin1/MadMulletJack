@@ -80,7 +80,9 @@ HRESULT CStage_Car::Ready_Scene()
     CPickingManager::GetInstance()->Ready_Picking();
     CObjectPoolManager::GetInstance()->Ready_Pools();
 
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer")))
+    RigidBodyConfig tConfig;
+    tConfig.fHealth = 50.f;
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer", &tConfig)))
         return E_FAIL;
     
     static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 3.f, 0.f, 10.f }, _vec3{ 8.f, 0.f, 10.f }, 4.f);

@@ -4,6 +4,8 @@
 
 struct RigidBodyConfig
 {
+	_float fHealth = 20.f;
+
 	_float fMoveSpeed			= 5.f;
 	_float fArriveRadius		= 0.35f;
 	_float fCornerSlowDown		= 0.85f;
@@ -99,6 +101,10 @@ public:
 	void Set_RectPath(const _vec3 &vCenter, _float fHalfX, _float fHalfZ, _float fY, _bool bRandom);
 	void Set_LinearLR(const _vec3 &vLeft, const _vec3 &vRight, _float fY);
 	void Set_Player(CGameObject *pPlayer) { m_pPlayer = pPlayer; }
+
+	_float Get_Helath() const { return m_tRigidbodyConfig.fHealth; }
+	void Set_Health(_float _f) { m_tRigidbodyConfig.fHealth = _f; }
+	void Add_Health(_float _f) { m_tRigidbodyConfig.fHealth += _f; }
 private:
 	HRESULT	Set_Component();
 	void Set_Collider();
@@ -184,6 +190,7 @@ private:
 
 	// Å¸°Ù ÁÂÇ¥
 	_vec3 m_vTarget{ 0.f,0.f,0.f };
+	const _float m_fDistance{ 30.f };
 
 	// ÆÐÅÏ
 	// 0 windup

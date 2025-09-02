@@ -559,7 +559,6 @@ HRESULT CLoader::Loading_Dev()
 
 HRESULT CLoader::Loading_Tutorial()
 {
-
 	//// WASD Tutorial
 	//if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Tut_Move",
 	//	CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/TutorialScene/WASD.png", 1))))
