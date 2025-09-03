@@ -338,7 +338,7 @@ void CStage_Snipe::TickDeathsAndProgress()
         // 다음 씬 이동
         // 여기에 영상 재생 시킬거임
         if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
+            SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_BOSS))))
         {
             return;
         }
