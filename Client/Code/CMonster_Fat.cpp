@@ -518,7 +518,6 @@ HRESULT CMonster_Fat::Texture_Clone()
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Fat_HIT_BALL",  0, 23,10.f,true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Fat_HIT_DEATH",    0, 20,10.f,true },
         { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Fat_HIT_ELECTRIC", 0, 14, 7.f,false },
-        { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
         { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Fat_HIT_DOOR",     0, 31, 12.f,false },
         { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Fat_HIT_BLOCK",      0,  5, 6.f,false },
         { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Fat_KATANA_BODY", 0, 21, 6.f,false }
@@ -560,7 +559,6 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC:
     {
-        tag = L"Com_Texture_Hit_Eletric";
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
@@ -598,12 +596,10 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
         }
         if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
         return;
-
     case KICKED:
         tag = L"Com_Texture_Blocking"; break;
 
     case INSKILL:
-
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
         break;

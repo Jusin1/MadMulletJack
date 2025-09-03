@@ -520,7 +520,6 @@ HRESULT CMonster_Soldier::Texture_Clone()
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Solider_BALL",  0, 23,10.f,true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Solider_DEATH",    0, 23,10.f,true },
         { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Solider_ELEC", 0, 15, 7.f,false },
-        { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
         { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Solider_DOOR",     0, 25, 7.f,false },
         { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Solider_BLOCK",      0,  5, 6.f,false },
         { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Solider_Katana_BODY",      0,  21, 6.f,false }
@@ -572,7 +571,6 @@ void CMonster_Soldier::OnEnterState(MON_STATE s)
 
     case HIT_BENT:
     {
-        tag = L"Com_Texture_Hit_VENT";
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
