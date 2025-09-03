@@ -31,6 +31,8 @@ private:
 	virtual _bool Picking(_vec3* PickingPoint) override;
 	virtual void PickingTrue() override;
 
+	HRESULT Create_Drink();
+
 private:
 	bool m_bDestroyed{ false };
 	Engine::CColider_Sphere *m_pColliderSphere;

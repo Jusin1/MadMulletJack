@@ -26,7 +26,7 @@ private:
 
 public:
     virtual HRESULT Ready_GameObject();
-    virtual HRESULT Initialize(void* pArg, WEAPON2 _eItemType);
+    virtual HRESULT Initialize(void* pArg);
     virtual _int    Update_GameObject(const _float& fTimeDelta);
     virtual void    LateUpdate_GameObject(const _float& fTimeDelta);
     virtual void    Render_GameObject();
@@ -51,8 +51,10 @@ private:
 private:
     ITEMINFO m_tItemInfo;
 
-    float m_fLifeTime;      // 현재까지 지난 시간
-    float m_fLifeLimit;     // 라이프 타임
+    _bool m_bMove; // 움직일래 말래
+    _float m_fMinY;          // 움직임 멈출 y값 
+    _float m_fLifeTime;      // 현재까지 지난 시간
+    _float m_fLifeLimit;     // 라이프 타임
 
 public:
     static  CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev);

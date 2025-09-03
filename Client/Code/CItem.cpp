@@ -5,9 +5,7 @@
 #include "CColiderManager.h"
 #include "CColider_Sphere.h"
 #include "CObjectPoolManager.h"
-#include "Client_Global.h"
-#include "CCullingManager.h"
-#include "CEffect_World.h"
+#include "CObjectManager.h"
 #include "CVIBuffer_Rect.h"
 #include "CManagement.h"
 
@@ -18,7 +16,8 @@ CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_pBufferCom(nullptr)
     , m_fLifeTime(0.f)
     , m_fLifeLimit(1.f)
-    , m_tItemInfo({ WP_DOPING, {0.f,0.f,0.f} })
+    , m_tItemInfo({ })
+    , m_bMove(true)
 {
 }
 
@@ -30,6 +29,7 @@ CItem::CItem(const CItem& rhs)
     , m_fLifeTime(rhs.m_fLifeTime)
     , m_fLifeLimit(rhs.m_fLifeLimit)
     , m_tItemInfo(rhs.m_tItemInfo)
+    , m_bMove (rhs.m_bMove)
 
 {
 }
@@ -43,7 +43,7 @@ HRESULT CItem::Ready_GameObject()
     return S_OK;
 }
 
-HRESULT CItem::Initialize(void* pArg, WEAPON2 _eItemType)
+HRESULT CItem::Initialize(void* pArg)
 {
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -56,13 +56,20 @@ HRESULT CItem::Initialize(void* pArg, WEAPON2 _eItemType)
     TransformInfo.fRotationSpeed = 0.f;
     m_pTransformCom->SetTransformInfo(TransformInfo);
 
-    m_fLifeTime = 5.f;
+    m_fLifeTime = 0.f;
+    m_fLifeLimit = 10.f;
+
+    if (pArg != nullptr)
+    {
+        memcpy(&m_tItemInfo, pArg, sizeof(ITEMINFO));
+
+        // 초기 위치 셋팅
+        GetTransform()->Set_Info(INFO_POS, m_tItemInfo.vStartPos);
+    }
 
     // item type 에 따른 설정
-
-    
     if (FAILED(Texture_Clone()))
-        return S_OK;
+        return E_FAIL;;
 
     return S_OK;
 }
@@ -81,13 +88,32 @@ _int CItem::Update_GameObject(const _float& fTimeDelta)
         m_fLifeTime += fTimeDelta;
 
     // 위치 update
+    //if(m_bMove)
+    //{
+    //    Engine::CTransform* pPlayerTransformCom =
+    //        dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+    //            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+    //    if (pPlayerTransformCom == nullptr)
+    //        return E_FAIL;
+
+    //    _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
+
+    //    _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+    //    vPos.y = vPos.y + 5.f * fTimeDelta; // test : 중력 5, 
+
+    //    if (vPos.y - m_pTransformCom->Get_Scale().y * 0.5f <= vPlayerPos.y)
+    //    {
+    //        m_bMove = false;
+    //        vPos.y = vPlayerPos.y + m_pTransformCom->Get_Scale().y * 0.5f;
+    //    }
+    //}
     
     __super::Update_GameObject(fTimeDelta);
 
     CColiderManager::GetInstance()->Add_CollisionGroup(
         CColiderManager::COLLISIOIN_ITEM, this);
 
-    m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
+    m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
     return NO_EVENT;
 }
@@ -192,7 +218,7 @@ CGameObject* CItem::Clone(void* pArg)
 {
     CItem* pInstance = new CItem(*this);
 
-    if (FAILED(pInstance->Initialize(pArg, _eItemType)))
+    if (FAILED(pInstance->Initialize(pArg)))
     {
         MSG_BOX("pBullet Clone Failed");
         Safe_Release(pInstance);
