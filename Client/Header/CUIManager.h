@@ -43,6 +43,7 @@ class CUIManager :
     std::unordered_map<int, std::vector<UpgradeId>> gSceneShopCards = {
         { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
         { SCENE_TUTORIAL, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
+        { SCENE_STAGE_1, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
         { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN, UpgradeId::HEADSHOT } },
         { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
     };

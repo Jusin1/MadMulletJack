@@ -1,7 +1,8 @@
 #pragma once
 #include "CScene.h"
 
-
+class CMonster_Suit;
+class CImageUI;
 class CStage_Snipe : public CScene
 {
 public:
@@ -37,9 +38,31 @@ public:
 
 
 private:
-	std::vector<_vec3> m_vSpawnPositions; // 스폰 좌표들
-	int m_iKillCount = 0;                 // 처치 수
-	bool m_bSpawned = false;              // 몬스터 스폰 여부
+	// 몬스터 스폰 관련 ㅎ마수
+	void SetMonsterActive();
+	void ActivateNext(int n = 1);
+	void TickDeathsAndProgress();
+	void  SpawnKillIconAtIndex(int idx);
+	void  ClearKillIcons();
+	void  SetLayoutIcon();
+
+private:
+	// 몬스터 스폰 관련 변수
+	int  m_iKillCount;
+	bool m_bSpawned;
+	std::vector<CMonster_Suit*> m_vMonsters;
+	std::vector<bool>           m_vDeathMarked;
+	std::vector<_vec3>          m_vSavedPos;
+	int  m_iNextActivate;
+	int  m_iInitialActivate;
+	int  m_iTargetKills;
+	std::vector<CImageUI*> m_vKillIcons;
+	const int   m_iKillMax;
+	// 시작 위치/간격/사이즈
+	float m_killUIStartX;
+	float m_killUIStartY;
+	float m_killUISpacing;
+	float m_killUISize;
 
 protected:
 	virtual void			Free();

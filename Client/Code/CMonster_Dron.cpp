@@ -239,6 +239,8 @@ void CMonster_Dron::OnEnterState(MON_STATE s)
 
     case DEATH:
         // 공통 사망 배너 처리
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
+        Spawn_Explosion_Effect(myPos);
         DisableAllCollisionAndPicking();
         tag = L"Com_Texture_Death";
         TrySpawnDeathUI_Common();

@@ -76,6 +76,7 @@ private:
     double m_frameDurSec = 1.0 / 30.0;  // 기본 30fps
     double m_playPosSec = 0.0;         // 재생 시계(초)
     double m_lastVidSec = 0.0;         // 마지막 업로드된 비디오 시각(초)
+    double m_accumSec = 0.0;   // ? 누적 델타타임 버퍼
 
     // 오디오 동기화용
     double  m_audioBaseSec = 0.0;       // waveOut 포지션 0이 가리키는 ‘절대 재생 시각’

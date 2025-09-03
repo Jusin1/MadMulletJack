@@ -71,35 +71,13 @@ _bool CPickingManager::Picking()
     for (auto it = m_PickingList.begin(); it != m_PickingList.end(); )
     {
         CGameObject* obj = *it;
+        if (!obj || obj->Get_Dead() || !obj->Is_Active()) { it = m_PickingList.erase(it); continue; }
 
-        // 1) 기본 null/죽음/비활성화 검사
-        if (!obj || obj->Get_Dead() || !obj->Is_Active()) {
-            it = m_PickingList.erase(it);
-            continue;
-        }
-
-        // 2) 트랜스폼 같은 핵심 컴포넌트 없는 경우 바로 스킵
-        if (!obj->GetTransform()) {
-            ++it;
-            continue;
-        }
-
-        // 3) 안전하게 Picking() 호출
         _vec3 hitW(0, 0, 0);
-        _bool bPicked = false;
-        try {
-            bPicked = obj->Picking(&hitW);
-        }
-        catch (...) {
-            // Picking 중 예외 터져도 리스트만 유지
-            bPicked = false;
-        }
-
-        if (bPicked) {
+        if (obj->Picking(&hitW)) {
             vecPicked.push_back(obj);
             vecPos.push_back(hitW);
         }
-
         ++it;
     }
     if (vecPicked.empty()) return false;

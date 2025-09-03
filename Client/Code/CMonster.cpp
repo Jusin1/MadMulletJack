@@ -9,6 +9,9 @@
 #include "CCullingManager.h"
 #include "CEffectUI.h"
 #include "CPlayer.h"
+#include "CEffect_World.h"
+#include "CObjectPoolManager.h"
+#include "CMonster_Head1.h"
 
 ULONGLONG CMonster::s_lastKillTimeMs = 0; // 마지막 처치 시각(ms)
 int       CMonster::s_comboCount = 0; // 현재 콤보 횟수
@@ -218,6 +221,97 @@ float CMonster::DistanceToPlayer() const
     _vec3 pl = m_pPlayerTr->Get_Info(INFO_POS);
     _vec3 diff = pl - my;
     return D3DXVec3Length(&diff);
+}
+
+void CMonster::Spawn_Eletric_Effect(const _vec3& vPos)
+{
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::ELCETRIC;
+    tInfo.fSize = 4.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+}
+
+void CMonster::Spawn_Explosion_Effect(const _vec3& vPos)
+{
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::EXPLOSION;
+    tInfo.fSize = 8.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+
+    tInfo.eType = WorldEffectType::SMOKE;
+    tInfo.fSize = 8.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+}
+
+void CMonster::Spawn_HeadExplosion_Effect(const _vec3& vPos)
+{
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::BLOOD_EXPLOSION4;
+    tInfo.fSize = 1.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.2f, 0.f });
+        });
+
+    HeadSpawnArg cfg{};
+    cfg.texTag = L"Com_Texture_Monster_HEAD";           
+    cfg.protoTag = L"Prototype_Component_Texture_Monster_HEAD";
+    cfg.endFrame = 11;     
+    cfg.animSpeed = 8.f;
+    cfg.loop = false;
+    cfg.fallSpeed = 0.3f;  
+    cfg.gravity = 3.0f;  
+    cfg.backDrift = 0.5f;  
+
+    const auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    if (auto* head = dynamic_cast<CMonster_Head1*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_Monster_Head1", sceneIdx, L"Monster_Layer", &cfg)))
+    {
+        _vec3 vLeftPos = vPos;
+        vLeftPos.x += 1.f; // 원하는 만큼 왼쪽으로 이동
+        head->GetTransform()->Set_Info(INFO_POS, vLeftPos);
+        head->GetTransform()->Set_Scale(0.2f, 0.2f, 0.2f);
+    }
+}
+
+void CMonster::Spawn_Hit_Effect(const _vec3& vPos)
+{
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::BLOOD_EXPLOSION2;
+
+    tInfo.fSize = 1.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.2f, 0.f });
+        });
+}
+
+void CMonster::Spawn_Hit_Vent(const _vec3& vPos)
+{
+    EFFECTINFO tInfo;
+    tInfo.eType = WorldEffectType::BLOOD_EXPLOSION2;
+
+    tInfo.fSize = 3.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos](CGameObject* pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
 }
 
 // 각 몬스터 이펙트 배너 텍스트 설정

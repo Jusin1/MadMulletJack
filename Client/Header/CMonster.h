@@ -45,6 +45,22 @@ struct DeathUIConfig { // 몬스터 마다 메시지 교체용 구조체
     float  emScale = 1.35f;
 };
 
+
+struct HeadSpawnArg {
+    const _tchar* texTag = L"Com_Texture_Monster_HEAD";
+    const _tchar* protoTag = L"Prototype_Component_Texture_Monster_HEAD";
+
+
+    int   endFrame = 11;
+    float animSpeed = 16.f;
+    bool  loop = false;
+
+    // 물리 파라미터
+    float fallSpeed = 0.8f;
+    float gravity = 3.5f;
+    float backDrift = 0.0f;
+};
+
 class CMonster : public CCharacter
 {
 protected:
@@ -129,6 +145,13 @@ public:
     // 유틸
     CTransform* GetPlayerTransform();
     float       DistanceToPlayer() const;
+
+    // 이펙트 생성 함수
+    void Spawn_Eletric_Effect(const _vec3& vPos);
+    void Spawn_Explosion_Effect(const _vec3& vPos);
+    void Spawn_HeadExplosion_Effect(const _vec3& vPos);
+    void Spawn_Hit_Effect(const _vec3& vPos);
+    void Spawn_Hit_Vent(const _vec3& vPos);
 
 public:
     virtual CGameObject* Clone(void* pArg = nullptr) override;

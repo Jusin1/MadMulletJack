@@ -62,6 +62,7 @@
 #include "CMonster_Fat.h"
 #include "CMonster_Soldier.h"
 #include "CMonster_Head.h"
+#include "CMonster_Head1.h"
 #include "CMonster_Dron.h"
 #include "CBoss.h"
 
@@ -352,6 +353,11 @@ HRESULT CLoader::Loading_Dev()
 	// KATANA - HIT - HEAD
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_Katana_HEAD",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/Katana/Head/HEAD%03d.png", 35))))
+		return E_FAIL;
+
+	// MONSTER - HEAD
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_HEAD",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Effect/MonsterHead/MonsterHead_%03d.png", 12))))
 		return E_FAIL;
 
 	// InstanceKill
@@ -677,6 +683,9 @@ HRESULT CLoader::Loading_Stage_2()
 
 HRESULT CLoader::Loading_Snipe()
 {
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SniperMosnterIcon",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Sniper/SNIPER ICON.png", 1))))
+		return E_FAIL;
 	m_isFinished = true;
 	return S_OK;
 }
@@ -895,7 +904,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	// effect
 	AddTexture(L"Proto_Effect_Splatter", L"../../Client/Bin/Resource/Effect/BloodSpread/thin-splatter_%03d.png", 9);
 	AddTexture(L"Proto_Effect_Electric", L"../../Client/Bin/Resource/Effect/Electric/Eletricity_%03d.png", 17);
-	AddTexture(L"Proto_Effect_Explosion", L"../../Client/Bin/Resource/Effect/Explosion/Explosion_%02d.png", 16);
+	AddTexture(L"Proto_Effect_Explosion", L"../../Client/Bin/Resource/Effect/Explosion/Explosion_%02d.png", 28);
 	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
 	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 15);
@@ -1622,6 +1631,10 @@ HRESULT CLoader::Loading_UI()
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Head",
 		CMonster_Head::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Head1",
+		CMonster_Head1::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Drone",

@@ -10,11 +10,11 @@ private:
     virtual ~CCameraFPS();
 
 public:
-    virtual         HRESULT      Ready_GameObject();
-    virtual         HRESULT      Initialize(void* pArg)override;
-    virtual         _int      Update_GameObject(const _float& fTimeDelta);
-    virtual         void      LateUpdate_GameObject(const _float& fTimeDelta);
-    virtual         void      Render_GameObject() {}
+    virtual HRESULT Ready_GameObject();
+    virtual HRESULT Initialize(void* pArg) override;
+    virtual _int    Update_GameObject(const _float& fTimeDelta);
+    virtual void    LateUpdate_GameObject(const _float& fTimeDelta);
+    virtual void    Render_GameObject() {}
 
     //getter stter func
 public:
@@ -35,22 +35,41 @@ public:
 
 private:
     HRESULT Set_PlayerPos();
-    void Move_Shaking();
-    void Mouse_Move(); //바라보는 방향
-    void Mouse_Fix(); // 마우스 화면 안에서 움직임
+    void    Move_Shaking();
+    void    Mouse_Move(); //바라보는 방향
+    void    Mouse_Fix(); // 마우스 화면 안에서 움직임
+
+    // 줌 시스템
+    void    TickZoom(const _float dt);
+    _bool   IsZoomWanted() const;     // 플레이어 상태로 줌 의도 판단
 
 private:
-    _bool      m_bFix;
-    _bool      m_bShaking;   // 플레이어 좌우 움직일때 쉐이킹
-    _bool      m_bRecoil;      // 총 반동을 위함 -> 뺄지도
-    _bool      m_bZoom;
-    FPSCAMMODE   m_eCamMode;
-    _float m_fOffset;
-    _float m_fZoomTime;
+    _bool   m_bFix;
+    _bool   m_bShaking;   // 플레이어 좌우 움직일때 쉐이킹
+    _bool   m_bRecoil;    // 총 반동을 위함 -> 뺄지도
+    _bool   m_bZoom;
+    FPSCAMMODE m_eCamMode;
+    _float  m_fOffset;   
+
+    _float  m_fZoomTime;  
+
+
+    _float     m_fDefaultFov;
+    _float     m_fZoomFov_Default;
+    _float     m_fZoomFov_Sniper;
+
+    _float     m_fCurFov;
+
+    _float     m_fZoomInSpeed;
+    _float     m_fZoomOutSpeed;
+
+    _float     m_fTargetOffset;
+    _float     m_fCurOffset;
+    _float     m_fZoomOffset_Default;
+    _float     m_fZoomOffset_Sniper;
 
 public:
     static CCameraFPS* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CCamera* Clone(void* pArg);
-    virtual void      Free();
+    virtual void       Free();
 };
-

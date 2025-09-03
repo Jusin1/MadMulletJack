@@ -12,13 +12,29 @@ CCameraFPS::CCameraFPS(LPDIRECT3DDEVICE9 pGraphicDev)
     m_bFix(false), m_bShaking(true),
     m_bRecoil(false), m_bZoom(false), m_eCamMode(CAM_NORMAL),
     m_fOffset(0.f), m_fZoomTime(0.f)
+    , m_fDefaultFov(D3DXToRadian(60.f))
+    , m_fZoomFov_Default(D3DXToRadian(28.f))
+    , m_fZoomFov_Sniper(D3DXToRadian(14.f))
+    , m_fCurFov(D3DXToRadian(60.f))
+    , m_fZoomInSpeed(10.f)
+    , m_fZoomOutSpeed(8.f)
+    , m_fTargetOffset(0.f)
+    , m_fCurOffset(0.f)
+    , m_fZoomOffset_Default(0.35f)
+    , m_fZoomOffset_Sniper(0.65f)
 {
 }
 
 CCameraFPS::CCameraFPS(const CCameraFPS& rhs) : CCamera(rhs),
 m_bFix(rhs.m_bFix), m_bShaking(rhs.m_bShaking),
 m_bRecoil(rhs.m_bRecoil), m_bZoom(rhs.m_bZoom), m_eCamMode(rhs.m_eCamMode),
-m_fOffset(rhs.m_fOffset), m_fZoomTime(rhs.m_fZoomTime)
+m_fOffset(rhs.m_fOffset), m_fZoomTime(rhs.m_fZoomTime),
+// FOV/줌 관련 복사
+m_fDefaultFov(rhs.m_fDefaultFov),
+m_fZoomFov_Default(rhs.m_fZoomFov_Default), m_fZoomFov_Sniper(rhs.m_fZoomFov_Sniper),
+m_fCurFov(rhs.m_fCurFov), m_fZoomInSpeed(rhs.m_fZoomInSpeed), m_fZoomOutSpeed(rhs.m_fZoomOutSpeed),
+m_fTargetOffset(rhs.m_fTargetOffset), m_fCurOffset(rhs.m_fCurOffset),
+m_fZoomOffset_Default(rhs.m_fZoomOffset_Default), m_fZoomOffset_Sniper(rhs.m_fZoomOffset_Sniper)
 {
 
 }
@@ -55,6 +71,9 @@ HRESULT CCameraFPS::Initialize(void* pArg)
 
     }
 
+    // 현재 프로젝션에서 기본 FOV를 읽어두고 싶다면, 여기서 m_fDefaultFov를 보정해도 됨.
+    m_fCurFov = m_fDefaultFov;
+
     return S_OK;
 }
 
@@ -62,43 +81,42 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
 {
     CCamera::Update_GameObject(fTimeDelta);
 
-    // zoom 상태일때
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMING)
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
     {
-        // 카메라의 look 방향으로 전진
-        _vec3 vLook;
-        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        // zoom 상태일때
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMING)
+        {
+            // 카메라의 look 방향으로 전진
+            _vec3 vLook;
+            vLook = m_pTransformCom->Get_Info(INFO_LOOK);
 
-        if(CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+
             m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
-        m_fZoomTime += fTimeDelta;
-    }
+            m_fZoomTime += fTimeDelta;
+        }
 
-    else if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMOUT)
-    {
-        // 카메라의 look 방향으로 전진
-        _vec3 vLook;
-        vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-        vLook *= -1.f;
-        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+        else if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMOUT)
+        {
+            // 카메라의 look 방향으로 전진
+            _vec3 vLook;
+            vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+            vLook *= -1.f;
+         
             m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
-
+            m_fZoomTime = 0.f;
+        }
+        // 플레이어의 위치를 가져와서 셋팅
         else
-            m_pTransformCom->Move_PosDir(m_fZoomTime, vLook);
-        m_fZoomTime = 0.f;
+            Set_PlayerPos();
     }
-    
-    // 플레이어의 위치를 가져와서 셋팅
-    else 
-        Set_PlayerPos();
-
-    Move_Shaking();
+    else
+    {
+        TickZoom(fTimeDelta);
+        m_camInfo.fFov = m_fCurFov;
+    }
 
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;
-
-   
-
     return NO_EVENT;
 }
 
@@ -107,35 +125,35 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     Engine::CCamera::LateUpdate_GameObject(fTimeDelta);
 
 
-    // 마우스로 바라보는 방향 조절
-    // fix가 아니고 clear가 아닐때
-    // 카메라 월드행렬 완성
+
     if (false == m_bFix &&
         (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR &&
-        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMING &&
-        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMOUT))
+            CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMING &&
+            CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMOUT))
     {
         Mouse_Move();
         Mouse_Fix();
     }
-
-    // 줌 상태 유지 하려면... 줌 한 시간 만큼 look 방향으로 이동 시켜주기
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM || 
-        CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
+    
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
     {
-    	// 카메라의 look 방향으로 전진
-    	_vec3 vLook;
-        vLook = GetTransform()->Get_Info(INFO_LOOK);
-
-
-        //if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM ||
+            CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
+        {
+            _vec3 vLook;
+            vLook = GetTransform()->Get_Info(INFO_LOOK);
             m_pTransformCom->Move_PosDir(m_fZoomTime, vLook);
-        
-        //else
-    	   // GetTransform()->Move_PosDir(m_fZoomTime * 5.2f, vLook);
+        }
     }
-
-    m_eCamMode = CAM_NORMAL;
+    else
+    {
+        if (m_fCurOffset != 0.f)
+        {
+            _vec3 vLook = GetTransform()->Get_Info(INFO_LOOK);
+            GetTransform()->Move_PosDir(m_fCurOffset, vLook);
+        }
+    }
+    
 
     // 카메라의 월드행렬 적용
     if (FAILED(Apply_ViewPorjection()))
@@ -144,24 +162,16 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCameraFPS::Mouse_Move()
 {
-    _matrix   matCamWorld;
+    _matrix matCamWorld;
     m_pTransformCom->Get_World(&matCamWorld);
 
-    _vec3 eye = m_pTransformCom->Get_Info(INFO_POS);
-
-
-    _long   dwMouseMove(0);
+    _long dwMouseMove(0);
 
     if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y))
     {
-        _vec3   vRight = m_pTransformCom->Get_Info(INFO_RIGHT);
-
-
-        _vec3   vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        _vec3 vRight = m_pTransformCom->Get_Info(INFO_RIGHT);
         _matrix matRot;
-
         D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouseMove / 10.f));
-
         matCamWorld = matCamWorld * matRot;
     }
 
@@ -172,7 +182,6 @@ void CCameraFPS::Mouse_Move()
     if (pPlayerTransformCom == nullptr)
         return;
 
-    // 행렬에서 벡터 추출 -> 플레이어에게 적용
     _vec3 vRight = { matCamWorld._11 * 1.f, matCamWorld._12, matCamWorld._13 };
     _vec3 vUp = { matCamWorld._21, matCamWorld._22 * 2.f, matCamWorld._23 };
     _vec3 vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33 * 1.f };
@@ -183,21 +192,17 @@ void CCameraFPS::Mouse_Move()
 
     if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
     {
-        _vec3   vUp{ 0.f, 1.f, 0.f };
-
-        _vec3   vLook = m_pTransformCom->Get_Info(INFO_LOOK);
+        _vec3 vUpAxis{ 0.f, 1.f, 0.f };
+        _vec3 vLookTmp = m_pTransformCom->Get_Info(INFO_LOOK);
         _matrix matRot;
-
-        D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(dwMouseMove / 10.f));
-        D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
+        D3DXMatrixRotationAxis(&matRot, &vUpAxis, D3DXToRadian(dwMouseMove / 10.f));
+        D3DXVec3TransformNormal(&vLookTmp, &vLookTmp, &matRot);
         matCamWorld = matCamWorld * matRot;
     }
 
-    // 행렬에서 벡터 추출
     vRight = { matCamWorld._11, matCamWorld._12, matCamWorld._13 };
     vUp = { matCamWorld._21, matCamWorld._22, matCamWorld._23 };
-    vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33};
+    vLook = { matCamWorld._31, matCamWorld._32, matCamWorld._33 };
 
     m_pTransformCom->Set_Info(INFO_RIGHT, vRight);
     m_pTransformCom->Set_Info(INFO_UP, vUp);
@@ -206,8 +211,7 @@ void CCameraFPS::Mouse_Move()
 
 void CCameraFPS::Mouse_Fix()
 {
-    POINT   ptMouse{ WINCX >> 1, WINCY >> 1 };
-
+    POINT ptMouse{ WINCX >> 1, WINCY >> 1 };
     ClientToScreen(g_hWnd, &ptMouse);
     SetCursorPos(ptMouse.x, ptMouse.y);
 }
@@ -221,9 +225,7 @@ HRESULT CCameraFPS::Set_PlayerPos()
         return E_FAIL;
 
     _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-
     m_pTransformCom->Set_Info(INFO_POS, vPlayerPos);
-
     return S_OK;
 }
 
@@ -232,8 +234,6 @@ void CCameraFPS::Move_Shaking()
     if (!m_bShaking)
         return;
 
-    // z축 회전
-    // 회전 행렬을 구해서 곱해서 전해줌
     switch (m_eCamMode)
     {
     case CAM_LEFT:
@@ -253,6 +253,31 @@ void CCameraFPS::Move_Shaking()
 }
 
 
+_bool CCameraFPS::IsZoomWanted() const
+{
+    const auto& st = CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState;
+    // “줌 유지” 계열 상태는 모두 줌 의도로 본다
+    return (st == ZOOMING || st == ZOOM || st == ATTACK_ZOOM);
+}
+
+void CCameraFPS::TickZoom(const _float dt)
+{
+    const bool wantZoom = IsZoomWanted();
+
+
+    const bool isSniper = (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WP_SNIPER);
+    const float targetFov = wantZoom ? (isSniper ? m_fZoomFov_Sniper : m_fZoomFov_Default) : m_fDefaultFov;
+    m_fTargetOffset = wantZoom ? (isSniper ? m_fZoomOffset_Sniper : m_fZoomOffset_Default) : 0.0f;
+
+    const float inK = 1.f - expf(-m_fZoomInSpeed * dt);
+    const float outK = 1.f - expf(-m_fZoomOutSpeed * dt);
+    const float kFov = (targetFov < m_fCurFov) ? inK : outK;
+
+    m_fCurFov = m_fCurFov + (targetFov - m_fCurFov) * kFov;
+
+    const float kOff = (m_fTargetOffset > m_fCurOffset) ? inK : outK;
+    m_fCurOffset = m_fCurOffset + (m_fTargetOffset - m_fCurOffset) * kOff;
+}
 
 CCameraFPS* CCameraFPS::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

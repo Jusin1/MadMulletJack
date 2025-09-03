@@ -174,7 +174,7 @@ HRESULT CEffect_World::Texture_Clone()
 	AnimationDeffinition anims[] =
 	{
 		{ L"Electric",	L"Proto_Effect_Electric",			0,	17,	15.f,	false },
-		{ L"Explosion",	L"Proto_Effect_Explosion",			0,	16,	10.f,	false },
+		{ L"Explosion",	L"Proto_Effect_Explosion",			0,	28,	30.f,	false },
 		{ L"Splatter",	L"Proto_Effect_Splatter",			0,  9,	5.f,	false },
 		{ L"Hitted",	L"Proto_Effect_Hitted",				0,	6,	5.f,	false },
 		{ L"Spread",    L"Proto_Effect_Spread",				0,  12, 10.f,   false },

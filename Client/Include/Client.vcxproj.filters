@@ -570,6 +570,9 @@
     <ClInclude Include="..\Header\CPrefabRecycleSystem.h">
       <Filter>03. Manager\PrefabRecycleSystem</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Head1.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -835,6 +838,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPrefabRecycleSystem.cpp">
       <Filter>03. Manager\PrefabRecycleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Head1.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
