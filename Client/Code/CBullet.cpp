@@ -20,6 +20,7 @@ CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_vMoveDir(0.f, 0.f, 1.f)
     , m_fLifeTime(0.f)
     , m_fLifeLimit(1.f)   
+    , m_eOwner(BulletData::OWNER::MONSTER)
 {
 }
 
@@ -32,6 +33,7 @@ CBullet::CBullet(const CBullet& rhs)
     , m_vMoveDir(rhs.m_vMoveDir)
     , m_fLifeTime(rhs.m_fLifeTime)
     , m_fLifeLimit(rhs.m_fLifeLimit)
+    , m_eOwner(rhs.m_eOwner)
 {
 }
 
@@ -142,6 +144,9 @@ HRESULT CBullet::Spawn_Pooling(void *pArg)
         m_pTransformCom->SetTransformInfo(TransformInfo);
         m_fSpeed = pData->fSpeed;
         Fire(pData->vMuzzlePosition, pData->vLookDir);
+
+        // owner Àû¿ë
+        m_eOwner = pData->eOwner;
     }
     else
     {
@@ -248,8 +253,6 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
 
 void    CBullet::Set_Collider(const _float& fTimeDelta)
 {
-    m_pColiderCom->Update_ColliderSphere();
-
     Set_Collider_With_Wall();
 
     return;

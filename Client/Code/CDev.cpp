@@ -16,6 +16,8 @@
 #include "CUIManager.h"
 #include "CGlobal_Info.h"
 #include "Sound_Manager.h"
+#include "CLoading_Scene.h"
+#include "CDInputMgr.h"
 
 CDev::CDev(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -96,18 +98,62 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
     // µð¹ö±ë¿ë 
     static _bool bPrevF1 = false;
 
-    if (GetAsyncKeyState(VK_F1) & 0x8000)
+    /*if (GetAsyncKeyState(VK_F1) & 0x8000)
     {
         if (!bPrevF1)
         {
             g_ColiderRender = !g_ColiderRender;
             bPrevF1 = true;
         }
-    }
-    else
+    }*/
+    /*else
     {
         bPrevF1 = false;
+    }*/
+
+    // test : eunbi
+    if (KEY_BUTTON_DOWN(DIK_U)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_TUTORIAL))))
+            return E_FAIL;
     }
+
+    if (KEY_BUTTON_DOWN(DIK_I)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_STAGE_1))))
+            return E_FAIL;
+    }
+
+    if (KEY_BUTTON_DOWN(DIK_O)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_STAGE_2))))
+            return E_FAIL;
+    }
+
+    if (KEY_BUTTON_DOWN(DIK_P)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_SNIPE))))
+            return E_FAIL;
+    }
+
+    if (KEY_BUTTON_DOWN(DIK_Y)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_BOSS))))
+            return E_FAIL;
+    }
+
+    if (KEY_BUTTON_DOWN(DIK_E)) {
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING,
+            CLoading_Scene::Create(m_pGraphicDev, SCENE_CAR))))
+            return E_FAIL;
+    }
+   
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);

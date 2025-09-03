@@ -59,29 +59,37 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	switch (iTargetScene)
 	{
 	case SCENE_DEV:
-	//case SCENE_TUTORIAL: //test
+	case SCENE_TUTORIAL: //test
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2: // test
 		m_iSceneCase = 0;
 		m_vTextSet = { -420.f, -145.f ,2.f};
+
+		// 셋팅값을 기준으로 ui들 생성
+		if (FAILED(Set_HpBarUI()))
+			return E_FAIL;
+
 		break;
 
-	case SCENE_TUTORIAL: // test
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
-	case SCENE_CAR:
+	
 		m_iSceneCase = 1;
-		m_vTextSet = { -430.f, -50.f ,1.3};
+		m_vTextSet = { -430.f, -56.f ,1.f};
+
+		// 셋팅값을 기준으로 ui들 생성
+		if (FAILED(Set_HpBarUI()))
+			return E_FAIL;
+
 		break;
+
+	case SCENE_CAR:
 	case SCENE_END:
-		m_iSceneCase = -1;
-		m_vRectOriginOffset = { 0.f, 0.f,0.f };
+		m_bActive = false;
 		break;
 	}
 
-	// 셋팅값을 기준으로 ui들 생성
-	if (FAILED(Set_HpBarUI()))
-		return E_FAIL;
+	
 
 	return S_OK;
 }
@@ -104,13 +112,16 @@ void	CHpBarUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	CBlackGackGround* pRect =  dynamic_cast<CBlackGackGround*>(this->Find_Child_ByTag(TEXT("RectUI")));
 	if (Is_Scene_Change()) // scene 이 바뀌면 
 	{
-		pPhone	->Set_Texture(m_eScene); // texture를 바꿔라
-		pMan	->Set_Texture(m_eScene); 
+		if(pPhone)
+			pPhone	->Set_Texture(m_eScene); // texture를 바꿔라
+		if(pMan)
+			pMan	->Set_Texture(m_eScene); 
 	}
 
 	if (m_bHitChange) // hitcount가 바뀌면
 	{
-		pMan->Set_Texture(m_iHitCount); // texture를 바꿔라
+		if (pMan)
+			pMan->Set_Texture(m_iHitCount); // texture를 바꿔라
 		m_bHitChange = false;
 	}
 }

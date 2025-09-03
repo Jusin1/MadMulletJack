@@ -89,6 +89,9 @@
 #include "CTile_Bottle.h"
 #include "CPrefab.h"
 
+// itme
+#include "CItem.h"
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphicDev(pGraphic_Device)
 {
@@ -1135,6 +1138,12 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/InsBlood%03d.png", 18))))
 		return E_FAIL;
 
+	// Dopding texture - item
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\dopoing\Bottle000.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_ItemDoping",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/dopoing/Bottle000.png", 1))))
+		return E_FAIL;
+
 	// Sniper Gun
 	// 이거는 나중에 scene_sniper 에서만 load
 	// Sniper aimUI
@@ -1770,6 +1779,12 @@ HRESULT CLoader::Loading_UI()
 		CWeaponUI_Manager::Create(m_pGraphicDev))))
 		return E_FAIL;
 #pragma endregion weapon  UI
+
+	// itme
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Item",
+		CItem::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 
 	PhaseStep(1.0f, L"UI 로딩 완료");
 	PhaseDone(L"UI 로딩 완료");

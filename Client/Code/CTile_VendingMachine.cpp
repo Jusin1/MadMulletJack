@@ -10,6 +10,9 @@
 #include "CTile_VendingMachine.h"
 #include "CGlobal_Info.h"
 #include "CPickingManager.h"
+#include "CObjectManager.h"
+#include "CManagement.h"
+#include "CItem.h"
 
 CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
@@ -103,7 +106,8 @@ void CTile_VendingMachine::LateUpdate_GameObject(const _float &fTimeDelta)
 			if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == KICK)
 			{
 				// 음료수 생성
-
+				if (FAILED(Create_Drink()))
+					return;
 				// destory
 				m_bDestroyed = true;
 			}
@@ -120,9 +124,31 @@ _bool CTile_VendingMachine::Picking(_vec3* PickingPoint)
 
 void CTile_VendingMachine::PickingTrue()
 {
-	m_bDestroyed = true;
+	// 음료수 생성`
+	if (FAILED(Create_Drink()))
+		return;
 
-	// 음료수 생성
+	m_bDestroyed = true;
+}
+
+HRESULT CTile_VendingMachine::Create_Drink()
+{
+	CItem::ITEMINFO tInfo{};
+	
+	_vec3 vPos = GetTransform()->Get_Info(INFO_POS); // 시작 위치
+	vPos.y += 0.2f; // 살짝 위로
+
+	_vec3 vLook = GetTransform()->Get_Info(INFO_LOOK); // 자판기 보다 살짝 앞으로 보내기 위해
+	D3DXVec3Normalize(&vLook, &vLook); // 정규화
+	vPos = vPos + vLook * 1.f;
+
+	tInfo.vStartPos = vPos;
+	tInfo.eWeapon = WP_DOPING;
+	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Item", 
+		CManagement::GetInstance()->Get_CurrentSceneIdx(), L"GameLogic_Layer",&tInfo)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CTile_VendingMachine::Render_GameObject()

@@ -103,7 +103,10 @@ void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 
     if (m_fComputeTime > 1.f)
     {
-        Set_OnTerrain(fTimeDelta);
+        if (!CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_SNIPE)
+        {
+            Set_OnTerrain(fTimeDelta);
+        }
         m_fCamDistance = 0.f;
     }
 

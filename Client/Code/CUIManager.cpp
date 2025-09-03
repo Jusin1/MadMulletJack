@@ -628,7 +628,7 @@ void CUIManager::Create_PlayerEff(PLAYEREFF _eEffect)
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer"));
 
-    //if (!effect) return;
+    if (!effect) return;
 
     // 셋팅 값 초기화
     _vec4           vSizeOffset = {};
@@ -770,7 +770,9 @@ void CUIManager::Update_CureEff(const _float& fTimeDelta)
 
 void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
 {
-    if (!m_pPlayerEffUI) return;
+    if (!m_pPlayerEffUI ||
+        m_pPlayerEffUI->GetChildren().empty()) 
+        return;
 
     const wchar_t* childTag = L"";
     CImageUI* pEff = nullptr;
@@ -779,14 +781,14 @@ void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
     {
     case PLAYEREFF::DASH:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"DashEff"));
-        if (!pEff)
+        if (pEff == nullptr)
             return;
 
         break;
 
     case PLAYEREFF::BLOODR:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodREff"));
-        if (!pEff)
+        if (pEff == nullptr)
             return;
         if (!pEff->GetTextureCom()->Is_AnimFinished())
             return;
@@ -795,7 +797,7 @@ void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
 
     case PLAYEREFF::BLOODG:
         pEff = dynamic_cast<CImageUI*> (m_pPlayerEffUI->Find_Child_ByTag(L"BloodGEff"));
-        if (!pEff)
+        if (pEff ==nullptr)
             return;
         if (!pEff->GetTextureCom()->Is_AnimFinished())
             return;
@@ -1115,9 +1117,10 @@ void CUIManager::ClearAllUI()
     Safe_Release(m_pPhoeScreenBackGround);
 
     // eunbi player effect ui delete
+    Destory_PlayerEff_ALL();
     Safe_Release(m_pPlayerEffUI);
     Destory_CureEff();
-    Safe_Release(m_pCureEffUI  );
+    Safe_Release(m_pCureEffUI );
 
     // --- 상점 UI ---
     Safe_Release(m_pShopRoot);

@@ -47,7 +47,12 @@ HRESULT CCameraFPS::Initialize(void* pArg)
     if (m_pTransformCom)
     {
         CTransform::TRANSFORMINFO tMyTransInfo = m_pTransformCom->GetTransformInfo();
-        m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 8.f, tMyTransInfo.fRotationSpeed });
+
+        if(CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_SNIPE)
+            m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 40.f, tMyTransInfo.fRotationSpeed });
+        else
+            m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 10.f, tMyTransInfo.fRotationSpeed });
+
     }
 
     return S_OK;
@@ -77,12 +82,17 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
         vLook *= -1.f;
         if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
             m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
+
+        else
+            m_pTransformCom->Move_PosDir(m_fZoomTime, vLook);
         m_fZoomTime = 0.f;
     }
     
     // 플레이어의 위치를 가져와서 셋팅
     else 
         Set_PlayerPos();
+
+    Move_Shaking();
 
     if (FAILED(Apply_ViewPorjection()))
         return NO_EVENT;
@@ -96,8 +106,6 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Engine::CCamera::LateUpdate_GameObject(fTimeDelta);
 
-    //Set_PlayerPos();
-    Move_Shaking();
 
     // 마우스로 바라보는 방향 조절
     // fix가 아니고 clear가 아닐때
@@ -118,10 +126,16 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
     	// 카메라의 look 방향으로 전진
     	_vec3 vLook;
         vLook = GetTransform()->Get_Info(INFO_LOOK);
-    	GetTransform()->Move_PosDir(m_fZoomTime, vLook);
+
+
+        //if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+            m_pTransformCom->Move_PosDir(m_fZoomTime, vLook);
+        
+        //else
+    	   // GetTransform()->Move_PosDir(m_fZoomTime * 5.2f, vLook);
     }
 
-    
+    m_eCamMode = CAM_NORMAL;
 
     // 카메라의 월드행렬 적용
     if (FAILED(Apply_ViewPorjection()))
@@ -224,12 +238,17 @@ void CCameraFPS::Move_Shaking()
     {
     case CAM_LEFT:
         //오른쪽 살짝 아래로 회전
+        // z 축 양의 방향으로 회전
         m_bFix = true;
         break;
     case CAM_RIGHT:
         //왼쪽 살짝 아래로 회전
+        // z 축 음의 방향으로 회전
         m_bFix = true;
         break;
+
+    default:
+        m_bFix = false;
     }
 }
 

@@ -176,6 +176,13 @@ HRESULT CPlayer_HandL::Set_Texture()
 
     // info 업데이트
     m_tInfo = CGlobal_Info::Get_Instance()->Get_PlayerInfo();
+
+    if (m_CurrentAnimTag == TEXT("Com_Texture_HandL_Doping"))
+    {
+
+        while (!m_pTextureCom->Is_AnimFinished())
+            m_pTextureCom->MoveFrame();
+    }
     
     // player state -> weapon 순으로 나누어서 texture 출력
     switch (m_tInfo.ePlayerState) {

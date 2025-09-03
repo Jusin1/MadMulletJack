@@ -9,6 +9,7 @@
 #include "CPicking.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
+#include "CBullet.h"
 
 CMonster_Dron::CMonster_Dron(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT) 
@@ -97,6 +98,7 @@ void CMonster_Dron::Set_Collider()
 
     m_pColiderCom->Update_ColliderSphere();
     Set_Collider_With_Wall();
+    Set_Collider_With_Bullet();
 }
 
 void CMonster_Dron::GetDeathUIConfig(DeathUIConfig& cfg, bool /*isHeadshot*/) const
@@ -323,6 +325,23 @@ bool CMonster_Dron::WorldToScreen(const _vec3& world, float& sx, float& sy) cons
     D3DXVec3Project(&out, &in, &vp, &proj, &view, &id);
     sx = out.x; sy = out.y;
     return (out.z >= 0.f && out.z <= 1.f);
+}
+
+void CMonster_Dron::Set_Collider_With_Bullet()
+{
+    CGameObject* pColliObj{ nullptr };
+    if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
+    {
+        if (!pColliObj) // 예외처리
+            return;
+
+        // 플레이어 bullet 일 때
+        if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() == BulletData::OWNER::PLAYER)
+        {
+            pColliObj->Set_Dead(true); // bullet dead 처리
+            SetState(DEATH);
+        }
+    }
 }
 
 CMonster_Dron* CMonster_Dron::Create(LPDIRECT3DDEVICE9 pGraphicDev)

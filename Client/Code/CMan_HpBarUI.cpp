@@ -158,7 +158,7 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 	switch (_eSCENE)
 	{
 	case SCENE_DEV:
-	//case SCENE_TUTORIAL: //test
+	case SCENE_TUTORIAL: //test
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2:		
 		m_vLocalOffset = { 22.f, -110.f,0.f };
@@ -169,10 +169,8 @@ HRESULT CMan_HpBarUI::Set_Texture(SCENE _eSCENE)
 
 		break;
 
-	case SCENE_TUTORIAL: // test
 	case SCENE_SNIPE:
 	case SCENE_BOSS:
-	case SCENE_CAR:
 		m_vLocalOffset = { 30.f, -200.f,0.f };
 
 		Set_New_TransInfo(50.f, 7.f);

@@ -10,6 +10,8 @@
 #include "CMissile.h"
 #include "Engine_Define.h"
 #include "CBoss.h"
+#include "CColiderManager.h"
+#include "CBullet.h"
 
 CBoss::CBoss(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -72,7 +74,10 @@ HRESULT CBoss::Set_Component()
 
 void CBoss::Set_Collider()
 {
+	// 备 面倒
+	m_pColiderSphere->Update_ColliderSphere();
 
+	Set_Collider_With_Bullet();
 }
 
 void CBoss::SetUp_BillBoard()
@@ -990,4 +995,22 @@ void CBoss::Render_AfterImage()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, oldAlphaOp);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, oldAlphaArg1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, oldAlphaArg2);
+}
+
+void CBoss::Set_Collider_With_Bullet()
+{
+	CGameObject* pColliObj{ nullptr };
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
+	{
+		if (!pColliObj) // 抗寇贸府
+			return;
+
+		// 敲饭捞绢 bullet 老 锭
+		if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() == BulletData::OWNER::PLAYER)
+		{
+			pColliObj->Set_Dead(true); // bullet dead 贸府
+			// 格见 临扁
+			m_fHp -= 1.f; // test : eunbi
+		}
+	}
 }

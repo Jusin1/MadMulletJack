@@ -93,7 +93,7 @@ protected:
 
     void DisableAllCollisionAndPicking(); // 몬스터가 죽을 때 픽킹 OFF
     void SetUp_BillBoard();            
-    void Set_Collider_With_Wall();     
+    void Set_Collider_With_Wall();
 
     // 텍스처
     virtual HRESULT Texture_Clone();

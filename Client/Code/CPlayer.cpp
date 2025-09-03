@@ -22,6 +22,8 @@
 #include "CWeaponUI_Manager.h"
 #include "CMainWeapon.h"
 #include "CMonster_Dron.h"
+#include "CCameraFPS.h"
+#include "CBullet.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -33,7 +35,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
-	m_fAttackCoolTime(0.f)
+	m_fAttackCoolTime(0.f), m_iCurScene(0), m_bIsZoomStage(false)
 {
 }
 
@@ -43,7 +45,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
 	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
-	m_fAttackCoolTime(rhs.m_fAttackCoolTime)
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_iCurScene(rhs.m_iCurScene), m_bIsZoomStage(rhs.m_bIsZoomStage)
 {
 }
 
@@ -88,7 +90,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	// state 변경 해줌
 	Change_State(OPENING);
-	Change_Move(PMV_NORMAL);
+	//Change_Move(PMV_NORMAL);
 
 	// terrain위에 있도록 함
 	m_bIsFixY = false;
@@ -100,23 +102,40 @@ HRESULT CPlayer::Initialize(void* pArg)
 	{
 	case SCENE_DEV:
 	case SCENE_TUTORIAL:
+		m_bIsZoomStage = false;
+		Change_Weapon(WP_PISTOL);
+		break;
 	case SCENE_STAGE_1:
+		m_bIsZoomStage = false;
+		Change_Weapon(WP_SHOTGUN);
+		break;
 	case SCENE_STAGE_2:
 		m_bIsZoomStage = false;
+		Change_Weapon(WP_KATANA);
 		break;
 
 	case SCENE_SNIPE:
 		m_bIsZoomStage = true;
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
 		Change_Weapon(WP_SNIPER);
 		break;
 
 	case SCENE_BOSS:
 		m_bIsZoomStage = false;
+		m_iCurScene = SCENE_BOSS;
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
+		Change_Weapon(WP_PISTOL);
 		break;
 
 	case SCENE_CAR:
+		m_fNormalSpeed = 10.f;
 		m_bIsZoomStage = true;
 		m_pHpBarUI->Set_Active(false);
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
+		Change_Weapon(WP_MINIGUN);
 		break;
 	}
 
@@ -134,6 +153,16 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	/*if (m_bDead)
 		return DEAD;*/
+
+
+	_vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+
+	std::wstring dbg = L"Player Pos: (" +
+		std::to_wstring(vPos.x) + L", " +
+		std::to_wstring(vPos.y) + L", " +
+		std::to_wstring(vPos.z) + L")\n";
+
+	OutputDebugString(dbg.c_str());
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_bIsZoomStage)
@@ -205,11 +234,11 @@ void CPlayer::Render_GameObject()
 void CPlayer::Add_Hp(_float _fAddHp)
 {
 	// 만약 hp가 증가하면
-	if (_fAddHp > 0)
-	{
-		// cure effect create
-		CUIManager::GetInstance()->Create_CureEff();
-	}
+	//if (_fAddHp > 0)
+	//{
+	//	// cure effect create
+	//	CUIManager::GetInstance()->Create_CureEff();
+	//}
 
 	// 체력을 더함
 	m_fHp += _fAddHp;
@@ -249,7 +278,6 @@ void CPlayer::NormalLateUpdate(const _float& fTimeDelta)
 	// y값 조정 ( fixYf로 이동하지 않을때)
 	if (!m_bIsFixY)
 	{
-		// jump를 하거나 terrain을 타거나
 		Set_OnTerrain(fTimeDelta);
 	}
 
@@ -336,7 +364,8 @@ void CPlayer::Set_State_Normal()
 void CPlayer::CountTime(const _float& fTimeDelta)
 {
 	// 초당 hp 감소
-	Add_Hp(-1.f * fTimeDelta);
+	if(m_iCurScene != SCENE_BOSS)
+		Add_Hp(-1.f * fTimeDelta);
 
 	// dashcooltime 이 0초가 아니라면 cooltime 깎아줌
 	if (m_fDashCoolTime != 0)
@@ -470,7 +499,7 @@ void CPlayer::StateEnd(PLAYERSTATE _e)
 	case JUMP:
 		JUMP_End();break;
 
-	case KICK:
+	case KICK:\
 		KICK_End();break;
 
 	case ATTACK:
@@ -632,7 +661,7 @@ void CPlayer::JUMP_Begin()
 	Set_Jumping(true);
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
-	m_bIsAttack = true;
+	//m_bIsAttack = true;
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -826,8 +855,9 @@ void CPlayer::DOPING_Begin()
 	// hit count reset
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->HitCount_Reset();
 
-	// text effect 추가
+	// effect 추가
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("생명 소다"));
+	CUIManager::GetInstance()->Create_CureEff();
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -1078,6 +1108,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		}
 
 		if (m_tPlayerInfo.ePlayerState != RELOAD &&		// 전에가 reload가 아니고
+			m_tPlayerInfo.ePlayerState != JUMP &&
 			(m_tPlayerInfo.eWeapon != WP_NON &&			// weapon1이 있을 때
 			m_tPlayerInfo.eWeapon != WP_KATANA &&
 			m_tPlayerInfo.eWeapon != WP_END ))
@@ -1659,6 +1690,7 @@ void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
+	Set_Collider_With_Bullet(fTimeDelta);
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -1854,14 +1886,29 @@ void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
 	CGameObject *pColliObj{ nullptr };
  	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
 	//나중에 item으로 바꿔야함 test
-	//if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
-	//{
-	//	if (!pColliObj) // 예외처리
-	//		return;
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
+	{
+		if (!pColliObj) // 예외처리
+			return;
 
-	//	pColliObj->Set_Dead(true); // bullet dead 처리
-	//	HitFromObject(fTimeDelta, 1.f);
-	//}
+		// 내 bullet이 아닐때만
+		if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() != BulletData::OWNER::PLAYER)
+		{
+			pColliObj->Set_Dead(true); // bullet dead 처리
+			HitFromObject(fTimeDelta, 1.f);
+		}
+	}
+
+	pColliObj = nullptr;
+	// 미사일
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MISSILE, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
+	{
+		if (!pColliObj) // 예외처리
+			return;
+
+		pColliObj->Set_Dead(true); // bullet dead 처리
+		HitFromObject(fTimeDelta, 5.f);
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -1947,6 +1994,9 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	// test : eunbi
+	//CUIManager::GetInstance()->ClearAllUI();
 }
 
 //debug

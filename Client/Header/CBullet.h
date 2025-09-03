@@ -25,7 +25,11 @@ public:
     virtual HRESULT Spawn_Pooling(void *pArg = nullptr) override;
     virtual HRESULT Despawn_Pooling() override;
 
+    // getter setter func
     void Set_Speed(_float s) { m_fSpeed = s; }
+    void Set_OwnerType(BulletData::OWNER eOwner) { m_eOwner = eOwner; }
+    BulletData::OWNER Get_OwnerType() const { return m_eOwner; }
+
 protected:
     HRESULT Set_Component();
     void    Set_Collider_With_Wall();
@@ -47,6 +51,8 @@ protected:
 
     float m_fLifeTime;      // 현재까지 지난 시간
     float m_fLifeLimit;     // 총알 생존 제한 시간
+
+    BulletData::OWNER m_eOwner;
 
 public:
     void Fire(const _vec3& vPos, const _vec3& vDir);

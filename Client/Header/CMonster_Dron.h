@@ -25,6 +25,7 @@ protected:
     void            Set_Collider();
     void            GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const override;
     void            Set_Check_Weapon(); // 카타나 겹침 감지 → KATANA_DEATH
+    void            Set_Collider_With_Bullet();
 
 public:
     static  CMonster_Dron* Create(LPDIRECT3DDEVICE9 pGraphicDev);

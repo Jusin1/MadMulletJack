@@ -75,7 +75,9 @@ HRESULT CPlayerUI_Manager::PlayerUI_OnOff()
 	for (auto& pChild : m_vecChildren)
 	{
 		if (pChild)
+		{
 			pChild->Set_Active(false);
+		}	
 	}
 
 	// handR은 거의 켜주기 때문에 active true
