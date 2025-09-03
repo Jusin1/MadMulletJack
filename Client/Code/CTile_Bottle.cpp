@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Engine_Define.h"
 #include "Clinet_Define.h"
+#include "Client_Global.h"
+#include "CObjectPoolManager.h"
+#include "CEffect_Pixel_Sprite.h"
 #include "CVIBuffer_Rect.h"
 #include "CPickingManager.h"
 #include "CTexture.h"
@@ -97,7 +100,41 @@ _bool CTile_Bottle::Picking(_vec3 *PickingPoint)
 
 void CTile_Bottle::PickingTrue()
 {
+    Spawn_DestroyEffect();
     Set_Dead(TRUE);
+}
+
+void CTile_Bottle::Spawn_DestroyEffect()
+{
+    _vec3 vPosition = GetTransform()->Get_Info(INFO::INFO_POS);
+    _float fRand = Rand_Float(0.1f, 0.4f);
+    _float fRand2 = Rand_Float(0.1f, 0.4f);
+    _float fRand3 = Rand_Float(0.1f, 0.4f);
+    _float fRand4 = Rand_Float(0.1f, 0.4f);    
+    SpriteParticleOptions Option2;
+    Option2.tEffectOption = Get_Preset_Blood();
+    Option2.eType = SpriteParticleType::BOTTLE;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand, fRand2](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ fRand, -fRand2, 0 });
+        });
+    Option2.eType = SpriteParticleType::BOTTLE;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand3, fRand4](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ -fRand3, fRand4, 0 });
+        });
+    Option2.tEffectOption = Get_Preset_BulletSpark();
+    Option2.tEffectOption.fDrag = 1.f;
+    Option2.tEffectOption.fSpeed_Min = 4.f;
+    Option2.tEffectOption.fSpeed_Max = 7.f;
+    Option2.eType = SpriteParticleType::BOTTLE;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [&vPosition](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition);
+        });
 }
 
 void CTile_Bottle::SetUp_BillBoard()

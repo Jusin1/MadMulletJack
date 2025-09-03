@@ -21,5 +21,6 @@ public:
 	virtual void PickingTrue() override;
 private:
 	HRESULT			Set_Component(void *pArg);
+	void Spawn_DestroyEffect();
 };
 

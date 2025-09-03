@@ -21,6 +21,8 @@ public:
 	virtual _bool Picking(_vec3 *PickingPoint) override;
 	virtual void PickingTrue() override;
 
+	void Spawn_DestroyEffect();
+
 	void SetUp_BillBoard();
 private:
 	HRESULT			Set_Component(void *pArg);

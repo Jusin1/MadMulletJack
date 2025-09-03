@@ -28,6 +28,7 @@ private:
 	HRESULT			Ready_Monster_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar *pLayerTag);
 	HRESULT			Ready_UI_Layer(const _tchar *pLayerTag);
+	HRESULT			Ready_Boss_Layer(const _tchar *pLayerTag);
 
 	void SetData(_uint _iSceneIndex);
 	void InstancingObjects(const wstring &_Layer);

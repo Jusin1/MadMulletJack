@@ -286,6 +286,9 @@
     <Filter Include="02. GameObject\09. Missile">
       <UniqueIdentifier>{e981e757-8176-4d92-ac18-c7b733ca879c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\PrefabRecycleSystem">
+      <UniqueIdentifier>{36863f2c-03c1-4fd7-bbbb-9e0d90b411ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -558,6 +561,9 @@
     <ClInclude Include="..\Header\CWarningCircle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPrefabRecycleSystem.h">
+      <Filter>03. Manager\PrefabRecycleSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -817,6 +823,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWarningCircle.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPrefabRecycleSystem.cpp">
+      <Filter>03. Manager\PrefabRecycleSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

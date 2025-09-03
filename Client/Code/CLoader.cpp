@@ -896,6 +896,8 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
 	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 15);
+	AddTexture(L"Proto_Effect_Glass", L"../../Client/Bin/Resource/Effect/Glass/glass_sheet_%02d.png", 3);
+	AddTexture(L"Proto_Effect_Bottle", L"../../Client/Bin/Resource/Effect/Glass/glass_sheet_brown_%02d.png", 3);
 
 	AddTexture(L"Proto_Effect_Smoke", L"../../Client/Bin/Resource/Effect/Smoke/SM_%03d.png", 22);
 	AddTexture(L"Proto_Effect_BloodExplosion", L"../../Client/Bin/Resource/Effect/BloodExplosion/BE/BE_%03d.png", 22);

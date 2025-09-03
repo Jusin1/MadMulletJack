@@ -86,7 +86,7 @@ private:
     _float m_fChangeColor_Duration{ 0.f };
     const _float m_fChangeColor_Frequence{ 2.f };
     const _float m_fLaunchSpeed{ 5.f };
-    const _float m_fTargetingSpeed{ 10.f };
+    _float m_fTargetingSpeed{ 10.f };
     const _float m_fArriveRadius{ 0.4f };
     const _float m_fArriveEps{ 0.1f };
     _vec3  m_vMoveDir{0.f, 0.f, 1.f};

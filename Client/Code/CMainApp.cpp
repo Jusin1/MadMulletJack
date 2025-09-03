@@ -132,7 +132,7 @@ void CMainApp::Render_MainApp()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE); 
 	
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 	m_pRenderer->Render_GameObject(); // ¸ğµç ·»´õ ´ë»ó ·»´õ¸µ
 	m_pDeviceClass->Render_End();
 

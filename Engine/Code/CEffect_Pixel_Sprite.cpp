@@ -64,7 +64,7 @@ HRESULT CEffect_Pixel_Sprite::Initialize(void *pArg)
     if (FAILED(Texture_Clone()))
         return E_FAIL;
 
-    m_iTextureCount = m_pTextureCom->Get_Frame().m_iEndTex;
+    m_iTextureCount = 20;
 
     SetOptions(EffectOptions{}, true);
 
@@ -84,7 +84,7 @@ _int CEffect_Pixel_Sprite::Update_GameObject(const _float &fTimeDelta)
     Particle_Update(fTimeDelta);
 
     if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius))
-        if (m_pRendererCom) m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
+        if (m_pRendererCom) m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return NO_EVENT;
 }
@@ -179,6 +179,8 @@ HRESULT CEffect_Pixel_Sprite::Texture_Clone()
     AnimationDeffinition ttt[] =
     {
         { L"DeadBody",	L"Proto_Effect_DeadBody",   0,	16,	1.f,	false },
+        {L"Glass",      L"Proto_Effect_Glass",      0,   3, 1.f,    false },
+        {L"Bottle",     L"Proto_Effect_Bottle",     0,   3, 1.f,    false },
     };
 
     for (AnimationDeffinition &Element : ttt)
@@ -472,6 +474,10 @@ HRESULT CEffect_Pixel_Sprite::Set_TextureInit(SpriteParticleType _e)
     {
     case Engine::SpriteParticleType::DEADBODY:
         return Change_Texture(L"DeadBody");
+    case Engine::SpriteParticleType::GLASS:
+        return Change_Texture(L"Glass");
+    case Engine::SpriteParticleType::BOTTLE:
+        return Change_Texture(L"Bottle");
     }
 
     return E_FAIL;

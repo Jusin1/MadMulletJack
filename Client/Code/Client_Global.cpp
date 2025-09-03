@@ -26,6 +26,18 @@ inline D3DXVECTOR3 Lerp_Vec3(D3DXVECTOR3 vA, D3DXVECTOR3 vB, float fT)
     return vA + (vB - vA) * fT;
 }
 
+inline D3DXCOLOR Lerp_Color(const D3DXCOLOR &colorA, const D3DXCOLOR &colorB, float fT)
+{
+    D3DXCOLOR colorNew;
+    
+    colorNew.r = colorA.r + (colorB.r - colorA.r) * fT;
+    colorNew.g = colorA.g + (colorB.g - colorA.g) * fT;
+    colorNew.b = colorA.b + (colorB.b - colorA.b) * fT;
+    colorNew.a = colorA.a;
+
+    return colorNew;
+}
+
 inline float Lenght_XZ(const D3DXVECTOR3 &v)
 {
     return std::sqrtf(v.x * v.x + v.z * v.z);
@@ -100,7 +112,7 @@ EffectOptions Get_Preset_Blood()
     o.fSpeed_Max = 2.5f;
     o.colorStart = D3DXCOLOR(0.7f, 0.05f, 0.08f, 1.f);
     o.colorEnd = D3DXCOLOR(0.3f, 0.05f, 0.08f, 1.f);
-    o.eBlendmode = BlendMode::ALPHA;
+    o.eBlendmode = BlendMode::ADDITIVE;
     o.fDrag = 2.f;
     return o;
 }

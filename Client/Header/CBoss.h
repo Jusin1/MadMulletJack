@@ -1,17 +1,18 @@
 #pragma once
 #include "CCharacter.h"
-#include <random>
+#include <deque>
+
 
 struct RigidBodyConfig
 {
 	_float fHealth = 20.f;
 
-	_float fMoveSpeed			= 5.f;
+	_float fMoveSpeed			= 6.f;
 	_float fArriveRadius		= 0.35f;
 	_float fCornerSlowDown		= 0.85f;
 
 	// 柳气
-	_float fHoverAmp			= 0.1f;
+	_float fHoverAmp			= 0.3f;
 	// 后档
 	_float fHoverFreq			= 0.5f;
 
@@ -19,33 +20,50 @@ struct RigidBodyConfig
 	_float fDash_Speed = 22.f;
 	_float fDash_Duration = 0.30f;
 	_float fDash_Recover = 0.22f;
-	_float fDash_Cooldown = 10.0f;
+	_float fDash_Cooldown = 2.0f;
 
 	// Missile
 	_float fMis_WindUp = 0.22f;
 	_float fMis_Interval = 0.22f;
-	_int   iMis_Volley = 2;
-	_int   iMis_PerVolley = 3;
+	_int   iMis_Volley = 3;
+	_int   iMis_PerVolley = 4;
 	_float fMis_Recover = 0.28f;
 	_float fMis_VolleyGap = 0.3f;
 	_float fMis_Cooldown = 5.2f;
 
 	// Bullet
 	_float fBul_WindUp = 0.14f;
-	_int   iBul_Burst = 11;
-	_float fBul_SpreadDeg = 3.f;
+	_int   iBul_Burst = 32;
+	_float fBul_SpreadDeg = 1.5f;
 	_float fBul_Speed = 18.f;
 	_float fBul_Recover = 0.22f;
 	_float fBul_Interval = 0.1f;
 	_float fBul_Cooldown = 1.3f;
 
 	// Idle
-	_float fIdle_Min = 0.45f;
-	_float fIdle_Max = 1.10f;
+	_float fIdle_Min = 0.3f;
+	_float fIdle_Max = 1.3f;
 
 	// Move
-	_float fMove_Min = 2.f;
-	_float fMove_Max = 3.f;
+	_float fMove_Min = 0.5f;
+	_float fMove_Max = 1.5f;
+
+	// Range with Player
+	_float fDesired = 20.f;
+	_float fDeadzone = 1.f;
+	_float fKeep = 6.f;
+	_float fMaxPush = 18.f;
+	_float fOrbitScale = 1.f;
+};
+
+struct AfterImage
+{
+	_vec3 vRight{ 0,0,0 };
+	_vec3 vUp{ 0,0,0 };
+	_vec3 vLook{ 0,0,0 };
+	_vec3 vPos{ 0,0,0 };
+	_uint iFrame{ 0 };
+	_float fLife{ 0.00f };
 };
 
 struct SmoothDamp
@@ -116,6 +134,7 @@ private:
 	virtual void  PickingTrue() override;
 
 	void Spawn_Missile();
+	void Spawn_Bullet(const _vec3 &vDir);
 
 	void UpdateSpeed(const float _fDeltaTime);
 	void ChangeState(State _e);
@@ -149,10 +168,18 @@ private:
 	// 框流烙率
 	_float Hover_Y() const;
 	void Set_Velocity_Towards(const _vec3 &vTarget , _float fSpeed);
-	void Follow_PathSpeed(_float fScale);
+	void Set_Velocity_LR(_float fMoveSpeed, _float fKeepZ, _float fMaxSpeed_Z);
+	void Follow_PathSpeed(_float fScale, _float fDeltaTime);
 	void Choose_Waypoint();
 	_vec3 Dash_Direction();
 	_bool Arrived(const _vec3 &v);
+	_bool Arrived_X(_float fTarget_X);
+	_float Sgnf(_float fV) { return fV >= 0.f ? 1.f : -1.f; }
+	_vec3 LR_TargetWorld();
+	void Maintain_LR_Anchor_Z(_float fK, _float fMaxZ);
+	void Record_AfterImage();
+	void Update_AfterImage(const _float fDeltaTime);
+	void Render_AfterImage();
 
 	void Set_Cooldown(_int iIndex, _float fTime) { m_fCooldown[iIndex] = (std::max)(m_fCooldown[iIndex], fTime); }
 	_bool Is_Cooldown_Ready(_int iIndex) const { return m_fCooldown[iIndex] <= 0.f; }
@@ -173,6 +200,8 @@ private:
 	_float m_fVelocity_Z{ 0.f };
 	_float m_fTargetVel_X{ 0.f };
 	_float m_fTargetVel_Z{ 0.f };
+	_bool m_bSnap_To_Player_Z{ FALSE };
+	_float m_fOffset_FromPlayer_Z{ 0.f };
 	SmoothDamp m_tDamping_X;
 	SmoothDamp m_tDamping_Z;
 
@@ -208,5 +237,16 @@ private:
 	CTexture *m_pTextureCom;
 	CColider_Sphere *m_pColiderSphere;
 	_bool m_bPickable;
+
+	_vec3 m_vPickedPosition{ 0.f, 0.f, 0.f };
+
+	// 儡惑
+	deque<AfterImage> m_dequeAfterImage;
+	_float m_fDurationRecordTime{ 0.00f };
+	const _uint m_iMaxAfterImage{ 10 };
+	const _float m_fLifeLimit{ 0.20f };
+	const _float m_fRecordTime{ 0.1f };
+	const D3DXCOLOR m_AfterIamge_StartColor{ 1.00f, 0.20f, 1.00f, 1.f };
+	const D3DXCOLOR m_AfterIamge_EndColor{ 0.20f, 1.00f, 1.00f, 1.f };
 };
 

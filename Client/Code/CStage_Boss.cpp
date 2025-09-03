@@ -78,14 +78,12 @@ HRESULT CStage_Boss::Ready_Scene()
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
 
+    if (FAILED(Ready_Boss_Layer(L"Boss_Layer")))
+        return E_FAIL;
+
     CPickingManager::GetInstance()->Ready_Picking();
     CObjectPoolManager::GetInstance()->Ready_Pools();
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_BOSS, L"Boss_Layer")))
-        return E_FAIL;
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_RectPath(_vec3{ 18.5f, 0.f, 18.5f }, 20.f, 20.f, 3.f, FALSE);
-    //static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ -1.f, 0.f, -1.f }, _vec3{ 19.f, 0.f, 19.f }, 2.f);
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Boss_Layer")->front())
-        ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Player_Layer")->front());
+
     return S_OK;
 }
 
@@ -204,6 +202,26 @@ HRESULT CStage_Boss::Ready_GameLogic_Layer(const _tchar *pLayerTag)
     return S_OK;
 }
 
+HRESULT CStage_Boss::Ready_Boss_Layer(const _tchar *pLayerTag)
+{
+    RigidBodyConfig tConfig;
+    tConfig.fDash_Speed = 50.f;
+    tConfig.fDash_Cooldown = 1.0f;
+    tConfig.fMoveSpeed = 30.f;
+    tConfig.fMove_Min = 2.f;
+    tConfig.fMove_Max = 3.f;
+    CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Boss", SCENE_BOSS, L"Boss_Layer", &tConfig);
+    if (!pGo) return E_FAIL;
+    CGameObject *pPlayer = CObjectManager::GetInstance()->Get_ObjectList(SCENE_BOSS, L"Player_Layer")->front();
+    if (!pPlayer) return E_FAIL;
+
+    CBoss* pBoss = static_cast<CBoss *>(pGo);
+    pBoss->Set_Player(pPlayer);
+    pBoss->Set_RectPath(_vec3{ 17.f, 0.f, 17.f }, 40.f, 40.f, 20.f, FALSE);
+
+    return S_OK;
+}
+
 HRESULT CStage_Boss::Ready_UI_Layer(const _tchar *pLayerTag)
 {
     if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_UIRoot", SCENE_BOSS, pLayerTag)))
@@ -218,6 +236,7 @@ void CStage_Boss::SetData(_uint _iSceneIndex)
 {
     CDataManager::GetInstance()->Clear();
     CGameDataManager::GetInstance()->AllClear();
+    CPickingManager::GetInstance()->Clear_Picking();
 
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");

@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "Engine_Define.h"
 #include "Clinet_Define.h"
+#include "Client_Global.h"
 #include "CVIBuffer_Rect.h"
 #include "CPickingManager.h"
+#include "CObjectPoolManager.h"
+#include "CEffect_Pixel_Sprite.h"
 #include "CTexture.h"
 #include "CTile_Glass.h"
 
@@ -96,6 +99,7 @@ _bool CTile_Glass::Picking(_vec3 *PickingPoint)
 
 void CTile_Glass::PickingTrue()
 {
+    Spawn_DestroyEffect();
     Set_Dead(TRUE);
 }
 
@@ -107,4 +111,50 @@ HRESULT CTile_Glass::Set_Component(void *pArg)
     // TODO - Effect Component
 
     return S_OK;
+}
+
+void CTile_Glass::Spawn_DestroyEffect()
+{
+    _vec3 vPosition = GetTransform()->Get_Info(INFO::INFO_POS);
+
+    _float fRand = Rand_Float(0.1f, 0.4f);
+    _float fRand2 = Rand_Float(0.1f, 0.4f);
+    _float fRand3 = Rand_Float(0.1f, 0.4f);
+    _float fRand4 = Rand_Float(0.1f, 0.4f);
+    _float fRand5 = Rand_Float(0.1f, 0.4f);
+    _float fRand6 = Rand_Float(0.1f, 0.4f);
+    _float fRand7 = Rand_Float(0.1f, 0.4f);
+    _float fRand8 = Rand_Float(0.1f, 0.4f);
+    SpriteParticleOptions Option2;
+    Option2.tEffectOption = Get_Preset_Blood();
+    Option2.eType = SpriteParticleType::GLASS;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand, fRand2](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{fRand, -fRand2, 0});
+        });
+    Option2.eType = SpriteParticleType::GLASS;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand3, fRand4](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{-fRand3, fRand4, 0});
+        });
+    Option2.eType = SpriteParticleType::GLASS;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [&vPosition](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition);
+        });
+    Option2.eType = SpriteParticleType::GLASS;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand5, fRand6](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ -fRand5, -fRand6, 0 });
+        });
+    Option2.eType = SpriteParticleType::GLASS;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPosition, fRand7, fRand8](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ fRand7, fRand8, 0 });
+        });
 }

@@ -36,7 +36,6 @@ CObjectPool *CObjectPool::Create(const wstring &_pPrototypeTag, _uint _iReserve)
 		MSG_BOX("CObjectPool::Create, Failed");
 		return nullptr;
 	}
-
 	return pInstance;
 }
 
@@ -114,6 +113,8 @@ HRESULT CObjectPool::Ready_ObjectPool(const wstring &_pPrototypeTag)
 		}
 		m_Objects.push_back(pGo);
 	}
+
+	m_PrototypeTag = _pPrototypeTag;
 
 	return S_OK;
 }

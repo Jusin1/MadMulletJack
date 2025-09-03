@@ -125,6 +125,8 @@ namespace Engine
 	enum class SpriteParticleType : unsigned int
 	{
 		DEADBODY,
+		GLASS,
+		BOTTLE,
 		NONE
 	};
 	constexpr size_t g_SpriteParticleTypeCount{ static_cast<size_t>(SpriteParticleType::NONE) };

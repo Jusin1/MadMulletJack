@@ -5,6 +5,7 @@
 #include "CFileManager.h"
 #include "CMapFactory.h"
 #include "CObjectManager.h"
+#include "CPrefabRecycleSystem.h"
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CBoss.h"
@@ -77,17 +78,18 @@ HRESULT CStage_Car::Ready_Scene()
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
 
+    if (FAILED(Ready_Boss_Layer(L"Boss_Layer")))
+        return E_FAIL;
+
     CPickingManager::GetInstance()->Ready_Picking();
     CObjectPoolManager::GetInstance()->Ready_Pools();
 
-    RigidBodyConfig tConfig;
-    tConfig.fHealth = 50.f;
-    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer", &tConfig)))
+    CPrefabRecycleSystem *pPrefabSystem = CPrefabRecycleSystem::GetInstance();
+    if (FAILED(pPrefabSystem->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front())))
         return E_FAIL;
-    
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())->Set_LinearLR(_vec3{ 3.f, 0.f, 10.f }, _vec3{ 8.f, 0.f, 10.f }, 4.f);
-    static_cast<CBoss *>(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Boss_Layer")->front())
-        ->Set_Player(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front());
+
+    if (FAILED(pPrefabSystem->Set_PrefabList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Prefab_Layer"))))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -114,7 +116,8 @@ _int CStage_Car::Update_Scene(const _float &fTimeDelta)
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
-    auto p = CObjectManager::GetInstance();
+    CPrefabRecycleSystem::GetInstance()->Update();
+
     return iExit;
 }
 
@@ -216,6 +219,22 @@ HRESULT CStage_Car::Ready_UI_Layer(const _tchar *pLayerTag)
     return S_OK;
 }
 
+HRESULT CStage_Car::Ready_Boss_Layer(const _tchar *pLayerTag)
+{
+    RigidBodyConfig tConfig;
+    tConfig.fHealth = 50.f;
+    CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer", &tConfig);
+    if (!pGo) return E_FAIL;
+    CGameObject *pPlayer = CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front();
+    if (!pPlayer) return E_FAIL;
+
+    CBoss *pBoss = static_cast<CBoss *>(pGo);
+    pBoss->Set_Player(pPlayer);
+    pBoss->Set_LinearLR(_vec3{ 4.f, 0.f, 35.f }, _vec3{ 20.f, 0.f, 35.f }, 10.f);
+
+    return S_OK;
+}
+
 
 
 void CStage_Car::SetData(_uint _iSceneIndex)
@@ -277,4 +296,5 @@ void CStage_Car::Free()
     Engine::CScene::Free();
 
     CGlobal_Info::Destroy_Instance();
+    CPrefabRecycleSystem::DestroyInstance();
 }

@@ -149,6 +149,9 @@ HRESULT CMissile::Spawn_Pooling(void *pArg)
         return E_FAIL;
     }
 
+    if (CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_BOSS)
+        m_fTargetingSpeed = 25.f;
+
     return S_OK;
 }
 
@@ -157,6 +160,7 @@ HRESULT CMissile::Despawn_Pooling()
     if (FAILED(CGameObject::Despawn_Pooling()))
         return E_FAIL;
 
+    m_fTargetingSpeed = 10.f;
     m_fSmokeEffect_Duration = 0.00f;
     m_vTargetPos = _vec3{ 0.f,0.f,0.f };
     m_vLaunchPos = _vec3{ 0.f,0.f,0.f };

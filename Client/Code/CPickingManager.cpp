@@ -79,7 +79,9 @@ _bool CPickingManager::Picking()
     }
     if (vecPicked.empty()) return false;
     const _matrix& view = CCamera::GetView();
+    const _matrix &proj = CCamera::GetProj();
 
+    _matrix matResult = view * proj;
     int best = -1;
     float bestZ = FLT_MAX;
     for (int i = 0; i < (int)vecPos.size(); ++i)

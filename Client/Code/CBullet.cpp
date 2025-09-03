@@ -140,6 +140,7 @@ HRESULT CBullet::Spawn_Pooling(void *pArg)
         TransformInfo.fSpeed = pData->fSpeed;
         TransformInfo.fRotationSpeed = 0.f;
         m_pTransformCom->SetTransformInfo(TransformInfo);
+        m_fSpeed = pData->fSpeed;
         Fire(pData->vMuzzlePosition, pData->vLookDir);
     }
     else
@@ -157,6 +158,7 @@ HRESULT CBullet::Despawn_Pooling()
         return E_FAIL;
 
     m_fLifeTime = 0.00f;
+    m_pTransformCom->Set_Scale(0.06f, 0.06f, 1.f);
 
     return S_OK;
 }
@@ -227,8 +229,8 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
     EffectOptions tOption{ Get_Preset_BulletSpark() };
     tOption.fLife_Min = 0.3f;
     tOption.fLife_Max = 0.5f;
-    tOption.fSize_Min = 2.f;
-    tOption.fSize_Max = 3.3f;
+    tOption.fSize_Min = 3.f;
+    tOption.fSize_Max = 4.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption,
         [&vPos](CGameObject *pGo)->void
         {
@@ -236,6 +238,7 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
         });
     EFFECTINFO tInfo;
     tInfo.eType = WorldEffectType::EXPLOSION;
+    tInfo.fSize = 2.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
         [&vPos](CGameObject *pGo)->void
         {

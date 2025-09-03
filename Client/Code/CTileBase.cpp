@@ -73,7 +73,7 @@ void CTileBase::LateUpdate_GameObject(const _float &fTimeDelta)
 	Engine::CGameObject::LateUpdate_GameObject(fTimeDelta);
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	Compute_CamDistance(Get_Position());
-	if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fRadius * 1.5f) == true)
 	{
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);

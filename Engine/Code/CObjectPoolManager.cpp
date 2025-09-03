@@ -26,7 +26,7 @@ HRESULT CObjectPoolManager::Ready_Pools()
 	if(!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)])
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL)] = CObjectPool::Create(L"Proto_PixelEffect");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_WORLD)])
-		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_WORLD)] = CObjectPool::Create(L"Proto_EffectWorld");
+		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_WORLD)] = CObjectPool::Create(L"Proto_EffectWorld", 200);
 	if (!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL_SPRITE)])
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL_SPRITE)] = CObjectPool::Create(L"Proto_PixelEffect_Sprite");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::BULLET)])
