@@ -585,7 +585,7 @@ void CUIManager::DestroyEnterUI()
     // æ¿ ±≥√º (∑Œµ˘æ¿¿∏∑Œ)
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_SNIPE));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_CAR));
     ClearAllUI();
     m_exitingEnter = false; 
 }
@@ -773,7 +773,6 @@ void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
     if (!m_pPlayerEffUI ||
         m_pPlayerEffUI->GetChildren().empty()) 
         return;
-
 
     const wchar_t* childTag = L"";
     CImageUI* pEff = nullptr;
@@ -1118,9 +1117,10 @@ void CUIManager::ClearAllUI()
     Safe_Release(m_pPhoeScreenBackGround);
 
     // eunbi player effect ui delete
+    Destory_PlayerEff_ALL();
     Safe_Release(m_pPlayerEffUI);
     Destory_CureEff();
-    Safe_Release(m_pCureEffUI  );
+    Safe_Release(m_pCureEffUI );
 
     // --- ªÛ¡° UI ---
     Safe_Release(m_pShopRoot);

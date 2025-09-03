@@ -116,12 +116,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	case SCENE_SNIPE:
 		m_bIsZoomStage = true;
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
 		Change_Weapon(WP_SNIPER);
 		break;
 
 	case SCENE_BOSS:
 		m_bIsZoomStage = false;
 		m_iCurScene = SCENE_BOSS;
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
 		Change_Weapon(WP_PISTOL);
 		break;
 
@@ -129,6 +133,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_fNormalSpeed = 10.f;
 		m_bIsZoomStage = true;
 		m_pHpBarUI->Set_Active(false);
+		m_fMaxHp = 100.f;
+		m_fHp = 100.f;
 		Change_Weapon(WP_MINIGUN);
 		break;
 	}
@@ -1684,6 +1690,7 @@ void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
+	Set_Collider_With_Bullet(fTimeDelta);
 }
 
 _float CPlayer::CosRadian(_vec3 v1, _vec3 v2)
@@ -1891,6 +1898,17 @@ void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
 			HitFromObject(fTimeDelta, 1.f);
 		}
 	}
+
+	pColliObj = nullptr;
+	// 固荤老
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MISSILE, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
+	{
+		if (!pColliObj) // 抗寇贸府
+			return;
+
+		pColliObj->Set_Dead(true); // bullet dead 贸府
+		HitFromObject(fTimeDelta, 5.f);
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -1978,7 +1996,7 @@ void CPlayer::Free()
 	__super::Free();
 
 	// test : eunbi
-	CUIManager::GetInstance()->ClearAllUI();
+	//CUIManager::GetInstance()->ClearAllUI();
 }
 
 //debug

@@ -250,8 +250,6 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
 
 void    CBullet::Set_Collider(const _float& fTimeDelta)
 {
-    m_pColiderCom->Update_ColliderSphere();
-
     Set_Collider_With_Wall();
 
     return;

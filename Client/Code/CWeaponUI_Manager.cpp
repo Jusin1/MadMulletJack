@@ -342,7 +342,7 @@ void CWeaponUI_Manager::SpawnInsEff()
 
 	float fxW = 800.f, fxH = 800.f;
 
-	pFx->Set_UISizeAndPos(fxW, fxH, 150.f, -10.f);
+	pFx->Set_UISizeAndPos(fxW, fxH, 150.f, -15.f);
 	pFx->RegisterTexture(L"Com_Texture_KnifeEff", L"Prototype_Component_Texture_SubWKnife_Eff", 0, 18, 10.f, false);
 	pFx->ChangeTexture(L"Com_Texture_KnifeEff");
 
@@ -401,7 +401,7 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 			return E_FAIL;
 		if (FAILED(Create_ShotGun(iCloneScene)))
 			return E_FAIL;
-		if (FAILED(Create_ShotGun(iCloneScene)))
+		if (FAILED(Create_Katana(iCloneScene)))
 			return E_FAIL;
 		break;
 

@@ -1134,6 +1134,12 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/cleaver/InsBlood%03d.png", 18))))
 		return E_FAIL;
 
+	// Dopding - item
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\dopoing\Bottle000.png"
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_ItemDoping",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/dopoing/Bottle000.png", 1))))
+		return E_FAIL;
+
 	// Sniper Gun
 	// 이거는 나중에 scene_sniper 에서만 load
 	// Sniper aimUI

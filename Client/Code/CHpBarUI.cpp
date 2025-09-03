@@ -75,7 +75,7 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	case SCENE_BOSS:
 	
 		m_iSceneCase = 1;
-		m_vTextSet = { -430.f, -50.f ,1.2};
+		m_vTextSet = { -430.f, -56.f ,1.f};
 
 		// 셋팅값을 기준으로 ui들 생성
 		if (FAILED(Set_HpBarUI()))

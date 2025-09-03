@@ -51,7 +51,7 @@ HRESULT CCameraFPS::Initialize(void* pArg)
         if(CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_SNIPE)
             m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 40.f, tMyTransInfo.fRotationSpeed });
         else
-            m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 8.f, tMyTransInfo.fRotationSpeed });
+            m_pTransformCom->SetTransformInfo({ tMyTransInfo.vStartPos, 10.f, tMyTransInfo.fRotationSpeed });
 
     }
 

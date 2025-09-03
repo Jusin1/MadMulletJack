@@ -170,7 +170,10 @@
     <ClInclude Include="..\Header\CGameDataManager.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CHpBarUI.h" />
-    <ClInclude Include="..\Header\CItem.h" />
+    <ClInclude Include="..\Header\CItem.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CItemUI.h" />
     <ClInclude Include="..\Header\CKatana.h" />
     <ClInclude Include="..\Header\CKnife_SubW.h">
@@ -266,7 +269,10 @@
     <ClCompile Include="..\Code\CGridPanel.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CHpBarUI.cpp" />
-    <ClCompile Include="..\Code\CItem.cpp" />
+    <ClCompile Include="..\Code\CItem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CItemUI.cpp" />
     <ClCompile Include="..\Code\CKatana.cpp" />
     <ClCompile Include="..\Code\CKnife_SubW.cpp">
