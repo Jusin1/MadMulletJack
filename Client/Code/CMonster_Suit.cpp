@@ -19,6 +19,7 @@
 #ifdef _DEBUG
 namespace {
     static LPD3DXMESH g_pDebugSphereMesh = nullptr;
+    static ID3DXLine* g_pLaserLine = nullptr;
     static void EnsureDebugSphereMesh(LPDIRECT3DDEVICE9 dev)
     {
         if (!g_pDebugSphereMesh)
@@ -34,22 +35,136 @@ namespace {
         default:                       return D3DCOLOR_ARGB(255, 200, 200, 200);
         }
     }
+    static void EnsureLaserLine(LPDIRECT3DDEVICE9 dev) {
+        if (!g_pLaserLine) {
+            if (FAILED(D3DXCreateLine(dev, &g_pLaserLine))) return;
+        }
+        if (!g_pLaserLine) return;
+
+        g_pLaserLine->SetAntialias(FALSE);   
+        g_pLaserLine->SetGLLines(TRUE);      
+        g_pLaserLine->SetWidth(4.0f);        
+    }
+#ifdef _DEBUG
+    static bool ProjectLaserClamped(
+        const _vec3& startW, const _vec3& dirW, float L,
+        std::function<bool(const _vec3&, float&, float&)> project,
+        float& sx1, float& sy1, float& sx2, float& sy2)
+    {
+        if (!project(startW, sx1, sy1)) return false; 
+
+        float lo = 0.f, hi = L;
+        bool endOk = false;
+        for (int i = 0; i < 12; ++i) {
+            float mid = (lo + hi) * 0.5f;
+            _vec3 endW = startW + dirW * mid;
+            float tx, ty;
+            if (project(endW, tx, ty)) {
+                endOk = true; sx2 = tx; sy2 = ty; lo = mid; 
+            }
+            else {
+                hi = mid; 
+            }
+        }
+        if (!endOk) return false;
+        return true;
+    }
+#endif
 }
 #endif
 
 CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::DRONE)
-    , m_eMonState(IDLE), m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
-    , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
+    // 상태/AI
+    , m_eMonState(IDLE)
+    , m_ePrevState(IDLE)
+    , m_fChaseRadius(12.f)
+    , m_fAimRadius(6.f)
+    , m_fLoseRadius(16.f)
+    , m_jumpCD(0.f)
+    , m_jumpDir(0)
+    , m_bKillAfterHit(false)
+    , m_cachedHitPart(HIT_UNKNOWN)
+    , m_hitSpheres()
+    , m_bDebugShowPartSpheres(false)
+    , m_shotTimer(0.f)
+    // knockback
+    , m_kbTime(0.f)
+    , m_kbDur(0.20f)
+    , m_kbTotalDist(0.35f)
+    , m_kbProgress(0.f)
+    , m_kbDir(0.f, 0.f, 0.f)
+    // 스나이퍼/레이저
+    , m_bSniperScene(false)
+    , m_bLaserPrimed(false)
+    , m_laserPos(0.f, 0.f, 0.f)
+    , m_laserDir(1.f, 0.f, 0.f)
+    , m_laserLength(2500.f)
+    // 스윕
+    , m_sweepT(0.f)
+    , m_yawFreq(0.16f)        // 좌우 이동 속도
+    , m_startSway(0.5f)       // 좌우 진폭
+    // 높이 보정
+    , m_laserMuzzleDown(0.2f)
+    , m_targetYOffset(0.32f)
+    // 피치 제한
+    , m_maxPitchDeg(4.f)
+    // 페이즈
+    , m_lzPhase(LZ_SWEEP)
+    , m_lzTimer(0.f)
+    , m_lzSweepDuration(1.25f)
+    , m_lzLockDuration(0.20f)
+    , m_lzFireDuration(0.22f)
+    , m_lzCooldown(0.50f)
+    // 락온 캐시
+    , m_lzLockedPos(0.f, 0.f, 0.f)
+    , m_lzLockedDir(1.f, 0.f, 0.f)
+    // 렌더 두께
+    , m_laserAimWidthPx(6.f)
+    , m_laserFireWidthPx(10.f)
 {
 }
 
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
     : CMonster(rhs)
-    , m_eMonState(rhs.m_eMonState), m_ePrevState(rhs.m_ePrevState)
-    , m_fChaseRadius(rhs.m_fChaseRadius), m_fAimRadius(rhs.m_fAimRadius), m_fLoseRadius(rhs.m_fLoseRadius)
-    , m_jumpCD(rhs.m_jumpCD), m_jumpDir(rhs.m_jumpDir), m_bKillAfterHit(rhs.m_bKillAfterHit)
+    , m_eMonState(rhs.m_eMonState)
+    , m_ePrevState(rhs.m_ePrevState)
+    , m_fChaseRadius(rhs.m_fChaseRadius)
+    , m_fAimRadius(rhs.m_fAimRadius)
+    , m_fLoseRadius(rhs.m_fLoseRadius)
+    , m_jumpCD(rhs.m_jumpCD)
+    , m_jumpDir(rhs.m_jumpDir)
+    , m_bKillAfterHit(rhs.m_bKillAfterHit)
+    , m_cachedHitPart(rhs.m_cachedHitPart)
+    , m_hitSpheres(rhs.m_hitSpheres)
+    , m_bDebugShowPartSpheres(rhs.m_bDebugShowPartSpheres)
+    , m_shotTimer(rhs.m_shotTimer)
+    , m_kbTime(rhs.m_kbTime)
+    , m_kbDur(rhs.m_kbDur)
+    , m_kbTotalDist(rhs.m_kbTotalDist)
+    , m_kbProgress(rhs.m_kbProgress)
+    , m_kbDir(rhs.m_kbDir)
+    , m_bSniperScene(rhs.m_bSniperScene)
+    , m_bLaserPrimed(rhs.m_bLaserPrimed)
+    , m_laserPos(rhs.m_laserPos)
+    , m_laserDir(rhs.m_laserDir)
+    , m_laserLength(rhs.m_laserLength)
+    , m_sweepT(rhs.m_sweepT)
+    , m_yawFreq(rhs.m_yawFreq)
+    , m_startSway(rhs.m_startSway)
+    , m_laserMuzzleDown(rhs.m_laserMuzzleDown)
+    , m_targetYOffset(rhs.m_targetYOffset)
+    , m_maxPitchDeg(rhs.m_maxPitchDeg)
+    , m_lzPhase(rhs.m_lzPhase)
+    , m_lzTimer(rhs.m_lzTimer)
+    , m_lzSweepDuration(rhs.m_lzSweepDuration)
+    , m_lzLockDuration(rhs.m_lzLockDuration)
+    , m_lzFireDuration(rhs.m_lzFireDuration)
+    , m_lzCooldown(rhs.m_lzCooldown)
+    , m_lzLockedPos(rhs.m_lzLockedPos)
+    , m_lzLockedDir(rhs.m_lzLockedDir)
+    , m_laserAimWidthPx(rhs.m_laserAimWidthPx)
+    , m_laserFireWidthPx(rhs.m_laserFireWidthPx)
 {
 }
 
@@ -76,22 +191,27 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
     GetPlayerTransform();
 
     m_jumpCD = 1.f + (rand() % 2001) / 1000.f;
-    SetState(IDLE);
-    SetupHitSpheres();
+    _uint curScene = CManagement::GetInstance()->Get_CurrentSceneIdx();
 
+
+    SetState(IDLE);
     _float fOut{ 0.f };
     m_pGroundingCom->Initialize_CurrentIndex(
         CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
         m_pTransformCom->Get_Info(INFO::INFO_POS).x,
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
+    
+    SetupHitSpheres();
 
     return S_OK;
 }
 
 _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 {
+    if (!Is_Active()) return NO_EVENT; 
     if (m_bDead) return DEAD;
+
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);
     return NO_EVENT;
@@ -99,14 +219,14 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+    if (!Is_Active()) return;
+
     m_fComputeTime += fTimeDelta;
 
     if (m_fComputeTime > 1.f)
     {
-        if (!CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_SNIPE)
-        {
+        if (!m_bSniperScene)
             Set_OnTerrain(fTimeDelta);
-        }
         m_fCamDistance = 0.f;
     }
 
@@ -117,12 +237,90 @@ void CMonster_Suit::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMonster_Suit::Render_GameObject()
 {
+    // 비활성/사망 차단
+    if (!Is_Active() || m_bDead) return;
+
     if (m_eMonState != INSKILL)
         __super::Render_GameObject();
 
+    // 디버그 히트 스피어
 #ifdef _DEBUG
     if (g_ColiderRender) DebugRender_HitSpheres();
 #endif
+
+
+
+#ifdef _DEBUG
+    if (m_eMonState == LAZER)
+    {
+        if (m_lzPhase == LZ_COOLDOWN) { }
+        else
+        {
+            const float widthPx = (m_lzPhase == LZ_FIRE) ? m_laserFireWidthPx : m_laserAimWidthPx;
+            const float safeWidth = 6.0f;
+
+            const _vec3 startW = m_laserPos;
+            const _vec3 dirW = m_laserDir;
+            const float L = m_laserLength;
+
+            auto proj = [this](const _vec3& w, float& sx, float& sy)->bool {
+                return WorldToScreen(w, sx, sy);
+                };
+
+            float sx1, sy1, sx2, sy2;
+            if (!ProjectLaserClamped(startW, dirW, L, proj, sx1, sy1, sx2, sy2))
+                return;
+
+            if (widthPx <= safeWidth) {
+                EnsureLaserLine(m_pGraphicDev);
+                if (g_pLaserLine) {
+                    g_pLaserLine->SetWidth(widthPx);
+                    D3DXVECTOR2 pts[2] = { {sx1,sy1}, {sx2,sy2} };
+                    g_pLaserLine->Begin();
+                    g_pLaserLine->Draw(pts, 2, (m_lzPhase == LZ_FIRE) ? D3DCOLOR_ARGB(240, 255, 60, 60)
+                        : D3DCOLOR_ARGB(200, 255, 120, 120));
+                    g_pLaserLine->End();
+                }
+            }
+            else {
+                D3DXVECTOR2 a(sx1, sy1), b(sx2, sy2), d = b - a;
+                float len = D3DXVec2Length(&d); if (len < 1e-3f) return;
+                d /= len;
+                D3DXVECTOR2 n(-d.y, d.x); n *= (widthPx * 0.5f);
+
+                struct VTX { float x, y, z, rhw; D3DCOLOR c; };
+                const D3DCOLOR col = D3DCOLOR_ARGB(240, 255, 60, 60);
+                VTX v[4] = {
+                    { a.x + n.x, a.y + n.y, 0,1, col }, { a.x - n.x, a.y - n.y, 0,1, col },
+                    { b.x + n.x, b.y + n.y, 0,1, col }, { b.x - n.x, b.y - n.y, 0,1, col },
+                };
+
+                DWORD oZ = 0, oA = 0, oS = 0, oD = 0, oFVF = 0;
+                m_pGraphicDev->GetRenderState(D3DRS_ZENABLE, &oZ);
+                m_pGraphicDev->GetRenderState(D3DRS_ALPHABLENDENABLE, &oA);
+                m_pGraphicDev->GetRenderState(D3DRS_SRCBLEND, &oS);
+                m_pGraphicDev->GetRenderState(D3DRS_DESTBLEND, &oD);
+                m_pGraphicDev->GetFVF(&oFVF);
+
+                m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+                m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+                m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+                m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+                m_pGraphicDev->SetTexture(0, nullptr);
+                m_pGraphicDev->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+                m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(VTX));
+
+                m_pGraphicDev->SetFVF(oFVF);
+                m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, oZ);
+                m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, oA);
+                m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, oS);
+                m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, oD);
+            }
+        }
+    }
+#endif
+
+
 }
 
 void CMonster_Suit::Set_Collider()
@@ -133,7 +331,6 @@ void CMonster_Suit::Set_Collider()
         return;
     }
 
-    // 🔹 플레이어와 멀리 떨어진 경우 충돌 스킵
     CTransform* pPlayerTr = GetPlayerTransform();
     if (pPlayerTr) {
         _vec3 diff = pPlayerTr->Get_Info(INFO_POS) - m_pTransformCom->Get_Info(INFO_POS);
@@ -205,14 +402,12 @@ void CMonster_Suit::Set_Collider()
         const _vec3 myC = sphereWorldCenter(myS, myTr);
         const _vec3 openC = sphereWorldCenter(openS, doorTr);
 
-        // 밀릴 방향: 문 open 중심 -> 몬스터 중심 (수평)
         _vec3 dir = myC - openC; dir.y = 0.f;
         if (D3DXVec3LengthSq(&dir) < 1e-6f) {  // 완전 겹침 대비
             dir = -myTr->Get_Info(INFO_LOOK); dir.y = 0.f;
         }
         D3DXVec3Normalize(&dir, &dir);
 
-        // LOOK을 '밀릴 방향'으로 맞춰두면, 이후 HIT_DOOR 상태에서 그 방향으로 이동시킬 수 있음
         const _vec3 myPos = myTr->Get_Info(INFO_POS);
         myTr->LookAt(myPos + dir);   // 내부에서 Right/Up 재정렬 가정
 
@@ -599,6 +794,20 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         TrySpawnDeathUI_Common();
         break;
 
+    case LAZER:
+        if (m_bSniperScene) {
+            _vec3 pos = m_pTransformCom->Get_Info(INFO_POS);
+            _vec3 look = m_pTransformCom->Get_Info(INFO_LOOK);
+
+            pos.z += 1.f;
+            pos.y += 0.1f;
+            m_pTransformCom->Set_Info(INFO_POS, pos);
+        }
+        tag = L"Com_Texture_Shot";
+        EnsureLaserPrimed();
+        break;
+
+
     case DEATH:
         DisableAllCollisionAndPicking();
         tag = L"Com_Texture_Death";
@@ -739,6 +948,10 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
     
         break;
 
+    case LAZER:
+        UpdateLaser(dt);
+        break;
+
     case JUMP:
     {
         const _matrix& W = *m_pTransformCom->Get_World();
@@ -853,6 +1066,14 @@ void CMonster_Suit::DebugRender_HitSpheres() const
 }
 #endif
 
+void CMonster_Suit::ForceSniperMode()
+{
+    m_bSniperScene = true;
+    SetState(LAZER);
+    if (m_pColiderCom) m_pColiderCom->Set_Active(true);
+}
+
+
 CMonster_Suit* CMonster_Suit::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CMonster_Suit* pInstance = new CMonster_Suit(pGraphicDev);
@@ -878,4 +1099,126 @@ CGameObject* CMonster_Suit::Clone(void* pArg)
 void CMonster_Suit::Free()
 {
     __super::Free();
+}
+
+void CMonster_Suit::EnsureLaserPrimed()
+{
+    if (m_bLaserPrimed) return;
+    m_bLaserPrimed = true;
+
+    _vec3 pos = GetHeadWorldPos();
+    pos.y -= m_laserMuzzleDown;       
+    m_laserPos = pos;
+
+    _vec3 look = m_pTransformCom->Get_Info(INFO_LOOK);
+    look.y = 0.f;                        
+    D3DXVec3Normalize(&look, &look);
+    m_laserDir = look;
+
+    m_sweepT = 0.f;
+}
+
+void CMonster_Suit::UpdateLaser(float dt)
+{
+    EnsureLaserPrimed();
+    m_sweepT += dt;
+
+    _vec3 basePos = GetHeadWorldPos();
+    basePos.y -= m_laserMuzzleDown;   
+
+    _vec3 playerPos = m_pPlayerTr ? m_pPlayerTr->Get_Info(INFO_POS)
+        : (basePos + _vec3(0, 0, 10));
+    playerPos.y += m_targetYOffset;    
+
+    _vec3 fwd = playerPos - basePos;
+    _vec3 fwdXZ = fwd; fwdXZ.y = 0.f;  
+    if (D3DXVec3LengthSq(&fwdXZ) < 1e-6f) {
+        fwdXZ = m_pTransformCom->Get_Info(INFO_LOOK); fwdXZ.y = 0.f;
+    }
+    D3DXVec3Normalize(&fwdXZ, &fwdXZ);
+
+    _vec3 worldUp(0, 1, 0), right;
+    D3DXVec3Cross(&right, &worldUp, &fwdXZ);
+    if (D3DXVec3LengthSq(&right) < 1e-6f) {
+        right = m_pTransformCom->Get_Info(INFO_RIGHT);
+        right.y = 0.f;
+        if (D3DXVec3LengthSq(&right) < 1e-6f) right = _vec3(1, 0, 0);
+    }
+    D3DXVec3Normalize(&right, &right);
+
+    const float lateral = m_startSway * sinf(2.f * D3DX_PI * m_yawFreq * m_sweepT);
+    _vec3 aimPoint = playerPos + right * lateral;
+
+    m_laserPos = basePos;
+    _vec3 dir = aimPoint - m_laserPos;
+
+    float horiz = sqrtf(dir.x * dir.x + dir.z * dir.z);
+    if (horiz > 1e-4f) {
+        float maxY = tanf(D3DXToRadian(m_maxPitchDeg)) * horiz;
+        if (dir.y > maxY) dir.y = maxY;
+        if (dir.y < -maxY) dir.y = -maxY;
+    }
+    else {
+        dir = fwdXZ;
+    }
+
+    D3DXVec3Normalize(&dir, &dir);
+    m_laserDir = dir;
+
+    switch (m_lzPhase)
+    {
+    case LZ_SWEEP:
+    {
+        m_sweepT += dt;
+        const float lateral = m_startSway * sinf(2.f * D3DX_PI * m_yawFreq * m_sweepT);
+
+        _vec3 aimPoint = playerPos + right * lateral;  
+
+        m_laserPos = basePos;
+        _vec3 dir = aimPoint - m_laserPos;
+        if (D3DXVec3LengthSq(&dir) < 1e-6f) dir = fwd;
+        D3DXVec3Normalize(&dir, &dir);
+        m_laserDir = dir;
+
+        if (m_lzTimer >= m_lzSweepDuration) {
+            m_lzLockedPos = basePos;
+            _vec3 lockAim = playerPos; 
+            _vec3 lockDir = lockAim - m_lzLockedPos;
+            if (D3DXVec3LengthSq(&lockDir) < 1e-6f) lockDir = fwd;
+            D3DXVec3Normalize(&lockDir, &lockDir);
+            m_lzLockedDir = lockDir;
+
+            m_lzPhase = LZ_LOCK;
+            m_lzTimer = 0.f;
+        }
+    } break;
+
+    case LZ_LOCK:
+        m_laserPos = m_lzLockedPos;
+        m_laserDir = m_lzLockedDir;
+        if (m_lzTimer >= m_lzLockDuration) {
+            m_lzPhase = LZ_FIRE;
+            m_lzTimer = 0.f;
+        }
+        break;
+
+    case LZ_FIRE:
+        m_laserPos = m_lzLockedPos;
+        m_laserDir = m_lzLockedDir;
+
+
+        if (m_lzTimer >= m_lzFireDuration) {
+            m_lzPhase = LZ_COOLDOWN;
+            m_lzTimer = 0.f;
+        }
+        break;
+
+    case LZ_COOLDOWN:
+        if (m_lzTimer >= m_lzCooldown) {
+            m_lzPhase = LZ_SWEEP;
+            m_lzTimer = 0.f;
+            m_sweepT = 0.f;
+        }
+        break;
+    }
 }

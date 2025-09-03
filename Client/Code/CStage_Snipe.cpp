@@ -14,9 +14,32 @@
 #include "CUIManager.h"
 #include "CGlobal_Info.h"
 #include "CLoading_Scene.h"
+#include "CImageUI.h"
+
+static void attachAndSlide(CImageUI* ui, float x, float y, float w, float h)
+{
+    ui->Set_UISizeAndPos(w, h, x, y);  
+    ui->Set_RenderOn(true);
+}
+
+
 
 CStage_Snipe::CStage_Snipe(LPDIRECT3DDEVICE9 pGraphiCStage_Snipe)
     : Engine::CScene(pGraphiCStage_Snipe)
+    , m_iKillCount(0)
+    , m_bSpawned(false)
+    , m_vMonsters()
+    , m_vDeathMarked()
+    , m_vSavedPos()
+    , m_iNextActivate(0)
+    , m_iInitialActivate(1)
+    , m_iTargetKills(10)
+    , m_vKillIcons()
+    , m_iKillMax(10)
+    , m_killUIStartX(-350.f)
+    , m_killUIStartY(150.f)
+    , m_killUISpacing(30.f)
+    , m_killUISize(80.f)
 {
 
 }
@@ -68,7 +91,7 @@ HRESULT CStage_Snipe::Ready_Scene()
     if (FAILED(Ready_Prefab_Layer(L"Prefab_Layer")))
         return E_FAIL;
 
-        // GameDataManager에 바닥을 z기준 정렬
+    // GameDataManager에 바닥을 z기준 정렬
     CGameDataManager::GetInstance()->Bind_FloorList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_SNIPE, L"Floor_Layer"));
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
@@ -81,57 +104,16 @@ HRESULT CStage_Snipe::Ready_Scene()
 
 _int CStage_Snipe::Update_Scene(const _float &fTimeDelta)
 {
-    _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+    const _int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
-    // 디버깅용 
     static _bool bPrevF1 = false;
+    if (GetAsyncKeyState(VK_F1) & 0x8000) { if (!bPrevF1) { g_ColiderRender = !g_ColiderRender; bPrevF1 = true; } }
+    else { bPrevF1 = false; }
 
-    if (GetAsyncKeyState(VK_F1) & 0x8000)
-    {
-        if (!bPrevF1)
-        {
-            g_ColiderRender = !g_ColiderRender;
-            bPrevF1 = true;
-        }
-    }
-    else
-    {
-        bPrevF1 = false;
-    }
-
-    // 몬스터 스폰 (한 번만)
-    if (!m_bSpawned)
-    {
-        for (auto& pos : m_vSpawnPositions)
-        {
-            CMonster_Suit* pMonster = dynamic_cast<CMonster_Suit*>(
-                CObjectManager::GetInstance()->Clone_GameObject(
-                    L"Prototype_GameObject_Monster_Suit",
-                    SCENE_SNIPE,
-                    L"Monster_Layer",
-                    &pos));
-            if (pMonster)
-            {
-                // 몬스터에게 Stage 포인터 넘겨서 죽을 때 카운트 올리도록 할 수도 있음
-            }
-        }
-        m_bSpawned = true;
-    }
-
-    // 8마리 이상 죽으면 다음 씬으로
-    if (m_iKillCount >= 8)
-    {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
-            return E_FAIL;
-        return iExit;
-    }
-
+    TickDeathsAndProgress();
 
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
-
     return iExit;
 }
 
@@ -215,7 +197,14 @@ HRESULT CStage_Snipe::Ready_Player_Layer(const _tchar *pLayerTag)
 
 HRESULT CStage_Snipe::Ready_Monster_Layer(const _tchar *pLayerTag)
 {
+    // 툴 배치 몬스터 생성
     InstancingObjects(L"Monster_Layer");
+
+    // 몬스터 전부 비활성화
+    SetMonsterActive();
+
+    // 1마리 활성화
+    ActivateNext(m_iInitialActivate);
 
     return S_OK;
 }
@@ -275,6 +264,87 @@ void CStage_Snipe::InstancingPrefabs()
     }
 }
 
+void CStage_Snipe::SetMonsterActive()
+{
+    m_vMonsters.clear();
+    m_vSavedPos.clear();
+
+    auto* pList = CObjectManager::GetInstance()->Get_ObjectList(SCENE_SNIPE, L"Monster_Layer");
+    if (!pList) return;
+
+    for (CGameObject* obj : *pList)
+    {
+        if (!obj) continue;
+        if (auto* mon = dynamic_cast<CMonster_Suit*>(obj))
+        {
+            _vec3 saved = mon->GetTransform()->Get_Info(INFO_POS);
+            m_vSavedPos.push_back(saved);
+
+            mon->Set_Active(false);
+            mon->Set_RenderOn(false);
+            _vec3 hide = saved; hide.y -= 10000.f;
+            mon->GetTransform()->Set_Info(INFO_POS, hide);
+            CPickingManager::GetInstance()->Remove_PickingGroup(mon);
+
+            m_vMonsters.push_back(mon);
+        }
+    }
+
+    m_vDeathMarked.assign(m_vMonsters.size(), false);
+    m_iNextActivate = 0;
+
+    if (m_iTargetKills > (int)m_vMonsters.size())
+        m_iTargetKills = (int)m_vMonsters.size();
+}
+
+void CStage_Snipe::ActivateNext(int n)
+{
+    const int N = (int)m_vMonsters.size();
+    for (int c = 0; c < n && m_iNextActivate < N; ++c, ++m_iNextActivate)
+    {
+        auto* mon = m_vMonsters[m_iNextActivate];
+        if (!mon) continue;
+
+        _vec3 p = m_vSavedPos[m_iNextActivate];
+        p.y += 0.6f;
+        p.z -= 1.2f;    
+        mon->GetTransform()->Set_Info(INFO_POS, p);
+
+        mon->Set_Active(true);
+        mon->Set_RenderOn(true);
+        mon->ForceSniperMode();   
+    }
+}
+
+void CStage_Snipe::TickDeathsAndProgress()
+{
+    for (int i = 0; i < (int)m_vMonsters.size(); ++i)
+    {
+        auto* mon = m_vMonsters[i];
+        if (!mon || m_vDeathMarked[i]) continue;
+
+        if (mon->Get_Dead())
+        {
+            m_vDeathMarked[i] = true;
+            ++m_iKillCount;
+
+            SpawnKillIconAtIndex(m_iKillCount - 1);
+            ActivateNext(1); // 한마리 활성화
+        }
+    }
+
+    if (m_iKillCount >= m_iTargetKills)
+    {
+        // 다음 씬 이동
+        // 여기에 영상 재생 시킬거임
+        if (FAILED(CManagement::GetInstance()->Open_Scene(
+            SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_DEV))))
+        {
+            return;
+        }
+    }
+}
+
 CStage_Snipe *CStage_Snipe::Create(LPDIRECT3DDEVICE9 pGraphiCStage_Snipe)
 {
     CStage_Snipe *pStage = new CStage_Snipe(pGraphiCStage_Snipe);
@@ -287,6 +357,57 @@ CStage_Snipe *CStage_Snipe::Create(LPDIRECT3DDEVICE9 pGraphiCStage_Snipe)
     }
 
     return pStage;
+}
+
+void CStage_Snipe::SpawnKillIconAtIndex(int idx)
+{
+    if ((int)m_vKillIcons.size() >= m_iKillMax) {
+        if (!m_vKillIcons.empty()) {
+            CImageUI* tail = m_vKillIcons.back();
+            if (tail) tail->Set_Active(false); 
+            m_vKillIcons.pop_back();
+        }
+    }
+
+    const _uint sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    if (auto* icon = dynamic_cast<CImageUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIImage", sceneIdx, L"UI_Layer")))
+    {
+        icon->RegisterTexture(L"Com_Texture_SniperIcon",
+            L"Prototype_Component_Texture_SniperMosnterIcon",
+            0, 0, 0.f, false);
+        icon->ChangeTexture(L"Com_Texture_SniperIcon");
+        icon->SetColorMode(CImageUI::ColorMode::TextureOnly);
+        icon->SetAdditive(false);
+        icon->SetTintRGBA(255, 255, 255, 255);
+
+        m_vKillIcons.insert(m_vKillIcons.begin(), icon);
+
+        SetLayoutIcon();
+    }
+}
+
+void CStage_Snipe::ClearKillIcons()
+{
+    m_vKillIcons.clear();
+}
+
+void CStage_Snipe::SetLayoutIcon()
+{
+    const int   N = (int)m_vKillIcons.size();     
+    const float step = (m_killUISize + m_killUISpacing);
+    const float baseX = m_killUIStartX;               
+    const float y = m_killUIStartY;
+
+    for (int i = 0; i < N; ++i)
+    {
+        CImageUI* icon = m_vKillIcons[i];
+        if (!icon) continue;
+        const float x = baseX + i * step;
+
+        attachAndSlide(icon, x, y, m_killUISize, m_killUISize);
+    }
 }
 
 void CStage_Snipe::Free()

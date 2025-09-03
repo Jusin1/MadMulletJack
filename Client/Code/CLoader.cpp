@@ -675,6 +675,9 @@ HRESULT CLoader::Loading_Stage_2()
 
 HRESULT CLoader::Loading_Snipe()
 {
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SniperMosnterIcon",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Sniper/SNIPER ICON.png", 1))))
+		return E_FAIL;
 	m_isFinished = true;
 	return S_OK;
 }
