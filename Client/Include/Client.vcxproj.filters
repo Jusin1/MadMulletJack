@@ -558,6 +558,9 @@
     <ClInclude Include="..\Header\CWarningCircle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonster_Head1.h">
+      <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -817,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWarningCircle.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonster_Head1.cpp">
+      <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

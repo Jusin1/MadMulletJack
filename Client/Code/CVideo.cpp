@@ -77,13 +77,18 @@ _int CVideo::Update_GameObject(const _float& fTimeDelta)
 {
     if (m_playing && !m_eos)
     {
-        // 재생 시계
-        m_playPosSec += (double)fTimeDelta;
+        // 누적 시간
+        m_accumSec += (double)fTimeDelta;
 
-        // 비디오: 목표 시각까지 스킵하며 최신 프레임 1장만 업로드
-        decodeToTime(m_playPosSec);
+        // 프레임 지속시간만큼 누적될 때만 업데이트
+        while (m_accumSec >= m_frameDurSec)
+        {
+            m_playPosSec += m_frameDurSec;
+            m_accumSec -= m_frameDurSec;
 
-        // 오디오: 실제 재생 위치 기반 동기화
+            decodeToTime(m_playPosSec);
+        }
+
         pumpAudio();
     }
 
@@ -132,6 +137,7 @@ void CVideo::Play()
     seekToStart();
     m_playPosSec = 0.0;
     m_lastVidSec = 0.0;
+    m_accumSec = 0.0;   // ? 초기화
 
     m_playing = true;
     startAudio();

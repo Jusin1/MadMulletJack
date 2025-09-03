@@ -640,10 +640,33 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
     const wchar_t* anim = L"Com_Texture_Hit_Body";
     int dmg = 1;
     switch (part) {
-    case HIT_HEAD:  anim = L"Com_Texture_Hit_Head";  dmg = 2; break;
-    case HIT_BALLS: anim = L"Com_Texture_Hit_Balls"; dmg = 2; break;
-    case HIT_LEG:   anim = L"Com_Texture_Hit_Leg";   dmg = 1; break;
-    case HIT_BODY:  anim = L"Com_Texture_Hit_Body";  dmg = 1; break;
+    case HIT_HEAD:
+    {
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
+        Spawn_HeadExplosion_Effect(myPos);
+        anim = L"Com_Texture_Hit_Head";
+        dmg = 2; break;
+    }
+    case HIT_BALLS:
+    {
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
+        Spawn_Hit_Effect(myPos);
+        anim = L"Com_Texture_Hit_Balls";
+        dmg = 2; break;
+    }
+    case HIT_LEG:
+    {
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -2.f, 1.f);
+        Spawn_Hit_Effect(myPos);
+        anim = L"Com_Texture_Hit_Leg";
+        dmg = 1; break;
+    }
+    case HIT_BODY:
+    {
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
+        Spawn_Hit_Effect(myPos);
+        anim = L"Com_Texture_Hit_Body";  dmg = 1; break;
+    }
     default: break;
     }
 
@@ -666,12 +689,10 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 
     if (lethal)
     {
-        // ★ 처치 종류 기록(배너 문구 분기)
         if (isBalls)      m_lastKillKind = KillKind::Balls;
         else if (isHead)  m_lastKillKind = KillKind::Head;
         else              m_lastKillKind = KillKind::Normal;
 
-        // 배너는 죽을 때만 뜸
         QueueDeathUI(headshot);
         if (auto* p = GetPlayerObj())
             p->Add_Hp(headshot ? 2.f : 3.f);
@@ -682,11 +703,11 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
         CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
         // 상태 전환
-        if (headshot) {          // 머리/급소 즉사: HIT 진입하면서 1회 배너
+        if (headshot) {         
             m_bKillAfterHit = true;
             SetState(HIT);
         }
-        else {                  // 일반 즉사: DEATH 진입하면서 1회 배너
+        else {             
             m_bKillAfterHit = false;
             SetState(DEATH);
         }
@@ -713,7 +734,6 @@ HRESULT CMonster_Suit::Texture_Clone()
         { L"Com_Texture_Hit_Balls", L"Prototype_Component_Texture_Monster_Suit_HIT_BALL",  0, 23,10.f,true },
         { L"Com_Texture_Death",     L"Prototype_Component_Texture_Monster_Suit_DEATH1",    0, 21,10.f,true },
         { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC", 0, 15, 7.f,false },
-        { L"Com_Texture_Hit_VENT",    L"Prototype_Component_Texture_Monster_Suit_HIT_VENT",     0,  4, 7.f,false },
         { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",     0, 14, 7.f,false },
         { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Suit_Blocking",      0,  4, 6.f,false },
         { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Suit_Katana_Body",      0,  20, 6.f,false }
@@ -754,23 +774,32 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case SHOT:  m_shotTimer = 0.7f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC:
+    {
         tag = L"Com_Texture_Hit_Eletric";
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
+        Spawn_Eletric_Effect(myPos);
+    }
         break;
 
     case HIT_BENT:
-        tag = L"Com_Texture_Hit_VENT";
+    {
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
+        Spawn_Hit_Vent(myPos);
+    }
         break;
 
     case HIT_DOOR:
+    {
         tag = L"Com_Texture_Hit_Door";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         m_bPickable = false;
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+    }
         break;
 
     case HIT:
@@ -897,9 +926,11 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case HIT_ELECTRIC:
-    case HIT_BENT:
     case KATANA_DEATH:
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
+        break;
+    case HIT_BENT:
+        m_bDead = true;
         break;
     case HIT_DOOR:
     {

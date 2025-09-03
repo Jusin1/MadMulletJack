@@ -170,7 +170,7 @@ HRESULT CHpBarUI::Set_HpBarUI()
 	if (auto* txt1 = dynamic_cast<CTextUI*>(
 		CObjectManager::GetInstance()->Clone_GameObject(
 			L"Prototype_GameObject_TextUI", iSceneIdx, L"UI_Layer"))) {
-		txt1->SetFontTag(L"UIFont");
+		txt1->SetFontTag(L"Font_Time");
 		txt1->SetText(L"");
 		txt1->SetColor(g_Color_White);
 		txt1->SetScale(m_vTextSet.z);
