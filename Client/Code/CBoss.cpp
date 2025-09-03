@@ -14,6 +14,7 @@
 #include "CBullet.h"
 #include "CImageUI.h"
 #include "CBossHpBar.h"
+#include "CLoading_Scene.h"
 
 CBoss::CBoss(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -276,7 +277,14 @@ HRESULT CBoss::Initialize(void *pArg)
 _int CBoss::Update_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
+	{
+		auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+		// 씬 교체 (로딩씬으로)
+		LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
+
+		CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_CAR));
 		return DEAD;
+	}
 
 	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
@@ -1013,7 +1021,7 @@ void CBoss::CreateHpBar()
 	if (hpBar)
 	{
 		hpBar->Set_UIPosition(WINCX * 0.5f - 650.f, -200.f, 370.f, 60.f);
-		hpBar->BindBoss(this); // 보스 HP 연결
+		hpBar->BindBoss(this); 
 	}
 }
 

@@ -16,7 +16,7 @@ class CUIManager :
     public CBase
 {
 #pragma region 카드
-    enum class UpgradeId { SlowMo, FIRE, SHOTGUN, HEADSHOT,};
+    enum class UpgradeId { SlowMo, FIRE, SHOTGUN, HEADSHOT, SNIPER, KATANA, SPEED};
 
     struct ShopItemDef {
         UpgradeId           id;
@@ -41,11 +41,10 @@ class CUIManager :
 
     // 씬별로 어떤 카드들이 등장하는지 지정
     std::unordered_map<int, std::vector<UpgradeId>> gSceneShopCards = {
-        { SCENE_DEV, { UpgradeId::SlowMo, UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_DEV, { UpgradeId::SPEED, UpgradeId::HEADSHOT, UpgradeId::SHOTGUN } },
         { SCENE_TUTORIAL, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
-        { SCENE_STAGE_1, { UpgradeId::SHOTGUN, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
-        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SHOTGUN, UpgradeId::HEADSHOT } },
-        { SCENE_SNIPE,   { UpgradeId::FIRE, UpgradeId::SHOTGUN } },
+        { SCENE_STAGE_1, { UpgradeId::KATANA, UpgradeId::SlowMo, UpgradeId::HEADSHOT} },
+        { SCENE_STAGE_2,   { UpgradeId::FIRE, UpgradeId::SNIPER, UpgradeId::SPEED } },
     };
 
     // ── 카드 데이터 풀 ──
@@ -62,13 +61,28 @@ class CUIManager :
 
         { UpgradeId::SHOTGUN,
           L"Com_Tex_BackGround", L"NONE",
-          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_Sniper_Art",
+          L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_ShotGun_Art",
           160.f, 280.f, 10.f },
 
         { UpgradeId::HEADSHOT,
           L"Com_Tex_BackGround", L"Prototype_Component_Texture_Monster_Bullet_Slow_Back",
           L"Com_Tex_SniperArt",  L"Prototype_Component_Texture_HeadSHOT",
-          160.f, 210.f, 50.f }
+          160.f, 210.f, 50.f },
+
+         { UpgradeId::SNIPER,
+          L"Com_Tex_BackGround", L"NONE",
+          L"Com_Tex_FireArt",    L"Prototype_Component_Texture_SniperCARD",
+          160.f, 300.f, -10.f },
+          
+          { UpgradeId::KATANA,
+          L"Com_Tex_BackGround", L"NONE",
+          L"Com_Tex_FireArt",    L"Prototype_Component_Texture_KATANA",
+          160.f, 300.f, -10.f },
+
+          { UpgradeId::SPEED,
+          L"Com_Tex_BackGround", L"Prototype_Component_Texture_SHOESSHOPBACK",
+          L"Com_Tex_FireArt",    L"Prototype_Component_Texture_SHOESSHOP",
+          160.f, 280.f, 10.f  },
 
 
     };
