@@ -188,6 +188,10 @@ void CUIBase::Add_ChildFront(CUIBase* pChild)
 
 CUIBase* CUIBase::Find_Child_ByTag(const _tchar* pTag) // 자식 찾기(태그로)
 {
+    // 비웠을때 예외 처리
+    if (m_vecChildren.empty())
+        return nullptr;
+
     for (auto& pChild : m_vecChildren)
     {
         if (lstrcmp(pChild->Get_ObjTag(), pTag) == 0)

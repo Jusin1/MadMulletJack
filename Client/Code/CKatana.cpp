@@ -387,6 +387,7 @@ HRESULT CKatana::Set_Texture()
 
     case ATTEND:
         CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+        break;
 
     default:
         m_bSelfActive = true;

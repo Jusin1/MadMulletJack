@@ -770,7 +770,10 @@ void CUIManager::Update_CureEff(const _float& fTimeDelta)
 
 void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
 {
-    if (!m_pPlayerEffUI) return;
+    if (!m_pPlayerEffUI ||
+        m_pPlayerEffUI->GetChildren().empty()) 
+        return;
+
 
     const wchar_t* childTag = L"";
     CImageUI* pEff = nullptr;

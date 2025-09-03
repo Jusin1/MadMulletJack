@@ -382,18 +382,26 @@ HRESULT CWeaponUI_Manager::Set_WeaponUI()
 		break;
 
 	case SCENE_TUTORIAL:
-	case SCENE_STAGE_1:
 		if (FAILED(Create_Pistol(iCloneScene)))
 			return E_FAIL;
 		break;
 
-	case SCENE_STAGE_2:
+	case SCENE_STAGE_1:
 		if (FAILED(Create_ShotGun(iCloneScene)))
 			return E_FAIL;
 		break;
 
-	case SCENE_BOSS:
+	case SCENE_STAGE_2:
 		if (FAILED(Create_Katana(iCloneScene)))
+			return E_FAIL;
+		break;
+
+	case SCENE_BOSS:
+		if (FAILED(Create_Pistol(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
+			return E_FAIL;
+		if (FAILED(Create_ShotGun(iCloneScene)))
 			return E_FAIL;
 		break;
 
