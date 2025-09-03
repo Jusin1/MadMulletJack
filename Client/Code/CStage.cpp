@@ -210,6 +210,7 @@ void CStage::SetData(_uint _iSceneIndex)
 {
     CDataManager::GetInstance()->Clear();
     CGameDataManager::GetInstance()->AllClear();
+    CPickingManager::GetInstance()->Clear_Picking();
 
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Wall_Layer");
     CFileManager::GetInstance()->LoadDataFile(_iSceneIndex, L"Tile_Layer");

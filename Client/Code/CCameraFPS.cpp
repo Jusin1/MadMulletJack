@@ -113,6 +113,7 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
     {
         TickZoom(fTimeDelta);
         m_camInfo.fFov = m_fCurFov;
+        Set_PlayerPos();
     }
 
     if (FAILED(Apply_ViewPorjection()))

@@ -26,7 +26,7 @@ public:
 public:
 
 	_vec3		Get_Info(INFO eType) { return *(_vec3*)&m_matWorld.m[eType][0]; }
-¤¸¤¸	void		Set_Info(INFO eType, _vec3 vState) { memcpy(&m_matWorld.m[eType][0], &vState, sizeof(_vec3)); }
+	void		Set_Info(INFO eType, _vec3 vState) { memcpy(&m_matWorld.m[eType][0], &vState, sizeof(_vec3)); }
 	_vec3		Get_Scale();
 	void		Set_Scale(_float x, _float y, _float z);
 	
