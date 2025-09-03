@@ -184,6 +184,9 @@ private:
 	void Set_Cooldown(_int iIndex, _float fTime) { m_fCooldown[iIndex] = (std::max)(m_fCooldown[iIndex], fTime); }
 	_bool Is_Cooldown_Ready(_int iIndex) const { return m_fCooldown[iIndex] <= 0.f; }
 
+	// 보스 HpBar 생성
+	void CreateHpBar();
+
 	//collider with bullet
 	void Set_Collider_With_Bullet();
 private:

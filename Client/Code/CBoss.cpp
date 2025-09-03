@@ -12,6 +12,8 @@
 #include "CBoss.h"
 #include "CColiderManager.h"
 #include "CBullet.h"
+#include "CImageUI.h"
+#include "CBossHpBar.h"
 
 CBoss::CBoss(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCharacter(pGraphicDev)
@@ -266,6 +268,8 @@ HRESULT CBoss::Initialize(void *pArg)
 	else
 		m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
 
+	CreateHpBar();
+
 	return S_OK;
 }
 
@@ -326,6 +330,9 @@ void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
 
 	if (m_bPickable && !m_bDead)
 		CPickingManager::GetInstance()->Add_PickingGroup(this);
+
+	if (Get_Helath() <= 0)
+		m_bDead = true;
 
 	Set_Collider();
 }
@@ -995,6 +1002,19 @@ void CBoss::Render_AfterImage()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, oldAlphaOp);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, oldAlphaArg1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, oldAlphaArg2);
+}
+
+void CBoss::CreateHpBar()
+{
+	auto* hpBar = dynamic_cast<CBossHpBar*>(
+		CObjectManager::GetInstance()->Clone_GameObject(
+			L"Prototype_GameObject_HpbarUI_Boss", SCENE_STATIC, L"UI_Layer"));
+
+	if (hpBar)
+	{
+		hpBar->Set_UIPosition(WINCX * 0.5f - 650.f, -200.f, 370.f, 60.f);
+		hpBar->BindBoss(this); // 보스 HP 연결
+	}
 }
 
 void CBoss::Set_Collider_With_Bullet()

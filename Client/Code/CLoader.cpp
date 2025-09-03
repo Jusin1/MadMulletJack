@@ -33,6 +33,7 @@
 #include "CHpbarUI.h"
 #include "CMan_HpBarUI.h"
 #include "CPhone_HpBarUI.h"
+#include "CBossHpBar.h"
 
 // Effect UI
 #include "CEffectUI.h"
@@ -1407,6 +1408,20 @@ HRESULT CLoader::Loading_UI()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/player/Katana/Attack/Attack3/LEFT_SLASH%03d.png", 5))))
 		return E_FAIL;
 
+	// 보스 HpBar
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_BossHpBar",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/BossUI/BOSS LIFE BAR.png", 1))))
+		return E_FAIL;
+
+	// 보스 텍스트
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_BossText",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/BossUI/BATTERY LIFE.png", 1))))
+		return E_FAIL;
+
+	// 보스 아이콘 
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_BossIcon",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/BossUI/BOSS DETECTED.png", 1))))
+		return E_FAIL;
 #pragma endregion UI
 
 #pragma region 일반 UI
@@ -1726,6 +1741,11 @@ HRESULT CLoader::Loading_UI()
 	// HpBar - Phone
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Phone",
 		CPhone_HpBarUI::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	// Boss- HpBar
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_HpbarUI_Boss",
+		CBossHpBar::Create(m_pGraphicDev))))
 		return E_FAIL;
 
 #pragma endregion HpBar UI
