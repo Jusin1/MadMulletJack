@@ -24,6 +24,7 @@
 #include "CMonster_Dron.h"
 #include "CCameraFPS.h"
 #include "CBullet.h"
+#include "CItem.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -1676,7 +1677,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	Set_Collider_With_Door();
 	Set_Colllider_With_Monster(fTimeDelta);
 	Set_Collider_With_SpecialTile();
-	//Set_Collider_With_Item();
+	Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
 	Set_Collider_With_Bullet(fTimeDelta);
@@ -1860,10 +1861,14 @@ void CPlayer::Set_Collider_With_SlideWall()
 
 void CPlayer::Set_Collider_With_Item()
 {
+	CGameObject* pColliObj{ nullptr };
 	//나중에 item으로 바꿔야함 test
-	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE))
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISIOIN_ITEM, this, CColiderManager::COLLISION_SPHERE,nullptr, pColliObj))
 	{
-		Change_State(DOPING);
+		if (pColliObj)
+		{
+			Change_Weapon2(dynamic_cast<CItem*>(pColliObj)->Get_ItemInfo().eWeapon);
+		}
 	}
 }
 

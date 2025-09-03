@@ -63,7 +63,7 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	case SCENE_STAGE_1:
 	case SCENE_STAGE_2: // test
 		m_iSceneCase = 0;
-		m_vTextSet = { -420.f, -145.f ,2.f};
+		m_vTextSet = { -420.f, -155.f ,1.7f};
 
 		// 셋팅값을 기준으로 ui들 생성
 		if (FAILED(Set_HpBarUI()))
@@ -75,7 +75,7 @@ HRESULT	CHpBarUI::Initialize(void* pArg)
 	case SCENE_BOSS:
 	
 		m_iSceneCase = 1;
-		m_vTextSet = { -430.f, -56.f ,1.f};
+		m_vTextSet = { -430.f, -60.f ,1.f};
 
 		// 셋팅값을 기준으로 ui들 생성
 		if (FAILED(Set_HpBarUI()))
