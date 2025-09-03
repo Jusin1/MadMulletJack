@@ -221,16 +221,20 @@ HRESULT CStage_Car::Ready_UI_Layer(const _tchar *pLayerTag)
 
 HRESULT CStage_Car::Ready_Boss_Layer(const _tchar *pLayerTag)
 {
+    CGameObject *pGo2 = CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front();
+    if (!pGo2) return E_FAIL;
+    CPlayer *pPlayer = static_cast<CPlayer *>(pGo2);
+    _float fNormalSpeed = pPlayer->Get_NormalSpeed();
+
     RigidBodyConfig tConfig;
     tConfig.fHealth = 50.f;
+    tConfig.fMoveSpeed = fNormalSpeed;
+    tConfig.fDash_Speed = fNormalSpeed * 1.5f;
     CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer", &tConfig);
     if (!pGo) return E_FAIL;
-    CGameObject *pPlayer = CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Player_Layer")->front();
-    if (!pPlayer) return E_FAIL;
-
     CBoss *pBoss = static_cast<CBoss *>(pGo);
-    pBoss->Set_Player(pPlayer);
-    pBoss->Set_LinearLR(_vec3{ 4.f, 0.f, 35.f }, _vec3{ 20.f, 0.f, 35.f }, 10.f);
+    pBoss->Set_Player(pGo2);
+    pBoss->Set_LinearLR(_vec3{ 4.f, 0.f, 35.f }, _vec3{ 20.f, 0.f, 35.f }, 8.f);
 
     return S_OK;
 }

@@ -11,6 +11,7 @@
 #include "CPicking.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
+#include "CEffect_Pixel_Sprite.h"
 #include "CBullet.h"
 #include "CPickingManager.h"
 #include "CMonster_Head.h"

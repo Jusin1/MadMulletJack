@@ -98,18 +98,18 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
     // µð¹ö±ë¿ë 
     static _bool bPrevF1 = false;
 
-    /*if (GetAsyncKeyState(VK_F1) & 0x8000)
+    if (GetAsyncKeyState(VK_F1) & 0x8000)
     {
         if (!bPrevF1)
         {
             g_ColiderRender = !g_ColiderRender;
             bPrevF1 = true;
         }
-    }*/
-    /*else
+    }
+    else
     {
         bPrevF1 = false;
-    }*/
+    }
 
     // test : eunbi
     if (KEY_BUTTON_DOWN(DIK_U)) {

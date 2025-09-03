@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CMini_Gun.h"
+#include "CPlayer.h"
 #include "CManagement.h"
 #include "CObjectManager.h"
 #include "CMapFactory.h"
@@ -91,17 +92,17 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 					BulletData tData;
 					Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook; _vec3 vPlayerPos;
 					// player¿« look,pos  ∫§≈Õ ∞°¡Æø»
-					pPlayerTransformCom =
-						dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-							Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+					CPlayer* pPlayer = static_cast<CPlayer *>(CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer")->front());
+					if (!pPlayer)
+						return NO_EVENT;
+					pPlayerTransformCom = pPlayer->GetTransform();
 					if (pPlayerTransformCom == nullptr)
 						return NO_EVENT;
-
 
 					vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
 					vPlayerPos.z += 0.1f;
 					tData.vMuzzlePosition = vPlayerPos;
-
+					tData.fSpeed = pPlayer->Get_NormalSpeed() * 2.f;
 					vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
 					D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // ¡§±‘»≠
 					tData.vLookDir = vPlayerLook;

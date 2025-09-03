@@ -2,6 +2,7 @@
 #include "Engine_Define.h"
 #include "Client_Global.h"
 #include "CPrefab.h"
+#include "CMonster_Dron.h"
 #include "CObjectManager.h"
 #include "CGameObject.h"
 #include "CPrefabRecycleSystem.h"
@@ -80,12 +81,16 @@ void CPrefabRecycleSystem::Sorting()
 
 void CPrefabRecycleSystem::RandomSpawnMonster(const _vec3 &vPos)
 {
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 9; ++i)
 	{
-		const _float fRand1 = Rand_Float(-8.f, 8.f);
+		const _float fRand1 = Rand_Float(-5.f, 5.f);
 		const _float iRand = Rand_Int(-10, 15);
-		const _vec3 SpawnPosition = vPos + _vec3{fRand1 + 12.f, 0.f, (_float)iRand};
+		const _float iRand2 = Rand_Int(1, 3);
+		const _vec3 SpawnPosition = vPos + _vec3{fRand1 + 12.f, (_float)iRand2, (_float)iRand};
 		CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Monster_Drone", SCENE_CAR, L"Monster_Layer");
 		pGo->GetTransform()->Set_Info(INFO::INFO_POS, SpawnPosition);
+		CMonster_Dron *pDron = static_cast<CMonster_Dron *>(pGo);
+		pDron->Set_DetectRadius(36.f);
+		pDron->Set_LoseRadius(64.f);
 	}
 }

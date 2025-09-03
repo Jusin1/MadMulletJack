@@ -130,7 +130,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		break;
 
 	case SCENE_CAR:
-		m_fNormalSpeed = 10.f;
+		m_fNormalSpeed = 15.f;
 		m_bIsZoomStage = true;
 		m_pHpBarUI->Set_Active(false);
 		m_fMaxHp = 100.f;
@@ -1217,14 +1217,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.1f, 0.53f, 1.1f });
 		});
 
-		SpriteParticleOptions Option2;
-		Option2.tEffectOption = Get_Preset_Blood();
-		Option2.eType = SpriteParticleType::DEADBODY;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.5f, 1.f });
-			});
+		
 	}
 	if (KEY_BUTTON_DOWN(DIK_U))
 	{
@@ -1644,9 +1637,18 @@ HRESULT CPlayer::Set_Component()
 	//m_pColliderCom->Set_Transform(m_pTransformCom);
 
 	// Collider_Sphere
+	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+	
  	CColider_Sphere::COLLINFO CollSphereInfo;
 	ZeroMemory(&CollSphereInfo, sizeof(CColider_Sphere::COLLINFO));
-	CollSphereInfo.fRadius = 0.4f;                    // 반지름 1 -> 0.8 eunbi
+	if (iSceneIndex == SCENE_CAR)
+	{
+		CollSphereInfo.fRadius = 2.f;
+	}
+	else
+	{
+		CollSphereInfo.fRadius = 0.4f;
+	}
 	CollSphereInfo.vOffset = _vec3(0.f, -0.3f, 0.f);    // 중심 오프셋 없음
 
 	// Colider_Sphere
@@ -1690,6 +1692,7 @@ void CPlayer::Set_ColliderZoom(const _float& fTimeDelta)
 	Set_Collider_With_Clear();
 	Set_Collider_With_Wall();
 	Set_Collider_With_Door();
+	Set_Colllider_With_Monster(fTimeDelta);
 	Set_Collider_With_Bullet(fTimeDelta);
 }
 
@@ -1819,8 +1822,17 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				// Dash attack이 아니면 hit || push
 				else
 				{
-					if(dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
-						HitFromObject(fTimeDelta, 1.f);
+					if (dynamic_cast<CMonster_Dron *>(pColiObj))
+					{
+						_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+						if (iSceneIndex == SCENE_CAR)
+						{
+							pColiObj->Set_Dead(TRUE);
+							return;
+						}
+						else
+							HitFromObject(fTimeDelta, 1.f);
+					}
 					PushBack(vDistance);
 				}
 			}
@@ -1828,8 +1840,17 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			// 앞에 없다면 hit || push
 			else
 			{
-				if (dynamic_cast<CMonster_Dron*>(pColiObj)) // dron monster일 경우
-					HitFromObject(fTimeDelta, 1.f);
+				if (dynamic_cast<CMonster_Dron *>(pColiObj))
+				{
+					_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+					if (iSceneIndex == SCENE_CAR)
+					{
+						pColiObj->Set_Dead(TRUE);
+						return;
+					}
+					else
+						HitFromObject(fTimeDelta, 1.f);
+				}
 				PushBack(vDistance);
 			}
 		}

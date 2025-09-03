@@ -10,6 +10,7 @@
 #include "CEffectUI.h"
 #include "CPlayer.h"
 #include "CEffect_World.h"
+#include "CEffect_Pixel_Sprite.h"
 #include "CObjectPoolManager.h"
 #include "CMonster_Head1.h"
 
@@ -225,21 +226,72 @@ float CMonster::DistanceToPlayer() const
 
 void CMonster::Spawn_Eletric_Effect(const _vec3& vPos)
 {
+    _float fRand = Rand_Float(0.1f, 0.4f);
+    _float fRand2 = Rand_Float(0.1f, 0.4f);
+    _float fRand3 = Rand_Float(0.1f, 0.4f);
+    _float fRand4 = Rand_Float(0.1f, 0.4f);
+    _float fRand5 = Rand_Float(0.1f, 0.4f);
+    _float fRand6 = Rand_Float(0.1f, 0.4f);
+    _float fRand7 = Rand_Float(0.1f, 0.4f);
+    _float fRand8 = Rand_Float(0.1f, 0.4f);
+
     EFFECTINFO tInfo;
+    EffectOptions Option = Get_Preset_Electric();
     tInfo.eType = WorldEffectType::ELCETRIC;
-    tInfo.fSize = 4.f;
+    tInfo.fSize = 2.f;
+    Option.iPixelCount = 36;
+    Option.fLife_Max = 1.f;
+
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-        [vPos](CGameObject* pGo)->void
+        [vPos, fRand, fRand2](CGameObject *pGo)->void
         {
-            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos - _vec3{ fRand, fRand2, fRand2 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos, fRand, fRand2](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos - _vec3{ fRand, fRand2, fRand2 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos, fRand3, fRand4](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ fRand3, fRand4, fRand4 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos, fRand3, fRand4](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ fRand3, fRand4, fRand4 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos, fRand5, fRand6](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos - _vec3{ fRand5, fRand6, fRand6 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos, fRand5, fRand6](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos - _vec3{ fRand5, fRand6, fRand6 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos, fRand7, fRand8](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ fRand7, fRand8, fRand8 });
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos, fRand7, fRand8](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ fRand7, fRand8, fRand8 });
         });
 }
 
 void CMonster::Spawn_Explosion_Effect(const _vec3& vPos)
 {
+    _vec3 vLook = GetTransform()->Get_Info(INFO::INFO_LOOK);
+    ::D3DXVec3Normalize(&vLook, &vLook);
+    vLook *= 0.1f;
     EFFECTINFO tInfo;
     tInfo.eType = WorldEffectType::EXPLOSION;
-    tInfo.fSize = 8.f;
+    tInfo.fSize = 20.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
         [vPos](CGameObject* pGo)->void
         {
@@ -247,11 +299,26 @@ void CMonster::Spawn_Explosion_Effect(const _vec3& vPos)
         });
 
     tInfo.eType = WorldEffectType::SMOKE;
-    tInfo.fSize = 8.f;
+    tInfo.fSize = 16.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
         [vPos](CGameObject* pGo)->void
         {
             pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+
+    tInfo.eType = WorldEffectType::BLOOD_EXPLOSION;
+    tInfo.fSize = 10.f;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
+        [vPos, vLook](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+
+    EffectOptions Option = Get_Preset_BulletSpark();
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.1f, 0.f });
         });
 }
 
@@ -311,6 +378,27 @@ void CMonster::Spawn_Hit_Vent(const _vec3& vPos)
         [vPos](CGameObject* pGo)->void
         {
             pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.f, 0.f });
+        });
+
+    SpriteParticleOptions Option2;
+    Option2.tEffectOption = Get_Preset_Blood();
+    Option2.eType = SpriteParticleType::DEADBODY;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.25f, 0.f });
+        });
+
+    EffectOptions Option = Get_Preset_Blood();
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos);
+        });
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
+        [vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos);
         });
 }
 

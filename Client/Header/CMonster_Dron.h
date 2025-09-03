@@ -18,6 +18,10 @@ public:
     virtual void    LateUpdate_GameObject(const _float& fTimeDelta) override;
     virtual void    Render_GameObject() override;
 
+    float           Get_DetectRadius() const { return m_fDetectRadius; }
+    void            Set_DetectRadius(float f) { m_fDetectRadius = f; }
+    float           Get_LoseRadius() const { return m_fLoseRadius; }
+    void            Set_LoseRadius(float f) { m_fLoseRadius = f; }
 protected:
     virtual HRESULT Texture_Clone() override;
     virtual _bool   Picking(_vec3* PickingPoint) override;   // 부위판정 없음(단일 스피어)
@@ -26,7 +30,6 @@ protected:
     void            GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const override;
     void            Set_Check_Weapon(); // 카타나 겹침 감지 → KATANA_DEATH
     void            Set_Collider_With_Bullet();
-
 public:
     static  CMonster_Dron* Create(LPDIRECT3DDEVICE9 pGraphicDev);
     virtual CGameObject* Clone(void* pArg = nullptr) override;
@@ -39,7 +42,6 @@ private:
 
     _vec3       GetHeadWorldPos() const;
     bool        WorldToScreen(const _vec3& world, float& sx, float& sy) const;
-
 #ifdef _DEBUG
     void        DebugRender_HitSpheres() const {} // 드론은 부위 스피어 없음. 필요시 바디 스피어 디버그로 교체 가능
 #endif

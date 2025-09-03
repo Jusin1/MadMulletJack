@@ -162,6 +162,8 @@ public:
 	_bool	Get_IsCountHp() const { return m_bIsCountHp; }
 	void	Set_IsCountHp(_bool _bCountHp) { m_bIsCountHp = _bCountHp; }
 
+	_float	Get_NormalSpeed() const { return m_fNormalSpeed; }
+	void	Set_NormalSpeed(_float f) { m_fNormalSpeed = f; }
 	// collider func
 private:
 	HRESULT			Set_Component();
