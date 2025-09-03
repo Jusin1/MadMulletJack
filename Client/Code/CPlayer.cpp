@@ -23,6 +23,7 @@
 #include "CMainWeapon.h"
 #include "CMonster_Dron.h"
 #include "CCameraFPS.h"
+#include "CBullet.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -34,7 +35,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
-	m_fAttackCoolTime(0.f)
+	m_fAttackCoolTime(0.f), m_iCurScene(0), m_bIsZoomStage(false)
 {
 }
 
@@ -44,7 +45,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
 	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
-	m_fAttackCoolTime(rhs.m_fAttackCoolTime)
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_iCurScene(rhs.m_iCurScene), m_bIsZoomStage(rhs.m_bIsZoomStage)
 {
 }
 
@@ -89,7 +90,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	// state 변경 해줌
 	Change_State(OPENING);
-	Change_Move(PMV_NORMAL);
+	//Change_Move(PMV_NORMAL);
 
 	// terrain위에 있도록 함
 	m_bIsFixY = false;
@@ -120,10 +121,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	case SCENE_BOSS:
 		m_bIsZoomStage = false;
+		m_iCurScene = SCENE_BOSS;
 		Change_Weapon(WP_PISTOL);
 		break;
 
 	case SCENE_CAR:
+		m_fNormalSpeed = 10.f;
 		m_bIsZoomStage = true;
 		m_pHpBarUI->Set_Active(false);
 		Change_Weapon(WP_MINIGUN);
@@ -355,7 +358,8 @@ void CPlayer::Set_State_Normal()
 void CPlayer::CountTime(const _float& fTimeDelta)
 {
 	// 초당 hp 감소
-	Add_Hp(-1.f * fTimeDelta);
+	if(m_iCurScene != SCENE_BOSS)
+		Add_Hp(-1.f * fTimeDelta);
 
 	// dashcooltime 이 0초가 아니라면 cooltime 깎아줌
 	if (m_fDashCoolTime != 0)
@@ -1875,14 +1879,18 @@ void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
 	CGameObject *pColliObj{ nullptr };
  	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
 	//나중에 item으로 바꿔야함 test
-	//if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
-	//{
-	//	if (!pColliObj) // 예외처리
-	//		return;
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr,pColliObj))
+	{
+		if (!pColliObj) // 예외처리
+			return;
 
-	//	pColliObj->Set_Dead(true); // bullet dead 처리
-	//	HitFromObject(fTimeDelta, 1.f);
-	//}
+		// 내 bullet이 아닐때만
+		if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() != BulletData::OWNER::PLAYER)
+		{
+			pColliObj->Set_Dead(true); // bullet dead 처리
+			HitFromObject(fTimeDelta, 1.f);
+		}
+	}
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -1968,6 +1976,9 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	// test : eunbi
+	CUIManager::GetInstance()->ClearAllUI();
 }
 
 //debug

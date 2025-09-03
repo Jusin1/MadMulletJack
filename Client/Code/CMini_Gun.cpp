@@ -86,7 +86,30 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 					m_fEffRenderTime = 0.f;
 					m_fEffCoolTime = 0.05f;
 
-					
+
+					// bullet 발사
+					BulletData tData;
+					Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook; _vec3 vPlayerPos;
+					// player의 look,pos  벡터 가져옴
+					pPlayerTransformCom =
+						dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+							Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+					if (pPlayerTransformCom == nullptr)
+						return NO_EVENT;
+
+
+					vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
+					vPlayerPos.z += 0.1f;
+					tData.vMuzzlePosition = vPlayerPos;
+
+					vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
+					D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
+					tData.vLookDir = vPlayerLook;
+					tData.eOwner = BulletData::OWNER::PLAYER;
+
+					//tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
+
+					CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
 				}
 
 			}
@@ -107,7 +130,7 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMING:
 		// size를 점점 키우기
-		m_fScale += fTimeDelta;
+		m_fScale += fTimeDelta *0.5;
 
 		if (m_fScale >= 1.1f)
 		{
@@ -130,7 +153,7 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMOUT:
 		// size 줄이기 -> 실패
-		m_fScale -= fTimeDelta;
+		m_fScale -= fTimeDelta *0.5;
 
 		if (m_fScale <= 1.f)
 		{
@@ -219,10 +242,6 @@ HRESULT CMini_Gun::Set_Texture() {
 	m_tMoveInfo.eUIMove = MV_NON; // 기본으로 안 움직이게
 
 	Set_UISizeAndPos(1093.f, 614.f, WINCX * 0.5f, WINCY * 0.5f + 200.f); //1366 768
-	
-	// bullet 발사
-	BulletData tData;
-	Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook;
 
 	switch (m_tInfo.ePlayerState)
 	{
@@ -237,25 +256,6 @@ HRESULT CMini_Gun::Set_Texture() {
 		m_fEffRenderTime = 0.05f;
 		m_fEffCoolTime = 0.f;
 		SpawnEff({ 400.f,150.f,0.f,300.f });
-
-		
-		tData.vMuzzlePosition = { WINCX  * 0.5f , WINCY * 0.5f , 0.f };
-
-		// player의 look  벡터 가져옴
-		pPlayerTransformCom =
-			dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-				Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
-		if (pPlayerTransformCom == nullptr)
-			return NO_EVENT;
-
-		vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
-		D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
-		tData.vLookDir = vPlayerLook;
-
-		//tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
-
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
-
 
 		break;
 
