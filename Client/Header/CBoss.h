@@ -123,6 +123,7 @@ public:
 	_float Get_Helath() const { return m_tRigidbodyConfig.fHealth; }
 	void Set_Health(_float _f) { m_tRigidbodyConfig.fHealth = _f; }
 	void Add_Health(_float _f) { m_tRigidbodyConfig.fHealth += _f; }
+	_bool Get_PrevDead() const { return m_prevDead; }
 private:
 	HRESULT	Set_Component();
 	void Set_Collider();
@@ -183,6 +184,9 @@ private:
 
 	void Set_Cooldown(_int iIndex, _float fTime) { m_fCooldown[iIndex] = (std::max)(m_fCooldown[iIndex], fTime); }
 	_bool Is_Cooldown_Ready(_int iIndex) const { return m_fCooldown[iIndex] <= 0.f; }
+
+	// 보스 HpBar 생성
+	void CreateHpBar();
 
 	//collider with bullet
 	void Set_Collider_With_Bullet();
@@ -251,5 +255,7 @@ private:
 	const _float m_fRecordTime{ 0.1f };
 	const D3DXCOLOR m_AfterIamge_StartColor{ 1.00f, 0.20f, 1.00f, 1.f };
 	const D3DXCOLOR m_AfterIamge_EndColor{ 0.20f, 1.00f, 1.00f, 1.f };
+
+	_bool m_prevDead = false;
 };
 

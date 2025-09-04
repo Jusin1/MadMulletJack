@@ -292,6 +292,9 @@
     <Filter Include="03. Manager\PrefabRecycleSystem">
       <UniqueIdentifier>{36863f2c-03c1-4fd7-bbbb-9e0d90b411ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character\03. Boss\HpBar">
+      <UniqueIdentifier>{88c326be-fe92-462d-b1f2-5c910a911add}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -573,6 +576,9 @@
     <ClInclude Include="..\Header\CMonster_Head1.h">
       <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBar.h">
+      <Filter>02. GameObject\01. Character\03. Boss\HpBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -841,6 +847,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster_Head1.cpp">
       <Filter>02. GameObject\01. Character\02. Monster\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBar.cpp">
+      <Filter>02. GameObject\01. Character\03. Boss\HpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

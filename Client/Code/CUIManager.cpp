@@ -585,7 +585,7 @@ void CUIManager::DestroyEnterUI()
     // ¾À ±³Ã¼ (·Îµù¾ÀÀ¸·Î)
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_STAGE_2)));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
     ClearAllUI();
     m_exitingEnter = false; 
 }
@@ -609,6 +609,14 @@ void CUIManager::DestroyReloadUI()
     if (!m_pReloadUI) return;
     m_pReloadUI->Set_Dead(true);
     m_pReloadUI = nullptr;
+}
+
+void CUIManager::ClearPlayerUI()
+{
+    Destory_PlayerEff_ALL();
+    Safe_Release(m_pPlayerEffUI);
+    Destory_CureEff();
+    Safe_Release(m_pCureEffUI);
 }
 
 

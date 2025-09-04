@@ -18,6 +18,7 @@
 #include "CGlobal_Info.h"
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
+#include "CLoading_Scene.h"
 
 CStage_Boss::CStage_Boss(LPDIRECT3DDEVICE9 pGraphiCStage_Boss)
     : Engine::CScene(pGraphiCStage_Boss)
@@ -115,6 +116,15 @@ _int CStage_Boss::Update_Scene(const _float &fTimeDelta)
 void CStage_Boss::LateUpdate_Scene(const _float &fTimeDelta)
 {
     Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+    auto pBoss = CObjectManager::GetInstance()->Find_Object(SCENE_BOSS, L"Boss_Layer", 0);
+    if (dynamic_cast<CBoss*>(pBoss)->Get_PrevDead())
+    {
+        CUIManager::GetInstance()->ClearPlayerUI();
+        auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
+        CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_CAR));
+    }
 }
 
 void CStage_Boss::Render_Scene()

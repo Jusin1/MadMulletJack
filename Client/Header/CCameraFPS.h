@@ -53,7 +53,6 @@ private:
 
     _float  m_fZoomTime;  
 
-
     _float     m_fDefaultFov;
     _float     m_fZoomFov_Default;
     _float     m_fZoomFov_Sniper;
