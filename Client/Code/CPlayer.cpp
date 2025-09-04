@@ -813,6 +813,9 @@ void CPlayer::ATTACK_INSTANT_Begin()
 	m_pHpBarUI->Set_Active(false);
 
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("돌진 처치"));
+
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\knife\instancekill.wav"
+	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/knife/instancekill.wav", SOUND_PLAYER, 1.2f, 2.f, false);
 }
 
 void CPlayer::ATTACK_INSTANT_On(const _float& fTimeDelta)
@@ -898,8 +901,9 @@ void CPlayer::DOPING_Begin()
 	CUIManager::GetInstance()->CreateEffectUI(TEXT("생명 소다"));
 	CUIManager::GetInstance()->Create_CureEff();
 
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\object\soda\open.can.wav"
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\doping\player.sodaDrink.wav"
-	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, 2.f,1.5f,false);
+	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/object/soda/open.can.wav", SOUND_PLAYER, 2.f,1.f,false);
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -910,6 +914,9 @@ void CPlayer::DOPING_On(const _float& fTimeDelta)
 
 void CPlayer::DOPING_End()
 {
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\doping\player.sodaDrink.wav"
+	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, 2.5f, 1.5f, false);
+
 	// 전 무기로 바꿈
 	Change_Weapon2(m_tPrePlayerInfo.eWeapon2);
 }
@@ -1525,7 +1532,12 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 	// 충돌때 생성
 	// change 후 destroy
 	if (m_tPlayerInfo.eWeapon2 == WP_KNIFE)
+	{
 		CUIManager::GetInstance()->CreateItemUI();
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\knife\sfx_gp_int_item_grab_01.wav"
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/knife/sfx_gp_int_item_grab_01.wav", SOUND_PMOVE, 2.f, 1.5f,false);
+	}
+		
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
