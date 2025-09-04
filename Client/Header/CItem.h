@@ -55,6 +55,7 @@ private:
     _float m_fMinY;          // 움직임 멈출 y값 
     _float m_fLifeTime;      // 현재까지 지난 시간
     _float m_fLifeLimit;     // 라이프 타임
+    _float m_fGravity; // 중력
 
 public:
     static  CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev);

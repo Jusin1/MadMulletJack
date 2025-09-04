@@ -38,7 +38,7 @@ namespace {
 CMonster_Fat::CMonster_Fat(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SOLIDER)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
+    , m_fChaseRadius(9.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
     , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
 {
 }
@@ -84,12 +84,20 @@ HRESULT CMonster_Fat::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
+    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
     return S_OK;
 }
 
 _int CMonster_Fat::Update_GameObject(const _float& fTimeDelta)
 {
-    if (m_bDead) return DEAD;
+    if (m_bDead)
+    {
+        CMonster::Create_Weapon(6);
+        return DEAD;
+    }
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);
     return NO_EVENT;

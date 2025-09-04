@@ -212,7 +212,7 @@ void CBoss::Spawn_Missile()
 	_vec3 vTarget = m_pPlayer->Get_Position();
 	if (m_ePathMode == PathMode::LR)
 	{
-		vTarget += _vec3{ 0.f, 0.f, 20.f };
+		vTarget += _vec3{ 0.f, 0.f, 30.f };
 	}
 
 	MissileData tData;
@@ -302,15 +302,12 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 			fMaxSpeedZ = m_tRigidbodyConfig.fMoveSpeed;
 		}
 
-		Maintain_LR_Anchor_Z(6.f, fMaxSpeedZ);
+		Maintain_LR_Anchor_Z(8.f, fMaxSpeedZ);
 	}
 
 	UpdateSpeed(fTimeDelta);
 	
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
-	_vec3 test = m_pTransformCom->Get_Info(INFO::INFO_LOOK);
-	test.z = 1.f;
-	m_pTransformCom->Set_Info(INFO::INFO_LOOK, test);
 	vPos.x += m_fVelocity_X * fTimeDelta;
 	vPos.y = m_fBase_Y + Hover_Y();
 	vPos.z += m_fVelocity_Z * fTimeDelta;
@@ -421,9 +418,8 @@ void CBoss::UpdateSpeed(const float _fDeltaTime)
 
 	if (m_ePathMode == PathMode::LR)
 	{
+		m_fVelocity_X = std::clamp(m_fVelocity_X, -fMaxSpeed, fMaxSpeed);
 		m_fVelocity_Z = std::clamp(m_fVelocity_Z, -fMaxSpeed, fMaxSpeed);
-		const _float fMax_X_Given_Z = std::sqrt((std::max)(0.f, fMaxSpeed * fMaxSpeed - m_fVelocity_Z * m_fVelocity_Z));
-		m_fVelocity_X = std::clamp(m_fVelocity_X, -fMax_X_Given_Z, fMax_X_Given_Z);
 		return;
 	}
 
@@ -548,11 +544,9 @@ void CBoss::Update_Move(_float fDeltaTime)
 	if (m_ePathMode == PathMode::LR)
 	{
 		const _float fTarget_X = m_iDirLR > 0 ? m_vRight.x : m_vLeft.x;
-		Set_Velocity_LR(m_tRigidbodyConfig.fMoveSpeed, 100.f, m_tRigidbodyConfig.fMoveSpeed);
+		Set_Velocity_LR(m_tRigidbodyConfig.fMoveSpeed, 0.f, 0.f);
 		if (Arrived_X(fTarget_X))
-		{
 			Choose_Waypoint();
-		}
 	}
 	else
 	{
@@ -799,26 +793,17 @@ void CBoss::Set_Velocity_LR(_float fMoveSpeed, _float fKeepZ, _float fMaxSpeed_Z
 {
 	const _vec3 vPosition = Get_Position();
 	const _float fTarget_X = (m_iDirLR > 0) ? m_vRight.x : m_vLeft.x;
-	_float fAnchor_Z = m_vTarget.z;
-	if (m_bSnap_To_Player_Z && m_pPlayer)
-		fAnchor_Z = m_pPlayer->Get_Position().z + m_fOffset_FromPlayer_Z;
 
 	_float fDx = fTarget_X - vPosition.x;
 	_float fSpeed = fMoveSpeed;
 	if (std::fabs(fDx) < 1.2f)
 		fSpeed *= (std::fabs(fDx) / 1.2f);
 	
-	_float fVelocity_X{ 0.f };
-
-	if (std::fabs(fDx) > g_Epsilon)
-		fVelocity_X = Sgnf(fDx) *fSpeed;
-	 
-
-	_float fDz = fAnchor_Z - vPosition.z;
-	_float fVelocity_Z = std::clamp(fKeepZ * fDz, -fMaxSpeed_Z, fMaxSpeed_Z);
+	float fVelocity_X{ 0.f };
+	if (fabs(fDx) > g_Epsilon)
+		fVelocity_X = Sgnf(fDx) * fSpeed;
 
 	m_fTargetVel_X = fVelocity_X;
-	m_fTargetVel_Z = fVelocity_Z;
 }
 
 void CBoss::Follow_PathSpeed(_float fScale, _float fDeltaTime)

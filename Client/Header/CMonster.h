@@ -97,6 +97,7 @@ protected:
 protected:
     virtual _bool Picking(_vec3* PickingPoint) override;
     virtual void  PickingTrue() override;
+    HRESULT Create_Weapon(_int iRate);
 
     // 몬스터 죽음 이펙트 관련 함수
     virtual void GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const; // 몬스터별 문구 변경

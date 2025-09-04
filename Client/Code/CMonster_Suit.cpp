@@ -78,7 +78,7 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     // 상태/AI
     , m_eMonState(IDLE)
     , m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f)
+    , m_fChaseRadius(9.f)
     , m_fAimRadius(6.f)
     , m_fLoseRadius(16.f)
     , m_jumpCD(0.f)
@@ -202,6 +202,10 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
     
+    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
     SetupHitSpheres();
 
     return S_OK;
@@ -210,7 +214,12 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 {
     if (!Is_Active()) return NO_EVENT; 
-    if (m_bDead) return DEAD;
+    if (m_bDead)
+    {
+        CMonster::Create_Weapon(5);
+        return DEAD;
+    }
+        
 
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);
@@ -335,7 +344,7 @@ void CMonster_Suit::Set_Collider()
     if (pPlayerTr) {
         _vec3 diff = pPlayerTr->Get_Info(INFO_POS) - m_pTransformCom->Get_Info(INFO_POS);
         float dist2 = D3DXVec3LengthSq(&diff);
-        if (dist2 > 30.f * 30.f) return; 
+        if (dist2 > 12.f * 12.f) return; 
     }
 
     m_pColiderCom->Update_ColliderSphere();

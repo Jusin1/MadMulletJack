@@ -4,6 +4,7 @@
 #include "CColiderManager.h"
 #include "CComponentMgr.h"
 #include "CObjectManager.h"
+#include "CMapFactory.h"
 #include "CEffectUI.h"
 #include "CGrounding.h"
 #include "CPicking.h"
@@ -41,23 +42,19 @@ HRESULT CMonster_Dron::Initialize(void* pArg)
 
     m_fHp = 1.f;
 
+    _int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+
     CTransform::TRANSFORMINFO ti{};
-    ti.fSpeed = 6.0f;                      // 드론이니 약간 빠르게
+    if(iSceneIndex == SCENE_CAR)
+        ti.fSpeed = 0.5f;
+    else
+        ti.fSpeed = 6.0f;
     ti.fRotationSpeed = D3DXToRadian(180); // 방향 전환 빠르게
     m_pTransformCom->SetTransformInfo(ti);
     m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 
     GetPlayerTransform();
     SetState(IDLE);
-
-    // 지면 인덱스 보정
-    _float fOut = 0.f;
-    m_pGroundingCom->Initialize_CurrentIndex(
-        CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
-        m_pTransformCom->Get_Info(INFO::INFO_POS).x,
-        m_pTransformCom->Get_Info(INFO::INFO_POS).z,
-        &fOut);
-
     return S_OK;
 }
 

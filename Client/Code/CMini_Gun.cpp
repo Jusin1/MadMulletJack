@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CMini_Gun.h"
+#include "CPlayer.h"
 #include "CManagement.h"
 #include "CObjectManager.h"
 #include "CMapFactory.h"
@@ -62,13 +63,27 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 {
 	__super::Update_GameObject(fTimeDelta);
 
+	return NO_EVENT;
+}
+
+void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	__super::LateUpdate_GameObject(fTimeDelta);
+
+	if ((m_tInfo.ePlayerState == ATTACK ||
+		m_tInfo.ePlayerState == ATTACK_ZOOM )&&
+		IS_LBUTTON_UP)
+	{
+		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+	}
+
 	// attack일때
-	// effect 회전
+// effect 회전
 	CUI* pEff = nullptr;
 
 	switch (m_tInfo.ePlayerState)
 	{
-		
+
 	case ATTACK:
 	case ATTACK_ZOOM:
 		pEff = dynamic_cast<CUI*>(Find_Child_ByTag(TEXT("Eff")));
@@ -91,19 +106,20 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 					BulletData tData;
 					Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook; _vec3 vPlayerPos;
 					// player의 look,pos  벡터 가져옴
-					pPlayerTransformCom =
-						dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-							Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+					CPlayer* pPlayer = static_cast<CPlayer *>(CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer")->front());
+					if (!pPlayer)
+						return;
+					pPlayerTransformCom = pPlayer->GetTransform();
 					if (pPlayerTransformCom == nullptr)
-						return NO_EVENT;
-
-
-					vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
-					vPlayerPos.z += 0.1f;
-					tData.vMuzzlePosition = vPlayerPos;
+						return;
 
 					vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
 					D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
+
+					vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
+					tData.fSpeed = pPlayer->Get_NormalSpeed() * 2.f;
+					tData.vMuzzlePosition = vPlayerPos + vPlayerLook * 1.2f;
+
 					tData.vLookDir = vPlayerLook;
 					tData.eOwner = BulletData::OWNER::PLAYER;
 
@@ -130,17 +146,17 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMING:
 		// size를 점점 키우기
-		m_fScale += fTimeDelta *0.5;
+		m_fScale += fTimeDelta * 0.5;
 
 		if (m_fScale >= 1.1f)
 		{
 			CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
 			GetTransform()->Set_Scale(1.1f, 1.1f, 0.f);
-		}	
+		}
 		else
 			//GetTransform()->Set_Scale( m_fScale,m_fScale,0.f );
 
-		break;
+			break;
 
 	case ZOOM:
 		// 키운 사이즈 유지
@@ -153,7 +169,7 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 
 	case ZOOMOUT:
 		// size 줄이기 -> 실패
-		m_fScale -= fTimeDelta *0.5;
+		m_fScale -= fTimeDelta * 0.5;
 
 		if (m_fScale <= 1.f)
 		{
@@ -163,23 +179,8 @@ _int CMini_Gun::Update_GameObject(const _float& fTimeDelta)
 		else
 			//GetTransform()->Set_Scale(m_fScale, m_fScale, 0.f);
 
-		break;
+			break;
 	}
-
-	return NO_EVENT;
-}
-
-void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	__super::LateUpdate_GameObject(fTimeDelta);
-
-	if ((m_tInfo.ePlayerState == ATTACK ||
-		m_tInfo.ePlayerState == ATTACK_ZOOM )&&
-		IS_LBUTTON_UP)
-	{
-		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-	}
-
 
 	return;
 }

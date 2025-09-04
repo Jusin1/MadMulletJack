@@ -13,6 +13,8 @@
 #include "CObjectManager.h"
 #include "CManagement.h"
 #include "CItem.h"
+#include "CEffect_Pixel_Sprite.h"
+#include "CObjectPoolManager.h"
 
 CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
@@ -20,7 +22,7 @@ CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 }
 
 CTile_VendingMachine::CTile_VendingMachine(const CTile_VendingMachine &rhs)
-	: CTileBase(rhs, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
+	: CTileBase(rhs, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)\
 {
 }
 
@@ -108,6 +110,7 @@ void CTile_VendingMachine::LateUpdate_GameObject(const _float &fTimeDelta)
 				// 음료수 생성
 				if (FAILED(Create_Drink()))
 					return;
+				Spawn_DestroyEffect();
 				// destory
 				m_bDestroyed = true;
 			}
@@ -125,10 +128,13 @@ _bool CTile_VendingMachine::Picking(_vec3* PickingPoint)
 void CTile_VendingMachine::PickingTrue()
 {
 	// 음료수 생성`
-	if (FAILED(Create_Drink()))
-		return;
-
-	m_bDestroyed = true;
+	if (!m_bDestroyed)
+	{
+		if (FAILED(Create_Drink()))
+			return;
+		Spawn_DestroyEffect();
+		m_bDestroyed = true;
+	}
 }
 
 HRESULT CTile_VendingMachine::Create_Drink()
@@ -136,19 +142,65 @@ HRESULT CTile_VendingMachine::Create_Drink()
 	CItem::ITEMINFO tInfo{};
 	
 	_vec3 vPos = GetTransform()->Get_Info(INFO_POS); // 시작 위치
-	vPos.y += 0.2f; // 살짝 위로
+	vPos.y += 0.1f; // 살짝 위로
 
-	_vec3 vLook = GetTransform()->Get_Info(INFO_LOOK); // 자판기 보다 살짝 앞으로 보내기 위해
-	D3DXVec3Normalize(&vLook, &vLook); // 정규화
-	vPos = vPos + vLook * 1.f;
+	for (int i = 0; i < 5; i++)
+	{
+		_vec3 vNewPos = vPos;
 
-	tInfo.vStartPos = vPos;
-	tInfo.eWeapon = WP_DOPING;
-	if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Item", 
-		CManagement::GetInstance()->Get_CurrentSceneIdx(), L"GameLogic_Layer",&tInfo)))
-		return E_FAIL;
+		// x값 새로 잡아줌
+		if (i % 2 == 0)
+			vNewPos.x += rand() % 5 * 0.1;
+		else
+			vNewPos.x -= rand() % 5 * 0.1;
+
+
+		_vec3 vLook = GetTransform()->Get_Info(INFO_LOOK); // 자판기 보다 살짝 앞으로 보내기 위해
+		D3DXVec3Normalize(&vLook, &vLook); // 정규화
+		vNewPos = vNewPos - vLook * 0.1f;
+
+		tInfo.vStartPos = vNewPos;
+		tInfo.eWeapon = WP_DOPING;
+		if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Item",
+			CManagement::GetInstance()->Get_CurrentSceneIdx(), L"GameLogic_Layer", &tInfo)))
+			return E_FAIL;
+
+	}
 
 	return S_OK;
+}
+
+void CTile_VendingMachine::Spawn_DestroyEffect()
+{
+	_vec3 vPosition = GetTransform()->Get_Info(INFO::INFO_POS);
+	_float fRand = Rand_Float(0.1f, 0.4f);
+	_float fRand2 = Rand_Float(0.1f, 0.4f);
+	_float fRand3 = Rand_Float(0.1f, 0.4f);
+	_float fRand4 = Rand_Float(0.1f, 0.4f);
+	SpriteParticleOptions Option2;
+	Option2.tEffectOption = Get_Preset_Blood();
+	Option2.eType = SpriteParticleType::BOTTLE;
+	CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+		[vPosition, fRand, fRand2](CGameObject* pGo)->void
+		{
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ fRand, -fRand2, 0 });
+		});
+	Option2.eType = SpriteParticleType::BOTTLE;
+	CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+		[vPosition, fRand3, fRand4](CGameObject* pGo)->void
+		{
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition + _vec3{ -fRand3, fRand4, 0 });
+		});
+	Option2.tEffectOption = Get_Preset_BulletSpark();
+	Option2.tEffectOption.fDrag = 1.f;
+	Option2.tEffectOption.fSpeed_Min = 4.f;
+	Option2.tEffectOption.fSpeed_Max = 7.f;
+	Option2.eType = SpriteParticleType::BOTTLE;
+	CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+		[&vPosition](CGameObject* pGo)->void
+		{
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPosition);
+		});
 }
 
 void CTile_VendingMachine::Render_GameObject()

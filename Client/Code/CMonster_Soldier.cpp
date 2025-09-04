@@ -11,6 +11,7 @@
 #include "CPicking.h"
 #include "CGlobal_Info.h"
 #include "CManagement.h"
+#include "CEffect_Pixel_Sprite.h"
 #include "CBullet.h"
 #include "CPickingManager.h"
 #include "CMonster_Head.h"
@@ -39,7 +40,7 @@ namespace {
 CMonster_Soldier::CMonster_Soldier(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
+    , m_fChaseRadius(9.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
     , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
 {
 }
@@ -85,12 +86,20 @@ HRESULT CMonster_Soldier::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
+    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
     return S_OK;
 }
 
 _int CMonster_Soldier::Update_GameObject(const _float& fTimeDelta)
 {
-    if (m_bDead) return DEAD;
+    if (m_bDead) 
+    {
+        CMonster::Create_Weapon(6);
+        return DEAD;
+    }
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);
     return NO_EVENT;
@@ -688,7 +697,6 @@ void CMonster_Soldier::OnUpdateState(MON_STATE s, const _float& dt)
             vDir.y -= 0.03f;
             D3DXVec3Normalize(&vDir, &vDir);
             tData.vLookDir = vDir;
-
             CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
         }
     }

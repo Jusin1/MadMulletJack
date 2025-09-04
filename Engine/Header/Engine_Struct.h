@@ -116,7 +116,7 @@ namespace Engine
 		enum class OWNER {MONSTER, PLAYER};
 		_vec3 vMuzzlePosition{0.f, 0.f, 0.f};
 		_vec3 vLookDir{ 0.f, 0.f, 0.f };
-		_float fSpeed{ 21.f };
+		_float fSpeed{ 15.f };
 		OWNER eOwner = OWNER::MONSTER;
 		
 	}BulletData;
