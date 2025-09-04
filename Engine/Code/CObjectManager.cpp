@@ -233,6 +233,12 @@ std::vector<PREFABDATA> CObjectManager::Export_InstancedPrefabData(_uint iSceneI
 	return returnData;
 }
 
+void CObjectManager::Sorting_By_Z(_uint iSceneIdx, const _tchar *pLayerTag)
+{
+	CLayer *pLayer = Find_Layer(iSceneIdx, pLayerTag);
+	pLayer->Sort_By_Z();
+}
+
 // 원본 검색
 CGameObject* CObjectManager::Find_Prototype(const _tchar* pProtoTypeTag)
 {

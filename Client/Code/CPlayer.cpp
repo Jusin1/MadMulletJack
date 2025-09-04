@@ -1783,7 +1783,6 @@ void CPlayer::Set_Collider_With_Wall()
 		//m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance - _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
 	}
-
 }
 
 void CPlayer::Set_Collider_With_Door()
@@ -1842,12 +1841,13 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 				// Dash attack이 아니면 hit || push
 				else
 				{
-					if (dynamic_cast<CMonster_Dron *>(pColiObj))
+					if (CMonster_Dron *pDron = dynamic_cast<CMonster_Dron *>(pColiObj))
 					{
 						_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 						if (iSceneIndex == SCENE_CAR)
 						{
-							pColiObj->Set_Dead(TRUE);
+							pDron->Spawn_Explosion_Effect(vMonPos + vDistance);
+							pDron->Set_Dead(TRUE);
 							return;
 						}
 						else
@@ -1860,12 +1860,13 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			// 앞에 없다면 hit || push
 			else
 			{
-				if (dynamic_cast<CMonster_Dron *>(pColiObj))
+				if (CMonster_Dron * pDron = dynamic_cast<CMonster_Dron *>(pColiObj))
 				{
 					_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 					if (iSceneIndex == SCENE_CAR)
 					{
-						pColiObj->Set_Dead(TRUE);
+						pDron->Spawn_Explosion_Effect(vMonPos + vDistance);
+						pDron->Set_Dead(TRUE);
 						return;
 					}
 					else
@@ -1954,17 +1955,6 @@ void CPlayer::Set_Collider_With_Bullet(const _float& fTimeDelta)
 			pColliObj->Set_Dead(true); // bullet dead 처리
 			HitFromObject(fTimeDelta, 1.f);
 		}
-	}
-
-	pColliObj = nullptr;
-	// 미사일
-	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MISSILE, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
-	{
-		if (!pColliObj) // 예외처리
-			return;
-
-		pColliObj->Set_Dead(true); // bullet dead 처리
-		HitFromObject(fTimeDelta, 5.f);
 	}
 }
 

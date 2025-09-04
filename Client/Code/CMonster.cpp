@@ -321,6 +321,15 @@ void CMonster::Spawn_Explosion_Effect(const _vec3& vPos)
         {
             pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.1f, 0.f });
         });
+
+    SpriteParticleOptions Option2;
+    Option2.tEffectOption = Get_Preset_Blood();
+    Option2.eType = SpriteParticleType::DRONEBODY;
+    CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL_SPRITE, &Option2,
+        [vPos](CGameObject *pGo)->void
+        {
+            pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos + _vec3{ 0.f, 0.25f, 0.f });
+        });
 }
 
 void CMonster::Spawn_HeadExplosion_Effect(const _vec3& vPos)

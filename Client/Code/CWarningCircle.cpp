@@ -71,8 +71,14 @@ _int CWarningCircle::Update_GameObject(const _float &fTimeDelta)
 {
     if (m_bDead)
         return DEAD;
-
     CGameObject::Update_GameObject(fTimeDelta);
+
+    Update_Position(m_pTransformCom->Get_Info(INFO::INFO_POS));
+
+    Compute_CamDistance(Get_Position());
+    // 카메라 컬링 등
+    if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fEnd_Radius * 1.2f))
+        if (m_pRendererCom) m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
 
     m_fElapsed += fTimeDelta;
     _float fT = (std::min)(1.f, m_fElapsed / m_fGoalTime);
@@ -86,13 +92,6 @@ _int CWarningCircle::Update_GameObject(const _float &fTimeDelta)
 void CWarningCircle::LateUpdate_GameObject(const _float &fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
-    Update_Position(m_pTransformCom->Get_Info(INFO::INFO_POS));
-
-    Compute_CamDistance(Get_Position());
-    // 카메라 컬링 등
-    if (CCullingManager::GetInstance()->Is_In_Frustum(Get_Position(), m_fEnd_Radius * 1.2f))
-        if (m_pRendererCom) m_pRendererCom->Add_RenderGroup(RENDER_ALPHA, this);
-
 }
 
 void CWarningCircle::Render_GameObject()

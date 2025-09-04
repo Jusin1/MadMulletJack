@@ -23,6 +23,7 @@ public:
 	void			Update_Layer(const _float& fTimeDelta);
 	void			LateUpdate_Layer(const _float& fTimeDelta);
 
+	void			Sort_By_Z();
 private:
 	list<class CGameObject*> m_objList;
 

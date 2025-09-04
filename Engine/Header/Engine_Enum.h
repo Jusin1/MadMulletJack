@@ -127,6 +127,7 @@ namespace Engine
 		DEADBODY,
 		GLASS,
 		BOTTLE,
+		DRONEBODY,
 		NONE
 	};
 	constexpr size_t g_SpriteParticleTypeCount{ static_cast<size_t>(SpriteParticleType::NONE) };

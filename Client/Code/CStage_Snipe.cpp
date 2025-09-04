@@ -70,9 +70,6 @@ HRESULT CStage_Snipe::Ready_Scene()
     if (FAILED(Ready_Ceiling_Layer(L"Ceiling_Layer")))
         return E_FAIL;
 
-    /*if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
-        return E_FAIL;*/
-
     if (FAILED(Ready_EnvObj_Layer(L"Env_Layer")))
         return E_FAIL;
 
@@ -163,6 +160,10 @@ HRESULT CStage_Snipe::Ready_Prefab_Layer(const _tchar *pLayerTag)
 HRESULT CStage_Snipe::Ready_EnvObj_Layer(const _tchar *pLayerTag)
 {
     InstancingObjects(L"Env_Layer");
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Skybox", SCENE_SNIPE, L"Skybox_Layer")))
+        return E_FAIL;
+
     return S_OK;
 }
 

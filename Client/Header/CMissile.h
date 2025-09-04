@@ -68,6 +68,7 @@ private:
     void    Target_Update(const _float &fDeltaTime);
     void    Target_Exit();
 
+    void Random_ExplosionSound();
     void Set_ModelTransform();
     void Turn_Towards(const _vec3 &vDir, _float fMaxDegreePerSeconds, _float fDeltaTime);
     void Turn_Yaw_Towards(const _vec3 &vDir_XZ, _float fMaxDegreePerSeconds, _float fDeltaTime);

@@ -1,10 +1,12 @@
 #include "pch.h"
+#include "Sound_Manager.h"
 #include "CPickingManager.h"
 #include "CCullingManager.h"
 #include "CManagement.h"
 #include "CDataManager.h"
 #include "CObjectManager.h"
 #include "CObjectPoolManager.h"
+#include "CEffect_World.h"
 #include "CMapFactory.h"
 #include "Client_Global.h"
 #include "CMissile.h"
@@ -166,9 +168,89 @@ HRESULT CBoss::Change_Texture(const _tchar *AnimTag)
 	return S_OK;
 }
 
+void CBoss::Random_Speak(const _float fDeltaTime)
+{
+	if (m_eCurrentState == State::DEATH)
+		return;
+
+	m_fRandomVoiceDuration += fDeltaTime;
+	if (m_fRandomVoiceDuration >= m_fRandomVoiceCoolTime)
+	{
+		CSound_Manager *pSound = CSound_Manager::GetInstance();
+		int iSceneIndex = CManagement::GetInstance()->Get_CurrentSceneIdx();
+		int iRandom = Rand_Int(1, 5);
+		int iRandom2 = Rand_Int(7, 10);
+		m_fRandomVoiceCoolTime = (_float)iRandom2;
+		m_fRandomVoiceDuration = 0.f;
+		if (iSceneIndex == SCENE_BOSS)
+		{
+			switch (iRandom)
+			{
+			case 1:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP1", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 2:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP2", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 3:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP3", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 4:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP4", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 5:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP5", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			}
+		}
+		else
+		{
+			switch (iRandom)
+			{
+			case 1:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car1", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 2:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car2", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 3:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car3", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 4:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car4", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			case 5:
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car5", SOUND_BOSSVOICE, 0.5f, false);
+				break;
+			}
+		}
+	}
+}
+
+void CBoss::Random_RocketSound()
+{
+	CSound_Manager *pSound = CSound_Manager::GetInstance();
+	_int iRandom = Rand_Int(1, 4);
+	switch (iRandom)
+	{
+	case 1:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket1", SOUND_BOSSROCKET, 0.7f);
+		break;
+	case 2:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket2", SOUND_BOSSROCKET, 0.7f);
+		break;
+	case 3:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket3", SOUND_BOSSROCKET, 0.7f);
+		break;
+	case 4:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket4", SOUND_BOSSROCKET, 0.7f);
+		break;
+	}
+}
+
 _bool CBoss::Picking(_vec3 *PickingPoint)
 {
-	if (m_bDead || !m_bPickable) return false;
+	if (m_bDead || !m_bPickable || CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_CAR) return false;
 	_bool bPick = m_pBufferCom->Picking(m_pTransformCom, PickingPoint);
 	if (bPick) m_vPickedPosition = *PickingPoint;
 	return bPick;
@@ -182,14 +264,12 @@ void CBoss::PickingTrue()
 	tOption.fLife_Max = 0.7f;
 	tOption.fSpeed_Min = 10.f;
 	tOption.fSpeed_Max = 20.f;
-	tOption.fSize_Min = 5.f;
-	tOption.fSize_Max = 7.f;
+	tOption.fSize_Min = 3.f;
+	tOption.fSize_Max = 5.f;
 	_vec3 SpawnPosition = m_vPickedPosition;
-	CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption,
-		[&SpawnPosition](CGameObject *pGo)->void
-		{
-			pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
-	});
+	CGameObject *pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+	if(pGo)
+		pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
 
 	Add_Health(-1.f);
 	// Todo - Dead State 만들고 땅으로 추락하게 만들어야함
@@ -223,11 +303,12 @@ void CBoss::Spawn_Missile()
 		{
 			pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos);
 		});
+
+	Random_RocketSound();
 }
 
 void CBoss::Spawn_Bullet(const _vec3 &vDir)
 {
-	// Todo - SpawnBullet
 	BulletData tData;
 	tData.vMuzzlePosition = m_pTransformCom->Get_Info(INFO_POS);
 	tData.vLookDir = vDir;
@@ -279,6 +360,24 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 	if (m_bDead)
 		return DEAD;
 	
+	if (!m_bPlaySound)
+	{
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Idle", SOUND_BOSSIDLE, 0.3f, true);
+		m_bPlaySound = true;
+	}
+
+
+	Random_Speak(fTimeDelta);
+
+	if (m_bAttacked)
+	{
+		m_fAttackCoolDuration += fTimeDelta;
+		if (m_fAttackCoolDuration >= m_fGetAttackCoolTime)
+		{
+			m_bAttacked = false;
+			m_fAttackCoolDuration = 0.f;
+		}
+	}
 
 	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
@@ -290,7 +389,7 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 
 	UpdateState(fTimeDelta);
 
-	if (m_ePathMode == PathMode::LR)
+	if (m_ePathMode == PathMode::LR && m_eCurrentState != State::DEATH)
 	{
 		_float fMaxSpeedZ{ 0.f };
 		if (m_eCurrentState == State::DASH)
@@ -305,11 +404,19 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 		Maintain_LR_Anchor_Z(8.f, fMaxSpeedZ);
 	}
 
-	UpdateSpeed(fTimeDelta);
+	if(m_eCurrentState != State::DEATH)
+		UpdateSpeed(fTimeDelta);
 	
 	_vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
 	vPos.x += m_fVelocity_X * fTimeDelta;
-	vPos.y = m_fBase_Y + Hover_Y();
+	if (m_eCurrentState != State::DEATH)
+	{
+		vPos.y = m_fBase_Y + Hover_Y();
+	}
+	else
+	{
+		vPos.y += Fall_Y(fTimeDelta);
+	}
 	vPos.z += m_fVelocity_Z * fTimeDelta;
 	m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
 
@@ -321,7 +428,6 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
 {
 	CCharacter::LateUpdate_GameObject(fTimeDelta);
-	m_pColiderSphere->Update_ColliderSphere();
 	Update_Position(m_pTransformCom->Get_Info(INFO_POS));
 	m_pRendererCom->Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -331,7 +437,7 @@ void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
 		CPickingManager::GetInstance()->Add_PickingGroup(this);
 
 	if (Get_Helath() <= 0)
-		m_prevDead = true;
+		ChangeState(State::DEATH);
 
 	Set_Collider();
 }
@@ -457,6 +563,7 @@ void CBoss::ChangeState(State _e)
 	case State::DASH:		Enter_Dash();		break;
 	case State::BULLET:		Enter_Bullet();		break;
 	case State::MISSILE:	Enter_Missile();	break;
+	case State::DEATH:		Enter_Death();		break;
 	}
 }
 void CBoss::UpdateState(const float _fDeltaTime)
@@ -468,12 +575,11 @@ void CBoss::UpdateState(const float _fDeltaTime)
 	case State::DASH:		Update_Dash(_fDeltaTime);		break;
 	case State::BULLET:		Update_Bullet(_fDeltaTime);		break;
 	case State::MISSILE:	Update_Missile(_fDeltaTime);	break;
+	case State::DEATH:		Update_Death(_fDeltaTime);		break;
 	}
 }
 void CBoss::Enter_Idle()
 {
-	// TODO - IDLE Anim
-
 	m_fStayTime_Idle = Rand_Float(
 		m_tRigidbodyConfig.fIdle_Min,
 		m_tRigidbodyConfig.fIdle_Max);
@@ -567,6 +673,7 @@ void CBoss::Enter_Dash()
 	m_fStateDuration = 0.f;
 	m_vDashDir = Dash_Direction();
 	Change_Texture(L"Idle");
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Dash", SOUND_BOSSDASH, 0.5f);
 }
 
 void CBoss::Update_Dash(_float fDeltaTime)
@@ -637,6 +744,7 @@ void CBoss::Enter_Bullet()
 	m_iPhase = 0;
 	m_iShots = 0;
 	Change_Texture(L"Bullet");
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/MachineGun", SOUND_BOSSMACHINEGUN, 0.3f, true);
 }
 
 void CBoss::Update_Bullet(_float fDeltaTime)
@@ -691,6 +799,7 @@ void CBoss::Update_Bullet(_float fDeltaTime)
 
 void CBoss::Exit_Bullet()
 {
+	CSound_Manager::GetInstance()->StopSound(SOUND_BOSSMACHINEGUN);
 }
 
 void CBoss::Enter_Missile()
@@ -772,9 +881,111 @@ void CBoss::Exit_Missile()
 {
 }
 
+void CBoss::Enter_Death()
+{
+	m_fStateDuration = 0.f;
+	m_fVelocity_X = 2.f;
+	m_fVelocity_Z = 2.f;
+	Change_Texture(L"Missile");
+	CSound_Manager::GetInstance()->StopSound(SOUND_BOSSIDLE);
+	CSound_Manager::GetInstance()->StopSound(SOUND_BOSSVOICE);
+}
+
+void CBoss::Update_Death(_float fDeltaTime)
+{
+	
+	if (Get_Position().y <= -10.f)
+	{
+		m_prevDead = true;
+		return;
+	}
+
+	m_fStateDuration += fDeltaTime;
+	if (m_fStateDuration >= m_fExplosionEffectDuration)
+	{
+		m_fStateDuration = 0.f;
+
+		_float fRandom_1 = Rand_Int(1, 4);
+		_float fRandom_2 = Rand_Int(1, 4);
+		_float fRandom_3 = Rand_Int(1, 4);
+		_float fRandom_4 = Rand_Int(1, 4);
+		EffectOptions tOption{ Get_Preset_BulletSpark() };
+		tOption.fLife_Min = 0.3f;
+		tOption.fLife_Max = 0.5f;
+		tOption.fSpeed_Min = 10.f;
+		tOption.fSpeed_Max = 20.f;
+		tOption.fSize_Min = 1.f;
+		tOption.fSize_Max = 2.f;
+
+		EFFECTINFO tInfo;
+		tInfo.eType = WorldEffectType::EXPLOSION;
+		tInfo.fSize = 35.f;
+
+		_vec3 SpawnPosition{ Get_Position().x - fRandom_1, Get_Position().y + fRandom_1, Get_Position().z - fRandom_1 };
+		CGameObject *pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, SpawnPosition);
+
+		SpawnPosition = _vec3{ Get_Position().x + fRandom_2, Get_Position().y - fRandom_2, Get_Position().z + fRandom_2 };
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, SpawnPosition);
+
+		SpawnPosition = _vec3{ Get_Position().x - fRandom_3, Get_Position().y - fRandom_3, Get_Position().z + fRandom_3 };
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, SpawnPosition);
+
+		SpawnPosition = _vec3{ Get_Position().x - fRandom_4, Get_Position().y + fRandom_4, Get_Position().z - fRandom_4 };
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
+		pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo);
+		if (pGo)
+			pGo->GetTransform()->Set_Info(INFO::INFO_POS, SpawnPosition);
+
+		Random_ExplosionSound();
+	}
+}
+
+void CBoss::Random_ExplosionSound()
+{
+	CSound_Manager *pSound = CSound_Manager::GetInstance();
+	_int iRandom = Rand_Int(1, 4);
+	switch (iRandom)
+	{
+	case 1:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions1", SOUND_BOSSEXPLOSION, 1.f);
+		break;
+	case 2:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions2", SOUND_BOSSEXPLOSION, 1.f);
+		break;
+	case 3:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions3", SOUND_BOSSEXPLOSION, 1.f);
+		break;
+	case 4:
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions4", SOUND_BOSSEXPLOSION, 1.f);
+		break;
+	}
+}
+
 _float CBoss::Hover_Y() const
 {
 	return m_tRigidbodyConfig.fHoverAmp * std::sinf(m_fHoverTime * (2.f * D3DX_PI) * m_tRigidbodyConfig.fHoverFreq);
+}
+
+_float CBoss::Fall_Y(const _float fDeltaTimes) const
+{
+	return m_fFallSpeed * fDeltaTimes;
 }
 
 void CBoss::Set_Velocity_Towards(const _vec3 &vTarget, _float fSpeed)
@@ -961,7 +1172,7 @@ void CBoss::Render_AfterImage()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-
+	
 	for (const AfterImage &element : m_dequeAfterImage)
 	{
 		_float fTime = std::clamp(element.fLife / m_fLifeLimit, 0.f, 1.f);
@@ -1007,17 +1218,33 @@ void CBoss::CreateHpBar()
 void CBoss::Set_Collider_With_Bullet()
 {
 	CGameObject* pColliObj{ nullptr };
-	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, nullptr, pColliObj))
+	_vec3 vDistance;
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_BULLET, this, CColiderManager::COLLISION_SPHERE, &vDistance, pColliObj))
 	{
 		if (!pColliObj) // 예외처리
 			return;
 
 		// 플레이어 bullet 일 때
-		if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() == BulletData::OWNER::PLAYER)
+		if (CBullet *pBullet = dynamic_cast<CBullet*>(pColliObj))
 		{
-			pColliObj->Set_Dead(true); // bullet dead 처리
-			// 목숨 줄기
-			m_fHp -= 1.f; // test : eunbi
+			if (pBullet->Get_OwnerType() == BulletData::OWNER::PLAYER && !m_bAttacked)
+			{
+				m_bAttacked = true;
+
+				EffectOptions tOption{ Get_Preset_BulletSpark() };
+				tOption.fLife_Min = 0.3f;
+				tOption.fLife_Max = 0.7f;
+				tOption.fSpeed_Min = 10.f;
+				tOption.fSpeed_Max = 20.f;
+				tOption.fSize_Min = 2.f;
+				tOption.fSize_Max = 4.f;
+				_vec3 SpawnPosition = vDistance + Get_Position();
+				CGameObject *pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &tOption);
+				if (pGo)
+					pGo->GetTransform()->Set_Info(INFO_POS, SpawnPosition);
+
+				Add_Health(-1.f);
+			}
 		}
 	}
 }

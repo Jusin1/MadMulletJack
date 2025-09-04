@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "Client_Global.h"
+#include "Clinet_Define.h"
 #include "Engine_Define.h"
 #include "CEffect_World.h"
 #include "CRenderer.h"
 #include "CObjectManager.h"
 #include "CColiderManager.h"
+#include "Sound_Manager.h"
 #include "CColider_Sphere.h"
 #include "CVIBuffer_Circle.h"
 #include "CComponentMgr.h"
@@ -113,24 +115,19 @@ _int CMissile::Update_GameObject(const _float &fTimeDelta)
 
 void CMissile::LateUpdate_GameObject(const _float &fTimeDelta)
 {
-    if (m_bDead) return;
-
     CGameObject::LateUpdate_GameObject(fTimeDelta);
     m_pColiderCom->Update_ColliderSphere();
     Update_Position(m_pTransformCom->Get_Info(INFO_POS));
     
-    // Set_Collider_With_Wall();
+    Set_Collider_With_Wall();
     Set_ModelTransform();
 }
 
 void CMissile::Render_GameObject()
 {
-    if (m_bDead) return;
-
     CGameObject::Render_GameObject();
     m_pTransformCom->Apply_WorldMatrix();
     m_pBufferCom->Render_Buffer();
-    // Todo - Launch Effect
 }
 
 HRESULT CMissile::Spawn_Pooling(void *pArg)
@@ -160,6 +157,12 @@ HRESULT CMissile::Despawn_Pooling()
     if (FAILED(CGameObject::Despawn_Pooling()))
         return E_FAIL;
 
+    if (m_pWarningCirlce)
+    {
+        m_pWarningCirlce->Set_Dead(TRUE);
+        m_pWarningCirlce = nullptr;
+    }
+
     m_fTargetingSpeed = 10.f;
     m_fSmokeEffect_Duration = 0.00f;
     m_vTargetPos = _vec3{ 0.f,0.f,0.f };
@@ -169,7 +172,7 @@ HRESULT CMissile::Despawn_Pooling()
     m_pTransformCom->Set_Info(INFO::INFO_RIGHT, _vec3{ 1.f,0.f,0.f });
     m_pTransformCom->Set_Info(INFO::INFO_UP, _vec3{ 0.f,1.f,0.f });
     m_pTransformCom->Set_Info(INFO::INFO_LOOK, _vec3{ 0.f,0.f,1.f });
-    m_pTransformCom->Set_Info(INFO::INFO_POS, _vec3{ 0.f,0.f,0.f });
+    m_pTransformCom->Set_Info(INFO::INFO_POS, _vec3{ 0.f,-10.f,0.f });
     Set_ModelTransform();
 
     return S_OK;
@@ -228,10 +231,17 @@ void CMissile::UpdateState(const float _fDeltaTime)
 
 void CMissile::Set_Destroy(const _vec3 &vPos)
 {
-    Spawn_Destroy_Effect(vPos);
-    Set_Dead(TRUE);
-    m_pWarningCirlce->Set_Dead(TRUE);
-    m_pWarningCirlce = nullptr;
+    if (!m_bDead)
+    {
+        Random_ExplosionSound();
+        Spawn_Destroy_Effect(vPos);
+        Set_Dead(TRUE);
+        if (m_pWarningCirlce)
+        {
+            m_pWarningCirlce->Set_Dead(TRUE);
+            m_pWarningCirlce = nullptr;
+        }
+    }
 }
 
 HRESULT CMissile::Set_Component()
@@ -295,7 +305,7 @@ void CMissile::Set_Collider_With_Wall()
         _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS) += vDistance;
         Set_Destroy(vPos);
     }
-    if (CColiderManager::GetInstance()->CollisionGroup(
+    else if (CColiderManager::GetInstance()->CollisionGroup(
         CColiderManager::COLLISION_VERWALL, this,
         CColiderManager::COLLISION_SPHERE_CUBE, &vDistance))
     {
@@ -406,12 +416,9 @@ void CMissile::Target_Enter()
 
     // Todo
     // Spawn_Warning_Effect();
-    CObjectPoolManager::GetInstance()->Spawn(PoolType::WARNING_CIRCLE, nullptr,
-        [this](CGameObject *pGo)->void
-        {
-            pGo->GetTransform()->Set_Info(INFO::INFO_POS, m_vFinalTargetPos);
-            m_pWarningCirlce = pGo;
-        });
+    CGameObject* pGo = CObjectPoolManager::GetInstance()->Spawn(PoolType::WARNING_CIRCLE, nullptr, nullptr);
+    pGo->GetTransform()->Set_Info(INFO::INFO_POS, m_vFinalTargetPos);
+    m_pWarningCirlce = pGo;
 }
 
 void CMissile::Target_Update(const _float &fDeltaTime)
@@ -437,7 +444,6 @@ void CMissile::Target_Update(const _float &fDeltaTime)
     ::D3DXVec3Normalize(&vLook, &vLook);
 
     _float fDot = D3DXVec3Dot(&vLook, &vDir);
-    _vec3 vForward = (fDot >= 0.f) ? vLook : vDir;
 
     _float fStep = m_fTargetingSpeed * fDeltaTime;
     _float fDistance = std::sqrt(fD);
@@ -450,12 +456,33 @@ void CMissile::Target_Update(const _float &fDeltaTime)
         return;
     }
 
-    vPos += vForward * fStep;
+    vPos += vDir * fStep;
     m_pTransformCom->Set_Info(INFO_POS, vPos);
 }
 
 void CMissile::Target_Exit()
 {
+}
+
+void CMissile::Random_ExplosionSound()
+{
+    CSound_Manager *pSound = CSound_Manager::GetInstance();
+    _int iRandom = Rand_Int(1, 4);
+    switch (iRandom)
+    {
+    case 1:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions1", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    case 2:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions2", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    case 3:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions3", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    case 4:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions5", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    }
 }
 
 void CMissile::Set_ModelTransform()

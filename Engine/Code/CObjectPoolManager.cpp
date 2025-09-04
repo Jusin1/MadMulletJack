@@ -30,7 +30,7 @@ HRESULT CObjectPoolManager::Ready_Pools()
 	if (!m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL_SPRITE)])
 		m_arrayPools[static_cast<_uint>(PoolType::EFFECT_PIXEL_SPRITE)] = CObjectPool::Create(L"Proto_PixelEffect_Sprite");
 	if (!m_arrayPools[static_cast<_uint>(PoolType::BULLET)])
-		m_arrayPools[static_cast<_uint>(PoolType::BULLET)] = CObjectPool::Create(L"Prototype_GameObject_Bullet");
+		m_arrayPools[static_cast<_uint>(PoolType::BULLET)] = CObjectPool::Create(L"Prototype_GameObject_Bullet", 200);
 	if (!m_arrayPools[static_cast<_uint>(PoolType::MISSILE)])
 		m_arrayPools[static_cast<_uint>(PoolType::MISSILE)] = CObjectPool::Create(L"Prototype_GameObject_Missile", 50);
 	if (!m_arrayPools[static_cast<_uint>(PoolType::WARNING_CIRCLE)])

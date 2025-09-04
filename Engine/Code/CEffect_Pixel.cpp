@@ -94,7 +94,6 @@ void CEffect_Pixel::Render_GameObject()
 
     // 포인트 스프라이트 모드
     m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
     //m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_POINTSCALE_A, FtoDW(0.f));
     m_pGraphicDev->SetRenderState(D3DRS_POINTSCALE_B, FtoDW(0.f));
@@ -112,7 +111,6 @@ void CEffect_Pixel::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
     //m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     //m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
     //m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);

@@ -728,7 +728,8 @@ CGuiBase *CGui_MapEditorPanel::TileThumbnail_Create()
 	AddThumbnail("Cable_1", L"Proto_CABLES_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Cable_2", L"Proto_CABLES_2", pThumbnail, TileType::DECO);
 	AddThumbnail("LASER_BORDER", L"Proto_Laser_Border", pThumbnail, TileType::DECO);
-	
+	AddThumbnail("FENCE_2", L"Proto_FENCE_2", pThumbnail, TileType::DECO);
+
 	// Road
 	AddThumbnail("Road_1", L"Proto_Road_1", pThumbnail, TileType::DECO);
 	AddThumbnail("Road_2", L"Proto_Road_2", pThumbnail, TileType::DECO);

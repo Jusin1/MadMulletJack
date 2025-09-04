@@ -53,6 +53,23 @@ void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 	}
 }
 
+void CLayer::Sort_By_Z()
+{
+	if (m_objList.size() <= 1)
+		return;
+
+	m_objList.sort(
+		[](CGameObject *pGo, CGameObject *pGo2)->bool
+		{
+			_vec3 pGo_Position = pGo->GetTransform()->Get_Info(INFO::INFO_POS);
+			_vec3 pGo2_Position = pGo2->GetTransform()->Get_Info(INFO::INFO_POS);
+			if (pGo_Position.z != pGo2_Position.z)
+				return pGo_Position.z < pGo2_Position.z;
+
+			return pGo_Position.x < pGo2_Position.x;
+		});
+}
+
 CGameObject* CLayer::Get_Object(_uint iIndex)
 {
 	if (m_objList.size() <= iIndex)

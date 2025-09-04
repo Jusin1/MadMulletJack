@@ -71,10 +71,9 @@ HRESULT CStage_2::Ready_Scene()
 
         // GameDataManager에 바닥을 z기준 정렬
     CGameDataManager::GetInstance()->Bind_FloorList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_STAGE_2, L"Floor_Layer"));
-
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
-
+    CObjectManager::GetInstance()->Sorting_By_Z(SCENE_STAGE_2, L"Monster_Layer");
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;

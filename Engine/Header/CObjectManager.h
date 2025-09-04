@@ -36,7 +36,7 @@ public:
 	std::vector<PREFABDATA> ExportPrefabData();
 	std::vector<PREFABDATA> Export_InstancedPrefabData(_uint iSceneID);
 
-	
+	void Sorting_By_Z(_uint iSceneIdx, const _tchar *pLayerTag);
 private:
 	CLayer* Find_Layer(_uint iSceneIdx, const _tchar* pLayerTag); // 레이어 찾기
 

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CMonster_Suit.h"
 #include "CGameDataManager.h"
+#include "CMapFactory.h"
 #include "CColiderManager.h"
 #include "CObjectPoolManager.h"
 #include "CComponentMgr.h"
@@ -202,9 +203,13 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
     
-    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
-    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
-    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+    _uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
+    if (iSceneIndex != SCENE_SNIPE)
+    {
+        _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+        vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+        m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+    }
 
     SetupHitSpheres();
 

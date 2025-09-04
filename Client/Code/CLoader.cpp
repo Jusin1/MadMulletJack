@@ -690,18 +690,37 @@ HRESULT CLoader::Loading_Snipe()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_SniperMosnterIcon",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/UI/Sniper/SNIPER ICON.png", 1))))
 		return E_FAIL;
+	
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_SNIPE, L"Prototype_Component_Texture_SkyBox",
+		CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/MapObject/Skybox/Skybox.dds", 1))))
+		return E_FAIL;
+
+	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Skybox",
+		CSkyBox::Create(m_pGraphicDev))))
+		return E_FAIL;
+
 	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_Rooftop()
 {
+	if(FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_BOSS, L"Prototype_Component_Texture_SkyBox",
+		CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/MapObject/Skybox/Skybox.dds", 1))))
+		return E_FAIL;
+
+	CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Skybox", CSkyBox::Create(m_pGraphicDev));
+
 	m_isFinished = true;
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_Road()
 {
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_CAR, L"Prototype_Component_Texture_SkyBox2",
+		CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/MapObject/Skybox/Skybox2.dds", 1))))
+		return E_FAIL;
+
 	m_isFinished = true;
 	return S_OK;
 }
@@ -842,6 +861,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png", 1);
 	AddTexture(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png", 1);
 	AddTexture(L"Proto_Laser_Border", L"../../Client/Bin/Resource/MapObject/LASER BORDER.png", 1);
+	AddTexture(L"Proto_FENCE_2", L"../../Client/Bin/Resource/MapObject/FENCE 2.png", 1);
 
 	// door
 	AddTexture(L"Proto_NormalDoor_1_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 2_1.png", 1);
@@ -913,6 +933,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_Effect_Spread", L"../../Client/Bin/Resource/Effect/FanSpread/fan_spread_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Hitted", L"../../Client/Bin/Resource/Effect/Hitted/Hitted_%02d.png", 6);
 	AddTexture(L"Proto_Effect_DeadBody", L"../../Client/Bin/Resource/Effect/MonsterDeadBody/aaa_%03d.png", 15);
+	AddTexture(L"Proto_Effect_DroneBody", L"../../Client/Bin/Resource/Effect/DroneDeadBody/aaa_%03d.png", 12);
 	AddTexture(L"Proto_Effect_Glass", L"../../Client/Bin/Resource/Effect/Glass/glass_sheet_%02d.png", 3);
 	AddTexture(L"Proto_Effect_Bottle", L"../../Client/Bin/Resource/Effect/Glass/glass_sheet_brown_%02d.png", 3);
 

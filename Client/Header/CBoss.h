@@ -92,7 +92,8 @@ public:
 		MOVE,
 		DASH,
 		BULLET,
-		MISSILE
+		MISSILE,
+		DEATH
 	};
 	enum PathMode
 	{
@@ -131,6 +132,8 @@ private:
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar *AnimTag);
 
+	void Random_Speak(const _float fDeltaTime);
+	void Random_RocketSound();
 	virtual _bool Picking(_vec3 *PickingPoint) override;
 	virtual void  PickingTrue() override;
 
@@ -160,6 +163,9 @@ private:
 	void Update_Missile(_float fDeltaTime);
 	void Exit_Missile();
 
+	void Enter_Death();
+	void Update_Death(_float fDeltaTime);
+
 	void Force_Dash() { if (Is_Cooldown_Ready(0)) ChangeState(State::DASH); }
 	void Force_Missile() { if (Is_Cooldown_Ready(1)) ChangeState(State::MISSILE); }
 	void Force_Bullet() { if (Is_Cooldown_Ready(2)) ChangeState(State::BULLET); }
@@ -168,6 +174,7 @@ private:
 
 	// 움직임쪽
 	_float Hover_Y() const;
+	_float Fall_Y(const _float fDeltaTime) const;
 	void Set_Velocity_Towards(const _vec3 &vTarget , _float fSpeed);
 	void Set_Velocity_LR(_float fMoveSpeed, _float fKeepZ, _float fMaxSpeed_Z);
 	void Follow_PathSpeed(_float fScale, _float fDeltaTime);
@@ -181,6 +188,7 @@ private:
 	void Record_AfterImage();
 	void Update_AfterImage(const _float fDeltaTime);
 	void Render_AfterImage();
+	void Random_ExplosionSound();
 
 	void Set_Cooldown(_int iIndex, _float fTime) { m_fCooldown[iIndex] = (std::max)(m_fCooldown[iIndex], fTime); }
 	_bool Is_Cooldown_Ready(_int iIndex) const { return m_fCooldown[iIndex] <= 0.f; }
@@ -209,6 +217,8 @@ private:
 	_float m_fTargetVel_Z{ 0.f };
 	_bool m_bSnap_To_Player_Z{ FALSE };
 	_float m_fOffset_FromPlayer_Z{ 0.f };
+	_float m_fFallSpeed{ -5.f };
+	const _float m_fExplosionEffectDuration{ 0.5f };
 	SmoothDamp m_tDamping_X;
 	SmoothDamp m_tDamping_Z;
 
@@ -250,12 +260,19 @@ private:
 	// 잔상
 	deque<AfterImage> m_dequeAfterImage;
 	_float m_fDurationRecordTime{ 0.00f };
-	const _uint m_iMaxAfterImage{ 10 };
-	const _float m_fLifeLimit{ 0.20f };
-	const _float m_fRecordTime{ 0.1f };
+	const _uint m_iMaxAfterImage{ 15 };
+	const _float m_fLifeLimit{ 0.30f };
+	const _float m_fRecordTime{ 0.05f };
 	const D3DXCOLOR m_AfterIamge_StartColor{ 1.00f, 0.20f, 1.00f, 1.f };
 	const D3DXCOLOR m_AfterIamge_EndColor{ 0.20f, 1.00f, 1.00f, 1.f };
 
-	_bool m_prevDead = false;
+	_bool m_prevDead{ false };
+	_bool m_bPlaySound{ false };
+	_bool m_bAttacked{ false };
+	const _float m_fGetAttackCoolTime{ 0.3f };
+	_float m_fAttackCoolDuration{ 0.f };
+
+	_float m_fRandomVoiceDuration{ 0.f };
+	_float m_fRandomVoiceCoolTime{ 3.f };
 };
 

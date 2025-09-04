@@ -52,9 +52,6 @@ HRESULT CStage_Boss::Ready_Scene()
     if (FAILED(Ready_Ceiling_Layer(L"Ceiling_Layer")))
         return E_FAIL;
 
-    /*if (FAILED(Ready_Camera_Layer(L"Camera_Layer")))
-        return E_FAIL;*/
-
     if (FAILED(Ready_EnvObj_Layer(L"Env_Layer")))
         return E_FAIL;
 
@@ -168,6 +165,10 @@ HRESULT CStage_Boss::Ready_Prefab_Layer(const _tchar *pLayerTag)
 HRESULT CStage_Boss::Ready_EnvObj_Layer(const _tchar *pLayerTag)
 {
     InstancingObjects(L"Env_Layer");
+
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Skybox", SCENE_STATIC, L"Skybox_Layer")))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -227,7 +228,7 @@ HRESULT CStage_Boss::Ready_Boss_Layer(const _tchar *pLayerTag)
 
     CBoss* pBoss = static_cast<CBoss *>(pGo);
     pBoss->Set_Player(pPlayer);
-    pBoss->Set_RectPath(_vec3{ 17.f, 0.f, 17.f }, 40.f, 40.f, 20.f, FALSE);
+    pBoss->Set_RectPath(_vec3{ 17.f, 0.f, 17.f }, 40.f, 40.f, 20.f, TRUE);
 
     return S_OK;
 }

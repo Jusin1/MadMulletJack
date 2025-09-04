@@ -181,6 +181,7 @@ HRESULT CEffect_Pixel_Sprite::Texture_Clone()
         { L"DeadBody",	L"Proto_Effect_DeadBody",   0,	16,	1.f,	false },
         {L"Glass",      L"Proto_Effect_Glass",      0,   3, 1.f,    false },
         {L"Bottle",     L"Proto_Effect_Bottle",     0,   3, 1.f,    false },
+        {L"Drone",      L"Proto_Effect_DroneBody",  0,  12, 1.f,    false },
     };
 
     for (AnimationDeffinition &Element : ttt)
@@ -478,6 +479,8 @@ HRESULT CEffect_Pixel_Sprite::Set_TextureInit(SpriteParticleType _e)
         return Change_Texture(L"Glass");
     case Engine::SpriteParticleType::BOTTLE:
         return Change_Texture(L"Bottle");
+    case Engine::SpriteParticleType::DRONEBODY:
+        return Change_Texture(L"Drone");
     }
 
     return E_FAIL;

@@ -1,4 +1,7 @@
 #include "pch.h"
+#include "CCamera.h"
+#include "CManagement.h"
+#include "CMapFactory.h"
 #include "CSkyBox.h"
 
 CSkyBox::CSkyBox(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -17,7 +20,7 @@ CSkyBox::~CSkyBox()
 
 HRESULT CSkyBox::Ready_GameObject()
 {
-	if (FAILED(__super::Ready_GameObject()))
+	if (FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
 
 	return S_OK;
@@ -25,20 +28,17 @@ HRESULT CSkyBox::Ready_GameObject()
 
 HRESULT CSkyBox::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
 
-	// Transform
 	CTransform::TRANSFORMINFO		TransformInfo;
-	ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
-
+	::ZeroMemory(&TransformInfo, sizeof(CTransform::TRANSFORMINFO));
 	TransformInfo.fSpeed = 5.f;
-	TransformInfo.fRotationSpeed = D3DXToRadian(90.0f);
 
 	if (FAILED(Set_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(40.f, 40.f, 40.f);
+	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -47,11 +47,17 @@ _int CSkyBox::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	_matrix	matView;
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	_matrix	matView = CCamera::GetView();
 	D3DXMatrixInverse(&matView, 0, &matView);
 
-	m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 3.f, matView._43));
+	if (CManagement::GetInstance()->Get_CurrentSceneIdx() == SCENE_SNIPE)
+	{
+		m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 0.54f, matView._43));
+	}
+	else
+	{
+		m_pTransformCom->Set_Info(INFO_POS, _vec3(matView._41, matView._42 + 0.93f, matView._43));
+	}
 
 	return 0;
 }
@@ -61,8 +67,7 @@ void CSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(RENDER_PRIORITY, this);
+	m_pRendererCom->Add_RenderGroup(RENDER_PRIORITY, this);
 }
 
 void CSkyBox::Render_GameObject()
@@ -72,7 +77,7 @@ void CSkyBox::Render_GameObject()
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pTextureCom->Set_Texture(3);
+	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
@@ -80,12 +85,22 @@ void CSkyBox::Render_GameObject()
 }
 
 HRESULT CSkyBox::Set_Component()
-{/*
-	if (FAILED(Add_Components(L"Com_Texture", SCENE_STAGE_1, L"Prototype_Component_Texture_SkyBox", (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
+{
+	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 
-	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_LOADING, L"Proto_CubeBuffer", (CComponent**)&m_pBufferCom)))
-		return E_FAIL;*/
+	if (iSceneIndex == SCENE_BOSS || iSceneIndex == SCENE_SNIPE)
+	{
+		if (FAILED(Add_Components(L"Com_Texture", iSceneIndex, L"Prototype_Component_Texture_SkyBox", (CComponent **)&m_pTextureCom)))
+			return E_FAIL;
+	}
+	else if (iSceneIndex == SCENE_CAR)
+	{
+		if (FAILED(Add_Components(L"Com_Texture", iSceneIndex, L"Prototype_Component_Texture_SkyBox2", (CComponent **)&m_pTextureCom)))
+			return E_FAIL;
+	}
+
+	if (FAILED(Add_Components(L"Com_VIBuffer", SCENE_STATIC, L"Proto_CubeBuffer", (CComponent**)&m_pBufferCom)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -93,16 +108,16 @@ HRESULT CSkyBox::Set_Component()
 
 CSkyBox* CSkyBox::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CSkyBox* pPlayer = new CSkyBox(pGraphicDev);
+	CSkyBox* pSkybox = new CSkyBox(pGraphicDev);
 
-	if (FAILED(pPlayer->Ready_GameObject()))
+	if (FAILED(pSkybox->Ready_GameObject()))
 	{
-		Safe_Release(pPlayer);
+		Safe_Release(pSkybox);
 		MSG_BOX("pSky Create Failed");
 		return nullptr;
 	}
 
-	return pPlayer;
+	return pSkybox;
 }
 
 CGameObject* CSkyBox::Clone(void* pArg)

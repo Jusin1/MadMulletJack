@@ -542,6 +542,7 @@ HRESULT CEditorApplication::Ready_MapObjectTexture()
 	AddTextureForThumbnail(L"Proto_CABLES_1", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 3.png");
 	AddTextureForThumbnail(L"Proto_CABLES_2", L"../../Client/Bin/Resource/MapObject/Tile/CABLES 4.png");
 	AddTextureForThumbnail(L"Proto_Laser_Border", L"../../Client/Bin/Resource/MapObject/LASER BORDER.png");
+	AddTextureForThumbnail(L"Proto_FENCE_2", L"../../Client/Bin/Resource/MapObject/FENCE 2.png");
 
 	// display
 	AddTextureForThumbnail(L"Proto_Bandit_Outdoor", L"../../Client/Bin/Resource/MapObject/DisplayBoard/BANDIT.png");

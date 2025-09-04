@@ -19,7 +19,7 @@ CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_fSpeed(21.f)
     , m_vMoveDir(0.f, 0.f, 1.f)
     , m_fLifeTime(0.f)
-    , m_fLifeLimit(1.f)   
+    , m_fLifeLimit(3.f)   
     , m_eOwner(BulletData::OWNER::MONSTER)
 {
 }
@@ -79,6 +79,9 @@ _int CBullet::Update_GameObject(const _float& fTimeDelta)
         m_bDead = true;  
         return DEAD;
     }
+
+    if (Get_OwnerType() == BulletData::OWNER::PLAYER)
+        int a = 0;
 
     CColiderManager::GetInstance()->Add_CollisionGroup(
         CColiderManager::COLLISION_BULLET, this);
@@ -176,7 +179,7 @@ HRESULT CBullet::Set_Component()
         return E_FAIL;
 
     CColider_Sphere::COLLINFO CollSphereInfo{};
-    CollSphereInfo.fRadius = 0.2f;
+    CollSphereInfo.fRadius = 0.5f;
     CollSphereInfo.vOffset = _vec3(0.f, 0.f, 0.f);
 
     if (FAILED(Add_Components(L"Com_Collider_Sphere", SCENE_STATIC,
@@ -244,7 +247,7 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
         });
     EFFECTINFO tInfo;
     tInfo.eType = WorldEffectType::EXPLOSION;
-    tInfo.fSize = 3.f;
+    tInfo.fSize = 5.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
         [&vPos](CGameObject *pGo)->void
         {
