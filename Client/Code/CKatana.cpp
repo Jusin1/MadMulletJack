@@ -8,6 +8,7 @@
 #include "CColiderManager.h"
 #include "CColider_Sphere.h"
 #include "CTransform.h"
+#include "Sound_Manager.h"
 
 CKatana::CKatana(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMainWeapon(pGraphicDev)
@@ -263,11 +264,12 @@ _int CKatana::Update_GameObject(const _float& fTimeDelta)
             m_fWaitTimer += fTimeDelta;
             if (m_fWaitTimer >= 0.7f)
             {
+                m_fWaitTimer = -999.f; // 다시 못 들어오게
                 m_pShineKnife->Set_Active(false);
                 m_pKnifeUI->Set_Active(true);
-
-                setMove(m_pKnifeHandleUI, MV_RIGHT, 1000.f, 2000.f);
-                setMove(m_pKnifeUI, MV_RIGHT, 1000.f, 2000.f);
+                CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_wp_katana_special_02", SOUND_WEAPON, 1.8f, false);
+                setMove(m_pKnifeHandleUI, MV_RIGHT, 3000.f, 2000.f);
+                setMove(m_pKnifeUI, MV_RIGHT, 3000.f, 2000.f);
 
                 setMove(m_pSheathUI, MV_LEFT, 400.f, 2000.f);
             }
@@ -418,7 +420,7 @@ HRESULT CKatana::Texture_Clone()
     // Attack
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack1", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -427,7 +429,7 @@ HRESULT CKatana::Texture_Clone()
     // Attack2
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack2", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack2", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -436,7 +438,7 @@ HRESULT CKatana::Texture_Clone()
     // Attack3
     texInfo.m_iStart = 0;
     texInfo.m_iEndTex = 1;
-    texInfo.m_fSpeed = 2.f;
+    texInfo.m_fSpeed = 3.f;
     texInfo.m_bLoop = false;
     if (FAILED(Add_Components(L"Com_Texture_Katana_Attack3", SCENE_STATIC, L"Prototype_Component_Texture_KatanaAttack3", (CComponent**)&m_pTextureCom, &texInfo)))
         return E_FAIL;
@@ -485,6 +487,23 @@ void CKatana::BeginHit(float seconds)
     m_fHitTimer = seconds;
 }
 
+void CKatana::CreateKatanaSound()
+{
+    const wchar_t* soundKeys[] = {
+    L"../Bin/Resource/Sounds/sfx_gp_wp_katana_swing_01",
+    L"../Bin/Resource/Sounds/sfx_gp_wp_katana_swing_02",
+    L"../Bin/Resource/Sounds/sfx_gp_wp_katana_swing_03",
+    L"../Bin/Resource/Sounds/sfx_gp_wp_katana_swing_04"
+    L"../Bin/Resource/Sounds/sfx_gp_wp_katana_swing_05"
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]), SOUND_MONSTER, 0.6f, false);
+}
+
 void CKatana::StartComboStep(int step)
 {
     m_fComboTimer = 0.f;
@@ -492,6 +511,7 @@ void CKatana::StartComboStep(int step)
     switch (step)
     {
     case 1:
+        CreateKatanaSound();
         Change_Texture(TEXT("Com_Texture_Katana_Attack"));
         Set_UISizeAndPos(1600.f, 200.f, WINCX * 0.5f - 650.f, WINCY * 0.5f + 70.f);
         Set_New_TransInfo(3500.f, 0.f);
@@ -500,6 +520,7 @@ void CKatana::StartComboStep(int step)
         BeginHit(0.08f);
         break;
     case 2:
+        CreateKatanaSound();
         Change_Texture(TEXT("Com_Texture_Katana_Attack2"));
         Set_UISizeAndPos(3000.f, 2300.f, WINCX * 0.5f - 600.f, WINCY * 0.5f - 620.f);
         Set_New_TransInfo(7000.f, 0.f);
@@ -508,6 +529,7 @@ void CKatana::StartComboStep(int step)
         BeginHit(0.08f);
         break;
     case 3:
+        CreateKatanaSound();
         Change_Texture(TEXT("Com_Texture_Katana_Attack3"));
         Set_UISizeAndPos(3000.f, 2300.f, WINCX * 0.5f + 820.f, WINCY * 0.5f - 670.f);
         Set_New_TransInfo(7000.f, 0.f);
