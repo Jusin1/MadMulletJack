@@ -32,6 +32,7 @@ public:
     int  VolumeUp(const _uint& eID, const _float& _vol);
     int  VolumeDown(const _uint& eID, const _float& _vol);
     int  Pause(const _uint& eID);
+    void PlaySoundPitch(const TCHAR* pSoundKey, const _uint& eID, const float& fVolume, float pitch, bool loop);
 
 private:
     void LoadSoundFile(); // Àç±Í ·Îµù

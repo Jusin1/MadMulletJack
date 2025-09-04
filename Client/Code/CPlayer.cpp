@@ -695,8 +695,7 @@ void CPlayer::JUMP_Begin()
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\jump\player.jump-002.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jump/player.jump-002.wav", SOUND_PLAYER, false);
-	CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jump/player.jump-002.wav", SOUND_PLAYER,1.f, false);
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -725,8 +724,7 @@ void CPlayer::JUMP_End()
 	Set_Velocity(0.f);
 	Set_Jumping(false);
 	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\jumpend\player.touchGround-002.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jumpend/player.touchGround-002.wav", SOUND_PLAYER, false);
-	CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jumpend/player.touchGround-002.wav", SOUND_PLAYER,1.f, false);
 }
 
 // kick
@@ -737,8 +735,7 @@ void CPlayer::KICK_Begin()
 	Change_Move(PMV_NORMAL);
 
 	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\kick\sfx_gp_kick_hit_02.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/kick/sfx_gp_kick_hit_02.wav", SOUND_PLAYER, false);
-	CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/kick/sfx_gp_kick_hit_02.wav", SOUND_PLAYER, 0.5f,false);
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
@@ -902,8 +899,7 @@ void CPlayer::DOPING_Begin()
 	CUIManager::GetInstance()->Create_CureEff();
 
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\doping\player.sodaDrink.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, false);
-	CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 1.f);
+	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, 1.f,1.5f,false);
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -970,8 +966,7 @@ void CPlayer::PLAYERDEAD_Begin()
 {
 	m_eMoveKey = MVKEY_NON;
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\player levando choque-004.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/player levando choque-004.wav", SOUND_PLAYER, false);
-	CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/player levando choque-004.wav", SOUND_PLAYER, 0.5f,false);
 }
 
 void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
@@ -1215,80 +1210,6 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		m_bIsZoomStage = !m_bIsZoomStage;
 	}
 
-	//test bj 0829
-	if (KEY_BUTTON_DOWN(DIK_K))
-	{
-		EffectOptions Option = Get_Preset_Blood();
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.f, 0.65f, 1.f });
-			});
-
-		EFFECTINFO tInfo;
-		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.11f, 0.54f, 1.11f });
-			});
-
-		tInfo;
-		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION2;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.111f, 0.48f, 1.111f });
-			});
-
-		tInfo;
-		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION3;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.112f, 0.46f, 1.112f });
-			});
-
-		tInfo;
-		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::BLOOD_EXPLOSION4;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.113f, 0.47f, 1.113f });
-			});
-
-		tInfo;
-		tInfo.fAngle = 20.f;
-		tInfo.eType = WorldEffectType::FAN_SPREAD;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-		[](CGameObject *pGo)->void
-		{
-				static_cast<CEffect_World *>(pGo)->Set_TintColor(D3DCOLOR_COLORVALUE(135.f, 0.f, 0.f, 255.f));
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 1.1f, 0.53f, 1.1f });
-		});
-
-		
-	}
-	if (KEY_BUTTON_DOWN(DIK_U))
-	{
-		EffectOptions Option = Get_Preset_Electric();
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_PIXEL, &Option,
-			[&](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
-			});
-		EFFECTINFO tInfo;
-		tInfo.eType = WorldEffectType::ELCETRIC;
-		CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
-			[](CGameObject *pGo)->void
-			{
-				pGo->GetTransform()->Set_Info(INFO::INFO_POS, _vec3{ 2.f, 0.5f, 1.f });
-			});
-	}
 }
 
 void CPlayer::KeyInputZoom(const _float& fTimeDelta)
@@ -1420,13 +1341,6 @@ void CPlayer::Move(const _float& fTimeDelta)
 	switch (m_tPlayerInfo.ePlayerMove)
 	{
 	case PMV_NORMAL:
-		// 만약 터레인 위에 없다면
-		/*if (m_tPlayerInfo.ePlayerState != JUMP &&
-			!Is_OnTerrain())
-		{
-			Change_Move(PMV_FALL);
-			Change_State(IDLE);
-		}*/
 		break;
 
 	case PMV_DASHATT:
@@ -1448,6 +1362,7 @@ void CPlayer::Move(const _float& fTimeDelta)
 		m_bIsAttack = true;
 		m_eMoveKey = MVKEY_STOP;
 		Move_Dash(fTimeDelta);
+		break;
 		
 	case PMV_DASH:
 	{
@@ -1541,9 +1456,7 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 	// 만약 slide에서 벗어나면
 	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::INCLINE)
 	{
-		// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\slide\player.slide_end02.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_end02.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_end02.wav", SOUND_PLAYER, 0.5f,false);
 		Change_Move(PMV_DASH);
 		return;
 	}
@@ -1634,7 +1547,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	{
 	case PMV_NORMAL:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed;
-		CSound_Manager::GetInstance()->StopSound(SOUND_PLAYER);
+		CSound_Manager::GetInstance()->StopSound(SOUND_PMOVE);
 		break;
 
 	case PMV_DASHATT:
@@ -1642,8 +1555,8 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\dash\player.dash-004.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE,0.5f, false);
+
 	break;
 
 	case PMV_DASH:
@@ -1655,10 +1568,9 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
-
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\dash\player.dash-004.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE, 0.5f,false);
+
 
 	break;
 
@@ -1667,8 +1579,8 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\slide\player.slide_in02.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, false);
+
 	break;
 	
 	case PMV_WALL:
@@ -1680,15 +1592,15 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 		m_bIsFixY = true;
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, false);
+
 		break;
 
 	case PMV_FALL:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed;
 		m_bIsFixY = true; // set onterrain 방지
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PLAYER, true);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, true);
+
 		break;
 
 	break;
@@ -1697,24 +1609,6 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 HRESULT CPlayer::Set_Component()
 {
-	//// Texture
-	//if (Texture_Clone())
-	//	return E_FAIL;
-
-	//CColider_Cube::COLLRECTDESC CollCubeDesc;
-	//ZeroMemory(&CollCubeDesc, sizeof(CColider_Cube::COLLRECTDESC));
-	//CollCubeDesc.fRadiusY = 1.f;
-	//CollCubeDesc.fRadiusX = 1.f;
-	//CollCubeDesc.fRadiusZ = 1.f;
-	//CollCubeDesc.fOffSetX = 0.f;
-	//CollCubeDesc.fOffSetY = 0.f;
-	//CollCubeDesc.fOffsetZ = 0.f;
-
-	//// Colider_Cube
-	//if (FAILED(Add_Components(L"Com_Collider_Cube", SCENE_STATIC, L"Proto_Colider_Cube", (CComponent**)&m_pColliderCom, &CollCubeDesc)))
-	//	return E_FAIL;
-	//m_pColliderCom->Set_Transform(m_pTransformCom);
-
 	// Collider_Sphere
 	_uint iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 	
@@ -1740,15 +1634,6 @@ HRESULT CPlayer::Set_Component()
 
 void CPlayer::Set_Collider(const _float& fTimeDelta)
 {
-	//m_pColliderCom->Update_ColliderBox();
-	//  큐브 충돌
-	/*
-	if (CColiderManager::GetInstance()->CollisionGroup(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_CUBE, nullptr))
-	{
-		_vec3 vPosition = m_pTransformCom->Get_Info(INFO_POS);
-	}
-	*/
-
 	// 구 충돌
 	m_pColiderSphere->Update_ColliderSphere();
 
@@ -1801,8 +1686,7 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::BLOODR);
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\MadJack_BonusLine_106_a.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/MadJack_BonusLine_106_a.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/MadJack_BonusLine_106_a.wav", SOUND_PLAYER, 0.5f, false);
 	}
 }
 
@@ -1822,18 +1706,14 @@ void CPlayer::Set_Collider_With_Wall()
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_HORWALL, 
 		this, CColiderManager::COLLISION_SPHERE_CUBE,1.f))
 	{
-
 	}
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_VERWALL, 
 		this, CColiderManager::COLLISION_SPHERE_CUBE, 1.f))
 	{
-
 	}
 
 	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_CEILING, this, CColiderManager::COLLISION_SPHERE_CUBE, -0.01f))
 	{
-		//_vec3 vPos = Get_Pos();
-		//m_pTransformCom->Set_Info(INFO_POS, vPos += (vDistance - _vec3{ 0.f, 0.01f, 0.f }));
 		Set_Velocity(Get_Velocity() * -1.f);
 	}
 
@@ -2109,9 +1989,6 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-
-	// test : eunbi
-	//CUIManager::GetInstance()->ClearAllUI();
 }
 
 //debug
