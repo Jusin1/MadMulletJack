@@ -304,22 +304,25 @@ void CHpBarUI::Set_Hp(_float _fMaxHp, _float _fCurHp)
 				Create_CountEff(L"Prototype_Component_Texture_UIHpBarPhoneEff3");
 				break;	
 				
-			case 4:
-				txt1->SetText(TEXT("04")); break;
-			case 5:
-				txt1->SetText(TEXT("05")); break;
-			case 6:
-				txt1->SetText(TEXT("06")); break;
-			case 7:
-				txt1->SetText(TEXT("07")); break;
-			case 8:
-				txt1->SetText(TEXT("08")); break;
-			case 9:
-				txt1->SetText(TEXT("09")); break;
-			case 10:
-				txt1->SetText(TEXT("10")); break;
-			default:
-				txt1->SetText(TEXT("00")); break;
+			case 4: txt1->SetText(TEXT("04")); break;
+			case 5:	txt1->SetText(TEXT("05")); break;
+			case 6:	txt1->SetText(TEXT("06")); break;
+			case 7:	txt1->SetText(TEXT("07")); break;
+			case 8:	txt1->SetText(TEXT("08")); break;
+			case 9:	txt1->SetText(TEXT("09")); break;
+			case 10:txt1->SetText(TEXT("10")); break;
+
+			case 11: txt1->SetText(TEXT("11")); break;
+			case 12:txt1->SetText(TEXT("12")); break;
+			case 13:txt1->SetText(TEXT("13")); break;
+			case 14:txt1->SetText(TEXT("14")); break;
+			case 15:txt1->SetText(TEXT("15")); break;
+			case 16:txt1->SetText(TEXT("16")); break;
+			case 17:txt1->SetText(TEXT("17")); break;
+			case 18:txt1->SetText(TEXT("18")); break;
+			case 19:txt1->SetText(TEXT("19")); break;
+			case 20:txt1->SetText(TEXT("20")); break;
+			default:txt1->SetText(TEXT("00")); break;
 			}
 		}
 		

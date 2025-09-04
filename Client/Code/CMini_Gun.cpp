@@ -123,7 +123,6 @@ void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 					tData.vLookDir = vPlayerLook;
 					tData.eOwner = BulletData::OWNER::PLAYER;
 
-					//tData.vLookDir = { 0.f,0.f,1.f }; // test : z ¹æÇâ
 
 					CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
 				}

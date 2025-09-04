@@ -86,8 +86,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 	GetTransform()->Set_Scale(1.f, 2.f, 1.f);
 	
-	m_fMaxHp = 10.f;
-	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
+	m_fMaxHp = 20.f;
+	m_fHp = 20.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
 
 	m_fPlayTime = 0.f;
@@ -1107,6 +1107,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		//DIK_LSHIFT
 		if (KEY_BUTTON_HOLD(DIK_LSHIFT) &&				//  l-shift hold 시
 			m_tPlayerInfo.ePlayerMove != PMV_DASH &&	// 이중 dash 금지
+			m_tPlayerInfo.ePlayerMove != PMV_DASHATT &&		// 이중 dash attack 금지
 			m_fDashCoolTime == 0 &&						// dash cool time이 0이라면
 			m_tPlayerInfo.ePlayerMove != PMV_DASHJUMP)						
 		{
@@ -1135,6 +1136,7 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 
 		if (IS_RBUTTON_HOLD &&								// 우클릭 hold 시
 			m_tPlayerInfo.ePlayerMove != PMV_DASHATT &&		// 이중 dash attack 금지
+			m_tPlayerInfo.ePlayerMove != PMV_DASH &&		// 이중 dash attack 금지
 			m_fDashCoolTime == 0 &&							// dash cool time이 지나면
 			m_tPlayerInfo.ePlayerState != JUMP &&
 			m_tPlayerInfo.ePlayerMove != PMV_SLIDE)				// jump dash 막음
@@ -1619,6 +1621,8 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 	break;
 
 	case PMV_DASH:
+		// dash effect 제거
+		CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::DASH); // dash effect 제거
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 
 		// 만약 전 state가 slide였다면 speed 좀 줄여줌
@@ -1642,6 +1646,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 
 	case PMV_DASHJUMP:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
+		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 		m_bIsFixY = true;
 		break;
 
