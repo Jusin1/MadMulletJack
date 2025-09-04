@@ -399,6 +399,15 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 		}
 	}
 
+	// hit 시간 누적
+	m_fHitTime += fTimeDelta;
+	// 누적 시간이 5초 이상이면
+	if (m_fHitTime >= 0.3f)
+	{
+		// 0초로 초기화
+		m_fHitTime = 0.f;
+	}
+
 	CUIManager::GetInstance()->Update_CureEff(fTimeDelta);
 
 	// hpbar에게 hp 전해줌
@@ -412,6 +421,15 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 
 void CPlayer::CountTimeZoom(const _float& fTimeDelta)
 {
+	// hit 시간 누적
+	m_fHitTime += fTimeDelta;
+	// 누적 시간이 5초 이상이면
+	if (m_fHitTime >= 0.3f)
+	{
+		// 0초로 초기화
+		m_fHitTime = 0.f;
+	}
+
 	// hpbar에게 hp 전해줌
 	dynamic_cast<CHpBarUI*>(m_pHpBarUI)->Set_Hp(m_fMaxHp, m_fHp);
 
@@ -1740,16 +1758,6 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 
 		// effect 추가
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::BLOODR);
-	}
-
-	// hit 시간 누적
-	m_fHitTime += fTimeDelta;
-
-	// 누적 시간이 5초 이상이면
-	if (m_fHitTime >= 0.1f)
-	{
-		// 0초로 초기화
-		m_fHitTime = 0.f;
 	}
 }
 
