@@ -142,6 +142,7 @@ public:
     MonsterType    m_eType;
     _float m_fComputeTime{ 0.f };
     _vec3 m_vPrevPosition;
+    _bool m_bSlideAttacked{ false };
 
     // ÄÞº¸ °øÅë
     static ULONGLONG s_lastKillTimeMs;

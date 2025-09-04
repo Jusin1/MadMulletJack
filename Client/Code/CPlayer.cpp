@@ -1751,18 +1751,19 @@ void CPlayer::Set_Collider_With_Door()
 	}
 }
 
-void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
+void CPlayer::Set_Colllider_With_Monster(const _float &fTimeDelta)
 {
 	// effect 삭제
 	CUIManager::GetInstance()->Destory_PlayerEff(PLAYEREFF::BLOODR);
 
-	CGameObject* pColiObj;
+	CGameObject *pColiObj;
 	_vec3 vDistance;
 	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISION_MONSTER, this, CColiderManager::COLLISION_SPHERE, &vDistance, pColiObj))
 	{
 		//몬스터와 앞에서 충돌했을때만 attack 가능 -> 나머지 hit
 		if (!m_bIsInvincible && pColiObj) // 무적이 아니고 몬스터가 있을때
 		{
+			CMonster *pMonster = dynamic_cast<CMonster *>(pColiObj);
 			// monster pos
 			_vec3 vMonPos = pColiObj->GetTransform()->Get_Info(INFO_POS);
 			// 내가 몬스터를 바라보는 방향벡터
@@ -1794,20 +1795,25 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 					}
 				}
 
+				if (m_tPlayerInfo.ePlayerMove == PMV_SLIDE && !pMonster->m_bSlideAttacked)
+				{
+					Add_Hp(1.f);
+					pMonster->m_bSlideAttacked = true;
+				}
+
 				// Dash attack이 아니면 hit || push
 				else
 				{
-					if (CMonster_Dron *pDron = dynamic_cast<CMonster_Dron *>(pColiObj))
+					if (dynamic_cast<CMonster_Dron *>(pColiObj))
 					{
 						_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 						if (iSceneIndex == SCENE_CAR)
 						{
-							pDron->QueueDeathUI(false);
-							pDron->TrySpawnDeathUI_Common();
+							dynamic_cast<CMonster_Dron *>(pColiObj)->QueueDeathUI(false);
+							dynamic_cast<CMonster_Dron *>(pColiObj)->TrySpawnDeathUI_Common();
 							CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/enemyDrone.death-002", SOUND_MONSTER, 0.1f, false);
 							CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/explosions-001", SOUND_MONSTER, 1.f, false);
-							pDron->Spawn_Explosion_Effect(vMonPos + vDistance);
-							pDron->Set_Dead(TRUE);
+							pColiObj->Set_Dead(TRUE);
 							return;
 						}
 						else
@@ -1820,13 +1826,12 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 			// 앞에 없다면 hit || push
 			else
 			{
-				if (CMonster_Dron * pDron = dynamic_cast<CMonster_Dron *>(pColiObj))
+				if (dynamic_cast<CMonster_Dron *>(pColiObj))
 				{
 					_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 					if (iSceneIndex == SCENE_CAR)
 					{
-						pDron->Spawn_Explosion_Effect(vMonPos + vDistance);
-						pDron->Set_Dead(TRUE);
+						pColiObj->Set_Dead(TRUE);
 						return;
 					}
 					else
