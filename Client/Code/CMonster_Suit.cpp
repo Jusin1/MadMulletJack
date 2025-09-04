@@ -128,8 +128,8 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
     : CMonster(rhs)
-    , m_eMonState(rhs.m_eMonState)
-    , m_ePrevState(rhs.m_ePrevState)
+    , m_eMonState(IDLE)
+    , m_ePrevState(IDLE)
     , m_fChaseRadius(rhs.m_fChaseRadius)
     , m_fAimRadius(rhs.m_fAimRadius)
     , m_fLoseRadius(rhs.m_fLoseRadius)
@@ -196,6 +196,7 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 
 
     SetState(IDLE);
+
     _float fOut{ 0.f };
     m_pGroundingCom->Initialize_CurrentIndex(
         CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
@@ -786,6 +787,24 @@ HRESULT CMonster_Suit::Texture_Clone()
 
 void CMonster_Suit::SetState(MON_STATE next)
 {
+    // 초기화 시점에는 무조건 IDLE 허용
+    if (next == IDLE) {
+        m_ePrevState = m_eMonState;
+        m_eMonState = IDLE;
+        OnEnterState(IDLE);
+        return;
+    }
+
+    // 전기 맞으면 DEATH 외엔 덮어쓰기 금지
+    if (m_eMonState == HIT_ELECTRIC && next != DEATH)
+        return;
+
+    // 이미 죽었으면 상태 변경 금지
+    if (m_eMonState == DEATH || m_bDead)
+        return;
+
+    if (m_eMonState == next) return;
+
     m_ePrevState = m_eMonState;
     m_eMonState = next;
     OnEnterState(next);
@@ -807,10 +826,13 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         tag = L"Com_Texture_Hit_Eletric";
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
         Spawn_Eletric_Effect(myPos);
         CreateElectricSound();
         CreateDeathSound();
+
+        m_bKillAfterHit = true;   // 무조건 죽음
     }
         break;
 
@@ -827,7 +849,7 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case HIT_DOOR:
     {
         tag = L"Com_Texture_Hit_Door";
-        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        // if (m_pColiderCom) m_pColiderCom->Set_Active(false); // 주석 처리
         m_bPickable = false;
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
@@ -966,6 +988,10 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case HIT_ELECTRIC:
+        if (m_pTextureCom->Is_AnimFinished()) {
+            m_bDead = true;
+        }
+        break;
     case KATANA_DEATH:
     case HIT_SHOTGUN:
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;

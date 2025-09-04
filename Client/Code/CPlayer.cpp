@@ -27,6 +27,7 @@
 #include "CItem.h"
 #include "Sound_Manager.h"
 
+
 //test bj 0829
 #include "CEffect_Pixel.h"
 #include "CEffect_Pixel_Sprite.h"
@@ -1792,6 +1793,10 @@ void CPlayer::Set_Colllider_With_Monster(const _float& fTimeDelta)
 						_int iSceneIndex = CMapFactory::GetInstance()->GetTargetSceneIndex();
 						if (iSceneIndex == SCENE_CAR)
 						{
+							dynamic_cast<CMonster_Dron*>(pColiObj)->QueueDeathUI(false);
+							dynamic_cast<CMonster_Dron*>(pColiObj)->TrySpawnDeathUI_Common();
+							CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/enemyDrone.death-002", SOUND_MONSTER, 0.1f, false);
+							CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/explosions-001", SOUND_MONSTER, 1.f, false);
 							pColiObj->Set_Dead(TRUE);
 							return;
 						}

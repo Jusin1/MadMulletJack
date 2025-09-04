@@ -617,8 +617,7 @@ void CUIManager::DestroyEnterUI()
     // ¾À ±³Ã¼ (·Îµù¾ÀÀ¸·Î)
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_SNIPE)));
-    //CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_CAR)));
     ClearAllUI();
     m_exitingEnter = false; 
 }

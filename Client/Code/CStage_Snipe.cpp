@@ -337,8 +337,7 @@ void CStage_Snipe::TickDeathsAndProgress()
 
     if (m_iKillCount >= m_iTargetKills)
     {
-        // 다음 씬 이동
-        // 여기에 영상 재생 시킬거임
+        CSound_Manager::GetInstance()->StopAll();
         if (FAILED(CManagement::GetInstance()->Open_Scene(
             SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_BOSS))))
         {

@@ -94,6 +94,9 @@ public:
 protected:
     HRESULT  Set_Component();
 
+public:
+    void QueueDeathUI(bool isHeadshot);     // UI 출력 예약
+    void TrySpawnDeathUI_Common();          // UI 출력
 protected:
     virtual _bool Picking(_vec3* PickingPoint) override;
     virtual void  PickingTrue() override;
@@ -101,8 +104,6 @@ protected:
 
     // 몬스터 죽음 이펙트 관련 함수
     virtual void GetDeathUIConfig(DeathUIConfig& cfg, bool isHeadshot) const; // 몬스터별 문구 변경
-    void QueueDeathUI(bool isHeadshot);     // UI 출력 예약
-    void TrySpawnDeathUI_Common();          // UI 출력
 
     void SpawnFollowUI_Common(bool isHeadshot, const DeathUIConfig& cfg); // 몬스터 위에 생성되는 이펙트
     void SpawnBannerUI_Common(bool isHeadshot, const DeathUIConfig& cfg); // 옆에 생성되는 배너
@@ -131,6 +132,8 @@ protected:
     // 처치 부위기록
     enum class KillKind : uint8_t { Normal, Head, Balls };
     KillKind    m_lastKillKind;
+
+    bool m_bElecTriggered;
 
 
 public:

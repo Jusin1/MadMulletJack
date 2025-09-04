@@ -45,7 +45,7 @@ CMonster_Fat::CMonster_Fat(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMonster_Fat::CMonster_Fat(const CMonster_Fat& rhs)
     : CMonster(rhs)
-    , m_eMonState(rhs.m_eMonState), m_ePrevState(rhs.m_ePrevState)
+    , m_eMonState(IDLE), m_ePrevState(IDLE)
     , m_fChaseRadius(rhs.m_fChaseRadius), m_fAimRadius(rhs.m_fAimRadius), m_fLoseRadius(rhs.m_fLoseRadius)
     , m_jumpCD(rhs.m_jumpCD), m_jumpDir(rhs.m_jumpDir), m_bKillAfterHit(rhs.m_bKillAfterHit)
 {
@@ -568,6 +568,21 @@ HRESULT CMonster_Fat::Texture_Clone()
 
 void CMonster_Fat::SetState(MON_STATE next)
 {
+    if (next == IDLE) {
+        m_ePrevState = m_eMonState;
+        m_eMonState = IDLE;
+        OnEnterState(IDLE);
+        return;
+    }
+
+    if (m_eMonState == HIT_ELECTRIC && next != DEATH)
+        return;
+
+    if (m_eMonState == DEATH || m_bDead)
+        return;
+
+    if (m_eMonState == next) return;
+
     m_ePrevState = m_eMonState;
     m_eMonState = next;
     OnEnterState(next);
@@ -607,12 +622,14 @@ void CMonster_Fat::OnEnterState(MON_STATE s)
         break;
 
     case HIT_DOOR:
+    {
         tag = L"Com_Texture_Hit_Door";
-        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        // if (m_pColiderCom) m_pColiderCom->Set_Active(false); 林籍 贸府
         m_bPickable = false;
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
         CreateDeathSound();
+    }
         break;
     case HIT_KATANA:
         tag = L"Com_Texture_KatanaDeath";
@@ -779,7 +796,12 @@ void CMonster_Fat::OnUpdateState(MON_STATE s, const _float& dt)
 
     case INSKILL:
         if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ATTACK_INSTANT)
-            m_bDead = true;
+            // 磷澜 贸府
+        {
+            SetState(HIT_DOOR);
+            m_bKillAfterHit = true;
+        }
+
         break;
 
     case JUMP:
