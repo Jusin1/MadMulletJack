@@ -86,6 +86,10 @@ HRESULT CMonster_Soldier::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
+    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
     return S_OK;
 }
 
@@ -688,7 +692,6 @@ void CMonster_Soldier::OnUpdateState(MON_STATE s, const _float& dt)
             vDir.y -= 0.03f;
             D3DXVec3Normalize(&vDir, &vDir);
             tData.vLookDir = vDir;
-
             CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
         }
     }

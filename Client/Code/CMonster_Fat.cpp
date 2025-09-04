@@ -84,6 +84,10 @@ HRESULT CMonster_Fat::Initialize(void* pArg)
         m_pTransformCom->Get_Info(INFO::INFO_POS).z,
         &fOut);
 
+    _vec3 vPos = m_pTransformCom->Get_Info(INFO::INFO_POS);
+    vPos.y = fOut + m_pTransformCom->Get_Scale().y * 0.5f;
+    m_pTransformCom->Set_Info(INFO::INFO_POS, vPos);
+
     return S_OK;
 }
 

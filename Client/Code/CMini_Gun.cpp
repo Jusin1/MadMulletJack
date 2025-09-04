@@ -108,7 +108,7 @@ void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 					// player¿« look,pos  ∫§≈Õ ∞°¡Æø»
 					CPlayer* pPlayer = static_cast<CPlayer *>(CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer")->front());
 					if (!pPlayer)
-						return NO_EVENT;
+						return;
 					pPlayerTransformCom = pPlayer->GetTransform();
 					if (pPlayerTransformCom == nullptr)
 						return;

@@ -154,7 +154,6 @@ HRESULT CBullet::Spawn_Pooling(void *pArg)
         return E_FAIL;
     }
 
-    m_fLifeTime = 5.f;
 
     return S_OK;
 }
