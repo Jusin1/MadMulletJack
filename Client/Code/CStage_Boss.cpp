@@ -123,6 +123,7 @@ void CStage_Boss::LateUpdate_Scene(const _float &fTimeDelta)
     auto pBoss = CObjectManager::GetInstance()->Find_Object(SCENE_BOSS, L"Boss_Layer", 0);
     if (dynamic_cast<CBoss*>(pBoss)->Get_PrevDead())
     {
+        CSound_Manager::GetInstance()->StopAll();
         CUIManager::GetInstance()->ClearPlayerUI();
         auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
         LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();

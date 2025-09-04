@@ -132,6 +132,8 @@ protected:
     enum class KillKind : uint8_t { Normal, Head, Balls };
     KillKind    m_lastKillKind;
 
+    bool m_bElecTriggered;
+
 
 public:
     ObjectCategory m_eCategory;

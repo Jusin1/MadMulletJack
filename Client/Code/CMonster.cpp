@@ -31,6 +31,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, MonsterType _eType)
     , m_lastKillKind(KillKind::Normal)
     , m_eCategory(ObjectCategory::MONSTER)
     , m_eType(_eType)
+    , m_bElecTriggered(false)
 {
 }
 
