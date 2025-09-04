@@ -162,7 +162,7 @@ HRESULT CShot_Gun::Set_Texture() {
 
 		SpawnEff({370.f,270.f,-350.f,310.f});
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_fire_layer_1.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_fire_layer_1.wav", SOUND_WEAPON, 0.3f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_fire_layer_1.wav", SOUND_WEAPON, 1.f,false);
 		break;
 
 	case ATTACK_INSTANT:
@@ -176,7 +176,7 @@ HRESULT CShot_Gun::Set_Texture() {
 
 		Reload_Bullet();
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_reload.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_reload.wav", SOUND_WEAPON, 0.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_reload.wav", SOUND_WEAPON, 1.5f,false);
 		break;
 
 	case OPENING:
@@ -184,7 +184,7 @@ HRESULT CShot_Gun::Set_Texture() {
 			return E_FAIL;
 		Set_UISizeAndPos(548.f, 960.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
 		// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_intro.wav"
-		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/shotGReload.wav", SOUND_WEAPON, 0.5f,1.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/shotGReload.wav", SOUND_WEAPON, 1.5f,1.5f,false);
 		break;
 
 	case PLAYERDEAD:
@@ -196,7 +196,7 @@ HRESULT CShot_Gun::Set_Texture() {
 			return E_FAIL;
 		Set_UISizeAndPos(532.f, 742.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 100.f);
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\bullet.fall-002.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/bullet.fall-002.wav", SOUND_WEAPON, 0.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/bullet.fall-002.wav", SOUND_WEAPON, 1.5f,false);
 		break;
 
 	default:

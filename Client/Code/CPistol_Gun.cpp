@@ -172,7 +172,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 			return E_FAIL;
 		Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f );
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_intro.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_intro.wav", SOUND_WEAPON, 0.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_intro.wav", SOUND_WEAPON, 1.8f,false);
 		
 		break;
 
@@ -185,7 +185,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 		
 		SpawnEff({ 300.f, 300.f,-300.f, 160.f });
 		// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_shot_04.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_shot_04.wav", SOUND_WEAPON, 0.3f, false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_shot_04.wav", SOUND_WEAPON, 2.f, false);
 		break;
 
 	case ATTACK_INSTANT:
@@ -199,7 +199,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 		Reload_Bullet();
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_reload_b_03.wav"
-		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/Gun_Reload_5_4.wav", SOUND_WEAPON, 0.5f,0.8f,false);
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/Gun_Reload_5_4.wav", SOUND_WEAPON, 1.8f,0.8f,false);
 		break;
 
 	case PLAYERDEAD:

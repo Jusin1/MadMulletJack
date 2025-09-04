@@ -695,7 +695,7 @@ void CPlayer::JUMP_Begin()
 	m_bIsKeyInput = true;
 	m_bIsFixY = false;
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\jump\player.jump-002.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jump/player.jump-002.wav", SOUND_PLAYER,1.f, false);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jump/player.jump-002.wav", SOUND_PLAYER,3.f, false);
 }
 
 void CPlayer::JUMP_On(const _float& fTimeDelta)
@@ -724,7 +724,7 @@ void CPlayer::JUMP_End()
 	Set_Velocity(0.f);
 	Set_Jumping(false);
 	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\jumpend\player.touchGround-002.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jumpend/player.touchGround-002.wav", SOUND_PLAYER,1.f, false);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/jumpend/player.touchGround-002.wav", SOUND_PLAYER,3.f, false);
 }
 
 // kick
@@ -735,7 +735,7 @@ void CPlayer::KICK_Begin()
 	Change_Move(PMV_NORMAL);
 
 	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\kick\sfx_gp_kick_hit_02.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/kick/sfx_gp_kick_hit_02.wav", SOUND_PLAYER, 0.5f,false);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/kick/sfx_gp_kick_hit_02.wav", SOUND_PLAYER, 2.f,false);
 }
 
 void CPlayer::KICK_On(const _float& fTimeDelta)
@@ -899,7 +899,7 @@ void CPlayer::DOPING_Begin()
 	CUIManager::GetInstance()->Create_CureEff();
 
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\doping\player.sodaDrink.wav"
-	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, 1.f,1.5f,false);
+	CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/doping/player.sodaDrink.wav", SOUND_PLAYER, 2.f,1.5f,false);
 }
 
 void CPlayer::DOPING_On(const _float& fTimeDelta)
@@ -966,7 +966,7 @@ void CPlayer::PLAYERDEAD_Begin()
 {
 	m_eMoveKey = MVKEY_NON;
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\player levando choque-004.wav"
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/player levando choque-004.wav", SOUND_PLAYER, 0.5f,false);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/player levando choque-004.wav", SOUND_PLAYER, 1.f,false);
 }
 
 void CPlayer::PLAYERDEAD_On(const _float& fTimeDelta)
@@ -1456,7 +1456,7 @@ void CPlayer::Move_Slide(const _float& fTimeDelta)
 	// 만약 slide에서 벗어나면
 	if ((*CGameDataManager::GetInstance()->Get_SortedFloorEntries())[m_pGroundingCom->GetCurrentIndex()].eType != WallType::INCLINE)
 	{
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_end02.wav", SOUND_PLAYER, 0.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_end02.wav", SOUND_PLAYER, 2.f,false);
 		Change_Move(PMV_DASH);
 		return;
 	}
@@ -1555,7 +1555,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\dash\player.dash-004.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE,0.5f, false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE,2.f, false);
 
 	break;
 
@@ -1569,7 +1569,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\dash\player.dash-004.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE, 0.5f,false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/dash/player.dash-004.wav", SOUND_PMOVE, 2.f,false);
 
 
 	break;
@@ -1579,7 +1579,7 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\slide\player.slide_in02.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 2.f, false);
 
 	break;
 	
@@ -1592,14 +1592,14 @@ void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed + 5.f;
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::DASH); // dash effect 추가
 		m_bIsFixY = true;
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 2.f, false);
 
 		break;
 
 	case PMV_FALL:
 		GetTransform()->GetTransformInfo().fSpeed = m_fNormalSpeed;
 		m_bIsFixY = true; // set onterrain 방지
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 0.5f, true);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/slide/player.slide_loop02.wav", SOUND_PMOVE, 2.f, true);
 
 		break;
 
@@ -1686,7 +1686,7 @@ void CPlayer::HitFromObject(const _float& fTimeDelta,_float fHit)
 		CUIManager::GetInstance()->Create_PlayerEff(PLAYEREFF::BLOODR);
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\MadJack_BonusLine_106_a.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/MadJack_BonusLine_106_a.wav", SOUND_PLAYER, 0.5f, false);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/MadJack_BonusLine_106_a.wav", SOUND_PLAYER, 2.f, false);
 	}
 }
 
@@ -1862,9 +1862,7 @@ _bool CPlayer::Set_Collider_With_SpecialTile()
 	if (m_tPlayerInfo.ePlayerMove == PMV_DASHATT &&
 		CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE, 1.f))
 	{
-		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\collision\choque eletrico-003.wav"
-		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/collision/choque eletrico-003.wav", SOUND_PLAYER, 0.3f,2.f,false);
-
+	
 		// state : kick
 		Change_State(KICK);
 		Change_Move(PMV_NORMAL);
