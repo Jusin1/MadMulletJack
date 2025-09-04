@@ -161,7 +161,11 @@ void CMonster_Fat::Set_Collider()
         if (CColiderManager::GetInstance()->CollisionGroup(
             CColiderManager::COLLISION_TILE_VENT, this, CColiderManager::COLLISION_SPHERE, nullptr))
         {
-            if (m_eMonState != HIT_BENT) SetState(HIT_BENT);
+            if (m_eMonState != HIT_BENT)
+            {
+                SetState(HIT_BENT);
+                Play_VentRandomSound();
+            }
         }
 
         CGameObject* pDoor = nullptr;

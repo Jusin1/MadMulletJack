@@ -202,6 +202,7 @@ void CWeaponUI_Manager::TagUI_SetActive(const _tchar* pTag , _bool _bActive)
 	CUIBase* pWeapon = Find_Child_ByTag(pTag);
 	if (pWeapon)
 	{
+		pWeapon->Destroy_Effect();
 		pWeapon ->Set_Active(_bActive);
 	}
 }

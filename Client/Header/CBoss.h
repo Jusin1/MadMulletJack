@@ -5,7 +5,7 @@
 
 struct RigidBodyConfig
 {
-	_float fHealth = 20.f;
+	_float fHealth = 28.f;
 
 	_float fMoveSpeed			= 6.f;
 	_float fArriveRadius		= 0.35f;

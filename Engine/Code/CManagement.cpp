@@ -31,7 +31,7 @@ HRESULT CManagement::Open_Scene(unsigned int iSceneIdx, CScene* pNewScene)
 		CComponentMgr::GetInstance()->Clear(m_iSceneIndex);
 		CObjectManager::GetInstance()->Clear(m_iSceneIndex);
 		CTimerMgr::GetInstance()->Reset_Timers();
-		CSound_Manager::GetInstance()->StopAll();
+		//CSound_Manager::GetInstance()->StopAll();
 	}
 
 

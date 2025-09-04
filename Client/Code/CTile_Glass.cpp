@@ -8,6 +8,7 @@
 #include "CEffect_Pixel_Sprite.h"
 #include "CTexture.h"
 #include "CTile_Glass.h"
+#include "Sound_Manager.h"
 
 CTile_Glass::CTile_Glass(LPDIRECT3DDEVICE9 pGraphicDevice)
     : CTileBase(pGraphicDevice, TileType::GLASS)
@@ -99,6 +100,8 @@ _bool CTile_Glass::Picking(_vec3 *PickingPoint)
 
 void CTile_Glass::PickingTrue()
 {
+    //"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\object\glass tile\sfx_gp_impact_screen_03.wav"
+    CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/object/glass tile/sfx_gp_impact_screen_03.wav", SOUND_OBJECT, 1.5f, false);
     Spawn_DestroyEffect();
     Set_Dead(TRUE);
 }

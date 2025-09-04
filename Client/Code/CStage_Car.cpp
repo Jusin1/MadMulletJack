@@ -231,7 +231,7 @@ HRESULT CStage_Car::Ready_Boss_Layer(const _tchar *pLayerTag)
     _float fNormalSpeed = pPlayer->Get_NormalSpeed();
 
     RigidBodyConfig tConfig;
-    tConfig.fHealth = 50.f;
+    tConfig.fHealth = 33.f;
     tConfig.fMoveSpeed = fNormalSpeed;
     tConfig.fDash_Speed = fNormalSpeed * 1.5f;
     CGameObject *pGo = CObjectManager::GetInstance()->Clone_GameObject(L"Prototype_GameObject_Boss", SCENE_CAR, L"Boss_Layer", &tConfig);

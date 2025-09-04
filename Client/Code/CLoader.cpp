@@ -1027,33 +1027,6 @@ HRESULT CLoader::Loading_UI()
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Re",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/reload/PISTOL_RELOAD%03d.png", 13))))
 		return E_FAIL;
-	// PistolC - Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/idle/PISTOL2_IDLE%02d.png", 3))))
-		return E_FAIL;
-	//PistolC - Attack
-	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\pistol\car\attack\PistolC_Attack004.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Attack",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/attack/PistolC_Attack%03d.png", 5))))
-		return E_FAIL;
-	// PistolC - Zooming
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Zooming",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zooming/PistolC_Zooming%03d.png", 3))))
-		return E_FAIL;
-	// PistolC - Zoom_Idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/idle/PISTOL_ZOOM_IDLE%03d.png", 3))))
-		return E_FAIL;
-	// PistolC - Zoom_Attack
-	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\pistol\car\zoom\attack\PISTOL_ZOOM_ATTACK02.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoom/attack/PISTOL_ZOOM_ATTACK%02d.png", 3))))
-		return E_FAIL;
-	// PistolC - Zoom out
-	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\pistol\car\zoomout\PistolC_ZoomOut002.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomOut",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/pistol/car/zoomout/PistolC_ZoomOut%03d.png", 3))))
-		return E_FAIL;
 
 	// pistol effect
 	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\pistol\effect\muzzle_tank_0009.png"muzzle_tank_009
@@ -1109,34 +1082,6 @@ HRESULT CLoader::Loading_UI()
 	// ShotGun - Reload
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShot_Reload",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/reload/ShotG_Reload%03d.png", 14))))
-		return E_FAIL;
-
-	// ShotGun - Car
-	// ShotGunC - idle
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_Idle",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/idle/IdleC%03d.png", 2))))
-		return E_FAIL;
-	// ShotGunC - attck
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_Att",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/attack/attack%03d.png", 2))))
-		return E_FAIL;
-	// ShotGunC - zoom
-	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\car\idle_zoom\IdleZ003.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_Zoom",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/idle_zoom/IdleZ%03d.png", 3))))
-		return E_FAIL;
-	// ShotGunC - attackzoom
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_ZoomAtt",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/attack_zoom/SGAttackZ%03d.png", 4))))
-		return E_FAIL;
-	// ShotGunC - zooming
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_Zooming",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/zooming/zooming%03d.png", 6))))
-		return E_FAIL;
-	// ShotGunC - zoomout
-	// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Weapon\shotGun\car\zoomout\zoomout005.png"
-	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_WapShotC_ZoomOut",
-		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Weapon/shotGun/car/zoomout/zoomout%03d.png", 6))))
 		return E_FAIL;
 
 	// minigun

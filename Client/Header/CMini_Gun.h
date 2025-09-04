@@ -15,6 +15,9 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+public:
+	virtual void Destroy_Effect();
+
 private:
 	virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
 	virtual HRESULT Texture_Clone()	override;
@@ -29,7 +32,8 @@ private:
 
 	_float m_fScale;
 	_float m_fEffCoolTime;
-	_float m_fEffRenderTime;                                                
+	_float m_fEffRenderTime;              
+	_float m_fSoundCoolTime;
 
 public:
 	static CMini_Gun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

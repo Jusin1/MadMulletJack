@@ -8,6 +8,7 @@
 #include "CObjectManager.h"
 #include "CVIBuffer_Rect.h"
 #include "CManagement.h"
+#include "Sound_Manager.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -110,6 +111,12 @@ _int CItem::Update_GameObject(const _float& fTimeDelta)
         {
             m_bMove = false;
             vPos.y = m_fMinY + m_pTransformCom->Get_Scale().y;
+
+            if (m_tItemInfo.eWeapon == DOPING)
+            {
+                //"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\object\soda\sfx_gp_int_soda_drop.wav"
+                CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/object/soda/sfx_gp_int_soda_drop.wav", SOUND_ITEM, 3.f, false);
+            }
         }
 
         GetTransform()->Set_Info(INFO_POS, vPos);
@@ -122,7 +129,6 @@ _int CItem::Update_GameObject(const _float& fTimeDelta)
     }
 
 
-    
     __super::Update_GameObject(fTimeDelta);
 
     CColiderManager::GetInstance()->Add_CollisionGroup(

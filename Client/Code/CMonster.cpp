@@ -196,6 +196,24 @@ void CMonster::Set_Collider_With_Wall()
     }
 }
 
+void CMonster::Play_VentRandomSound()
+{
+    CSound_Manager *pSound = CSound_Manager::GetInstance();
+    _int iRand = Rand_Int(1, 3);
+    switch (iRand)
+    {
+    case 1:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent1", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    case 2:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent2", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    case 3:
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent3", SOUND_BOSSEXPLOSION, 1.f);
+        break;
+    }
+}
+
 
 
 HRESULT CMonster::Texture_Clone() { return S_OK; }

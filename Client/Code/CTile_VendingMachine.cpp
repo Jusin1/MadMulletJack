@@ -15,6 +15,7 @@
 #include "CItem.h"
 #include "CEffect_Pixel_Sprite.h"
 #include "CObjectPoolManager.h"
+#include "Sound_Manager.h"
 
 CTile_VendingMachine::CTile_VendingMachine(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::VENDINGMACHINE), m_pColliderSphere(nullptr)
@@ -139,6 +140,8 @@ void CTile_VendingMachine::PickingTrue()
 
 HRESULT CTile_VendingMachine::Create_Drink()
 {
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\object\soda\sfx_vending_machine_pinball.wav"
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/object/soda/sfx_vending_machine_pinball.wav", SOUND_OBJECT, 2.f, false);
 	CItem::ITEMINFO tInfo{};
 	
 	_vec3 vPos = GetTransform()->Get_Info(INFO_POS); // 시작 위치

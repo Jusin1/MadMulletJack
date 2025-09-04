@@ -9,14 +9,17 @@
 #include "CDInputMgr.h"
 #include "CObjectPoolManager.h"
 #include "CCameraFPS.h"
+#include "Sound_Manager.h"
 
 CMini_Gun::CMini_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
-	:CGun(pGraphicDev), m_fScale(0.f), m_fEffCoolTime(0.f), m_fEffRenderTime(0.f)
+	:CGun(pGraphicDev), m_fScale(0.f), m_fEffCoolTime(0.f), 
+	m_fEffRenderTime(0.f), m_fSoundCoolTime(0.f)
 {
 }
 
 CMini_Gun::CMini_Gun(const CMini_Gun& rhs)
-	:CGun(rhs), m_fScale(rhs.m_fScale), m_fEffCoolTime(rhs.m_fEffCoolTime), m_fEffRenderTime(rhs.m_fEffRenderTime)
+	:CGun(rhs), m_fScale(rhs.m_fScale), m_fEffCoolTime(rhs.m_fEffCoolTime), 
+	m_fEffRenderTime(rhs.m_fEffRenderTime), m_fSoundCoolTime(rhs.m_fSoundCoolTime)
 {
 }
 
@@ -147,6 +150,20 @@ void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 					m_fEffRenderTime = 0.05f;
 				}
 			}
+
+			if (m_fSoundCoolTime != 0)
+			{
+				m_fSoundCoolTime += fTimeDelta;
+				if (m_fSoundCoolTime >= 2.f)
+				{
+					m_fSoundCoolTime = 0.f;
+				}
+			}
+			else
+			{
+				m_fSoundCoolTime += fTimeDelta;
+				CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/minigun/mmc_sfx_weapon_machinegun_loop_v2.wav", SOUND_WEAPON, 1.5f, false);
+			}
 		}
 		break;
 
@@ -213,6 +230,12 @@ void CMini_Gun::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
+void CMini_Gun::Destroy_Effect()
+{
+	DeleteEff();
+	__super::Destroy_Effect();
+}
+
 HRESULT CMini_Gun::Texture_Clone()
 {
 	CTexture::TEXINFO info{};
@@ -245,6 +268,7 @@ HRESULT CMini_Gun::Set_Texture() {
 
 	m_bRenderOn = true;
 
+	CSound_Manager::GetInstance()->StopSound(SOUND_WEAPON);
 	DeleteEff();
 	m_tMoveInfo.eUIMove = MV_NON; // 기본으로 안 움직이게
 
@@ -263,12 +287,14 @@ HRESULT CMini_Gun::Set_Texture() {
 		m_fEffRenderTime = 0.05f;
 		m_fEffCoolTime = 0.f;
 		SpawnEff({ 400.f,150.f,0.f,300.f });
-
+		m_fSoundCoolTime = 0.f;
 		break;
 
 	case ZOOMING:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_MiniG_Zooming"))))
 			return E_FAIL;
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\minigun\mmc_sfx_weapon_machinegun_windup.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/minigun/mmc_sfx_weapon_machinegun_windup.wav", SOUND_WEAPON, 1.5f, false);
 		break;
 	case ZOOM:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_MiniG_Idle"))))
@@ -284,6 +310,9 @@ HRESULT CMini_Gun::Set_Texture() {
 		
 		Set_New_TransInfo(100.f,0.f);
 		m_tMoveInfo = { MV_UP, false, 0.f,0.f };
+
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\minigun\sfx_gp_wp_machinegun_intro.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/minigun/sfx_gp_wp_machinegun_intro.wav", SOUND_WEAPON, 1.5f, false);
 		break;
 
 	case PLAYERDEAD:
@@ -292,6 +321,8 @@ HRESULT CMini_Gun::Set_Texture() {
 
 	case ATTEND:
 		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\minigun\mmc_sfx_weapon_machinegun_shells_end_02.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/minigun/mmc_sfx_weapon_machinegun_shells_end_02.wav", SOUND_WEAPON, 1.5f, false);
 		break;
 
 	case ATTACK_ZOOM:
@@ -302,11 +333,14 @@ HRESULT CMini_Gun::Set_Texture() {
 		Set_UISizeAndPos(1093.f * 1.1f, 614.f * 1.1f, WINCX * 0.5f, WINCY * 0.5f + 200.f);
 
 		SpawnEff({ 440.f,165.f,0.f,320.f });
-		break;
+		m_fSoundCoolTime = 0.f;
+		
 
 	case ZOOMOUT:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_MiniG_Zooming"))))
 			return E_FAIL;
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\minigun\mmc_sfx_weapon_machinegun_windup.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/minigun/mmc_sfx_weapon_machinegun_windup.wav", SOUND_WEAPON, 1.5f, false);
 		break;
 	}
 	

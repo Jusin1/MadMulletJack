@@ -117,6 +117,12 @@ void CShot_Gun::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
+void CShot_Gun::Destroy_Effect()
+{
+	DeleteEff();
+	
+}
+
 HRESULT CShot_Gun::Texture_Clone()
 {
 	CTexture::TEXINFO info{};

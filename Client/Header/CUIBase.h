@@ -28,6 +28,7 @@ public:
 public:
     // 부모→자식 전체를 Dead
     void Set_DeadRecursive(bool bDead = true);
+    virtual void Destroy_Effect(); // weapon manage에서 쓸거긴 한데 dynamiccast 줄일려고 여기에다 생성
 
 public:
     void Set_ObjTag(const _tchar* pTag) { m_pObjTag = pTag; } // 태그 세팅
