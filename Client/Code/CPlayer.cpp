@@ -141,6 +141,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pHpBarUI->Set_Active(false);
 		m_fMaxHp = 100.f;
 		m_fHp = 100.f;
+		m_iCurScene = SCENE_CAR;
 		Change_Weapon(WP_MINIGUN);
 		break;
 	}
@@ -1187,35 +1188,57 @@ void CPlayer::KeyInput(const _float& fTimeDelta)
 		}
 	}
 
-	//debug
-	if (KEY_BUTTON_DOWN(DIK_E))
-		Change_State(ATTACK_INSTANT);
+	////debug
+	//if (KEY_BUTTON_DOWN(DIK_E))
+	//	Change_State(ATTACK_INSTANT);
 
-	if (KEY_BUTTON_DOWN(DIK_O))
-		Change_State(OPENING);
-	if (KEY_BUTTON_DOWN(DIK_M))
-		Change_Weapon2(WP_DOPING);
-	if (KEY_BUTTON_DOWN(DIK_T))
-		Change_Weapon(WEAPON::WP_KATANA);
+	//if (KEY_BUTTON_DOWN(DIK_O))
+	//	Change_State(OPENING);
+	//if (KEY_BUTTON_DOWN(DIK_M))
+	//	Change_Weapon2(WP_DOPING);
+	//if (KEY_BUTTON_DOWN(DIK_T))
+	//	Change_Weapon(WEAPON::WP_KATANA);
 
 
-	if (KEY_BUTTON_DOWN(DIK_C))
-		Change_Weapon2(WP_KICK);
-	if (KEY_BUTTON_DOWN(DIK_V))
-		Change_Weapon2(WP_KNIFE);
+	//if (KEY_BUTTON_DOWN(DIK_C))
+	//	Change_Weapon2(WP_KICK);
+	//if (KEY_BUTTON_DOWN(DIK_V))
+	//	Change_Weapon2(WP_KNIFE);
 
-	if (KEY_BUTTON_DOWN(DIK_Z))
-		Change_Weapon(WP_NON);
-	if (KEY_BUTTON_DOWN(DIK_X))
-		Change_Weapon(WP_PISTOL);
-	if (KEY_BUTTON_DOWN(DIK_Q))
-		Change_Weapon(WP_SHOTGUN);
+	//if (KEY_BUTTON_DOWN(DIK_Z))
+	//	Change_Weapon(WP_NON);
+	//if (KEY_BUTTON_DOWN(DIK_X))
+	//	Change_Weapon(WP_PISTOL);
+	//if (KEY_BUTTON_DOWN(DIK_Q))
+	//	Change_Weapon(WP_SHOTGUN);
 
-	if (KEY_BUTTON_DOWN(DIK_B))
+	//if (KEY_BUTTON_DOWN(DIK_B))
+	//{
+	//	Change_Weapon(WP_SNIPER);
+
+	//	m_bIsZoomStage = !m_bIsZoomStage;
+	//}
+
+	// boss scene에서 Q키를 누르면
+	// 다음 weapon으로 변경
+	if (m_iCurScene == SCENE_BOSS)
 	{
-		Change_Weapon(WP_SNIPER);
+		if (KEY_BUTTON_DOWN(DIK_Q))
+		{
+			switch (m_tPlayerInfo.eWeapon)
+			{
+			case WP_PISTOL:
+				Change_Weapon(WP_SHOTGUN);
+				break;
+			case WP_SHOTGUN:
+				Change_Weapon(WP_KATANA);
+				break;
+			case WP_KATANA:
+				Change_Weapon(WP_PISTOL);
+				break;
 
-		m_bIsZoomStage = !m_bIsZoomStage;
+			}
+		}
 	}
 
 }
@@ -1232,7 +1255,7 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 	}
 
 	// 자동차씬인 경우 무조건 전진
-	if (CMapFactory::GetInstance()->GetTargetSceneIndex() == SCENE_CAR)
+	if (m_iCurScene == SCENE_CAR)
 	{
 		m_pTransformCom->Move_Forward(fTimeDelta, m_vPosition.y);
 
@@ -1298,23 +1321,8 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 		}
 
 
-		//// 좌 클릭시 : attack
-		//if (m_bIsAttack && IS_LBUTTON_DOWN)
-		//{
-		//	if (m_tPlayerInfo.ePlayerState == ZOOM)
-		//	{
-		//		Change_State(ATTACK_ZOOM);
-		//	}
-
-		//	else
-		//	{
-		//		Change_State(ATTACK);
-		//	}
-		//}
-
-		//minigun test
 		// 좌 클릭시 : attack
-		if (m_bIsAttack && IS_LBUTTON_HOLD)
+		if (m_bIsAttack && IS_LBUTTON_DOWN)
 		{
 			if (m_tPlayerInfo.ePlayerState == ZOOM)
 			{
@@ -1326,20 +1334,21 @@ void CPlayer::KeyInputZoom(const _float& fTimeDelta)
 				Change_State(ATTACK);
 			}
 		}
+
+
 	}
 	
+	//// debug
+	//if (KEY_BUTTON_DOWN(DIK_B))
+	//{
+	//	Change_Weapon(WP_PISTOL);
 
-	// debug
-	if (KEY_BUTTON_DOWN(DIK_B))
-	{
-		Change_Weapon(WP_PISTOL);
-
-		m_bIsZoomStage = !m_bIsZoomStage;
-	}
-	if (KEY_BUTTON_DOWN(DIK_O))
-		Change_State(OPENING);
-	if (KEY_BUTTON_DOWN(DIK_M))
-		Change_Weapon(WP_MINIGUN);
+	//	m_bIsZoomStage = !m_bIsZoomStage;
+	//}
+	//if (KEY_BUTTON_DOWN(DIK_O))
+	//	Change_State(OPENING);
+	//if (KEY_BUTTON_DOWN(DIK_M))
+	//	Change_Weapon(WP_MINIGUN);
 }
 
 ////////////////// move func

@@ -25,8 +25,6 @@ public:
     void PlaySoundW(const TCHAR* pSoundKey, const _uint& eID, const float& fVolume, bool loop = false);
     void PlayBGM(const TCHAR* pSoundKey, const float& fVolume, bool loop = true);
 
-    void PlaySoundPitch(const TCHAR* pSoundKey, const _uint& eID,
-        const float& fVolume, float pitch = 1.0f, bool loop = false);
 
     void StopSound(const _uint& eID);
     void StopAll();
