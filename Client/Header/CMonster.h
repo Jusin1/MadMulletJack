@@ -154,6 +154,13 @@ public:
     void Spawn_Hit_Effect(const _vec3& vPos);
     void Spawn_Hit_Vent(const _vec3& vPos);
 
+    // 사운드 생성 함수
+    void CreateHeadHitSound();
+    void CreateDeathSound();
+    void CreateKatanaHitSound();
+    void CreateElectricSound();
+    void CreateShotSound();
+
 public:
     virtual CGameObject* Clone(void* pArg = nullptr) override;
     virtual void Free() override;

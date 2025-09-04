@@ -4,6 +4,7 @@
 #include "CDataManager.h"
 #include "CObjectManager.h"
 #include "CTimerMgr.h"
+#include "Sound_Manager.h"
 
 IMPLEMENT_SINGLETON(CManagement)
 
@@ -30,7 +31,7 @@ HRESULT CManagement::Open_Scene(unsigned int iSceneIdx, CScene* pNewScene)
 		CComponentMgr::GetInstance()->Clear(m_iSceneIndex);
 		CObjectManager::GetInstance()->Clear(m_iSceneIndex);
 		CTimerMgr::GetInstance()->Reset_Timers();
-		
+		CSound_Manager::GetInstance()->StopAll();
 	}
 
 

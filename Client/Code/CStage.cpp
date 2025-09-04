@@ -75,7 +75,7 @@ HRESULT CStage::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
-
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_04.wav", 0.6f, true);
     CPickingManager::GetInstance()->Ready_Picking();
 
 
