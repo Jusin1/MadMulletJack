@@ -107,12 +107,14 @@ void CMonster_Dron::GetDeathUIConfig(DeathUIConfig& cfg, bool /*isHeadshot*/) co
 
     cfg.rightTextNormal = L"2sec";
     cfg.rightTextHead = L"2sec";    
-    cfg.killTextNormal = L"처치";
-    cfg.killTextHead = L"처치";
+    cfg.killTextNormal = L"드론파괴";
+    cfg.killTextHead = L"드론파괴";
 
     if (m_eMonState == KATANA_DEATH || m_ePrevState == KATANA_DEATH) {
         cfg.killTextNormal = L"원무";
     }
+
+
 }
 
 void CMonster_Dron::Set_Check_Weapon()
@@ -358,6 +360,7 @@ void CMonster_Dron::Set_Collider_With_Bullet()
         if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() == BulletData::OWNER::PLAYER)
         {
             pColliObj->Set_Dead(true); // bullet dead 처리
+            QueueDeathUI(false);
             SetState(DEATH);
         }
     }
