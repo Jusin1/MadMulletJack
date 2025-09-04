@@ -586,7 +586,7 @@ void CUIManager::DestroyEnterUI()
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
     //CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_CAR)));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_SNIPE)));
     ClearAllUI();
     m_exitingEnter = false; 
 }
@@ -768,6 +768,68 @@ void CUIManager::Update_CureEff(const _float& fTimeDelta)
     }
 }
 
+void CUIManager::Create_AimUI()
+{
+    if (m_pAimUI) return; // 중복 방지
+    auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+    m_pAimUI = dynamic_cast<CUIBase*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_UIRoot", sceneIdx, L"UI_Layer"));
+    if (!m_pAimUI) return;
+
+    //if (auto* pRed = dynamic_cast<CBlackGackGround*>(
+    //    CObjectManager::GetInstance()->Clone_GameObject(
+    //        L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+    //    pRed->Set_UIPosition(0.f, 130.f, 170.f, 50.f);
+    //    pRed->SetAlpha(255);
+    //    pRed->SetColor(D3DCOLOR_ARGB(255, 220, 80, 80)); // 흐린 붉은색
+    //    m_pAimUI->Add_Child(pRed);
+    //}
+
+    if (auto* pBlack = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pBlack->Set_UIPosition(-18.f, 125.f, 210.f, 40.f);
+        pBlack->SetAlpha(255);
+        m_pAimUI->Add_Child(pBlack);
+    }
+
+    if (auto* pGreen = dynamic_cast<CBlackGackGround*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_BlackBackground", sceneIdx, L"UI_Layer"))) {
+        pGreen->Set_UIPosition(37.f, 125.f, 100.f, 40.f);
+        pGreen->SetAlpha(255);
+        pGreen->SetColor(D3DCOLOR_ARGB(255, 255, 0, 0)); // 
+        //pGreen->EnableColorCycle(true, 0.8f); // ← 이 객체만 색상 자동 변경
+        m_pAimUI->Add_Child(pGreen);
+    }
+
+
+    if (auto* txt1 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt1->SetFontTag(L"Font_UI_Regular");
+        txt1->SetText(L"[Mouse 2]");
+        txt1->Set_UIPosition(-65.f, -115.f, 50.f, 25.f);
+        txt1->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt1->SetScale(0.5f);
+        txt1->SetCentered(true);
+        m_pAimUI->Add_Child(txt1);
+    }
+
+    if (auto* txt2 = dynamic_cast<CTextUI*>(
+        CObjectManager::GetInstance()->Clone_GameObject(
+            L"Prototype_GameObject_TextUI", sceneIdx, L"UI_Layer"))) {
+        txt2->SetFontTag(L"Font_UI_Bold");
+        txt2->SetText(L"조 준");
+        txt2->Set_UIPosition(37.f, -115.f, 50.f, 25.f);
+        txt2->SetColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+        txt2->SetScale(0.5f);
+        txt2->SetCentered(true);
+        m_pAimUI->Add_Child(txt2);
+    }
+}
+
 
 void CUIManager::Destory_PlayerEff(PLAYEREFF _eEffect)
 {
@@ -824,6 +886,13 @@ void CUIManager::Destory_PlayerEff_ALL()
 
     m_pPlayerEffUI->Set_Dead(true);
     m_pPlayerEffUI = nullptr;
+}
+
+void CUIManager::Destroy_AimUI()
+{
+    if (!m_pAimUI) return;
+    m_pAimUI->Set_Dead(true);
+    m_pAimUI = nullptr;
 }
 
 bool CUIManager::PhoneSlidesDone() const
@@ -1122,6 +1191,7 @@ void CUIManager::ClearAllUI()
     Safe_Release(m_pPlayerEffUI);
     Destory_CureEff();
     Safe_Release(m_pCureEffUI );
+    Safe_Release(m_pAimUI);
 
     // --- 상점 UI ---
     Safe_Release(m_pShopRoot);

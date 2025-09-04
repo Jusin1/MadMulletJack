@@ -140,6 +140,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 		break;
 	}
 
+	if (m_bIsZoomStage)
+	{
+		
+	}
+
 	// ui 키기
 	m_pPlayerUI->Set_Active(true);
 	m_pPlayerUI->Set_RenderOn(true);
@@ -269,6 +274,8 @@ _int CPlayer::NormalUpdate(const _float& fTimeDelta)
 
 _int CPlayer::ZoomUpdate(const _float& fTimeDelta)
 {
+	CUIManager::GetInstance()->Create_AimUI();
+
 	StateUpdateZoom(m_tPlayerInfo.ePlayerState, fTimeDelta);
 
 	return NO_EVENT;
@@ -787,11 +794,11 @@ void CPlayer::ATTACK_INSTANT_End()
 {
 	// 무기를 썼으면 kick(non)으로 바꿔라
 	Change_Weapon2(WP_KICK);
+	CUIManager::GetInstance()->DestroyItemUI();
 }
 
 void CPlayer::ZOOMING_Begin()
 {
-
 }
 
 void CPlayer::ZOOMING_On(const _float& fTimeDelta)
@@ -952,6 +959,8 @@ void CPlayer::Clear_Begin()
 	CUIManager::GetInstance()->DestroyReloadUI();
 	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 	CUIManager::GetInstance()->Destory_CureEff();
+	CUIManager::GetInstance()->DestroyItemUI();
+	CUIManager::GetInstance()->Destroy_AimUI();
 }
 
 void CPlayer::ATTEND_Begin()
@@ -1559,7 +1568,8 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 
 	// 충돌때 생성
 	// change 후 destroy
-	//CUIManager::GetInstance()->CreateItemUI();
+	if (m_tPlayerInfo.eWeapon2 == WP_KNIFE)
+		CUIManager::GetInstance()->CreateItemUI();
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
