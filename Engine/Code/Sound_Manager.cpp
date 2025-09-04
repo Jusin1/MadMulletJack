@@ -66,7 +66,7 @@ void CSound_Manager::PlaySoundW(const TCHAR* pSoundKey, const _uint& eID, const 
     }
     if (!snd) return;
 
-    if (FMOD_OK == m_pSystem->playSound(snd, 0, false, &m_pChannelArr[eID])) {
+    if (FMOD_OK == m_pSystem->playSound(snd, 0, loop, &m_pChannelArr[eID])) {
         if (m_pChannelArr[eID]) {
             m_pChannelArr[eID]->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
             m_pChannelArr[eID]->setVolume(fVolume);

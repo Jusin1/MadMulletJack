@@ -13,7 +13,7 @@ public:
         _vec3    localCenter;
         float    radius;
         int      priority;
-        float    xScale;
+        float    xScale; 
     };
 
 private:

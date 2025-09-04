@@ -474,7 +474,12 @@ void CMonster_Soldier::ApplyDamage(HIT_PART part, int dmg)
     if (m_bDead) return;
 
     const float prevHp = m_fHp;
-    m_fHp -= dmg;
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WEAPON::WP_SHOTGUN)
+    {
+        m_fHp -= 3;
+    }
+    else
+        m_fHp -= dmg;
 
     const bool lethal = (prevHp > 0.f && m_fHp <= 0.f);
     const bool isHead = (part == HIT_HEAD);
