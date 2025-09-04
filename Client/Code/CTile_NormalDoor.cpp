@@ -8,6 +8,7 @@
 #include "CTile_NormalDoor.h"
 #include "CPickingManager.h"
 #include "CVIBuffer_Rect.h"
+#include "Sound_Manager.h"
 
 CTile_NormalDoor::CTile_NormalDoor(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CTileBase(pGraphicDevice, TileType::NORMALDOOR)
@@ -276,6 +277,8 @@ _bool CTile_NormalDoor::Picking(_vec3* PickingPoint)
 
 void CTile_NormalDoor::PickingTrue()
 {
+	//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\kick\door.open-001.wav"
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/kick/door.open-001.wav", SOUND_OBJECT, 2.3f, false);
 	if (m_fTargetAngle < 84.99f) m_fTargetAngle = 84.99f;
 	m_bOpend = true;
 }

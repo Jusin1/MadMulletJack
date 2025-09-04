@@ -126,7 +126,7 @@ HRESULT CSniper_Gun::Set_Texture()
 		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
 
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\sniper\sfx_wp_sniper_intro.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_wp_sniper_intro.wav", SOUND_WEAPON, 2.f, false);
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_wp_sniper_intro.wav", SOUND_WEAPON, 2.f, 2.5f,false);
 
 		break;
 

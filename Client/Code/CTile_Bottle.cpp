@@ -8,6 +8,7 @@
 #include "CPickingManager.h"
 #include "CTexture.h"
 #include "CTile_Bottle.h"
+#include "Sound_Manager.h"
 
 CTile_Bottle::CTile_Bottle(LPDIRECT3DDEVICE9 pGraphicDevice)
     : CTileBase(pGraphicDevice, TileType::BOTTLE)
@@ -100,6 +101,8 @@ _bool CTile_Bottle::Picking(_vec3 *PickingPoint)
 
 void CTile_Bottle::PickingTrue()
 {
+    //"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\object\glass\glass.destroy-003.wav"
+    CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/object/glass/glass.destroy-003.wav", SOUND_OBJECT, 2.f, false);
     Spawn_DestroyEffect();
     Set_Dead(TRUE);
 }
