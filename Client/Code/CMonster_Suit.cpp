@@ -654,6 +654,8 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
     {
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
         Spawn_HeadExplosion_Effect(myPos);
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_gp_blood_medium_03.wav", SOUND_MONSTER, false);
+        CSound_Manager::GetInstance()->SetChannelVolume(SOUND_MONSTER, 0.1f);
         anim = L"Com_Texture_Hit_Head";
         dmg = 2; break;
     }
@@ -826,8 +828,6 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         if (m_bKillAfterHit) {
             DisableAllCollisionAndPicking(); 
             TrySpawnDeathUI_Common();     
-            CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_gp_blood_medium_03.wav", SOUND_MONSTER, false);
-            CSound_Manager::GetInstance()->SetChannelVolume(SOUND_MONSTER, 0.1f);
         }
         if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
         return;

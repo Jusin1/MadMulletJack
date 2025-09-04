@@ -15,6 +15,7 @@
 #include "CGlobal_Info.h"
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
+#include "Sound_Manager.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphiCStage)
     : Engine::CScene(pGraphiCStage)
@@ -76,6 +77,7 @@ HRESULT CStage::Ready_Scene()
         return E_FAIL;
 
     CPickingManager::GetInstance()->Ready_Picking();
+
 
     return S_OK;
 }
