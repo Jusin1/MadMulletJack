@@ -59,7 +59,7 @@ HRESULT CItem::Initialize(void* pArg)
     m_pTransformCom->SetTransformInfo(TransformInfo);
 
     m_fLifeTime = 0.f;
-    m_fLifeLimit = 10.f;
+    m_fLifeLimit = 6.f;
     m_fGravity = 5.f;
 
     if (pArg != nullptr)

@@ -16,6 +16,7 @@
 #include "CLoading_Scene.h"
 #include "CItemUI.h"
 #include "CTextEffectUI.h"
+#include "CPlayer.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -137,6 +138,17 @@ void CUIManager::Update(const _float& dt)
     // 타임 텍스트 시간 스폰
     if (!m_spawnedTimeUI && m_pVictoryText && m_pFloorTimeText) {
         if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished()) {
+
+            // 플레이어의 시간을 가져옴
+           /* CPlayer* pPlayer = dynamic_cast<CPlayer*>(CObjectManager::GetInstance()->Find_Object(CManagement::GetInstance()->Get_CurrentSceneIdx(),
+                TEXT("Player_Layer"), 0));
+            if (pPlayer)
+            {
+                _float fPlayTime = pPlayer->Get_PlayTime();
+                _int iMin = fPlayTime % 60;
+                _int iSec = fPlayTime / 60;
+            }*/
+            
             CreateTimeTextUI(L"01:12:45");
             m_spawnedTimeUI = true;
         }
@@ -586,7 +598,7 @@ void CUIManager::DestroyEnterUI()
     LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
 
     //CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(sceneIdx + 1)));
-    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_SNIPE)));
+    CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, (SCENE)(SCENE_STAGE_2)));
     ClearAllUI();
     m_exitingEnter = false; 
 }
