@@ -118,6 +118,7 @@ public:
     void DestroyItemUI();
     void DestroyEffectUI();
     void DestroyReloadUI();
+    void ClearPlayerUI();
     bool IsEnterUIBusy() const { return (m_pEnterUI != nullptr) || m_exitingEnter; }
 
     // player effect

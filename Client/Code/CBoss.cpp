@@ -277,14 +277,8 @@ HRESULT CBoss::Initialize(void *pArg)
 _int CBoss::Update_GameObject(const _float &fTimeDelta)
 {
 	if (m_bDead)
-	{
-		auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
-		// ¾À ±³Ã¼ (·Îµù¾ÀÀ¸·Î)
-		LPDIRECT3DDEVICE9 pDev = CManagement::GetInstance()->GetCurrentScene()->GetDevice();
-
-		CManagement::GetInstance()->Open_Scene(SCENE_LOADING, CLoading_Scene::Create(pDev, SCENE_CAR));
 		return DEAD;
-	}
+	
 
 	CPickingManager::GetInstance()->Remove_PickingGroup(this);
 
@@ -340,7 +334,7 @@ void CBoss::LateUpdate_GameObject(const _float &fTimeDelta)
 		CPickingManager::GetInstance()->Add_PickingGroup(this);
 
 	if (Get_Helath() <= 0)
-		m_bDead = true;
+		m_prevDead = true;
 
 	Set_Collider();
 }

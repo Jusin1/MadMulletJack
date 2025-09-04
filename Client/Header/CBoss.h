@@ -123,6 +123,7 @@ public:
 	_float Get_Helath() const { return m_tRigidbodyConfig.fHealth; }
 	void Set_Health(_float _f) { m_tRigidbodyConfig.fHealth = _f; }
 	void Add_Health(_float _f) { m_tRigidbodyConfig.fHealth += _f; }
+	_bool Get_PrevDead() const { return m_prevDead; }
 private:
 	HRESULT	Set_Component();
 	void Set_Collider();
@@ -254,5 +255,7 @@ private:
 	const _float m_fRecordTime{ 0.1f };
 	const D3DXCOLOR m_AfterIamge_StartColor{ 1.00f, 0.20f, 1.00f, 1.f };
 	const D3DXCOLOR m_AfterIamge_EndColor{ 0.20f, 1.00f, 1.00f, 1.f };
+
+	_bool m_prevDead = false;
 };
 
