@@ -144,6 +144,7 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
         btnA->Add_Child(text);
     }
     btnA->SetOnClick([this, btnA, text]() {
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/menu.selected-002", SOUND_UI, 2.f, false);
         m_bOpenScene = true;
         });
 

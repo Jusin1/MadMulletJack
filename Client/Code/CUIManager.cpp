@@ -17,6 +17,7 @@
 #include "CItemUI.h"
 #include "CTextEffectUI.h"
 #include "CPlayer.h"
+#include "Sound_Manager.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -183,7 +184,6 @@ void CUIManager::Update(const _float& dt)
             if (m_changeScreenOnPullFinish) {
                 m_pPhoneScreen->ChangeTexture(tag);
                 m_pPhoneScreen->Play(true);
-
                 // 1초 후 핸드폰 댕기기
                 m_createPhoneScreenPending = true;
                 m_createPhoneScreenTimer = 0.f;
@@ -227,7 +227,7 @@ void CUIManager::Update(const _float& dt)
             auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
             if (auto* talk = dynamic_cast<CTalkUI*>(CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_TalkUI", sceneIdx, L"UI_Layer"))) {
-                std::vector<std::wstring> dialogues = { L"클리어하셨군요...", L"좋은 걸 보여드릴게요", L"좋은 선택이길!!" };
+                std::vector<std::wstring> dialogues = { L"클리어하셨군요...", L"좋은 걸 보여드릴게요", L"행운을 빌어요!!" };
                 talk->LoadDialogues(dialogues);
                 talk->Set_TextPos(420.f, -500.f);
                 talk->Set_TextScale(0.5f);
@@ -262,6 +262,9 @@ void CUIManager::Update(const _float& dt)
 
 void CUIManager::CreateClearUI()
 {
+    CSound_Manager::GetInstance()->StopAll();
+    CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/mx_stinger_stage_end", 1.f, SOUND_UI, false);
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin/Resource/mx_elevator_v2_fx", 1.f, true);
     DestroyItemUI();
     DestroyEffectUI();
 
@@ -1161,6 +1164,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
                 buyLabel->Set_Active(true);
                 buyLabel->Set_RenderOn(true);
                 buyLabel->m_bHovering = true;   // ← Hover 시작
+                CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_ui_trailer_hover", SOUND_UI, 1.f);
             }
             });
 
@@ -1178,6 +1182,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         {
             m_bRemoveUI = true;
             m_pTalkUI->NextDialogue();
+            CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_ui_trailer_select", SOUND_UI, 1.f);
         });
 }
 
@@ -1261,6 +1266,7 @@ void CUIManager::ClearAllUI()
     m_slideTasks.clear();
     m_scaleTasks.clear();
     m_pEnterUI = nullptr;
+    CSound_Manager::GetInstance()->StopAll();
 }
 
 
@@ -1563,6 +1569,7 @@ void CUIManager::SliderPhoneUI()
 
 void CUIManager::StartPhonePullAnim()
 {
+    CSound_Manager::GetInstance()->PlaySoundW(L"sfx_ui_shop_enter", SOUND_UI, 1.0f);
     // ─────────────────────────────────────────────────────────────
 // 프레임 구멍(center, size)  ※ CreateClearUI()와 동일해야 함
 //   Black/Hole & Frame : (-130, -70) 중심, 1080 x 600 크기

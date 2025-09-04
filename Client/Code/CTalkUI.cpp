@@ -6,6 +6,7 @@
 #include "CUIManager.h"
 #include "CLisaUI.h"
 #include "CManagement.h"
+#include "Sound_Manager.h"
 
 CTalkUI::CTalkUI(LPDIRECT3DDEVICE9 dev)
 	: CUI(dev)
@@ -168,7 +169,10 @@ void CTalkUI::NextDialogue()
 
 		if (m_iCurrentIndex == last) {
 			m_pLisa->SetState(CLisaUI::AnimState::Bye);
+			CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/MC_ENDLESS_START_1", SOUND_UI, 2.f, false);
 		}
+		else if (m_iCurrentIndex == 0)
+			CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/MC_ENDING_1", SOUND_UI, 1.0f, false);
 		else if (m_iCurrentIndex == 1) {
 			CUIManager::GetInstance()->SliderPhoneUI();
 			m_pLisa->SetState(CLisaUI::AnimState::WINK);

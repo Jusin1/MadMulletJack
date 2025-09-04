@@ -14,6 +14,7 @@
 #include "CObjectPoolManager.h"
 #include "CMonster_Head1.h"
 #include "CItem.h"
+#include "Sound_Manager.h"
 
 ULONGLONG CMonster::s_lastKillTimeMs = 0; // 마지막 처치 시각(ms)
 int       CMonster::s_comboCount = 0; // 현재 콤보 횟수
@@ -401,6 +402,83 @@ void CMonster::Spawn_Hit_Vent(const _vec3& vPos)
         {
             pGo->GetTransform()->Set_Info(INFO::INFO_POS, vPos);
         });
+}
+
+void CMonster::CreateHeadHitSound()
+{
+    const wchar_t* soundKeys[] = {
+        L"../Bin/Resource/Sounds/sfx_gp_enemies_headshot_01",
+        L"../Bin/Resource/Sounds/sfx_gp_enemies_headshot_02",
+        L"../Bin/Resource/Sounds/sfx_gp_enemies_headshot_03",
+        L"../Bin/Resource/Sounds/sfx_gp_enemies_headshot_04"
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]),SOUND_MONSTER, 1.0f, false);
+}
+
+void CMonster::CreateDeathSound()
+{
+    // 재생할 사운드 키 배열
+    const wchar_t* soundKeys[] = {
+        L"../Bin/Resource/Sounds/enemyGeneral.death_alt3-001",
+        L"../Bin/Resource/Sounds/enemyGeneral.death_alt3-005"
+        L"../Bin/Resource/Sounds/enemyGeneral.death_alt3-006"
+        L"../Bin/Resource/Sounds/enemyGeneral.death_alt3-009"
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]), SOUND_MONSTER, 1.0f, false);
+}
+
+void CMonster::CreateKatanaHitSound()
+{
+    // 재생할 사운드 키 배열
+    const wchar_t* soundKeys[] = {
+        L"../Bin/Resource/Sounds/sfx_gp_blood_medium_01",
+        L"../Bin/Resource/Sounds/sfx_gp_blood_medium_02",
+        L"../Bin/Resource/Sounds/sfx_gp_blood_medium_03",
+        L"../Bin/Resource/Sounds/sfx_gp_blood_medium_04",
+        L"../Bin/Resource/Sounds/sfx_gp_blood_medium_05",
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]), SOUND_MONSTER, 1.0f, false);
+}
+
+void CMonster::CreateElectricSound()
+{
+    // 재생할 사운드 키 배열
+    const wchar_t* soundKeys[] = {
+        L"../Bin/Resource/Sounds/tiro eletrico-001",
+        L"../Bin/Resource/Sounds/tiro eletrico-002",
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]), SOUND_MONSTER, 1.0f, false);
+}
+
+void CMonster::CreateShotSound()
+{
+    // 재생할 사운드 키 배열
+    const wchar_t* soundKeys[] = {
+        L"../Bin/Resource/Sounds/pistol.shoot-001",
+        L"../Bin/Resource/Sounds/pistol.shoot-002",
+    };
+
+    const int soundCount = sizeof(soundKeys) / sizeof(soundKeys[0]);
+    int idx = rand() % soundCount;
+
+    CSound_Manager::GetInstance()->PlaySoundW(const_cast<wchar_t*>(soundKeys[idx]), SOUND_MONSTER, 1.0f, false);
 }
 
 // 각 몬스터 이펙트 배너 텍스트 설정

@@ -15,6 +15,7 @@
 #include "CGlobal_Info.h"
 #include "CLoading_Scene.h"
 #include "CImageUI.h"
+#include "Sound_Manager.h"
 
 static void attachAndSlide(CImageUI* ui, float x, float y, float w, float h)
 {
@@ -96,7 +97,7 @@ HRESULT CStage_Snipe::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
-
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_boss_sniper.wav", 0.6f, true);
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;

@@ -19,6 +19,7 @@
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
 #include "CLoading_Scene.h"
+#include "Sound_Manager.h"
 
 CStage_Boss::CStage_Boss(LPDIRECT3DDEVICE9 pGraphiCStage_Boss)
     : Engine::CScene(pGraphiCStage_Boss)
@@ -78,6 +79,8 @@ HRESULT CStage_Boss::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
+
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_boss_07.wav", 0.6f, true);
 
     if (FAILED(Ready_Boss_Layer(L"Boss_Layer")))
         return E_FAIL;

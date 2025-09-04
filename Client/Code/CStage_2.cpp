@@ -15,6 +15,7 @@
 #include "CGlobal_Info.h"
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
+#include "Sound_Manager.h"
 
 CStage_2::CStage_2(LPDIRECT3DDEVICE9 pGraphiCStage_2)
     : Engine::CScene(pGraphiCStage_2)
@@ -74,7 +75,7 @@ HRESULT CStage_2::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
-
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_08.wav", 0.6f, true);
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;
