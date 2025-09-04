@@ -199,7 +199,7 @@ HRESULT CPistol_Gun::Set_Texture() {
 
 		Reload_Bullet();
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_reload_b_03.wav"
-		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_reload_b.wav", SOUND_WEAPON, 0.5f,1.2f,false);
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/Gun_Reload_5_4.wav", SOUND_WEAPON, 0.5f,0.8f,false);
 		break;
 
 	case PLAYERDEAD:

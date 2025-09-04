@@ -5,6 +5,7 @@
 #include "CMapFactory.h"
 #include "CImageUI.h"
 #include "Engine_Function.h"
+#include "Sound_Manager.h"
 
 CShot_Gun::CShot_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -125,17 +126,8 @@ HRESULT CShot_Gun::Texture_Clone()
 		{ L"Com_Texture_ShotG_Idle",			L"Prototype_Component_Texture_WapShot_Idle",		0, 5, 8.f,  true },
 		{ L"Com_Texture_ShotG_Att",				L"Prototype_Component_Texture_WapShot_Att",			0, 2,10.f,  false },
 		{ L"Com_Texture_ShotG_AttEnd",			L"Prototype_Component_Texture_WapShot_AttEnd",			0, 13,20.f,  false },
-		{ L"Com_Texture_ShotG_Op",				L"Prototype_Component_Texture_WapShot_Op",			0, 13,25.f,  false },
-		{ L"Com_Texture_ShotG_Re",				L"Prototype_Component_Texture_WapShot_Reload",		0, 14, 20.f,  false },
-
-		// car scene - not zoom
-		{ L"Com_Texture_ShotGC_Idle",			L"Prototype_Component_Texture_WapShotC_Idle",		0, 2,10.f,  true },
-		{ L"Com_Texture_ShotGC_Att",			L"Prototype_Component_Texture_WapShotC_Att",		0, 2, 7.f,false },
-		// car scene - zoom
-		{ L"Com_Texture_ShotGC_Zoom",			L"Prototype_Component_Texture_WapShotC_Zoom",		0,  3,10.f,true },
-		{ L"Com_Texture_ShotGC_ZoomAtt",		L"Prototype_Component_Texture_WapShotC_ZoomAtt",	0, 4,10.f,false },
-		{ L"Com_Texture_ShotGC_ZoomIng",		L"Prototype_Component_Texture_WapShotC_Zooming",	0, 6,10.f,false },
-		{ L"Com_Texture_ShotGC_ZoomOut",		L"Prototype_Component_Texture_WapShotC_ZoomOut",	0, 6, 7.f,false }
+		{ L"Com_Texture_ShotG_Op",				L"Prototype_Component_Texture_WapShot_Op",			0, 13,20.f,  false },
+		{ L"Com_Texture_ShotG_Re",				L"Prototype_Component_Texture_WapShot_Reload",		0, 14, 20.f,  false }
 	};
 
 	for (auto& a : anims)
@@ -156,105 +148,65 @@ HRESULT CShot_Gun::Texture_Clone()
 }
 
 HRESULT CShot_Gun::Set_Texture() {
-	//IDLE, JUMP, KICK, ATTACK,
-	//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, PLAYER_END
+
 	m_bRenderOn = true;
 
-	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
-
-	// scene car 에서 쓰는 texture가 아예 달라서 scene 별로 나누어서 결정
-	if (eScene == SCENE_CAR)
+	switch (m_tInfo.ePlayerState)
 	{
-		switch (m_tInfo.ePlayerState)
-		{
-		case IDLE:
-			break;
+	case ATTACK:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Att"))))
+			return E_FAIL;
+		Set_UISizeAndPos(415.f, 617.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 290.f);
 
-		case ATTACK:
-			break;
+		m_iBullet--;
 
-		case ZOOMING:
-			break;
+		SpawnEff({370.f,270.f,-350.f,310.f});
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_fire_layer_1.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_fire_layer_1.wav", SOUND_WEAPON, 0.3f,false);
+		break;
 
-		case ZOOM:
-			break;
+	case ATTACK_INSTANT:
+		m_bRenderOn = false;
+		break;
 
-		case OPENING:
-			break;
+	case RELOAD:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Re"))))
+			return E_FAIL;
+		Set_UISizeAndPos(287.f, 560.f, WINCX * 0.5f + 330.f, WINCY * 0.5f + 200.f);
 
-		case PLAYERDEAD:
-			break;
+		Reload_Bullet();
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_reload.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/sfx_wp_shotgun_reload.wav", SOUND_WEAPON, 0.5f,false);
+		break;
 
-		case ATTEND:
-			break;
+	case OPENING:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Op"))))
+			return E_FAIL;
+		Set_UISizeAndPos(548.f, 960.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
+		// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\sfx_wp_shotgun_intro.wav"
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/shotGReload.wav", SOUND_WEAPON, 0.5f,1.5f,false);
+		break;
 
-		case ATTACK_ZOOM:
-			break;
+	case PLAYERDEAD:
+		m_bActive = false;
+		break;
 
-		case ZOOMOUT:
-			break;
-		}
+	case ATTEND:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_AttEnd"))))
+			return E_FAIL;
+		Set_UISizeAndPos(532.f, 742.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 100.f);
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\shotgun\bullet.fall-002.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/shotgun/bullet.fall-002.wav", SOUND_WEAPON, 0.5f,false);
+		break;
+
+	default:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Idle"))))
+			return E_FAIL;
+		Set_UISizeAndPos(325.f, 520.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f); // pos를 정하고
+
+		break;
 	}
 
-	else
-	{
-		//IDLE, JUMP, KICK, ATTACK,
-		//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, ATTEND, ATTACK_ZOOM, ZOOMOUT, KATANA, PLAYER_END
-		switch (m_tInfo.ePlayerState)
-		{
-		case ATTACK:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Att"))))
-				return E_FAIL;
-			Set_UISizeAndPos(415.f, 617.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 290.f);
-
-			m_iBullet--;
-
-			SpawnEff({370.f,270.f,-350.f,310.f});
-
-			break;
-
-		case ATTACK_INSTANT:
-			m_bRenderOn = false;
-			break;
-
-		case RELOAD:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Re"))))
-				return E_FAIL;
-			Set_UISizeAndPos(287.f, 560.f, WINCX * 0.5f + 330.f, WINCY * 0.5f + 200.f);
-
-			Reload_Bullet();
-
-			break;
-
-		case OPENING:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Op"))))
-				return E_FAIL;
-			Set_UISizeAndPos(548.f, 960.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
-
-			/*Set_New_TransInfo(700.f, 0.f);
-			m_tMoveInfo = { MV_UP, true, 200.f, 0.f };*/
-
-			break;
-
-		case PLAYERDEAD:
-			m_bActive = false;
-			break;
-
-		case ATTEND:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_AttEnd"))))
-				return E_FAIL;
-			//1332 * 1856
-			Set_UISizeAndPos(532.f, 742.f, WINCX * 0.5f + 350.f, WINCY * 0.5f + 100.f);
-			break;
-
-		default:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_ShotG_Idle"))))
-				return E_FAIL;
-			Set_UISizeAndPos(325.f, 520.f, WINCX * 0.5f - 200.f, WINCY * 0.5f + 200.f); // pos를 정하고
-
-			break;
-		}
-	}
 
 	return S_OK;
 }

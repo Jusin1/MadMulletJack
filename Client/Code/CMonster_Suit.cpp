@@ -217,7 +217,7 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
     if (!Is_Active()) return NO_EVENT; 
     if (m_bDead)
     {
-        CMonster::Create_Weapon(5);
+        CMonster::Create_Weapon(7);
         return DEAD;
     }
         

@@ -1863,8 +1863,7 @@ _bool CPlayer::Set_Collider_With_SpecialTile()
 		CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE, 1.f))
 	{
 		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\player\collision\choque eletrico-003.wav"
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/player/collision/choque eletrico-003.wav", SOUND_PLAYER, false);
-		CSound_Manager::GetInstance()->SetChannelVolume(SOUND_PLAYER, 0.5f);
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/player/collision/choque eletrico-003.wav", SOUND_PLAYER, 0.3f,2.f,false);
 
 		// state : kick
 		Change_State(KICK);
