@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CSniper_Gun.h"
+#include "Sound_Manager.h"
 
 CSniper_Gun::CSniper_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGun(pGraphicDev)
@@ -99,8 +100,10 @@ HRESULT CSniper_Gun::Set_Texture()
 		if (FAILED(Change_Texture(TEXT("Com_Texture_Sniper_Attack"))))
 			return E_FAIL;
 		Set_UISizeAndPos(590.f, 810.f, WINCX * 0.5f + 400.f, WINCY * 0.5f + 380.f);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_gp_wp_sniper_air_01.wav", SOUND_WEAPON, 2.f, false);
 		break;
-
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\sniper\sfx_gp_wp_sniper_air_01.wav"
+		
 
 	case ZOOMING:
 		if (FAILED(Change_Texture(TEXT("Com_Texture_Sniper_Zooming"))))
@@ -122,6 +125,8 @@ HRESULT CSniper_Gun::Set_Texture()
 			return E_FAIL;
 		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
 
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\sniper\sfx_wp_sniper_intro.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_wp_sniper_intro.wav", SOUND_WEAPON, 2.f, false);
 
 		break;
 
@@ -134,10 +139,14 @@ HRESULT CSniper_Gun::Set_Texture()
 			return E_FAIL;
 		Set_UISizeAndPos(1014.f, 903.f, WINCX * 0.5f, WINCY * 0.5f + 100.f);
 
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\sniper\sfx_wp_sniper_reload.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_wp_sniper_reload.wav", SOUND_WEAPON, 2.f, false);
 
 		break;
 
 	case ATTACK_ZOOM:
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\sniper\sfx_gp_wp_sniper_shot_06.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/sniper/sfx_gp_wp_sniper_shot_06.wav", SOUND_WEAPON, 2.f, false);
 		break;
 
 	case ZOOMOUT:

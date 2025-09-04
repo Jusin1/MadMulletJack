@@ -15,6 +15,7 @@
 #include "CGlobal_Info.h"
 #include "CLoading_Scene.h"
 #include "CImageUI.h"
+#include "Sound_Manager.h"
 
 static void attachAndSlide(CImageUI* ui, float x, float y, float w, float h)
 {
@@ -93,7 +94,7 @@ HRESULT CStage_Snipe::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
-
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_boss_sniper.wav", 0.6f, true);
     CPickingManager::GetInstance()->Ready_Picking();
 
     return S_OK;
@@ -337,8 +338,7 @@ void CStage_Snipe::TickDeathsAndProgress()
 
     if (m_iKillCount >= m_iTargetKills)
     {
-        // 다음 씬 이동
-        // 여기에 영상 재생 시킬거임
+        CSound_Manager::GetInstance()->StopAll();
         if (FAILED(CManagement::GetInstance()->Open_Scene(
             SCENE_LOADING, CLoading_Scene::Create(m_pGraphicDev, SCENE_BOSS))))
         {

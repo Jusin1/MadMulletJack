@@ -16,6 +16,8 @@
 #include "CGlobal_Info.h"
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
+#include "Sound_Manager.h"
+
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
     : Engine::CScene(pGraphicDev)
@@ -72,6 +74,8 @@ HRESULT CTutorial::Ready_Scene()
 
     if (FAILED(Ready_Monster_Layer(L"Monster_Layer")))
         return E_FAIL;
+
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_01.wav", 0.6f, true);
 
     CPickingManager::GetInstance()->Ready_Picking();
     CObjectPoolManager::GetInstance()->Ready_Pools();

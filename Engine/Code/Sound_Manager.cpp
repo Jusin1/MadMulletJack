@@ -66,7 +66,7 @@ void CSound_Manager::PlaySoundW(const TCHAR* pSoundKey, const _uint& eID, const 
     }
     if (!snd) return;
 
-    if (FMOD_OK == m_pSystem->playSound(snd, 0, false, &m_pChannelArr[eID])) {
+    if (FMOD_OK == m_pSystem->playSound(snd, 0, loop, &m_pChannelArr[eID])) {
         if (m_pChannelArr[eID]) {
             m_pChannelArr[eID]->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
             m_pChannelArr[eID]->setVolume(fVolume);
@@ -134,6 +134,17 @@ void CSound_Manager::PlayBGM(const TCHAR* pSoundKey, const float& fVolume, bool 
         }
     }
     m_pSystem->update();
+}
+
+void CSound_Manager::PlaySoundPitch(const TCHAR* pSoundKey, const _uint& eID, const float& fVolume, float pitch, bool loop)
+{
+    PlaySoundW(pSoundKey, eID, fVolume, loop);
+
+    if (m_pChannelArr[eID] && pitch != 1.0f) {
+        float baseFreq = 0.f;
+        m_pChannelArr[eID]->getFrequency(&baseFreq);
+        m_pChannelArr[eID]->setFrequency(baseFreq * pitch);
+    }
 }
 
 void CSound_Manager::StopSound(const _uint& eID)
@@ -241,5 +252,16 @@ void CSound_Manager::Free()
         m_pSystem->close();
         m_pSystem->release();
         m_pSystem = nullptr;
+    }
+}
+
+void CSound_Manager::PlaySoundPitch(const TCHAR* pSoundKey, const _uint& eID, const float& fVolume, float pitch, bool loop)
+{
+    PlaySoundW(pSoundKey, eID, fVolume, loop);
+
+    if (m_pChannelArr[eID] && pitch != 1.0f) {
+        float baseFreq = 0.f;
+        m_pChannelArr[eID]->getFrequency(&baseFreq);
+        m_pChannelArr[eID]->setFrequency(baseFreq * pitch);
     }
 }

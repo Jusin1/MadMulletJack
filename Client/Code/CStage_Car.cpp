@@ -18,6 +18,7 @@
 #include "CGlobal_Info.h"
 #include "CTutorialTracker.h"
 #include "CTutorialUI.h"
+#include "Sound_Manager.h"
 
 CStage_Car::CStage_Car(LPDIRECT3DDEVICE9 pGraphiCStage_Car)
     : Engine::CScene(pGraphiCStage_Car)
@@ -87,6 +88,8 @@ HRESULT CStage_Car::Ready_Scene()
 
     if (FAILED(pPrefabSystem->Set_PrefabList(CObjectManager::GetInstance()->Get_ObjectList(SCENE_CAR, L"Prefab_Layer"))))
         return E_FAIL;
+
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin//Resource/Sounds/mx_stage_02.wav", 0.6f, true);
 
     return S_OK;
 }

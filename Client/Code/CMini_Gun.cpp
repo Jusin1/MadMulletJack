@@ -8,6 +8,7 @@
 #include "Engine_Function.h"
 #include "CDInputMgr.h"
 #include "CObjectPoolManager.h"
+#include "CCameraFPS.h"
 
 CMini_Gun::CMini_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev), m_fScale(0.f), m_fEffCoolTime(0.f), m_fEffRenderTime(0.f)
@@ -101,30 +102,35 @@ void CMini_Gun::LateUpdate_GameObject(const _float& fTimeDelta)
 					m_fEffRenderTime = 0.f;
 					m_fEffCoolTime = 0.05f;
 
-
 					// bullet 발사
 					BulletData tData;
-					Engine::CTransform* pPlayerTransformCom = nullptr; _vec3 vPlayerLook; _vec3 vPlayerPos;
-					// player의 look,pos  벡터 가져옴
+					Engine::CTransform* pTransformCom = nullptr; _vec3 vCameraLook;_vec3 vCameraPos;
+
+					// 카메라의 위치 가져옴 : 줌하면 위치 변화 하기 때문
+					CCameraFPS* pCamera = static_cast<CCameraFPS*>(CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Camera_Layer")->front());
+					if (!pCamera)
+						return;
+					pTransformCom = pCamera->GetTransform();
+					if (pTransformCom == nullptr)
+						return;
+					vCameraPos = pTransformCom->Get_Info(INFO_POS);
+					vCameraLook = pTransformCom->Get_Info(INFO_LOOK);
+					D3DXVec3Normalize(&vCameraLook, &vCameraLook); // 정규화
+
+					// 카메라의 월드 matrix 기준으로 position과  look 정함
+					tData.vMuzzlePosition = vCameraPos + vCameraLook * 1.5;
+					tData.vLookDir = vCameraLook;
+
+					// 속도는 player의 움직임 속도
 					CPlayer* pPlayer = static_cast<CPlayer *>(CObjectManager::GetInstance()->Get_ObjectList(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer")->front());
 					if (!pPlayer)
 						return;
-					pPlayerTransformCom = pPlayer->GetTransform();
-					if (pPlayerTransformCom == nullptr)
-						return;
-
-					vPlayerLook = pPlayerTransformCom->Get_Info(INFO_LOOK);
-					D3DXVec3Normalize(&vPlayerLook, &vPlayerLook); // 정규화
-
-					vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
 					tData.fSpeed = pPlayer->Get_NormalSpeed() * 2.f;
-					tData.vMuzzlePosition = vPlayerPos + vPlayerLook * 1.2f;
-
-					tData.vLookDir = vPlayerLook;
+					
+					// 충돌시 처리를 위해 owner 지정
 					tData.eOwner = BulletData::OWNER::PLAYER;
 
-					//tData.vLookDir = { 0.f,0.f,1.f }; // test : z 방향
-
+					// object pooling
 					CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
 				}
 

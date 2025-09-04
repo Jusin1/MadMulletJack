@@ -15,6 +15,7 @@
 #include "CPickingManager.h"
 #include "CCullingManager.h"
 #include "CMonster_Head.h"
+#include "Sound_Manager.h"
 
 
 #ifdef _DEBUG
@@ -128,8 +129,8 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMonster_Suit::CMonster_Suit(const CMonster_Suit& rhs)
     : CMonster(rhs)
-    , m_eMonState(rhs.m_eMonState)
-    , m_ePrevState(rhs.m_ePrevState)
+    , m_eMonState(IDLE)
+    , m_ePrevState(IDLE)
     , m_fChaseRadius(rhs.m_fChaseRadius)
     , m_fAimRadius(rhs.m_fAimRadius)
     , m_fLoseRadius(rhs.m_fLoseRadius)
@@ -196,6 +197,7 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 
 
     SetState(IDLE);
+
     _float fOut{ 0.f };
     m_pGroundingCom->Initialize_CurrentIndex(
         CGameDataManager::GetInstance()->Get_SortedFloorEntries(),
@@ -221,7 +223,7 @@ _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
     if (!Is_Active()) return NO_EVENT; 
     if (m_bDead)
     {
-        CMonster::Create_Weapon(5);
+        CMonster::Create_Weapon(7);
         return DEAD;
     }
         
@@ -658,6 +660,8 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
     {
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
         Spawn_HeadExplosion_Effect(myPos);
+        CreateHeadHitSound();
+        CreateDeathSound();
         anim = L"Com_Texture_Hit_Head";
         dmg = 2; break;
     }
@@ -665,6 +669,7 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
     {
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, 0.f, 1.f);
         Spawn_Hit_Effect(myPos);
+        CreateDeathSound();
         anim = L"Com_Texture_Hit_Balls";
         dmg = 2; break;
     }
@@ -692,9 +697,13 @@ void CMonster_Suit::HitAt(const _vec3& /*hitPosWorld*/)
 void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
 {
     if (m_bDead) return;
-
     const float prevHp = m_fHp;
-    m_fHp -= dmg;
+    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WEAPON::WP_SHOTGUN)
+    {
+        m_fHp -= 3;
+    }
+    else
+        m_fHp -= dmg;
 
     const bool lethal = (prevHp > 0.f && m_fHp <= 0.f);
     const bool isHead = (part == HIT_HEAD);
@@ -710,6 +719,7 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
         QueueDeathUI(headshot);
         if (auto* p = GetPlayerObj())
             p->Add_Hp(headshot ? 2.f : 3.f);
+        
 
         // 충돌/픽킹 차단
         m_bPickable = false;
@@ -719,17 +729,27 @@ void CMonster_Suit::ApplyDamage(HIT_PART part, int dmg)
         // 상태 전환
         if (headshot) {         
             m_bKillAfterHit = true;
-            SetState(HIT);
+             SetState(HIT);
         }
         else {             
             m_bKillAfterHit = false;
-            SetState(DEATH);
+            if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WEAPON::WP_SHOTGUN)
+            {
+                CreateDeathSound();
+                SetState(HIT_SHOTGUN);
+            }
+            else
+            {
+                CreateDeathSound();
+                SetState(DEATH);
+            }
         }
         return;
     }
 
     // 비치명타: 배너 금지(히트 애니만)
     m_bKillAfterHit = false;
+
     SetState(HIT);
 }
 
@@ -750,7 +770,8 @@ HRESULT CMonster_Suit::Texture_Clone()
         { L"Com_Texture_Hit_Eletric", L"Prototype_Component_Texture_Monster_Suit_HIT_ELECTRIC", 0, 15, 7.f,false },
         { L"Com_Texture_Hit_Door",    L"Prototype_Component_Texture_Monster_Suit_HIT_DOOR",     0, 14, 7.f,false },
         { L"Com_Texture_Blocking",    L"Prototype_Component_Texture_Monster_Suit_Blocking",      0,  4, 6.f,false },
-        { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Suit_Katana_Body",      0,  20, 6.f,false }
+        { L"Com_Texture_KatanaDeath",    L"Prototype_Component_Texture_Monster_Suit_Katana_Body",      0,  20, 6.f,false },
+        { L"Com_Texture_Hit_ShotGun",    L"Prototype_Component_Texture_Monster_Suit_HitShotGun",      0,  13, 6.f,false },
     };
 
     for (auto& a : anims)
@@ -771,6 +792,24 @@ HRESULT CMonster_Suit::Texture_Clone()
 
 void CMonster_Suit::SetState(MON_STATE next)
 {
+    // 초기화 시점에는 무조건 IDLE 허용
+    if (next == IDLE) {
+        m_ePrevState = m_eMonState;
+        m_eMonState = IDLE;
+        OnEnterState(IDLE);
+        return;
+    }
+
+    // 전기 맞으면 DEATH 외엔 덮어쓰기 금지
+    if (m_eMonState == HIT_ELECTRIC && next != DEATH)
+        return;
+
+    // 이미 죽었으면 상태 변경 금지
+    if (m_eMonState == DEATH || m_bDead)
+        return;
+
+    if (m_eMonState == next) return;
+
     m_ePrevState = m_eMonState;
     m_eMonState = next;
     OnEnterState(next);
@@ -785,15 +824,20 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
     case IDLE:  tag = L"Com_Texture_Idle";  break;
     case CHASE: tag = L"Com_Texture_Chase"; break;
     case AIM:   tag = L"Com_Texture_Aim";   break;
-    case SHOT:  m_shotTimer = 0.7f; tag = L"Com_Texture_Shot"; break;
+    case SHOT:  m_shotTimer = 3.f; tag = L"Com_Texture_Shot"; break;
     case JUMP:  tag = L"Com_Texture_Jump";  break;
     case HIT_ELECTRIC:
     {
         tag = L"Com_Texture_Hit_Eletric";
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
         Spawn_Eletric_Effect(myPos);
+        CreateElectricSound();
+        CreateDeathSound();
+
+        m_bKillAfterHit = true;   // 무조건 죽음
     }
         break;
 
@@ -803,16 +847,18 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         TrySpawnDeathUI_Common();
         const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
         Spawn_Hit_Vent(myPos);
+        CreateDeathSound();
     }
         break;
 
     case HIT_DOOR:
     {
         tag = L"Com_Texture_Hit_Door";
-        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
+        // if (m_pColiderCom) m_pColiderCom->Set_Active(false); // 주석 처리
         m_bPickable = false;
         QueueDeathUI(false);
         TrySpawnDeathUI_Common();
+        CreateDeathSound();
     }
         break;
 
@@ -831,9 +877,15 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         tag = L"Com_Texture_KatanaDeath";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         TrySpawnDeathUI_Common();
+        CreateKatanaHitSound();
         break;
     case INSKILL:
         QueueDeathUI(false);
+        TrySpawnDeathUI_Common();
+        break;
+    case HIT_SHOTGUN:
+        tag = L"Com_Texture_Hit_ShotGun";
+        if (m_pColiderCom) m_pColiderCom->Set_Active(false);
         TrySpawnDeathUI_Common();
         break;
 
@@ -910,7 +962,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         if (m_pTextureCom->Is_AnimFinished())
             m_pTextureCom->Stop_Anim();
 
-        if (m_shotTimer >= 0.7f) {
+        if (m_shotTimer >= 3.f) {
             m_shotTimer = 0.f;
             m_pTextureCom->Set_Zero_Frame();
             m_pTextureCom->Resume_Anim();
@@ -928,6 +980,7 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
             tData.vLookDir = vDir;
 
             CObjectPoolManager::GetInstance()->Spawn(PoolType::BULLET, &tData);
+            CreateShotSound();
         }
     }
     break;
@@ -940,7 +993,12 @@ void CMonster_Suit::OnUpdateState(MON_STATE s, const _float& dt)
         break;
 
     case HIT_ELECTRIC:
+        if (m_pTextureCom->Is_AnimFinished()) {
+            m_bDead = true;
+        }
+        break;
     case KATANA_DEATH:
+    case HIT_SHOTGUN:
         if (m_pTextureCom->Is_AnimFinished()) m_bDead = true;
         break;
     case HIT_BENT:

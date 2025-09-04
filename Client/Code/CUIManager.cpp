@@ -17,6 +17,7 @@
 #include "CItemUI.h"
 #include "CTextEffectUI.h"
 #include "CPlayer.h"
+#include "Sound_Manager.h"
 
 // 유틸 - UI 죽이기
 static void DetachAndKill(CUIBase* parent, CUIBase*& node)
@@ -140,16 +141,33 @@ void CUIManager::Update(const _float& dt)
         if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished()) {
 
             // 플레이어의 시간을 가져옴
-           /* CPlayer* pPlayer = dynamic_cast<CPlayer*>(CObjectManager::GetInstance()->Find_Object(CManagement::GetInstance()->Get_CurrentSceneIdx(),
+            CPlayer* pPlayer = dynamic_cast<CPlayer*>(CObjectManager::GetInstance()->Find_Object(CManagement::GetInstance()->Get_CurrentSceneIdx(),
                 TEXT("Player_Layer"), 0));
             if (pPlayer)
             {
                 _float fPlayTime = pPlayer->Get_PlayTime();
-                _int iMin = fPlayTime % 60;
-                _int iSec = fPlayTime / 60;
-            }*/
+                int totalSeconds = static_cast<int>(fPlayTime);
+
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+                int mmsec = (totalSeconds - minutes * 60 - seconds) * 100;
+
+                auto To2Digit = [](int num) -> std::wstring {
+                    return (num < 10 ? L"0" : L"") + std::to_wstring(num);
+                    };
+
+                std::wstring timeStr =
+                    To2Digit(minutes) + L":" +
+                    To2Digit(seconds) + L":" +
+                    To2Digit(mmsec);
+
+                CreateTimeTextUI(timeStr);
+            }
             
-            CreateTimeTextUI(L"01:12:45");
+            else
+            {
+                CreateTimeTextUI(L"01:12:45");
+            }
             m_spawnedTimeUI = true;
         }
     }
@@ -166,7 +184,6 @@ void CUIManager::Update(const _float& dt)
             if (m_changeScreenOnPullFinish) {
                 m_pPhoneScreen->ChangeTexture(tag);
                 m_pPhoneScreen->Play(true);
-
                 // 1초 후 핸드폰 댕기기
                 m_createPhoneScreenPending = true;
                 m_createPhoneScreenTimer = 0.f;
@@ -210,7 +227,7 @@ void CUIManager::Update(const _float& dt)
             auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
             if (auto* talk = dynamic_cast<CTalkUI*>(CObjectManager::GetInstance()->Clone_GameObject(
                 L"Prototype_GameObject_TalkUI", sceneIdx, L"UI_Layer"))) {
-                std::vector<std::wstring> dialogues = { L"클리어하셨군요...", L"좋은 걸 보여드릴게요", L"좋은 선택이길!!" };
+                std::vector<std::wstring> dialogues = { L"클리어하셨군요...", L"좋은 걸 보여드릴게요", L"행운을 빌어요!!" };
                 talk->LoadDialogues(dialogues);
                 talk->Set_TextPos(420.f, -500.f);
                 talk->Set_TextScale(0.5f);
@@ -245,6 +262,9 @@ void CUIManager::Update(const _float& dt)
 
 void CUIManager::CreateClearUI()
 {
+    CSound_Manager::GetInstance()->StopAll();
+    CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/mx_stinger_stage_end", 1.f, SOUND_UI, false);
+    CSound_Manager::GetInstance()->PlayBGM(L"../Bin/Resource/mx_elevator_v2_fx", 1.f, true);
     DestroyItemUI();
     DestroyEffectUI();
 
@@ -1144,6 +1164,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
                 buyLabel->Set_Active(true);
                 buyLabel->Set_RenderOn(true);
                 buyLabel->m_bHovering = true;   // ← Hover 시작
+                CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_ui_trailer_hover", SOUND_UI, 1.f);
             }
             });
 
@@ -1161,6 +1182,7 @@ void CUIManager::CreateShopCardAt(int poolIdx, float cx, float cy, ShopCardUI& o
         {
             m_bRemoveUI = true;
             m_pTalkUI->NextDialogue();
+            CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_ui_trailer_select", SOUND_UI, 1.f);
         });
 }
 
@@ -1244,6 +1266,7 @@ void CUIManager::ClearAllUI()
     m_slideTasks.clear();
     m_scaleTasks.clear();
     m_pEnterUI = nullptr;
+    CSound_Manager::GetInstance()->StopAll();
 }
 
 
@@ -1546,6 +1569,7 @@ void CUIManager::SliderPhoneUI()
 
 void CUIManager::StartPhonePullAnim()
 {
+    CSound_Manager::GetInstance()->PlaySoundW(L"sfx_ui_shop_enter", SOUND_UI, 1.0f);
     // ─────────────────────────────────────────────────────────────
 // 프레임 구멍(center, size)  ※ CreateClearUI()와 동일해야 함
 //   Black/Hole & Frame : (-130, -70) 중심, 1080 x 600 크기

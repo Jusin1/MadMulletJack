@@ -27,6 +27,9 @@ private:
     void CleanupFinishedFx(); // 이펙트 정리
     void  BeginHit(float seconds);
 
+    // 사운드
+    void CreateKatanaSound();
+
 public:
     void Set_SelfActive(bool b) { m_bSelfActive = b; }
 public:

@@ -11,6 +11,7 @@
 #include "CGlobal_Info.h"
 #include "CManagement.h"
 #include "CBullet.h"
+#include "Sound_Manager.h"
 
 CMonster_Dron::CMonster_Dron(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SUIT) 
@@ -106,12 +107,14 @@ void CMonster_Dron::GetDeathUIConfig(DeathUIConfig& cfg, bool /*isHeadshot*/) co
 
     cfg.rightTextNormal = L"2sec";
     cfg.rightTextHead = L"2sec";    
-    cfg.killTextNormal = L"처치";
-    cfg.killTextHead = L"처치";
+    cfg.killTextNormal = L"드론파괴";
+    cfg.killTextHead = L"드론파괴";
 
     if (m_eMonState == KATANA_DEATH || m_ePrevState == KATANA_DEATH) {
         cfg.killTextNormal = L"원무";
     }
+
+
 }
 
 void CMonster_Dron::Set_Check_Weapon()
@@ -187,7 +190,7 @@ HRESULT CMonster_Dron::Texture_Clone()
         { L"Com_Texture_Idle",         L"Prototype_Component_Texture_Monster_Drone_IDLE",    0, 6, 10.f, true  },
         { L"Com_Texture_Wake",         L"Prototype_Component_Texture_Monster_Drone_WAKE",    0, 6, 12.f, false },
         { L"Com_Texture_Attack",       L"Prototype_Component_Texture_Monster_Drone_ATTACK",  0, 10, 12.f, true  },
-        { L"Com_Texture_KatanaDeath",  L"Prototype_Component_Texture_Monster_Drone_KATANA_DEATH",  0, 11,  8.f, false },
+        { L"Com_Texture_KatanaDeath",  L"Prototype_Component_Texture_Monster_Drone_KATANA_DEATH",  0, 11,  12.f, false },
         { L"Com_Texture_Death",        L"Prototype_Component_Texture_Monster_Drone_DEATH",   0, 4,  13.f, false },
     };
 
@@ -221,26 +224,41 @@ void CMonster_Dron::OnEnterState(MON_STATE s)
     switch (s)
     {
     case IDLE:          tag = L"Com_Texture_Idle"; break;
-    case WAKE:          tag = L"Com_Texture_Wake"; break;
+    case WAKE:
+    {
+                tag = L"Com_Texture_Wake";
+        auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+        if (sceneIdx != SCENE_CAR)
+            CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_enemy_dogdrone_alert", SOUND_MONSTER, 1.f, false);
+    }
+        break;
     case ATTACK:        tag = L"Com_Texture_Attack"; break;
 
     case KATANA_DEATH:
+    {
         m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
         tag = L"Com_Texture_KatanaDeath";
         if (m_pColiderCom) m_pColiderCom->Set_Active(false);
-        TrySpawnDeathUI_Common();         
+        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
+        TrySpawnDeathUI_Common();
         if (auto* p = GetPlayerObj())
             p->Add_Hp(2.f);
         m_bPickable = false;
+
+
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/enemyDrone.death-002", SOUND_MONSTER, 0.3f, false);
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/explosions-001", SOUND_MONSTER, 1.f, false);
+        
+    }
         break;
 
     case DEATH:
         // 공통 사망 배너 처리
-        const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
-        Spawn_Explosion_Effect(myPos);
         DisableAllCollisionAndPicking();
         tag = L"Com_Texture_Death";
         TrySpawnDeathUI_Common();
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/enemyDrone.death-002", SOUND_MONSTER, 0.1f, false);
+        CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/explosions-001", SOUND_MONSTER, 1.f, false);
         break;
     }
 
@@ -300,7 +318,11 @@ void CMonster_Dron::OnUpdateState(MON_STATE s, const _float& dt)
     case KATANA_DEATH:
     case DEATH:
         if (m_pTextureCom && m_pTextureCom->Is_AnimFinished())
+        {
+            const _vec3 myPos = m_pTransformCom ? m_pTransformCom->Get_Info(INFO_POS) : _vec3(0.f, -5.f, 0.f);
+            Spawn_Explosion_Effect(myPos);
             m_bDead = true;
+        }
         break;
     }
 }
@@ -338,6 +360,7 @@ void CMonster_Dron::Set_Collider_With_Bullet()
         if (dynamic_cast<CBullet*>(pColliObj)->Get_OwnerType() == BulletData::OWNER::PLAYER)
         {
             pColliObj->Set_Dead(true); // bullet dead 처리
+            QueueDeathUI(false);
             SetState(DEATH);
         }
     }

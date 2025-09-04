@@ -14,7 +14,7 @@ CCameraFPS::CCameraFPS(LPDIRECT3DDEVICE9 pGraphicDev)
     m_fOffset(0.f), m_fZoomTime(0.f)
     , m_fDefaultFov(D3DXToRadian(60.f))
     , m_fZoomFov_Default(D3DXToRadian(28.f))
-    , m_fZoomFov_Sniper(D3DXToRadian(14.f))
+    , m_fZoomFov_Sniper(D3DXToRadian(10.f))
     , m_fCurFov(D3DXToRadian(60.f))
     , m_fZoomInSpeed(10.f)
     , m_fZoomOutSpeed(8.f)
@@ -81,35 +81,6 @@ _int CCameraFPS::Update_GameObject(const _float& fTimeDelta)
 {
     CCamera::Update_GameObject(fTimeDelta);
 
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
-    {
-        // zoom 상태일때
-        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMING)
-        {
-            // 카메라의 look 방향으로 전진
-            _vec3 vLook;
-            vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-
-
-            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
-            m_fZoomTime += fTimeDelta;
-        }
-
-        else if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOMOUT)
-        {
-            // 카메라의 look 방향으로 전진
-            _vec3 vLook;
-            vLook = m_pTransformCom->Get_Info(INFO_LOOK);
-            vLook *= -1.f;
-         
-            m_pTransformCom->Move_PosDir(fTimeDelta, vLook);
-            m_fZoomTime = 0.f;
-        }
-        // 플레이어의 위치를 가져와서 셋팅
-        else
-            Set_PlayerPos();
-    }
-    else
     {
         TickZoom(fTimeDelta);
         m_camInfo.fFov = m_fCurFov;
@@ -125,8 +96,6 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Engine::CCamera::LateUpdate_GameObject(fTimeDelta);
 
-
-
     if (false == m_bFix &&
         (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != CLEAR &&
             CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState != ZOOMING &&
@@ -136,25 +105,12 @@ void CCameraFPS::LateUpdate_GameObject(const _float& fTimeDelta)
         Mouse_Fix();
     }
     
-    if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon != WP_SNIPER)
+    if (m_fCurOffset != 0.f)
     {
-        if (CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ZOOM ||
-            CGlobal_Info::Get_Instance()->Get_PlayerInfo().ePlayerState == ATTACK_ZOOM)
-        {
-            _vec3 vLook;
-            vLook = GetTransform()->Get_Info(INFO_LOOK);
-            m_pTransformCom->Move_PosDir(m_fZoomTime, vLook);
-        }
+        _vec3 vLook = GetTransform()->Get_Info(INFO_LOOK);
+        GetTransform()->Move_PosDir(m_fCurOffset, vLook);
+        Update_Position(m_pTransformCom->Get_Info(INFO_POS));
     }
-    else
-    {
-        if (m_fCurOffset != 0.f)
-        {
-            _vec3 vLook = GetTransform()->Get_Info(INFO_LOOK);
-            GetTransform()->Move_PosDir(m_fCurOffset, vLook);
-        }
-    }
-    
 
     // 카메라의 월드행렬 적용
     if (FAILED(Apply_ViewPorjection()))
@@ -266,7 +222,8 @@ void CCameraFPS::TickZoom(const _float dt)
     const bool wantZoom = IsZoomWanted();
 
 
-    const bool isSniper = (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WP_SNIPER);
+    const bool isSniper = (CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon  == WP_SNIPER ||
+        CGlobal_Info::Get_Instance()->Get_PlayerInfo().eWeapon == WP_MINIGUN);
     const float targetFov = wantZoom ? (isSniper ? m_fZoomFov_Sniper : m_fZoomFov_Default) : m_fDefaultFov;
     m_fTargetOffset = wantZoom ? (isSniper ? m_fZoomOffset_Sniper : m_fZoomOffset_Default) : 0.0f;
 

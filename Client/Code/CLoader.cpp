@@ -366,6 +366,11 @@ HRESULT CLoader::Loading_Dev()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
 		return E_FAIL;
 
+	// InstanceKill
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_HitShotGun",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/DeathShotGun/Death_ShotGun%03d.png", 13))))
+		return E_FAIL;
+
 #pragma endregion 슈트 몬스터
 
 #pragma region 뚱뚱한 몬스터
@@ -441,6 +446,11 @@ HRESULT CLoader::Loading_Dev()
 	// Katana -> Head - Death
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_KATANA_HEAD",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/Katana/Head/HEAD%03d.png", 40))))
+		return E_FAIL;
+
+	//// Dead -ShotGun
+	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Fat_SHOT_GUN",
+		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_2/DeathShotGun/FG_DeathShotGun%03d.png", 23))))
 		return E_FAIL;
 
 	// 추가 예정
@@ -1666,7 +1676,7 @@ HRESULT CLoader::Loading_UI()
 
 	
 #pragma endregion 게임 진입 UI
-	PhaseStep(0.80f, L"오브젝트 프로토타입 생성");
+	PhaseStep(0.80f, L"오브젝트 프로토타입 생성"); 
 	// Camera_FPS
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
 		CCameraFPS::Create(m_pGraphicDev))))
