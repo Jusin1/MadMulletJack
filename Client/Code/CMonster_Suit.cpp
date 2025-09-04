@@ -14,6 +14,7 @@
 #include "CPickingManager.h"
 #include "CCullingManager.h"
 #include "CMonster_Head.h"
+#include "Sound_Manager.h"
 
 
 #ifdef _DEBUG
@@ -825,6 +826,8 @@ void CMonster_Suit::OnEnterState(MON_STATE s)
         if (m_bKillAfterHit) {
             DisableAllCollisionAndPicking(); 
             TrySpawnDeathUI_Common();     
+            CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/sfx_gp_blood_medium_03.wav", SOUND_MONSTER, false);
+            CSound_Manager::GetInstance()->SetChannelVolume(SOUND_MONSTER, 0.1f);
         }
         if (m_pTextureCom) { m_pTextureCom->Set_Zero_Frame(); m_pTextureCom->Resume_Anim(); }
         return;

@@ -1655,7 +1655,7 @@ HRESULT CLoader::Loading_UI()
 
 	
 #pragma endregion 게임 진입 UI
-	PhaseStep(0.80f, L"오브젝트 프로토타입 생성");
+	PhaseStep(0.80f, L"오브젝트 프로토타입 생성"); 
 	// Camera_FPS
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Camera_FPS",
 		CCameraFPS::Create(m_pGraphicDev))))
