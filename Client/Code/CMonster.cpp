@@ -13,6 +13,7 @@
 #include "CEffect_Pixel_Sprite.h"
 #include "CObjectPoolManager.h"
 #include "CMonster_Head1.h"
+#include "CItem.h"
 
 ULONGLONG CMonster::s_lastKillTimeMs = 0; // 마지막 처치 시각(ms)
 int       CMonster::s_comboCount = 0; // 현재 콤보 횟수
@@ -526,6 +527,30 @@ void CMonster::DisableAllCollisionAndPicking()
     m_bPickable = false;
     if (m_pColiderCom) m_pColiderCom->Set_Active(false);
     CPickingManager::GetInstance()->Remove_PickingGroup(this);
+}
+
+HRESULT CMonster::Create_Weapon(_int iRate)
+{
+
+    if (rand() % iRate) // iDropRate가 0이 아니면 -> 생성하지 않은
+        return S_OK;
+   
+    CItem::ITEMINFO tInfo{};
+
+    _vec3 vPos = GetTransform()->Get_Info(INFO_POS); // 시작 위치
+    vPos.y += 0.1f; // 살짝 위로
+
+    _vec3 vLook = GetTransform()->Get_Info(INFO_LOOK); // 자판기 보다 살짝 앞으로 보내기 위해
+    D3DXVec3Normalize(&vLook, &vLook); // 정규화
+    vPos = vPos - vLook * 0.1f;
+
+    tInfo.vStartPos = vPos;
+    tInfo.eWeapon = WP_KNIFE;
+    if (FAILED(CObjectManager::GetInstance()->Add_GameObject(L"Prototype_GameObject_Item",
+        CManagement::GetInstance()->Get_CurrentSceneIdx(), L"GameLogic_Layer", &tInfo)))
+        return E_FAIL;
+
+    return S_OK;
 }
 
 CGameObject* CMonster::Clone(void* pArg)

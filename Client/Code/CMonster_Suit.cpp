@@ -210,7 +210,12 @@ HRESULT CMonster_Suit::Initialize(void* pArg)
 _int CMonster_Suit::Update_GameObject(const _float& fTimeDelta)
 {
     if (!Is_Active()) return NO_EVENT; 
-    if (m_bDead) return DEAD;
+    if (m_bDead)
+    {
+        CMonster::Create_Weapon(5);
+        return DEAD;
+    }
+        
 
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);

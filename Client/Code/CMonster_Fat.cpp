@@ -89,7 +89,11 @@ HRESULT CMonster_Fat::Initialize(void* pArg)
 
 _int CMonster_Fat::Update_GameObject(const _float& fTimeDelta)
 {
-    if (m_bDead) return DEAD;
+    if (m_bDead)
+    {
+        CMonster::Create_Weapon(6);
+        return DEAD;
+    }
     OnUpdateState(m_eMonState, fTimeDelta);
     __super::Update_GameObject(fTimeDelta);
     return NO_EVENT;

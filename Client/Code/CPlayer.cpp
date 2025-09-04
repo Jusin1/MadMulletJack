@@ -24,6 +24,7 @@
 #include "CMonster_Dron.h"
 #include "CCameraFPS.h"
 #include "CBullet.h"
+#include "CItem.h"
 
 //test bj 0829
 #include "CEffect_Pixel.h"
@@ -35,7 +36,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_TimerTag(TEXT("")), m_fGround_Height(0.f), m_eMoveKey(MVKEY_END),
 	m_bIsKeyInput(true), m_bIsInvincible(true), m_bIsAttack(true), m_bIsCountHp(false),
 	m_fHitTime(0.f), m_fNormalSpeed(0.f), m_fFixY(0.f), m_bIsFixY(false), m_fDashCoolTime(0.f),
-	m_fAttackCoolTime(0.f), m_iCurScene(0), m_bIsZoomStage(false)
+	m_fAttackCoolTime(0.f), m_iCurScene(0), m_bIsZoomStage(false), m_fPlayTime(0.f)
 {
 }
 
@@ -45,7 +46,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 	m_bIsKeyInput(rhs.m_bIsKeyInput), m_bIsInvincible(rhs.m_bIsInvincible), m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsCountHp(rhs.m_bIsCountHp), m_fHitTime(rhs.m_fHitTime), m_fNormalSpeed(rhs.m_fNormalSpeed), 
 	m_fFixY(rhs.m_fFixY), m_bIsFixY(rhs.m_bIsFixY), m_fDashCoolTime(rhs.m_fDashCoolTime),
-	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_iCurScene(rhs.m_iCurScene), m_bIsZoomStage(rhs.m_bIsZoomStage)
+	m_fAttackCoolTime(rhs.m_fAttackCoolTime), m_iCurScene(rhs.m_iCurScene), 
+	m_bIsZoomStage(rhs.m_bIsZoomStage), m_fPlayTime(rhs.m_fPlayTime)
 {
 }
 
@@ -87,6 +89,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fMaxHp = 10.f;
 	m_fHp = 10.f; // 플레이어 목숨 초 -> origin : 10, test : 3
 	m_fNormalSpeed = 5.f; // normal speed 값 -> 이값은 고정
+
+	m_fPlayTime = 0.f;
 
 	// state 변경 해줌
 	Change_State(OPENING);
@@ -137,6 +141,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_fHp = 100.f;
 		Change_Weapon(WP_MINIGUN);
 		break;
+	}
+
+	if (m_bIsZoomStage)
+	{
+		
 	}
 
 	// ui 키기
@@ -233,12 +242,13 @@ void CPlayer::Render_GameObject()
 /////////////// public func
 void CPlayer::Add_Hp(_float _fAddHp)
 {
-	// 만약 hp가 증가하면
-	//if (_fAddHp > 0)
-	//{
-	//	// cure effect create
-	//	CUIManager::GetInstance()->Create_CureEff();
-	//}
+	// test : 최소 체력 0으로 맞춤
+	if (m_fHp <= 0)
+	{
+		m_fHp = 0.f;
+		if (_fAddHp < 0)
+			return;
+	}
 
 	// 체력을 더함
 	m_fHp += _fAddHp;
@@ -268,6 +278,8 @@ _int CPlayer::NormalUpdate(const _float& fTimeDelta)
 
 _int CPlayer::ZoomUpdate(const _float& fTimeDelta)
 {
+	CUIManager::GetInstance()->Create_AimUI();
+
 	StateUpdateZoom(m_tPlayerInfo.ePlayerState, fTimeDelta);
 
 	return NO_EVENT;
@@ -394,6 +406,8 @@ void CPlayer::CountTime(const _float& fTimeDelta)
 
 	// debug
 	OutputDebugString((L"m_fHp: " + std::to_wstring(m_fHp) + L"\n").c_str());
+
+	m_fPlayTime += fTimeDelta;
 }
 
 void CPlayer::CountTimeZoom(const _float& fTimeDelta)
@@ -786,11 +800,11 @@ void CPlayer::ATTACK_INSTANT_End()
 {
 	// 무기를 썼으면 kick(non)으로 바꿔라
 	Change_Weapon2(WP_KICK);
+	CUIManager::GetInstance()->DestroyItemUI();
 }
 
 void CPlayer::ZOOMING_Begin()
 {
-
 }
 
 void CPlayer::ZOOMING_On(const _float& fTimeDelta)
@@ -951,6 +965,9 @@ void CPlayer::Clear_Begin()
 	CUIManager::GetInstance()->DestroyReloadUI();
 	CUIManager::GetInstance()->Destory_PlayerEff_ALL();
 	CUIManager::GetInstance()->Destory_CureEff();
+	CUIManager::GetInstance()->DestroyItemUI();
+	CUIManager::GetInstance()->Destroy_AimUI();
+	CUIManager::GetInstance()->DestroyEffectUI();
 }
 
 void CPlayer::ATTEND_Begin()
@@ -1446,6 +1463,8 @@ void CPlayer::Move(const _float& fTimeDelta)
 
 	case PMV_FALL:
 		m_eMoveKey = MVKEY_NORMAL;
+		// 속도 점점 빨라지게
+		GetTransform()->GetTransformInfo().fSpeed += 5.f * fTimeDelta;
 		Move_Fall(fTimeDelta);
 		break;
 
@@ -1551,7 +1570,8 @@ void CPlayer::Change_Weapon2(WEAPON2 _eWeapon2)
 
 	// 충돌때 생성
 	// change 후 destroy
-	//CUIManager::GetInstance()->CreateItemUI();
+	if (m_tPlayerInfo.eWeapon2 == WP_KNIFE)
+		CUIManager::GetInstance()->CreateItemUI();
 }
 
 void CPlayer::Change_Move(PLAYERMOVE ePlayerMove, _bool bYFix)
@@ -1678,7 +1698,7 @@ void CPlayer::Set_Collider(const _float& fTimeDelta)
 	Set_Collider_With_Door();
 	Set_Colllider_With_Monster(fTimeDelta);
 	Set_Collider_With_SpecialTile();
-	//Set_Collider_With_Item();
+	Set_Collider_With_Item();
 
 	Set_Collider_With_SlideWall();
 	Set_Collider_With_Bullet(fTimeDelta);
@@ -1881,10 +1901,26 @@ void CPlayer::Set_Collider_With_SlideWall()
 
 void CPlayer::Set_Collider_With_Item()
 {
+	CGameObject* pColliObj{ nullptr };
 	//나중에 item으로 바꿔야함 test
-	if (CColiderManager::GetInstance()->CollisionGroupPush(CColiderManager::COLLISION_TILE_ELECTRIC, this, CColiderManager::COLLISION_SPHERE))
+	if (CColiderManager::GetInstance()->CollisionGroupWho(CColiderManager::COLLISIOIN_ITEM, this, CColiderManager::COLLISION_SPHERE,nullptr, pColliObj))
 	{
-		Change_State(DOPING);
+		if (pColliObj)
+		{
+			WEAPON2 wp2 = dynamic_cast<CItem*>(pColliObj)->Get_ItemInfo().eWeapon;
+
+			// 중복 적용 방지
+			if (m_tPlayerInfo.eWeapon2 == wp2)
+			{
+				return;
+			}
+			else
+			{
+				pColliObj->Set_Dead(true);
+				Change_Weapon2(wp2);
+			}
+			
+		}
 	}
 }
 

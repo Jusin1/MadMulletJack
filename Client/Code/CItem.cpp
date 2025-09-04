@@ -18,6 +18,7 @@ CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
     , m_fLifeLimit(1.f)
     , m_tItemInfo({ })
     , m_bMove(true)
+    , m_fGravity(0.f)
 {
 }
 
@@ -30,6 +31,7 @@ CItem::CItem(const CItem& rhs)
     , m_fLifeLimit(rhs.m_fLifeLimit)
     , m_tItemInfo(rhs.m_tItemInfo)
     , m_bMove (rhs.m_bMove)
+    , m_fGravity(rhs.m_fGravity)
 
 {
 }
@@ -57,7 +59,8 @@ HRESULT CItem::Initialize(void* pArg)
     m_pTransformCom->SetTransformInfo(TransformInfo);
 
     m_fLifeTime = 0.f;
-    m_fLifeLimit = 10.f;
+    m_fLifeLimit = 6.f;
+    m_fGravity = 5.f;
 
     if (pArg != nullptr)
     {
@@ -69,7 +72,17 @@ HRESULT CItem::Initialize(void* pArg)
 
     // item type 에 따른 설정
     if (FAILED(Texture_Clone()))
-        return E_FAIL;;
+        return E_FAIL;
+
+    GetTransform()->Set_Scale(0.2f, 0.2f, 0.2f);
+
+    Engine::CTransform* pPlayerTransformCom =
+        dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
+            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
+    if (pPlayerTransformCom == nullptr)
+        return E_FAIL;
+
+    m_fMinY = pPlayerTransformCom->Get_Info(INFO_POS).y - 1.f;
 
     return S_OK;
 }
@@ -88,25 +101,27 @@ _int CItem::Update_GameObject(const _float& fTimeDelta)
         m_fLifeTime += fTimeDelta;
 
     // 위치 update
-    //if(m_bMove)
-    //{
-    //    Engine::CTransform* pPlayerTransformCom =
-    //        dynamic_cast<CTransform*>(CObjectManager::GetInstance()->
-    //            Get_Component(CManagement::GetInstance()->Get_CurrentSceneIdx(), L"Player_Layer", L"Com_Transform", 0));
-    //    if (pPlayerTransformCom == nullptr)
-    //        return E_FAIL;
+    if(m_bMove)
+    {
+        _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
+        vPos.y = vPos.y + m_fGravity * fTimeDelta; // test : 중력 5, 
 
-    //    _vec3 vPlayerPos = pPlayerTransformCom->Get_Info(INFO_POS);
+        if (vPos.y - m_pTransformCom->Get_Scale().y  <= m_fMinY)
+        {
+            m_bMove = false;
+            vPos.y = m_fMinY + m_pTransformCom->Get_Scale().y;
+        }
 
-    //    _vec3 vPos = m_pTransformCom->Get_Info(INFO_POS);
-    //    vPos.y = vPos.y + 5.f * fTimeDelta; // test : 중력 5, 
+        GetTransform()->Set_Info(INFO_POS, vPos);
+        //중력 가속도 적용
+        m_fGravity -= 10.f * fTimeDelta * 5.f; /*Mess*/
+    }
 
-    //    if (vPos.y - m_pTransformCom->Get_Scale().y * 0.5f <= vPlayerPos.y)
-    //    {
-    //        m_bMove = false;
-    //        vPos.y = vPlayerPos.y + m_pTransformCom->Get_Scale().y * 0.5f;
-    //    }
-    //}
+    else {
+        m_fGravity = 10.f; // 중력 원상 복귀
+    }
+
+
     
     __super::Update_GameObject(fTimeDelta);
 

@@ -152,6 +152,8 @@ public:
 	void	Set_MaxHp(_float _fMaxHp) { m_fMaxHp = _fMaxHp; }
 	_float	Get_FixY() const { return m_fFixY; }
 	void	Set_FixY(_float _fFixY) { m_fFixY = _fFixY; }
+	_float	Get_PlayTime()  { return m_fPlayTime; }
+	void	Set_PlayTime(_float _fPlayTime) { m_fPlayTime = _fPlayTime; }
 
 	_bool	Get_IsKeyInput()const { return m_bIsKeyInput; }
 	void	Set_IsKeyInput(_bool _bKeyInput) { m_bIsKeyInput = _bKeyInput; }
@@ -225,6 +227,8 @@ private:
 
 	_uint m_iCurScene;			// 현재 scene
 	_bool m_bIsZoomStage;		// zoom 가능 씬일 경우 적용되는 함수가 다르므로 bool값 줌
+
+	_float m_fPlayTime;
 
 private:
 	CUIBase* m_pPlayerUI = nullptr;
