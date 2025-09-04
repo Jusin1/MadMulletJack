@@ -29,7 +29,7 @@ private:
 
 	_float m_fScale;
 	_float m_fEffCoolTime;
-	_float m_fEffRenderTime;
+	_float m_fEffRenderTime;                                                
 
 public:
 	static CMini_Gun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

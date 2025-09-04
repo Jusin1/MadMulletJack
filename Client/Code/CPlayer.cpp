@@ -1867,6 +1867,7 @@ void CPlayer::Set_Collider_With_Item()
 	{
 		if (pColliObj)
 		{
+			pColliObj->Set_Dead(true);
 			Change_Weapon2(dynamic_cast<CItem*>(pColliObj)->Get_ItemInfo().eWeapon);
 		}
 	}

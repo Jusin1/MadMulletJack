@@ -125,10 +125,13 @@ _bool CTile_VendingMachine::Picking(_vec3* PickingPoint)
 void CTile_VendingMachine::PickingTrue()
 {
 	// 음료수 생성`
-	if (FAILED(Create_Drink()))
-		return;
+	if (!m_bDestroyed)
+	{
+		if (FAILED(Create_Drink()))
+			return;
 
-	m_bDestroyed = true;
+		m_bDestroyed = true;
+	}
 }
 
 HRESULT CTile_VendingMachine::Create_Drink()
@@ -136,11 +139,11 @@ HRESULT CTile_VendingMachine::Create_Drink()
 	CItem::ITEMINFO tInfo{};
 	
 	_vec3 vPos = GetTransform()->Get_Info(INFO_POS); // 시작 위치
-	vPos.y += 0.2f; // 살짝 위로
+	vPos.y += 0.1f; // 살짝 위로
 
 	_vec3 vLook = GetTransform()->Get_Info(INFO_LOOK); // 자판기 보다 살짝 앞으로 보내기 위해
 	D3DXVec3Normalize(&vLook, &vLook); // 정규화
-	vPos = vPos + vLook * 1.f;
+	vPos = vPos - vLook * 0.1f;
 
 	tInfo.vStartPos = vPos;
 	tInfo.eWeapon = WP_DOPING;
