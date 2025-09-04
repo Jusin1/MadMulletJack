@@ -154,6 +154,8 @@ HRESULT CBullet::Spawn_Pooling(void *pArg)
         return E_FAIL;
     }
 
+    m_fLifeTime = 5.f;
+
     return S_OK;
 }
 
@@ -243,7 +245,7 @@ void CBullet::Spawn_Destroy_Effect(const _vec3 &vPos)
         });
     EFFECTINFO tInfo;
     tInfo.eType = WorldEffectType::EXPLOSION;
-    tInfo.fSize = 2.f;
+    tInfo.fSize = 3.f;
     CObjectPoolManager::GetInstance()->Spawn(PoolType::EFFECT_WORLD, &tInfo,
         [&vPos](CGameObject *pGo)->void
         {

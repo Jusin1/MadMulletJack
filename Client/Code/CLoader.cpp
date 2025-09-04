@@ -126,6 +126,7 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	} break;
 	case SCENE_STAGE_2:
 	{
+		pLoader->Loading_Tutorial();
 		pLoader->Loading_Stage_2();
 	} break;
 	case SCENE_SNIPE:
@@ -846,6 +847,7 @@ HRESULT CLoader::Loading_MapObjectTexture_Src()
 	AddTexture(L"Proto_NormalDoor_2_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 3_2.png", 1);
 	AddTexture(L"Proto_NormalDoor_3_1", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4_1.png", 1);
 	AddTexture(L"Proto_NormalDoor_3_2", L"../../Client/Bin/Resource/MapObject/Door/DOOR 4_2.png", 1);
+	AddTexture(L"Proto_OpeningDoor", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR.png", 1);
 	AddTexture(L"Proto_OpeningDoor_1", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR_1.png", 1);
 	AddTexture(L"Proto_OpeningDoor_2", L"../../Client/Bin/Resource/MapObject/Elevator/DOOR ELEVATOR_2.png", 1);
 

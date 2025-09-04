@@ -78,7 +78,7 @@ CMonster_Suit::CMonster_Suit(LPDIRECT3DDEVICE9 pGraphicDev)
     // 상태/AI
     , m_eMonState(IDLE)
     , m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f)
+    , m_fChaseRadius(9.f)
     , m_fAimRadius(6.f)
     , m_fLoseRadius(16.f)
     , m_jumpCD(0.f)
@@ -335,7 +335,7 @@ void CMonster_Suit::Set_Collider()
     if (pPlayerTr) {
         _vec3 diff = pPlayerTr->Get_Info(INFO_POS) - m_pTransformCom->Get_Info(INFO_POS);
         float dist2 = D3DXVec3LengthSq(&diff);
-        if (dist2 > 30.f * 30.f) return; 
+        if (dist2 > 12.f * 12.f) return; 
     }
 
     m_pColiderCom->Update_ColliderSphere();

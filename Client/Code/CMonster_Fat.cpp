@@ -38,7 +38,7 @@ namespace {
 CMonster_Fat::CMonster_Fat(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev, MonsterType::SOLIDER)
     , m_eMonState(IDLE), m_ePrevState(IDLE)
-    , m_fChaseRadius(12.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
+    , m_fChaseRadius(9.f), m_fAimRadius(6.f), m_fLoseRadius(16.f)
     , m_jumpCD(0.f), m_jumpDir(0), m_bKillAfterHit(false)
 {
 }
