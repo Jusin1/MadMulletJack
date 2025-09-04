@@ -230,6 +230,12 @@ void CMini_Gun::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
+void CMini_Gun::Destroy_Effect()
+{
+	DeleteEff();
+	__super::Destroy_Effect();
+}
+
 HRESULT CMini_Gun::Texture_Clone()
 {
 	CTexture::TEXINFO info{};

@@ -119,6 +119,20 @@ void CPistol_Gun::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
+void CPistol_Gun::Destroy_Effect()
+{
+	DeleteEff();
+	CImageUI* pEff = dynamic_cast<CImageUI*> (Find_Child_ByTag(TEXT("Eff_Smoke")));
+
+	if (pEff)
+	{
+		pEff->Set_Dead(true);
+		Remove_Child(pEff);
+	}
+
+	__super::Destroy_Effect();
+}
+
 HRESULT CPistol_Gun::Texture_Clone()
 {
 	CTexture::TEXINFO texInfo = {};

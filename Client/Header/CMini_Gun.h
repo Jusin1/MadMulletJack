@@ -15,6 +15,9 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+public:
+	virtual void Destroy_Effect();
+
 private:
 	virtual HRESULT Set_Texture() override; // palyerInfo에 따라 texture 셋팅
 	virtual HRESULT Texture_Clone()	override;

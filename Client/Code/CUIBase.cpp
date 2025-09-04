@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CUIBase.h"
+#include "CUIManager.h"
 CUIBase::CUIBase(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev) , m_fRotSum(0.f), m_bPosParentFix(false)
 {
@@ -146,6 +147,12 @@ void CUIBase::Set_DeadRecursive(bool bDead)
     __super::Set_Dead(bDead);        
     for (auto& child : m_vecChildren)
         if (child) child->Set_DeadRecursive(bDead);
+}
+
+void CUIBase::Destroy_Effect()
+{
+    CUIManager::GetInstance()->DestroyReloadUI();
+    CUIManager::GetInstance()->Destroy_AimUI();
 }
 
 void CUIBase::Add_Child(CUIBase* pChild) // 자식 추가
