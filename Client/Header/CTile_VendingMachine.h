@@ -32,6 +32,7 @@ private:
 	virtual void PickingTrue() override;
 
 	HRESULT Create_Drink();
+	void Spawn_DestroyEffect();
 
 private:
 	bool m_bDestroyed{ false };

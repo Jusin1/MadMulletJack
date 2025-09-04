@@ -1867,8 +1867,19 @@ void CPlayer::Set_Collider_With_Item()
 	{
 		if (pColliObj)
 		{
-			pColliObj->Set_Dead(true);
-			Change_Weapon2(dynamic_cast<CItem*>(pColliObj)->Get_ItemInfo().eWeapon);
+			WEAPON2 wp2 = dynamic_cast<CItem*>(pColliObj)->Get_ItemInfo().eWeapon;
+
+			// 중복 적용 방지
+			if (m_tPlayerInfo.eWeapon2 == wp2)
+			{
+				return;
+			}
+			else
+			{
+				pColliObj->Set_Dead(true);
+				Change_Weapon2(wp2);
+			}
+			
 		}
 	}
 }
