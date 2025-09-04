@@ -113,50 +113,6 @@ _int CDev::Update_Scene(const _float &fTimeDelta)
         bPrevF1 = false;
     }
 
-    // test : eunbi
-    if (KEY_BUTTON_DOWN(DIK_U)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_TUTORIAL))))
-            return E_FAIL;
-    }
-
-    if (KEY_BUTTON_DOWN(DIK_I)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_STAGE_1))))
-            return E_FAIL;
-    }
-
-    if (KEY_BUTTON_DOWN(DIK_O)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_STAGE_2))))
-            return E_FAIL;
-    }
-
-    if (KEY_BUTTON_DOWN(DIK_P)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_SNIPE))))
-            return E_FAIL;
-    }
-
-    if (KEY_BUTTON_DOWN(DIK_Y)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_BOSS))))
-            return E_FAIL;
-    }
-
-    if (KEY_BUTTON_DOWN(DIK_E)) {
-        if (FAILED(CManagement::GetInstance()->Open_Scene(
-            SCENE_LOADING,
-            CLoading_Scene::Create(m_pGraphicDev, SCENE_CAR))))
-            return E_FAIL;
-    }
-   
-
     CPickingManager::GetInstance()->Picking();
     CUIManager::GetInstance()->Update(fTimeDelta);
     return iExit;

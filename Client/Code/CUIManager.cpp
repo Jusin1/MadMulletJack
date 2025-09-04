@@ -141,16 +141,33 @@ void CUIManager::Update(const _float& dt)
         if (m_pVictoryText->IsAppearFinished() && m_pFloorTimeText->IsAppearFinished()) {
 
             // 플레이어의 시간을 가져옴
-           /* CPlayer* pPlayer = dynamic_cast<CPlayer*>(CObjectManager::GetInstance()->Find_Object(CManagement::GetInstance()->Get_CurrentSceneIdx(),
+            CPlayer* pPlayer = dynamic_cast<CPlayer*>(CObjectManager::GetInstance()->Find_Object(CManagement::GetInstance()->Get_CurrentSceneIdx(),
                 TEXT("Player_Layer"), 0));
             if (pPlayer)
             {
                 _float fPlayTime = pPlayer->Get_PlayTime();
-                _int iMin = fPlayTime % 60;
-                _int iSec = fPlayTime / 60;
-            }*/
+                int totalSeconds = static_cast<int>(fPlayTime);
+
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+                int mmsec = (totalSeconds - minutes * 60 - seconds) * 100;
+
+                auto To2Digit = [](int num) -> std::wstring {
+                    return (num < 10 ? L"0" : L"") + std::to_wstring(num);
+                    };
+
+                std::wstring timeStr =
+                    To2Digit(minutes) + L":" +
+                    To2Digit(seconds) + L":" +
+                    To2Digit(mmsec);
+
+                CreateTimeTextUI(timeStr);
+            }
             
-            CreateTimeTextUI(L"01:12:45");
+            else
+            {
+                CreateTimeTextUI(L"01:12:45");
+            }
             m_spawnedTimeUI = true;
         }
     }

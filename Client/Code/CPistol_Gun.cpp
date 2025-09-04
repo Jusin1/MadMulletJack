@@ -6,6 +6,7 @@
 #include "CMapFactory.h"
 #include "CImageUI.h"
 #include "Engine_Function.h"
+#include "Sound_Manager.h"
 
 CPistol_Gun::CPistol_Gun(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CGun(pGraphicDev)
@@ -158,136 +159,73 @@ HRESULT CPistol_Gun::Texture_Clone()
 		return E_FAIL;
 	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_Re"), m_pTextureCom });
 
-	// CIdle
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Idle", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Idle", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Idle"), m_pTextureCom });
-
-	// CAttack
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 5;
-	texInfo.m_fSpeed = 0.5f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Att", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Attack", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Att"), m_pTextureCom });
-
-	// CZooming
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_Zooming", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_Zooming", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_Zooming"), m_pTextureCom });
-
-	// CZoomIdle
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 4;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = true;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomIdle", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomIdle", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomIdle"), m_pTextureCom });
-
-	// CZoomAtt
-	texInfo.m_iStart = 0;
-	texInfo.m_iEndTex = 3;
-	texInfo.m_fSpeed = 1.f;
-	texInfo.m_bLoop = false;
-	if (FAILED(Add_Components(L"Com_Texture_Pistol_C_ZoomAtt", SCENE_STATIC, L"Prototype_Component_Texture_WapPistol_Car_ZoomAtt", (CComponent**)&m_pTextureCom, &texInfo)))
-		return E_FAIL;
-	m_mapTextures.insert({ TEXT("Com_Texture_Pistol_C_ZoomAtt"), m_pTextureCom });
-
 	return S_OK;
 }
 
 HRESULT CPistol_Gun::Set_Texture() {
-	//IDLE, JUMP, KICK, ATTACK,
-	//ATTACK_INSTANT, ZOOMING, ZOOM, RELOAD, DOPING, OPENING, PLAYERDEAD, CLEAR, PLAYER_END
 	m_bRenderOn = true;
 
-	SCENE eScene = (SCENE)CManagement::GetInstance()->Get_CurrentSceneIdx();
-
-	// scene car 에서 쓰는 texture가 아예 달라서 scene 별로 나누어서 결정
-	if (eScene == SCENE_CAR)
+	switch (m_tInfo.ePlayerState)
 	{
-		switch (m_tInfo.ePlayerState)
-		{
-		case IDLE:
-			break;
-		case ATTACK:
-			break;
-		case ZOOMING:
-			break;
-		}
-	}
+	case OPENING:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
+			return E_FAIL;
+		Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f );
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_intro.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_intro.wav", SOUND_WEAPON, 1.8f,false);
+		
+		break;
 
-	else 
-	{
-		switch (m_tInfo.ePlayerState)
-		{
-		case OPENING:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Op"))))
-				return E_FAIL;
-			Set_UISizeAndPos(201.f, 457.f, WINCX * 0.5f + 350.f, WINCY * 0.5f - 50.f );
-			
-			break;
+	case ATTACK:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
+			return E_FAIL;
+		Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
 
-		case ATTACK:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Att"))))
-				return E_FAIL;
-			Set_UISizeAndPos(360.f, 720.f, WINCX * 0.5f + 460.f, WINCY * 0.5f + 200.f);
+		m_iBullet--;
+		
+		SpawnEff({ 300.f, 300.f,-300.f, 160.f });
+		// "C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_shot_04.wav"
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/sfx_wp_pistol_shot_04.wav", SOUND_WEAPON, 2.f, false);
+		break;
 
-			m_iBullet--;
-			
-			SpawnEff({ 300.f, 300.f,-300.f, 160.f });
+	case ATTACK_INSTANT:
+		m_bRenderOn = false;
+		break;
 
-			break;
+	case RELOAD:
+		if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Re"))))
+			return E_FAIL;
+		Set_UISizeAndPos(360.f, 660.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
 
-		case ATTACK_INSTANT:
-			m_bRenderOn = false;
-			break;
+		Reload_Bullet();
+		//"C:\Users\Eunbi\jusin\teamProj\SR\project\MadMulletJack\Client\Bin\Resource\Sounds\eunbi\weapon\pistol\sfx_wp_pistol_reload_b_03.wav"
+		CSound_Manager::GetInstance()->PlaySoundPitch(L"../Bin/Resource/Sounds/eunbi/weapon/pistol/Gun_Reload_5_4.wav", SOUND_WEAPON, 1.8f,0.8f,false);
+		break;
 
-		case RELOAD:
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Re"))))
-				return E_FAIL;
-			Set_UISizeAndPos(360.f, 660.f, WINCX * 0.5f + 450.f, WINCY * 0.5f + 150.f);
+	case PLAYERDEAD:
+		m_bActive = false;
+		DeleteEff();
+		DeleteSmoke();
+		break;
 
-			Reload_Bullet();
+	case CLEAR:
+		DeleteEff();
+		DeleteSmoke();
+		break;
 
-			break;
+	case ATTEND:
+		CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
+		DeleteEff();
+		SpwanSmoke({ 400.f, 400.f, -50.f, 20.f });
+		break;
 
-		case PLAYERDEAD:
-			m_bActive = false;
-			DeleteEff();
-			DeleteSmoke();
-			break;
+	default:
+		DeleteEff();
+		if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
+			return E_FAIL;
+		Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
 
-		case CLEAR:
-			DeleteEff();
-			DeleteSmoke();
-			break;
-
-		case ATTEND:
-			CGlobal_Info::Get_Instance()->Set_STATE(STATE_END);
-			DeleteEff();
-			SpwanSmoke({ 400.f, 400.f, -50.f, 20.f });
-			break;
-
-		default:
-			DeleteEff();
-			if (FAILED(Change_Texture(TEXT("Com_Texture_Pistol_Idle"))))
-				return E_FAIL;
-			Set_UISizeAndPos(165.f, 500.f, WINCX * 0.5f + 300.f, WINCY * 0.5f + 200.f); // pos를 정하고
-			//pPistol->Set_UIPos(m_pTransformCom->Get_Info(INFO_POS), -120.f, 350.f);
-
-			break;
-		}
+		break;
 	}
 
 	return S_OK;
