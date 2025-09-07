@@ -46,7 +46,6 @@ CGameObject *CPrefab::Clone(void *pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("CPrefab::Clone, Failed");
 		Safe_Release(pInstance);
 		return nullptr;
 	}
@@ -183,7 +182,6 @@ HRESULT CPrefab::Set_Data(PREFABDATA *_pData)
 {
 	if (_pData->eType < PrefabType::SIGN_PILLAR || _pData->eType >= PrefabType::NONE)
 	{
-		MSG_BOX("CPrefab::Set_Data, type was invalid in Loaded data");
 		return E_FAIL;
 	}
 

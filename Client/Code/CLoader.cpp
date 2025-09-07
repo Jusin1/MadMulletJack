@@ -594,6 +594,31 @@ HRESULT CLoader::Loading_Tutorial()
 	//	return E_FAIL;
 #pragma region 군인 몬스터
 	PhaseStep(0.5f, L"몬스터 로딩");
+	
+
+	// 인스턴스킬
+	//InstanceKill
+   //if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
+   //    CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
+   //    return E_FAIL;
+
+#pragma endregion 군인몬스터
+
+	
+
+	m_isFinished = true;
+	lstrcpy(m_szLoading, TEXT("튜토리얼 로딩이 완료되었습니다."));
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage_1()
+{
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage_2()
+{
 	// IDLE
 	if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Solider_Idle",
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Idle/vg_idle%02d.png", 12))))
@@ -666,31 +691,10 @@ HRESULT CLoader::Loading_Tutorial()
 		CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Monster/Monster_1/Katana/Top/Katana%03d.png", 21))))
 		return E_FAIL;
 
-	// 인스턴스킬
-	//InstanceKill
-   //if (FAILED(CComponentMgr::GetInstance()->Add_Prototype(SCENE_STATIC, L"Prototype_Component_Texture_Monster_Suit_InstanceKill",
-   //    CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/suit_monster/instanceKill/sm_IKill%03d.png", 13))))
-   //    return E_FAIL;
-
-#pragma endregion 군인몬스터
-
 	if (FAILED(CObjectManager::GetInstance()->Add_Prototype(L"Prototype_GameObject_Monster_Soldier",
 		CMonster_Soldier::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	m_isFinished = true;
-	lstrcpy(m_szLoading, TEXT("튜토리얼 로딩이 완료되었습니다."));
-	return S_OK;
-}
-
-HRESULT CLoader::Loading_Stage_1()
-{
-	m_isFinished = true;
-	return S_OK;
-}
-
-HRESULT CLoader::Loading_Stage_2()
-{
 	m_isFinished = true;
 	return S_OK;
 }

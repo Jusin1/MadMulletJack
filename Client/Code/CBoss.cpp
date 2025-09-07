@@ -187,19 +187,19 @@ void CBoss::Random_Speak(const _float fDeltaTime)
 			switch (iRandom)
 			{
 			case 1:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP1", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 2:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP2", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 3:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP3", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 4:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP4", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 5:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP5", SOUND_BOSSVOICE, 0.5f, false);
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP1", SOUND_BOSSVOICE, 1.f, false);
+				break;																				  
+			case 2:																					  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP2", SOUND_BOSSVOICE, 1.f, false);
+				break;																				  
+			case 3:																					  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP3", SOUND_BOSSVOICE, 1.f, false);
+				break;																				  
+			case 4:																					  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP4", SOUND_BOSSVOICE, 1.f, false);
+				break;																				  
+			case 5:																					  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/rooftop/ROOFTOP5", SOUND_BOSSVOICE, 1.f, false);
 				break;
 			}
 		}
@@ -208,19 +208,19 @@ void CBoss::Random_Speak(const _float fDeltaTime)
 			switch (iRandom)
 			{
 			case 1:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car1", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 2:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car2", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 3:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car3", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 4:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car4", SOUND_BOSSVOICE, 0.5f, false);
-				break;
-			case 5:
-				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car5", SOUND_BOSSVOICE, 0.5f, false);
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car1", SOUND_BOSSVOICE, 1.f, false);
+				break;																		  
+			case 2:																			  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car2", SOUND_BOSSVOICE, 1.f, false);
+				break;																		  
+			case 3:																			  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car3", SOUND_BOSSVOICE, 1.f, false);
+				break;																		  
+			case 4:																			  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car4", SOUND_BOSSVOICE, 1.f, false);
+				break;																		  
+			case 5:																			  
+				pSound->PlaySoundW(L"../Bin/Resources/Sounds/boss/car/Car5", SOUND_BOSSVOICE, 1.f, false);
 				break;
 			}
 		}
@@ -234,16 +234,16 @@ void CBoss::Random_RocketSound()
 	switch (iRandom)
 	{
 	case 1:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket1", SOUND_BOSSROCKET, 0.7f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket1", SOUND_BOSSROCKET, 1.2f);
 		break;
 	case 2:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket2", SOUND_BOSSROCKET, 0.7f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket2", SOUND_BOSSROCKET, 1.2f);
 		break;
 	case 3:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket3", SOUND_BOSSROCKET, 0.7f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket3", SOUND_BOSSROCKET, 1.2f);
 		break;
 	case 4:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket4", SOUND_BOSSROCKET, 0.7f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Rocket4", SOUND_BOSSROCKET, 1.2f);
 		break;
 	}
 }
@@ -362,7 +362,7 @@ _int CBoss::Update_GameObject(const _float &fTimeDelta)
 	
 	if (!m_bPlaySound)
 	{
-		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Idle", SOUND_BOSSIDLE, 0.3f, true);
+		CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Idle", SOUND_BOSSIDLE, 1.f, true);
 		m_bPlaySound = true;
 	}
 
@@ -673,7 +673,7 @@ void CBoss::Enter_Dash()
 	m_fStateDuration = 0.f;
 	m_vDashDir = Dash_Direction();
 	Change_Texture(L"Idle");
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Dash", SOUND_BOSSDASH, 0.5f);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Dash", SOUND_BOSSDASH, 1.5f);
 }
 
 void CBoss::Update_Dash(_float fDeltaTime)
@@ -744,7 +744,7 @@ void CBoss::Enter_Bullet()
 	m_iPhase = 0;
 	m_iShots = 0;
 	Change_Texture(L"Bullet");
-	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/MachineGun", SOUND_BOSSMACHINEGUN, 0.3f, true);
+	CSound_Manager::GetInstance()->PlaySoundW(L"../Bin/Resource/Sounds/Boss/MachineGun", SOUND_BOSSMACHINEGUN, 0.7f, true);
 }
 
 void CBoss::Update_Bullet(_float fDeltaTime)
@@ -906,9 +906,9 @@ void CBoss::Update_Death(_float fDeltaTime)
 		m_fStateDuration = 0.f;
 
 		_float fRandom_1 = Rand_Int(1, 4);
-		_float fRandom_2 = Rand_Int(1, 4);
+		_float fRandom_2 = Rand_Int(1, 3);
 		_float fRandom_3 = Rand_Int(1, 4);
-		_float fRandom_4 = Rand_Int(1, 4);
+		_float fRandom_4 = Rand_Int(1, 3);
 		EffectOptions tOption{ Get_Preset_BulletSpark() };
 		tOption.fLife_Min = 0.3f;
 		tOption.fLife_Max = 0.5f;
@@ -964,16 +964,16 @@ void CBoss::Random_ExplosionSound()
 	switch (iRandom)
 	{
 	case 1:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions1", SOUND_BOSSEXPLOSION, 1.f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions1", SOUND_BOSSEXPLOSION, 1.3f);
 		break;
 	case 2:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions2", SOUND_BOSSEXPLOSION, 1.f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions2", SOUND_BOSSEXPLOSION, 1.3f);
 		break;
 	case 3:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions3", SOUND_BOSSEXPLOSION, 1.f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions3", SOUND_BOSSEXPLOSION, 1.3f);
 		break;
 	case 4:
-		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions4", SOUND_BOSSEXPLOSION, 1.f);
+		pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/Explosions4", SOUND_BOSSEXPLOSION, 1.3f);
 		break;
 	}
 }

@@ -141,14 +141,12 @@ HRESULT CFileManager::LoadDataFile(_uint iSceneID, const _tchar *szLayerTag)
     filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / szLayerTag / L"data.json";
     if (dir.parent_path().empty())
     { 
-        MSG_BOX("CFileManager::LoadDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ifstream ifs(dir, std::ios::in | std::ios::binary);
     if (!ifs.is_open())
     {
-        MSG_BOX("CFileManager::LoadDataFile, open failed");
         return E_FAIL;
     }
 
@@ -171,7 +169,6 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
 
     if (objectDatas.size() <= 0)
     {
-        MSG_BOX("CFileManager::SaveObjectList, objlist is empty");
         return E_FAIL;
     }
 
@@ -190,14 +187,12 @@ HRESULT CFileManager::SavePrefabDataFile(PrefabType _e)
     }
     else
     {
-        MSG_BOX("CFileManager::SavePrefabDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ofstream ofs(dir, std::ios::out | std::ios::binary);
     if (!ofs.is_open())
     {
-        MSG_BOX("CFileManager::SavePrefabDataFile, Failed Save");
         return E_FAIL;
     }
 
@@ -214,14 +209,12 @@ HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
 
     if (dir.parent_path().empty())
     {
-        MSG_BOX("CFileManager::LoadPrefabDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ifstream ifs(dir, std::ios::in | std::ios::binary);
     if (!ifs.is_open())
     {
-        MSG_BOX("CFileManager::LoadPrefabDataFile, open failed");
         return E_FAIL;
     }
 
@@ -233,7 +226,6 @@ HRESULT CFileManager::LoadPrefabDataFile(PrefabType _e)
     {
         if (iIndex > 0)
         {
-            MSG_BOX("CFileManager::LoadPrefabDataFile, it can't happen, over data!");
             return S_OK;
         }
 
@@ -253,7 +245,6 @@ HRESULT CFileManager::SaveInstancedPrefabDataFile(_uint iSceneID)
 
     if (prefabDatas.size() <= 0)
     {
-        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, objlist is empty");
         return E_FAIL;
     }
 
@@ -270,14 +261,12 @@ HRESULT CFileManager::SaveInstancedPrefabDataFile(_uint iSceneID)
     }
     else
     {
-        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ofstream ofs(dir, std::ios::out | std::ios::binary);
     if (!ofs.is_open())
     {
-        MSG_BOX("CFileManager::SaveInstancedPrefabDataFile, Failed Save");
         return E_FAIL;
     }
 
@@ -292,14 +281,12 @@ HRESULT CFileManager::LoadInstancedPrefabDataFile(_uint iSceneID)
     filesystem::path dir = GameDataPath / SceneIdToWstring(iSceneID) / L"Prefab_Layer/data.json";
     if (dir.parent_path().empty())
     {
-        MSG_BOX("CFileManager::LoadInstancedPrefabDataFile, path is invalid");
         return E_FAIL;
     }
 
     std::ifstream ifs(dir, std::ios::in | std::ios::binary);
     if (!ifs.is_open())
     {
-        MSG_BOX("CFileManager::LoadInstancedPrefabDataFile, open failed");
         return E_FAIL;
     }
 

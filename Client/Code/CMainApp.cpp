@@ -63,7 +63,6 @@ HRESULT CMainApp::Ready_MainApp()
 	unsigned seed = (unsigned)(qpc.QuadPart ^ GetTickCount64() ^ GetCurrentProcessId());
 	srand(seed);
 
-
 	// 디바이스 세팅
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;

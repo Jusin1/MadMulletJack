@@ -54,7 +54,6 @@ CGameObject *CMissile::Clone(void *pArg)
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CMissile Clone Failed");
         Safe_Release(pInstance);
     }
     return pInstance;
@@ -279,7 +278,6 @@ HRESULT CMissile::Set_MissileModel()
     CGameObject *pGo = pPrototype->Clone(&tData);
     if (!pGo)
     {
-        MSG_BOX("CObjectPool::Ready_ObjectPool, Cant Clone DefaultPrefab");
         return E_FAIL;
     }
     if (CPrefab *pPrefab = dynamic_cast<CPrefab *>(pGo))
@@ -288,7 +286,6 @@ HRESULT CMissile::Set_MissileModel()
     }
     else
     {
-        MSG_BOX("CObjectPool::Ready_ObjectPool, Cant Upcasting Prefab");
         return E_FAIL;
     }
 

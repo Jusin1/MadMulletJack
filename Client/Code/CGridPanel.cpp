@@ -39,7 +39,6 @@ CGridPanel *CGridPanel::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(gridPanel->Ready_GameObject()))
 	{
 		Safe_Release(gridPanel);
-		MSG_BOX("CGridPanel::Create, Failed");
 		return nullptr;
 	}
 
@@ -52,7 +51,6 @@ CGameObject *CGridPanel::Clone(void *pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("CGridPanel::Clone, Failed");
 		Safe_Release(pInstance);
 	}
 

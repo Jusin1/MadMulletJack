@@ -203,13 +203,13 @@ void CMonster::Play_VentRandomSound()
     switch (iRand)
     {
     case 1:
-        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent1", SOUND_BOSSEXPLOSION, 1.f);
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent1", SOUND_BOSSEXPLOSION, 1.5f);
         break;
     case 2:
-        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent2", SOUND_BOSSEXPLOSION, 1.f);
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent2", SOUND_BOSSEXPLOSION, 1.5f);
         break;
     case 3:
-        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent3", SOUND_BOSSEXPLOSION, 1.f);
+        pSound->PlaySoundW(L"../Bin/Resource/Sounds/Boss/vent3", SOUND_BOSSEXPLOSION, 1.5f);
         break;
     }
 }

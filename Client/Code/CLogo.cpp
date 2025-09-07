@@ -165,5 +165,6 @@ CLogo* CLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CLogo::Free()
 {
+    while (ShowCursor(FALSE) >= 0) {}
     Engine::CScene::Free();
 }

@@ -3,7 +3,7 @@
 #include "Client_Global.h"
 
 std::mt19937_64 g_Rng{ 0xDEADBEEFCAFEBABEULL };
-_bool g_ColiderRender = true;
+_bool g_ColiderRender = false;
 constexpr float g_Epsilon = 1e-6f;
 
 inline float Rand_Float(float fA, float fB)

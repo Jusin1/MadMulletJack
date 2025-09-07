@@ -33,7 +33,6 @@ CObjectPool *CObjectPool::Create(const wstring &_pPrototypeTag, _uint _iReserve)
 	if (FAILED(pInstance->Ready_ObjectPool(_pPrototypeTag)))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("CObjectPool::Create, Failed");
 		return nullptr;
 	}
 	return pInstance;
@@ -44,7 +43,6 @@ CGameObject *CObjectPool::Spawn(void *pArg, std::function<void(CGameObject *)> _
 {
 	if (m_iActiveCount >= m_Objects.size())
 	{
-		MSG_BOX("CObjectPool::Spawn, Pool is Full");
 		return nullptr;
 	}
 	CGameObject *pGo = m_Objects[m_iActiveCount];
@@ -61,13 +59,11 @@ HRESULT CObjectPool::Despawn(CGameObject *_pObject)
 {
 	if (!_pObject)
 	{
-		MSG_BOX("CObjectPool::Despawn, Parameter is nullptr");
 		return E_FAIL;
 	}
 	int iNeed_Despawned_Index = _pObject->Get_ActiveIndex();
 	if (iNeed_Despawned_Index < 0 || iNeed_Despawned_Index >= m_iActiveCount)
 	{
-		MSG_BOX("CObjectPool::Despawn, Index was wrong");
 		return E_FAIL;
 	}
 
@@ -85,7 +81,6 @@ HRESULT CObjectPool::Despawn(CGameObject *_pObject)
 
 	if (FAILED(_pObject->Despawn_Pooling()))
 	{
-		MSG_BOX("CObjectPool::Despawn, Despawn failed");
 		return E_FAIL;
 	}
 
@@ -100,7 +95,6 @@ HRESULT CObjectPool::Ready_ObjectPool(const wstring &_pPrototypeTag)
 	CGameObject *pPrototype = CObjectManager::GetInstance()->Find_Prototype(_pPrototypeTag.c_str());
 	if (!pPrototype)
 	{
-		MSG_BOX("CObjectPool::Ready_ObjectPool, Failed ! Prototype is invalid");
 		return E_FAIL;
 	}
 	for (int i = 0; i < m_Objects.capacity(); ++i)
@@ -108,7 +102,6 @@ HRESULT CObjectPool::Ready_ObjectPool(const wstring &_pPrototypeTag)
 		CGameObject *pGo = pPrototype->Clone();
 		if (!pGo)
 		{
-			MSG_BOX("CObjectPool::Ready_ObjectPool, Clone Failed !");
 			return E_FAIL;
 		}
 		m_Objects.push_back(pGo);

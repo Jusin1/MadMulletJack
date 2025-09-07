@@ -32,7 +32,6 @@ CVIBuffer_GridPanel_Normal *CVIBuffer_GridPanel_Normal::Create(LPDIRECT3DDEVICE9
     if (FAILED(pGridPanel->Ready_Buffer(nullptr)))
     {
         Safe_Release(pGridPanel);
-        MSG_BOX("CVIBuffer_GridPanel_Normal::Create, Failed");
         return nullptr;
     }
 
@@ -45,7 +44,6 @@ CComponent *CVIBuffer_GridPanel_Normal::Clone(void *pArg)
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("CVIBuffer_GridPanel_Normal::Clone, Failed");
         Safe_Release(pInstance);
         return nullptr;
     }
@@ -70,7 +68,6 @@ HRESULT CVIBuffer_GridPanel_Normal::Ready_Buffer(void *pArg)
 
     if (FAILED(Set_Buffer()))
     {
-        MSG_BOX("CVIBuffer_GridPanel_Normal::Ready_Buffer, Failed");
         return E_FAIL;
     }
 
