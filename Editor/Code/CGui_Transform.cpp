@@ -83,8 +83,10 @@ CGui_Transform *CGui_Transform::Create(TransformDataType _eType)
 
 _bool CGui_Transform::Render(_int _iState)
 {
+	// -> 화살표 박스 헤더 선언
 	if (ImGui::CollapsingHeader(m_label.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		// 화살표 박스 내부 요소들 Table 선언
 		if (ImGui::BeginTable(m_label.c_str(), (int)m_vecInfos.size(),
 			ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV))
 		{
@@ -97,6 +99,7 @@ _bool CGui_Transform::Render(_int _iState)
 		}
 	}
 
+	// 간격 추가해주세요
 	ImGui::Spacing();
 	return FALSE;
 }

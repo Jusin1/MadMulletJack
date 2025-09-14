@@ -62,6 +62,7 @@ struct AfterImage
 	_vec3 vUp{ 0,0,0 };
 	_vec3 vLook{ 0,0,0 };
 	_vec3 vPos{ 0,0,0 };
+
 	_uint iFrame{ 0 };
 	_float fLife{ 0.00f };
 };

@@ -85,6 +85,7 @@ private:
 	Engine::CGameObject *m_pTarget;
 	std::array<CGui_Panel *, (_ulong)(PANEL::NONE)> m_pPanels;
 	std::array<PANELINFO, (_ulong)(PANEL::NONE)> m_pPanelInfos;
+	// prefab Àü¿ë
 	ObjectCategory m_eLocalCategory;
 	_uint m_iLocalObjectType;
 	

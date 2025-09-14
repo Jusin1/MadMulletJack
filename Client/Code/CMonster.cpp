@@ -564,42 +564,88 @@ void CMonster::SpawnFollowUI_Common(bool isHeadshot, const DeathUIConfig& cfg)
     }
 }
 
-void CMonster::SpawnBannerUI_Common(bool isHeadshot, const DeathUIConfig& cfg)
+void CMonster::SpawnBannerUI_Common(bool isHeadshot, const DeathUIConfig &cfg)
 {
-    if (auto banner = dynamic_cast<CEffectUI*>(
+    if (auto banner = dynamic_cast<CEffectUI *>(
         CObjectManager::GetInstance()->Clone_GameObject(
             L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
     {
-        banner->Change_Texture(cfg.iconTexTag);
-        banner->SetImageSize(cfg.iconW, cfg.iconH);
-        banner->SetBannerShowIcon(true);
-        banner->SetImageOffset(cfg.iconOffX, cfg.iconOffY);
+        if (CManagement::GetInstance()->Get_CurrentSceneIdx() != SCENE_CAR)
+        {
+            banner->Change_Texture(cfg.iconTexTag);
+            banner->SetImageSize(cfg.iconW, cfg.iconH);
+            banner->SetBannerShowIcon(true);
+            banner->SetImageOffset(cfg.iconOffX, cfg.iconOffY);
 
-        banner->SetBannerRightText(isHeadshot ? cfg.rightTextHead : cfg.rightTextNormal);
-        banner->SetNumberEmphasis(cfg.emDigits, cfg.emScale);
-        banner->SetBannerRightFixedScale(cfg.rightFixedScale);
+            banner->SetBannerRightText(isHeadshot ? cfg.rightTextHead : cfg.rightTextNormal);
+            banner->SetNumberEmphasis(cfg.emDigits, cfg.emScale);
+            banner->SetBannerRightFixedScale(cfg.rightFixedScale);
 
-        banner->SetBannerTextOffset(cfg.textOffX, cfg.textOffY);
-        banner->SetBannerAngle(0.f);
-        banner->LinkBannerTextAngleToBanner(true);
-        banner->SetBannerTextAngle(cfg.textAngleDeg);
-        banner->SetBannerDownSpeed(cfg.bannerDownSpeed);
+            banner->SetBannerTextOffset(cfg.textOffX, cfg.textOffY);
+            banner->SetBannerAngle(0.f);
+            banner->LinkBannerTextAngleToBanner(true);
+            banner->SetBannerTextAngle(cfg.textAngleDeg);
+            banner->SetBannerDownSpeed(cfg.bannerDownSpeed);
 
-        banner->SetBannerLabelPop(cfg.labelPopStart, cfg.labelPopDur);
+            banner->SetBannerLabelPop(cfg.labelPopStart, cfg.labelPopDur);
 
-        banner->ShowBanner(
-            isHeadshot ? cfg.killTextHead : cfg.killTextNormal,
-            1.10f,
-            cfg.bannerX, cfg.bannerY,
-            1.0f, 1.0f,
-            L"Font_UI_Effect",
-            D3DXCOLOR(1, 1, 1, 1),
-            0.85f,
-            4.f);
+            banner->ShowBanner(
+                isHeadshot ? cfg.killTextHead : cfg.killTextNormal,
+                1.10f,
+                cfg.bannerX, cfg.bannerY,
+                1.0f, 1.0f,
+                L"Font_UI_Effect",
+                D3DXCOLOR(1, 1, 1, 1),
+                0.85f,
+                4.f);
 
-        banner->SetBoxSize(cfg.bannerBoxW, cfg.bannerBoxH);
+            banner->SetBoxSize(cfg.bannerBoxW, cfg.bannerBoxH);
 
-        banner->SetBannerLabelPop(cfg.labelPopStart, cfg.labelPopDur);
+            banner->SetBannerLabelPop(cfg.labelPopStart, cfg.labelPopDur);
+        }
+        else
+        {
+            const auto sceneIdx = CManagement::GetInstance()->Get_CurrentSceneIdx();
+            const bool isCarScene = (sceneIdx == SCENE_CAR);
+
+            const float labelPopStart = isCarScene ? 0.f : cfg.labelPopStart;
+            const float labelPopDur = isCarScene ? 0.f : cfg.labelPopDur;
+            const float emphScale = isCarScene ? 1.f : cfg.emScale;
+
+            if (auto banner = dynamic_cast<CEffectUI *>(
+                CObjectManager::GetInstance()->Clone_GameObject(
+                    L"Prototype_GameObject_MonsterHitEffectUI", SCENE_STATIC, L"UI_Layer")))
+            {
+                banner->Change_Texture(cfg.iconTexTag);
+                banner->SetImageSize(cfg.iconW, cfg.iconH);
+                banner->SetBannerShowIcon(true);
+                banner->SetImageOffset(cfg.iconOffX, cfg.iconOffY);
+
+                banner->SetBannerRightText(isHeadshot ? cfg.rightTextHead : cfg.rightTextNormal);
+                banner->SetNumberEmphasis(cfg.emDigits, emphScale);
+                banner->SetBannerRightFixedScale(cfg.rightFixedScale);
+
+                banner->SetBannerTextOffset(cfg.textOffX, cfg.textOffY);
+                banner->SetBannerAngle(0.f);
+                banner->LinkBannerTextAngleToBanner(true);
+                banner->SetBannerTextAngle(cfg.textAngleDeg);
+                banner->SetBannerDownSpeed(cfg.bannerDownSpeed);
+
+                banner->SetBannerLabelPop(labelPopStart, labelPopDur);
+
+                banner->ShowBanner(
+                    isHeadshot ? cfg.killTextHead : cfg.killTextNormal,
+                    1.10f,
+                    cfg.bannerX, cfg.bannerY,
+                    1.0f, 1.0f,
+                    L"Font_UI_Effect",
+                    D3DXCOLOR(1, 1, 1, 1),
+                    0.85f,
+                    4.f);
+
+                banner->SetBoxSize(cfg.bannerBoxW, cfg.bannerBoxH);
+            }
+        }
     }
 }
 
